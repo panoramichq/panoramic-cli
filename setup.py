@@ -7,7 +7,7 @@ DEV_REQUIRES = ["mypy>=0.780", "flake8>=3.8.3", "black>=19.10b0", "pre-commit>=2
 
 VERSION = "0.1.0"
 setup(
-    name="panoctl",
+    name="panoramic-cli",
     description="Panoramic CLI",
     url="https://github.com/panoramichq/panoctl",
     project_urls={"Source Code": "https://github.com/panoramichq/panoctl"},
