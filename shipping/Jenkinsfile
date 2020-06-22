@@ -13,11 +13,13 @@ pipeline {
         stages {
           stage('RunTox') {
             steps {
-              script {
-                def images = [py36: 'python:3.6', py37: 'python:3.7', py38: 'python:3.8']
-                def image = images.get(TOX_ENV, 'python:3.7')
-                docker.image(image).inside {
-                  sh "pip install --upgrade tox && tox -e ${TOX_ENV}"
+              withCredentials([file(credentialsId: 'ARTIFACTORY_PIPCONF', variable: 'PIPCONF_PATH')]) {
+                script {
+                  def images = [py36: 'python:3.6', py37: 'python:3.7', py38: 'python:3.8']
+                  def image = images.get(TOX_ENV, 'python:3.7')
+                  docker.image(image).withRun('-v ${PIPCONF_PATH}:/etc/pip.conf').inside {
+                    sh "pip install --upgrade tox && tox -e ${TOX_ENV}"
+                  }
                 }
               }
             }
@@ -39,7 +41,9 @@ pipeline {
         VERSION = sh(script: 'python setup.py --version', returnStdout: true).trim()
       }
       steps {
-        sh 'python setup.py sdist bdist_wheel'
+        withCredentials([file(credentialsId: 'ARTIFACTORY_PIPCONF', variable: 'PIPCONF_PATH')]) {
+          sh 'python setup.py sdist bdist_wheel'
+        }
         rtUpload(
           serverId: 'pano',
           spec: '''{
