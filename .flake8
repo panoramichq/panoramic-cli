@@ -2,8 +2,6 @@
 ignore = E265,
          # block comments formatting
          E402,
-         # many unassigned variables right now, will be used in the future?
-         N803,
          # allow comparing value directly to True, which is used a lot with pandas code to filter rows
          E712,
          # do not enforce double quoted docstrings
@@ -14,8 +12,6 @@ ignore = E265,
          W293,
          # https://lintlyci.github.io/Flake8Rules/
          E, W, # All codestyle errors
-         F401, # Unused import
-         F841, # unused vars
          F811 # redefinition of unused name
 
 statistics = True

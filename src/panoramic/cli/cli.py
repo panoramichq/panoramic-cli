@@ -1,5 +1,3 @@
-from typing import Any, Dict
-
 import click
 
 from panoramic.cli.scan import Scanner

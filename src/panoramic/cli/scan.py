@@ -3,8 +3,6 @@ import operator
 
 from typing import Any, Dict, Iterable
 
-import yaml
-
 from panoramic.cli.metadata import MetadataClient
 
 
@@ -12,7 +10,7 @@ def columns_to_tables(columns: Iterable[Dict]) -> Iterable[Dict]:
     """Map iterable of ordered column records to tables."""
     columns_grouped = itertools.groupby(columns, operator.itemgetter('table_schema', 'table_name'))
     return (
-        {'name': table_name, 'schema': table_schema, 'columns': columns,}
+        {'name': table_name, 'schema': table_schema, 'columns': columns}
         for (table_schema, table_name), columns in columns_grouped
     )
 
