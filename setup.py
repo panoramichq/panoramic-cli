@@ -13,7 +13,6 @@ setup(
     project_urls={"Source Code": "https://github.com/panoramichq/panoctl"},
     author="Panoramic",
     maintainer="Panoramic",
-    keywords=["TODO"],
     version=VERSION,
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",

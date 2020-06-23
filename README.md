@@ -5,7 +5,7 @@
 To release a new version of the library, follow these steps:
 
 * In your PR, update version in [setup.py](setup.py) and add entry to [CHANGELOG.md](CHANGELOG.md)
-* After merge, tag the commit with version number from setup.py. For example `git tag v0.1.1`. You can also do this by creating a new [release](https://github.com/panoramichq/panoramic-auth/releases).
+* After merge, tag the commit with version number from setup.py. For example `git tag v0.1.1`. You can also do this by creating a new [release](https://github.com/panoramichq/panoctl/releases).
 * This triggers a Jenkins pipeline which runs tests, linters and uploads the package to Artifactory
 
 ## Development
@@ -19,7 +19,7 @@ This repository does not have a dedicated docker image. At the moment, we create
 If you use pyenv and pyenv-virtualenv, you can create it using:
 
 ```
-> pyenv virtualenv panoramic-auth
+> pyenv virtualenv panoctl
 ```
 
 Then, you can switch to it from command-line using following command:
@@ -31,7 +31,7 @@ Then, you can switch to it from command-line using following command:
 Or if using pyenv-virtualenv:
 
 ```
-pyenv local panoramic-auth
+pyenv local panoctl
 ```
 
 Lastly, use following command to install dependencies (make sure you have correct python environment active):
