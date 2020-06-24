@@ -28,5 +28,5 @@ setup(
     install_requires=['panoramic-auth>=0.1.0', 'requests>=2.24.0', 'click>=7.1.2', 'PyYAML==5.3.1'],
     extras_require={"tests": TEST_REQUIRES, "dev": TEST_REQUIRES + DEV_REQUIRES},
     include_package_data=True,
-    entry_points={"console_scripts": ["panoctl=panoramic.cli:cli"]},
+    entry_points={"console_scripts": ["pano=panoramic.cli:cli"]},
 )
