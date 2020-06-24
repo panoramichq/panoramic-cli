@@ -1,0 +1,68 @@
+pipeline {
+  agent none
+  stages {
+    stage('BuildAndTest') {
+      matrix {
+        agent any
+        axes {
+          axis {
+            name 'TOX_ENV'
+            values 'py36', 'py37', 'py38', 'lint', 'manifest'
+          }
+        }
+        stages {
+          stage('RunTox') {
+            steps {
+              script {
+                def images = [py36: 'python:3.6', py37: 'python:3.7', py38: 'python:3.8']
+                def image = images.get(TOX_ENV, 'python:3.7')
+                withCredentials([file(credentialsId: 'ARTIFACTORY_PIPCONF', variable: 'PIPCONF_PATH')]) {
+                  docker.image(image).inside('-v ${PIPCONF_PATH}:/etc/pip.conf') {
+                    sh "pip install --upgrade tox && tox -r -e ${TOX_ENV}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    stage('Package') {
+      when {
+        tag 'v*'
+        beforeAgent true
+      }
+      agent {
+        docker {
+          image 'python:3.7'
+        }
+      }
+      environment {
+        VERSION = sh(script: 'python setup.py --version', returnStdout: true).trim()
+      }
+      steps {
+        withCredentials([file(credentialsId: 'ARTIFACTORY_PIPCONF', variable: 'PIPCONF_PATH')]) {
+          sh 'python setup.py sdist bdist_wheel'
+        }
+        rtUpload(
+          serverId: 'pano',
+          spec: '''{
+            "files": [
+              {
+                "pattern": "dist/*",
+                "target": "pypi/panoramic-cli/${VERSION}/",
+                "props": "pypi.name=panoramic-cli;pypi.normalized.name=panoramic-cli;pypi.requires.python=>=3.6;pypi.version=${VERSION}"
+              }
+            ]
+          }''',
+          failNoOp: true,
+        )
+      }
+      post {
+        success {
+          archiveArtifacts 'dist/*'
+        }
+      }
+    }
+  }
+}
