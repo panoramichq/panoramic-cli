@@ -50,8 +50,8 @@ pipeline {
             "files": [
               {
                 "pattern": "dist/*",
-                "target": "pypi/panoramic-cli/${VERSION}/",
-                "props": "pypi.name=panoramic-cli;pypi.normalized.name=panoramic-cli;pypi.requires.python=>=3.6;pypi.version=${VERSION}"
+                "target": "pypi/pano-cli/${VERSION}/",
+                "props": "pypi.name=pano-cli;pypi.normalized.name=pano-cli;pypi.requires.python=>=3.6;pypi.version=${VERSION}"
               }
             ]
           }''',

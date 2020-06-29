@@ -1,4 +1,4 @@
-from typing import Any, Optional
+from typing import Any, Dict, List, Optional
 from urllib.parse import urljoin
 
 from panoramic.auth import OAuth2Client
@@ -20,9 +20,41 @@ class MetadataClient(OAuth2Client):
         super().__init__(client_id, client_secret)
         self.base_url = base_url
 
-    def get_columns(self, source_id: str, scope: str, page: int = 0, limit: int = 100) -> Any:
-        url = urljoin(self.base_url, f'columns/{source_id}')
-        params = {'scope': scope, 'page': page, 'limit': limit}
+    def create_refresh_job(self, source_id: str, table_name: str):
+        """Starts async "refresh metadata" job and return job id."""
+        url = urljoin(self.base_url, f'{source_id}/refresh?table-name={table_name}')
+        params = {'table-filter': table_name}
+        response = self.session.post(url, params=params)
+        response.raise_for_status()
+        return response.json()['job_id']
+
+    def create_get_tables_job(self, source_id: str, table_filter: str) -> str:
+        """Starts async "get tables" job and return job id."""
+        url = urljoin(self.base_url, f'{source_id}/tables')
+        params = {'table-filter': table_filter}
+        response = self.session.post(url, params=params)
+        response.raise_for_status()
+        return response.json()['job_id']
+
+    def create_get_columns_job(self, source_id: str, table_filter: str) -> str:
+        """Starts async "get columns" job and return job id."""
+        url = urljoin(self.base_url, f'{source_id}/columns')
+        params = {'table-filter': table_filter}
+        response = self.session.post(url, params=params)
+        response.raise_for_status()
+        return response.json()['job_id']
+
+    def get_job_status(self, job_id: str) -> str:
+        """Get status of an async job."""
+        url = urljoin(self.base_url, f'jobs/{job_id}')
+        response = self.session.get(url)
+        response.raise_for_status()
+        return response.json()['job_status']
+
+    def get_job_results(self, job_id: str, offset: int = 0, limit: int = 500) -> List[Dict[str, Any]]:
+        """Get results of an async job."""
+        url = urljoin(self.base_url, f'jobs/{job_id}/results')
+        params = {'offset': offset, 'limit': limit}
         response = self.session.get(url, params=params)
         response.raise_for_status()
         return response.json()
