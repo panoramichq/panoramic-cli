@@ -38,7 +38,7 @@ class Scanner:
     def scan_tables(self, table_filter: str) -> Iterable[Dict]:
         """Scan tables for a given source and filter."""
         logger.debug(f'Starting get tables job with filter {table_filter}')
-        job_id = self.client.create_get_tables_job()(self.source_id, table_filter)
+        job_id = self.client.create_get_tables_job(self.source_id, table_filter)
         logger.debug(f'Get tables job with id {job_id} started with filter {table_filter}')
 
         self._wait_for_terminal_state(job_id)
