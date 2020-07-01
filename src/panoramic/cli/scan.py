@@ -17,7 +17,7 @@ def columns_to_tables(columns: Iterable[Dict]) -> Iterable[Dict]:
     """Map iterable of ordered column records to tables."""
     columns_grouped = itertools.groupby(columns, operator.itemgetter('table_schema', 'table_name'))
     return (
-        {'name': table_name, 'schema': table_schema, 'columns': columns}
+        {'name': table_name, 'schema': table_schema, 'columns': list(columns)}
         for (table_schema, table_name), columns in columns_grouped
     )
 
@@ -62,7 +62,7 @@ class Scanner:
             logger.debug(f'Got status {status} for job with id {job_id}')
             if status in TERMINAL_STATES:
                 return
-            time.sleep(3)
+            time.sleep(1)
 
     def _collect_results(self, job_id: str) -> Iterable[Dict[str, Any]]:
         """Collect all results for a given job."""
@@ -76,7 +76,7 @@ class Scanner:
 
             if len(page) < limit:
                 # last page
-                logger.debug(f'Finished fetcing all results for job with id {job_id}')
+                logger.debug(f'Finished fetching all results for job with id {job_id}')
                 return
 
             offset += limit
