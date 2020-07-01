@@ -64,5 +64,30 @@ pipeline {
         }
       }
     }
+    stage('Apply') {
+      when {
+        tag 'v*'
+        beforeAgent true
+      }
+      agent {
+        docker {
+          image 'amazon/aws-cli:2.0.27'
+          args '--entrypoint=""'
+        }
+      }
+      steps {
+        withCredentials([
+          [
+            $class: 'AmazonWebServicesCredentialsBinding',
+            credentialsId: 'AWS_ASSETS_ECR',
+            accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+            secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+          ]
+        ]) {
+	      sh script: 'python shipping/generate-versions-file.py', label: "Generate versions file"
+	      sh script: 'aws s3 cp versions.json s3://a1.panocdn.com/updates/pano-cli/versions.json --metadata-directive REPLACE --cache-control max-age=60', label: "Update versions file in S3"
+        }
+      }
+    }
   }
 }
