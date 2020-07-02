@@ -7,9 +7,15 @@ from typing import Optional
 import click
 import yaml
 
+from panoramic.cli.file_utils import (
+    FileExtension,
+    FilePackage,
+    get_target_abs_filepath,
+    write_yaml,
+)
+from panoramic.cli.layer import load_scanned_table, unload_scanned_table
 from panoramic.cli.refresh import Refresher
-from panoramic.cli.scan import Scanner, columns_to_tables
-from panoramic.cli.write import write
+from panoramic.cli.scan import Scanner
 
 
 logging.basicConfig(level=logging.WARNING)
@@ -33,8 +39,14 @@ def scan(source_id: str, filter: Optional[str]):
             sourceless_schema = table['table_schema'].split('.', 1)[1]
             table_name = f'{sourceless_schema}.{table["table_name"]}'
             refresher.refresh_table(table_name)
-            tables = columns_to_tables(scanner.scan_columns(table_filter=table_name))
-            write(tables)
+            raw_columns = scanner.scan_columns(table_filter=table_name)
+
+            scanned_table = load_scanned_table(raw_columns)
+            abs_filepath = get_target_abs_filepath(
+                scanned_table.table_file_id, FileExtension.model_yaml, FilePackage.scanned
+            )
+            yaml_dict = unload_scanned_table(scanned_table)
+            write_yaml(abs_filepath, yaml_dict)
 
 
 @cli.command(help='Configure pano CLI options')
