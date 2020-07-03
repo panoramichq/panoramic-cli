@@ -53,5 +53,5 @@ This installs git hooks that run pre-commit.
 Use following command to run all tests:
 
 ```
-> make tests
+> make test
 ```

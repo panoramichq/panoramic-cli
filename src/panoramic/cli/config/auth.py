@@ -19,11 +19,3 @@ def get_client_secret() -> str:
     except KeyError:
         with open(Path.home() / '.pano' / 'config') as f:
             return yaml.safe_load(f)['client_secret']
-
-
-def get_token_url() -> str:
-    try:
-        return os.environ['PANO_TOKEN_URL']
-    except KeyError:
-        with open(Path.home() / '.pano' / 'config') as f:
-            return yaml.safe_load(f)['token_url']
