@@ -8,15 +8,12 @@ from panoramic.cli.file_utils import (
     get_target_abs_filepath,
     write_yaml,
 )
-from panoramic.cli.layer import load_scanned_table, unload_scanned_table
-from panoramic.cli.refresh import Refresher
-from panoramic.cli.scan import Scanner
 
 
 def scan(source_id: str, filter: Optional[str]):
-    from panoramic.cli.scan import Scanner, columns_to_tables
+    from panoramic.cli.scan import Scanner
     from panoramic.cli.refresh import Refresher
-    from panoramic.cli.write import write
+    from panoramic.cli.layer import load_scanned_table, unload_scanned_table
 
     scanner = Scanner(source_id)
     refresher = Refresher(source_id)
