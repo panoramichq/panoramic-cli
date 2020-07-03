@@ -35,7 +35,7 @@ Alternatively if you use pyenv and pyenv-virtualenv, you can create virtual envi
 And use the created virtual environment:
 
 ```
-> pyenv local panoctl
+> pyenv local pano-cli
 ```
 
 ### Build and Run
