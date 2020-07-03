@@ -74,7 +74,7 @@ Use following command to run all other checks:
 
 ## Pre commit hooks
 
-You can install pre-commit. It is useful to avoid commiting code that doesn't pass the linter. Id installs git hooks that run pre-commit.
+You can install pre-commit. It is useful to avoid commiting code that doesn't pass the linter. It installs git hooks that run pre-commit.
 
 ```
 > make pre-commit-install
