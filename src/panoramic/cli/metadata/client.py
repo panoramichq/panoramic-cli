@@ -6,11 +6,7 @@ from typing import Any, Dict, Iterable, List, Optional
 from urllib.parse import urljoin
 
 from panoramic.auth import OAuth2Client
-from panoramic.cli.config.auth import (
-    get_client_id,
-    get_client_secret,
-    get_token_url,
-)
+from panoramic.cli.config.auth import get_client_id, get_client_secret
 from panoramic.cli.config.metadata import get_base_url
 from panoramic.cli.errors import TimeoutException
 
@@ -34,9 +30,6 @@ class JobState(Enum):
 TERMINAL_STATES = {JobState.COMPLETED, JobState.CANCELED, JobState.FAILED}
 
 
-logger = logging.getLogger(__name__)
-
-
 class MetadataClient(OAuth2Client):
 
     """Metadata HTTP API client."""
@@ -49,9 +42,8 @@ class MetadataClient(OAuth2Client):
         base_url = base_url if base_url is not None else get_base_url()
         client_id = client_id if client_id is not None else get_client_id()
         client_secret = client_secret if client_secret is not None else get_client_secret()
-        token_url = token_url if token_url is not None else get_token_url()
 
-        super().__init__(client_id, client_secret, token_url=token_url)
+        super().__init__(client_id, client_secret)
         self.base_url = base_url
 
     def create_refresh_job(self, source_id: str, table_name: str):
