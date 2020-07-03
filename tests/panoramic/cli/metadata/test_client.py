@@ -1,6 +1,11 @@
+import pytest
 import responses
 
-from panoramic.cli.metadata.client import JobState, MetadataClient
+from panoramic.cli.metadata.client import (
+    TERMINAL_STATES,
+    JobState,
+    MetadataClient,
+)
 
 
 @responses.activate
@@ -67,3 +72,31 @@ def test_get_job_results():
     )
 
     assert client.get_job_results('test-job-id') == [{'a': 'b'}]
+
+
+@responses.activate
+@pytest.mark.parametrize('final_state', TERMINAL_STATES)
+def test_wait_for_terminal_state(final_state):
+    responses.add(responses.POST, 'https://token/', json={'access_token': '123123'})
+    responses.add(responses.GET, 'https://diesel/job/test-job-id', json={'job_status': 'RUNNING'})
+    responses.add(responses.GET, 'https://diesel/job/test-job-id', json={'job_status': final_state.value})
+
+    client = MetadataClient(
+        base_url='https://diesel/', token_url='https://token', client_id='client-id', client_secret='client-secret'
+    )
+
+    assert client.wait_for_terminal_state('test-job-id') == final_state
+
+
+@responses.activate
+def test_collect_results():
+    responses.add(responses.POST, 'https://token/', json={'access_token': '123123'})
+    responses.add(responses.GET, 'https://diesel/job/test-job-id/results?offset=0&limit=1', json={'data': [{'a': 'b'}]})
+    responses.add(responses.GET, 'https://diesel/job/test-job-id/results?offset=1&limit=1', json={'data': [{'c': 'd'}]})
+    responses.add(responses.GET, 'https://diesel/job/test-job-id/results?offset=2&limit=1', json={'data': []})
+
+    client = MetadataClient(
+        base_url='https://diesel/', token_url='https://token', client_id='client-id', client_secret='client-secret'
+    )
+
+    assert list(client.collect_results('test-job-id', limit=1)) == [{'a': 'b'}, {'c': 'd'}]

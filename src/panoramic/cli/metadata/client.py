@@ -38,6 +38,8 @@ class MetadataClient(OAuth2Client):
 
     """Metadata HTTP API client."""
 
+    base_url: str
+
     def __init__(
         self,
         base_url: Optional[str] = None,
@@ -97,12 +99,12 @@ class MetadataClient(OAuth2Client):
         response.raise_for_status()
         return response.json()['data']
 
-    def wait_for_terminal_state(self, job_id: str, timeout: int = 60) -> str:
+    def wait_for_terminal_state(self, job_id: str, timeout: int = 60) -> JobState:
         """Wait for job to reach terminal state."""
         tick_time = 1
         while True:
             logger.debug(f'Getting status for job with id {job_id}')
-            status = self.client.get_job_status(job_id)
+            status = self.get_job_status(job_id)
             logger.debug(f'Got status {status} for job with id {job_id}')
             if status in TERMINAL_STATES:
                 return status
@@ -111,14 +113,13 @@ class MetadataClient(OAuth2Client):
             time.sleep(tick_time)
             timeout -= tick_time
 
-    def collect_results(self, job_id: str) -> Iterable[Dict[str, Any]]:
+    def collect_results(self, job_id: str, limit: int = 500) -> Iterable[Dict[str, Any]]:
         """Collect all results for a given job."""
         offset = 0
-        limit = 500
 
         while True:
             logger.debug(f'Fetching page number {offset // limit + 1} for job with id {job_id}')
-            page = self.client.get_job_results(job_id, offset=offset, limit=limit)
+            page = self.get_job_results(job_id, offset=offset, limit=limit)
             yield from page
 
             if len(page) < limit:
