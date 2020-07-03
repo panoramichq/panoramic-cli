@@ -1,16 +1,26 @@
 import itertools
+import logging
 import operator
 
-from typing import Any, Dict, Iterable
+from typing import Dict, Iterable
 
+import requests
+
+from requests.exceptions import RequestException
+
+from panoramic.cli.errors import ScanException, SourceNotFoundException
 from panoramic.cli.metadata import MetadataClient
+from panoramic.cli.metadata.client import JobState
+
+
+logger = logging.getLogger(__name__)
 
 
 def columns_to_tables(columns: Iterable[Dict]) -> Iterable[Dict]:
     """Map iterable of ordered column records to tables."""
     columns_grouped = itertools.groupby(columns, operator.itemgetter('table_schema', 'table_name'))
     return (
-        {'name': table_name, 'schema': table_schema, 'columns': columns}
+        {'name': table_name, 'schema': table_schema, 'columns': list(columns)}
         for (table_schema, table_name), columns in columns_grouped
     )
 
@@ -28,22 +38,41 @@ class Scanner:
         if client is None:
             self.client = MetadataClient()
 
-    def run(self, scope: str) -> Iterable[Dict[str, Any]]:
-        """Perform metadata scan for given source and scope."""
-        yield from columns_to_tables(self.scan_columns(scope))
+    def scan_tables(self, table_filter: str, timeout: int = 60) -> Iterable[Dict]:
+        """Scan tables for a given source and filter."""
+        logger.debug(f'Starting get tables job with filter {table_filter}')
+        try:
+            job_id = self.client.create_get_tables_job(self.source_id, table_filter)
+            logger.debug(f'Get tables job with id {job_id} started with filter {table_filter}')
+        except RequestException as e:
+            if e.response and e.response.status == requests.codes.not_found:
+                raise SourceNotFoundException(f'Source {self.source_id} not found')
+            raise ScanException(f'Error ocurred scanning tables for source {self.source_id}')
 
-    def scan_columns(self, scope: str) -> Iterable[Dict]:
-        """Scan columns for a given source and scope."""
-        page = 0
-        limit = 100
-        while True:
-            columns = self.client.get_columns(self.source_id, scope, page=page, limit=limit)
-            for column in columns:
-                yield column
+        try:
+            state = self.client.wait_for_terminal_state(job_id, timeout=timeout)
+            if state != JobState.COMPLETED:
+                raise ScanException(f'Scan job {job_id} failed')
+            yield from self.client.collect_results(job_id)
+        except RequestException:
+            raise ScanException(f'Error ocurred scanning tables for source {self.source_id}')
 
-            # last page
-            if len(columns) < limit:
-                return
+    def scan_columns(self, table_filter: str, timeout: int = 60) -> Iterable[Dict]:
+        """Scan columns for a given source and filter."""
+        logger.debug('Starting get columns job')
+        try:
+            job_id = self.client.create_get_columns_job(self.source_id, table_filter)
+            logger.debug(f'Get columns job with id {job_id} started with filter {table_filter}')
+        except requests.HTTPError as e:
+            if e.response.status == requests.codes.not_found:
+                raise SourceNotFoundException(f'Source {self.source_id} not found')
+            raise ScanException(f'Error ocurred scanning columns for source {self.source_id}')
 
-            # get next page
-            page += 1
+        try:
+            state = self.client.wait_for_terminal_state(job_id, timeout=timeout)
+            if state != JobState.COMPLETED:
+                raise ScanException(f'Scan job {job_id} failed')
+
+            yield from self.client.collect_results(job_id)
+        except RequestException:
+            raise ScanException(f'Error ocurred scanning columns for source {self.source_id}')

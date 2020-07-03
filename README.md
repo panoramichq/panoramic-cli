@@ -5,7 +5,7 @@
 To release a new version of the library, follow these steps:
 
 * In your PR, update version in [setup.py](setup.py) and add entry to [CHANGELOG.md](CHANGELOG.md)
-* After merge, tag the commit with version number from setup.py. For example `git tag v0.1.1`. You can also do this by creating a new [release](https://github.com/panoramichq/panoctl/releases).
+* After merge, tag the commit with version number from setup.py. For example `git tag v0.1.1`. You can also do this by creating a new [release](https://github.com/panoramichq/pano-cli/releases).
 * This triggers a Jenkins pipeline which runs tests, linters and uploads the package to Artifactory
 
 ## Development
