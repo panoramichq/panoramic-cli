@@ -29,7 +29,7 @@ Then, you can switch to it from command-line using following command:
 Alternatively if you use pyenv and pyenv-virtualenv, you can create virtual environment using:
 
 ```
-> pyenv virtualenv panoctl
+> pyenv virtualenv pano-cli
 ```
 
 And use the created virtual environment:
