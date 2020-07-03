@@ -1,6 +1,4 @@
-import itertools
 import logging
-import operator
 
 from typing import Dict, Iterable
 

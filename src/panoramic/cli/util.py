@@ -1,8 +1,7 @@
-from typing import Iterable, Any, Tuple
 import itertools
 
 
-def peek_iterator(gen: Iterable[Any]) -> Tuple[Any, Iterable]:
+def peek_iterator(gen):
     """
     Peek first item in iterator
     """

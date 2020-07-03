@@ -3,9 +3,13 @@ import re
 
 from typing import Dict, Iterable, List
 
-from panoramic.cli.table_model import TableModel, TableModelDataSource, TableModelField
-from panoramic.cli.util import peek_iterator
 from panoramic.cli.errors import ParserException
+from panoramic.cli.table_model import (
+    TableModel,
+    TableModelDataSource,
+    TableModelField,
+)
+from panoramic.cli.util import peek_iterator
 
 
 logger = logging.getLogger(__name__)

@@ -1,9 +1,11 @@
 import logging
 import os
-import yaml
+
+from enum import Enum
 from pathlib import Path
 from typing import Dict
-from enum import Enum
+
+import yaml
 
 
 logger = logging.getLogger(__name__)
@@ -29,7 +31,7 @@ def get_work_dir_abs_filepath() -> str:
     """
     Return abs filepath of current workdir
     """
-    return Path().absolute()
+    return str(Path().absolute())
 
 
 def get_target_abs_filepath(table_file_id: str, file_extension: FileExtension, file_package: FilePackage) -> str:
