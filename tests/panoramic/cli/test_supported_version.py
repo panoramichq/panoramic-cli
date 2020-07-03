@@ -1,6 +1,6 @@
 import responses
 
-from src.panoramic.cli.supported_version import URL, is_version_supported
+from panoramic.cli.supported_version import URL, is_version_supported
 
 
 @responses.activate
