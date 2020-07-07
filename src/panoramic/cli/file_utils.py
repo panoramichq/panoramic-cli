@@ -27,11 +27,11 @@ class FilePackage(Enum):
     scanned = 'scanned'
 
 
-def get_work_dir_abs_filepath() -> str:
+def get_work_dir_abs_filepath() -> Path:
     """
     Return abs filepath of current workdir
     """
-    return str(Path().absolute())
+    return Path().absolute()
 
 
 def get_target_abs_filepath(table_file_id: str, file_extension: FileExtension, file_package: FilePackage) -> str:
@@ -39,16 +39,14 @@ def get_target_abs_filepath(table_file_id: str, file_extension: FileExtension, f
     Get target file abs filepath
     """
     file_name = f'{table_file_id}{file_extension.value}'
-    path_components = (get_work_dir_abs_filepath(), file_package.value, file_name)
-    return os.path.join(*path_components)
+    return get_work_dir_abs_filepath() / file_package.value / file_name
 
 
 def ensure_dir(abs_filepath: str) -> None:
     """
     Ensure parent directory exists.
     """
-    dir_path, _ = os.path.split(abs_filepath)
-    path_obj = Path(dir_path)
+    path_obj = Path(abs_filepath).parent
     path_obj.mkdir(parents=True, exist_ok=True)
 
 
