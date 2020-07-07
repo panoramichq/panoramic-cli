@@ -1,9 +1,9 @@
 from typing import List
 
 
-class TableModelDataSource:
+class PanoModelDataSource:
     """
-    Table Model Data Source
+    Pano Model Data Source
     """
 
     sql: str
@@ -15,9 +15,9 @@ class TableModelDataSource:
         return {'sql': self.sql}
 
 
-class TableModelField:
+class PanoModelField:
     """
-    Table Model Field
+    Pano Model Field
     """
 
     data_type: str
@@ -33,9 +33,9 @@ class TableModelField:
         return {'data_type': self.data_type, 'transformation': self.transformation, 'field_map': self.field_map}
 
 
-class TableModelJoin:
+class PanoModelJoin:
     """
-    Table Model Field
+    Pano Model Field
     """
 
     join: str
@@ -47,23 +47,23 @@ class TableModelJoin:
         return {'join': self.join}
 
 
-class TableModel:
+class PanoModel:
     """
-    Table Model
+    Pano Model
     """
 
     table_file_id: str
-    data_source: TableModelDataSource
-    fields: List[TableModelField]
-    joins: List[TableModelJoin]
+    data_source: PanoModelDataSource
+    fields: List[PanoModelField]
+    joins: List[PanoModelJoin]
     identifiers: List[str]
 
     def __init__(
         self,
         table_file_id: str,
-        data_source: TableModelDataSource,
-        fields: List[TableModelField],
-        joins: List[TableModelJoin],
+        data_source: PanoModelDataSource,
+        fields: List[PanoModelField],
+        joins: List[PanoModelJoin],
         identifiers: List[str],
     ):
         self.table_file_id = table_file_id

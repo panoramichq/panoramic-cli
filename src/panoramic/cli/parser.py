@@ -4,10 +4,10 @@ import re
 from typing import Dict, Iterable, List
 
 from panoramic.cli.errors import ParserException
-from panoramic.cli.table_model import (
-    TableModel,
-    TableModelDataSource,
-    TableModelField,
+from panoramic.cli.pano_model import (
+    PanoModel,
+    PanoModelDataSource,
+    PanoModelField,
 )
 from panoramic.cli.util import peek_iterator
 
@@ -65,14 +65,14 @@ def _get_table_file_id(col: Dict) -> str:
     return re.sub(r'\W+', '', _get_table_path(col))
 
 
-def load_scanned_table(raw_columns: Iterable[Dict]) -> TableModel:
+def load_scanned_table(raw_columns: Iterable[Dict]) -> PanoModel:
     """
     Load result of metadata table columns scan into Table Model
     """
     col, raw_columns = peek_iterator(raw_columns)
     table_path = _get_table_path(col)
     table_file_id = _get_table_file_id(col)
-    data_source = TableModelDataSource(sql=table_path)
+    data_source = PanoModelDataSource(sql=table_path)
     fields = []
 
     for col in raw_columns:
@@ -80,11 +80,11 @@ def load_scanned_table(raw_columns: Iterable[Dict]) -> TableModel:
             raise ParserException('Unable to parse columns from multiple tables')
 
         fields.append(
-            TableModelField(
+            PanoModelField(
                 data_type=_get_field_data_type(col),
                 transformation=_get_field_transformation(col),
                 field_map=_get_field_map(col),
             )
         )
 
-    return TableModel(table_file_id=table_file_id, data_source=data_source, fields=fields, joins=[], identifiers=[])
+    return PanoModel(table_file_id=table_file_id, data_source=data_source, fields=fields, joins=[], identifiers=[])
