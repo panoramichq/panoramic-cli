@@ -45,7 +45,7 @@ def get_target_abs_filepath(table_file_id: str, file_extension: FileExtension, f
 
 def ensure_dir(abs_filepath: str) -> None:
     """
-    Creates dir if not exist
+    Ensure parent directory exists.
     """
     dir_path, _ = os.path.split(abs_filepath)
     path_obj = Path(dir_path)
