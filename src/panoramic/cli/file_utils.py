@@ -1,5 +1,4 @@
 import logging
-import os
 
 from enum import Enum
 from pathlib import Path
@@ -50,44 +49,14 @@ def ensure_dir(abs_filepath: str) -> None:
     path_obj.mkdir(parents=True, exist_ok=True)
 
 
-def write_file(abs_filepath: str, file_content: str) -> None:
-    """
-    Writes string file to path
-    """
-    with open(abs_filepath, 'w') as f:
-        f.write(file_content)
-
-
-def read_file(abs_filepath: str) -> str:
-    """
-    Reads string file from path
-    """
-    with open(abs_filepath, 'r') as f:
-        return f.read()
-
-
-def to_yaml(yaml_dict: Dict) -> str:
-    """
-    Serialize to yaml
-    """
-    return yaml.dump(yaml_dict, default_flow_style=False)
-
-
-def from_yaml(yaml_str: str) -> Dict:
-    """
-    Serialize from yaml
-    """
-    return yaml.safe_load(yaml_str)
-
-
 def write_yaml(abs_filepath: str, yaml_dict: Dict) -> None:
     """
     Writes yaml dict to path
     """
     logger.debug(f'Write yaml {abs_filepath}')
     ensure_dir(abs_filepath)
-    yaml_str = to_yaml(yaml_dict)
-    write_file(abs_filepath, yaml_str)
+    with open(abs_filepath, 'w') as f:
+        yaml.dump(yaml_dict, f, default_flow_style=False)
 
 
 def read_yaml(abs_filepath: str) -> Dict:
@@ -95,5 +64,5 @@ def read_yaml(abs_filepath: str) -> Dict:
     Reads yaml dict from path
     """
     logger.debug(f'Read yaml {abs_filepath}')
-    yaml_str = read_file(abs_filepath)
-    return from_yaml(yaml_str)
+    with open(abs_filepath, 'r') as f:
+        return yaml.safe_load(f)
