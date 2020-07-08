@@ -19,7 +19,7 @@ def test_get_all_data_sources():
     )
 
     client = VirtualDataSourceClient(
-        company_id='50', base_url='https://diesel/virtual', client_id='client-id', client_secret='client-secret'
+        company_id='50', base_url='https://diesel/virtual/', client_id='client-id', client_secret='client-secret'
     )
 
     assert client.all() == [fake_source]
@@ -35,7 +35,7 @@ def test_get_data_source():
     )
 
     client = VirtualDataSourceClient(
-        company_id='50', base_url='https://diesel/virtual', client_id='client-id', client_secret='client-secret'
+        company_id='50', base_url='https://diesel/virtual/', client_id='client-id', client_secret='client-secret'
     )
     remote_source = client.get(fake_source['slug'])
 
