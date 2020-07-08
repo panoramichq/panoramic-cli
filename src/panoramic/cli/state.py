@@ -30,25 +30,27 @@ class Action(Generic[T]):
 
     current: Optional[T]
     desired: Optional[T]
-    direction: Tuple[Origin, Origin]
 
-    def __init__(
-        self, *, current: Optional[T] = None, desired: Optional[T] = None, direction: Tuple[Origin, Origin],
-    ):
+    def __init__(self, *, current: Optional[T] = None, desired: Optional[T] = None):
         if current is None and desired is None:
             raise ValueError('Both current and desired cannot be None')
 
         self.current = current
         self.desired = desired
-        self.direction = direction
 
     @staticmethod
-    def with_desired(desired: T, direction: Tuple[Origin, Origin]):
-        return Action(desired=desired, direction=direction)
+    def with_desired(desired: T):
+        return Action(desired=desired)
 
     @staticmethod
-    def with_current(current: T, direction: Tuple[Origin, Origin]):
-        return Action(current=current, direction=direction)
+    def with_current(current: T):
+        return Action(current=current)
+
+
+class ActionList(Generic[T]):
+
+    actions: List[Action[T]]
+    direction: Tuple[Origin, Origin]
 
 
 class Model(Actionable):
