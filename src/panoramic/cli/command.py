@@ -20,6 +20,8 @@ logger = logging.getLogger(__name__)
 
 def scan(source_id: str, filter: Optional[str]):
     """Scan all metdata for given source and filter."""
+    # TODO: Obtain api version
+    api_version = 'v1'
     scanner = Scanner(source_id)
     refresher = Refresher(source_id)
     tables = scanner.scan_tables(filter)
@@ -32,7 +34,7 @@ def scan(source_id: str, filter: Optional[str]):
                 refresher.refresh_table(table_name)
                 raw_columns = scanner.scan_columns(table_filter=table_name)
 
-                scanned_tables = load_scanned_tables(raw_columns)
+                scanned_tables = load_scanned_tables(raw_columns, api_version)
                 scanned_table = scanned_tables[0]
                 abs_filepath = get_target_abs_filepath(
                     scanned_table.table_file_name, FileExtension.model_yaml, FilePackage.scanned

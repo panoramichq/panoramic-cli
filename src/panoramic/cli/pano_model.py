@@ -72,6 +72,7 @@ class PanoModel:
     fields: List[PanoModelField]
     joins: List[PanoModelJoin]
     identifiers: List[str]
+    api_version: str
 
     def __init__(
         self,
@@ -80,12 +81,14 @@ class PanoModel:
         fields: List[PanoModelField],
         joins: List[PanoModelJoin],
         identifiers: List[str],
+        api_version: str,
     ):
         self.table_file_name = table_file_name
         self.data_source = data_source
         self.fields = fields
         self.joins = joins
         self.identifiers = identifiers
+        self.api_version = api_version
 
     def to_dict(self):
         # The "table_file_name" is used as file name and not being exported
@@ -94,4 +97,5 @@ class PanoModel:
             'fields': [x.to_dict() for x in self.fields],
             'joins': [x.to_dict() for x in self.joins],
             'identifiers': self.identifiers,
+            'api_version': self.api_version,
         }

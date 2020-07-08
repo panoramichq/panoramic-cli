@@ -30,7 +30,7 @@ def _remove_source_from_path(table_schema: str):
         return table_schema
 
 
-def load_scanned_tables(raw_columns: Iterable[Dict]) -> List[PanoModel]:
+def load_scanned_tables(raw_columns: Iterable[Dict], api_version: str) -> List[PanoModel]:
     """
     Load result of metadata table columns scan into Table Model
     """
@@ -61,6 +61,7 @@ def load_scanned_tables(raw_columns: Iterable[Dict]) -> List[PanoModel]:
                 fields=fields,
                 joins=[],
                 identifiers=[],
+                api_version=api_version,
             )
         )
 
