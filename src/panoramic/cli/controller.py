@@ -1,8 +1,29 @@
-from typing import List
+from typing import Iterable
 
 from panoramic.cli.state import Action, VirtualState
 
 
-def reconcile(current_state: VirtualState, desired_state: VirtualState) -> List[Action]:
+def reconcile(current_state: VirtualState, desired_state: VirtualState) -> Iterable[Action]:
     """Create actions that get us from current state to desired state."""
-    pass
+    current_data_sources_by_id = {s.id: s for s in current_state.data_sources}
+    desired_data_sources_by_id = {s.id: s for s in desired_state.data_sources}
+
+    # delete what is not desired but exists
+    ids_to_delete = current_data_sources_by_id.keys() - desired_data_sources_by_id.keys()
+    # create what is desired but doesn't exist
+    ids_to_create = desired_data_sources_by_id.keys() - current_data_sources_by_id.keys()
+    # update what is desired and exists
+    ids_to_update = current_data_sources_by_id.keys() & desired_data_sources_by_id.keys()
+
+    direction = (current_state.origin, desired_state.origin)
+
+    for id_ in ids_to_delete:
+        yield Action.with_current(current_data_sources_by_id[id_], direction)
+
+    for id_ in ids_to_create:
+        yield Action.with_desired(desired_data_sources_by_id[id_], direction)
+
+    for id_ in ids_to_update:
+        yield Action(
+            current=current_data_sources_by_id[id_], desired=desired_data_sources_by_id[id_], direction=direction
+        )
