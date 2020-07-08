@@ -1,11 +1,7 @@
 import pytest
 import responses
 
-from panoramic.cli.metadata.client import (
-    TERMINAL_STATES,
-    JobState,
-    MetadataClient,
-)
+from panoramic.cli.metadata.client import TERMINAL_STATES, JobState, MetadataClient
 
 
 @pytest.fixture(autouse=True)

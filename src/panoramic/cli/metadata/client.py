@@ -1,6 +1,5 @@
 import logging
 import time
-
 from enum import Enum
 from typing import Any, Dict, Iterable, List, Optional
 from urllib.parse import urljoin
@@ -9,7 +8,6 @@ from panoramic.auth import OAuth2Client
 from panoramic.cli.config.auth import get_client_id, get_client_secret
 from panoramic.cli.config.metadata import get_base_url
 from panoramic.cli.errors import TimeoutException
-
 
 logger = logging.getLogger(__name__)
 

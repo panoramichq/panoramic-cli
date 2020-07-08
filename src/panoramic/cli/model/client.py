@@ -1,12 +1,10 @@
 import logging
-
 from typing import Any, Dict, List, Optional
 from urllib.parse import urljoin
 
 from panoramic.auth import OAuth2Client
 from panoramic.cli.config.auth import get_client_id, get_client_secret
 from panoramic.cli.config.model import get_base_url
-
 
 logger = logging.getLogger(__name__)
 

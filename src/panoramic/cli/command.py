@@ -1,5 +1,4 @@
 import logging
-
 from typing import Optional
 
 import click
@@ -14,7 +13,10 @@ from panoramic.cli.file_utils import (
 from panoramic.cli.parser import load_scanned_tables
 from panoramic.cli.refresh import Refresher
 from panoramic.cli.scan import Scanner
-
+from panoramic.cli.context import get_company_name
+from panoramic.cli.controller import reconcile
+from panoramic.cli.executor import execute
+from panoramic.cli.state import get_local, get_remote
 
 logger = logging.getLogger(__name__)
 
@@ -48,3 +50,23 @@ def scan(source_id: str, filter: Optional[str]):
                 print(f'Failed to scan table {table_name}')
                 logger.debug(f'Failed to scan table {table_name}', exc_info=True)
                 continue
+
+
+def pull():
+    """Pull models and data sources from remote."""
+    company_name = get_company_name()
+    remote_source = get_remote(company_name)
+    local_source = get_local(company_name)
+
+    actions = reconcile(local_source, remote_source)
+    execute(actions)
+
+
+def push():
+    """Push models and data sources to remote."""
+    company_name = get_company_name()
+    remote_source = get_remote(company_name)
+    local_source = get_local(company_name)
+
+    actions = reconcile(remote_source, local_source)
+    execute(actions)

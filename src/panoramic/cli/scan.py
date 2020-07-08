@@ -1,15 +1,12 @@
 import logging
-
 from typing import Dict, Iterable
 
 import requests
-
 from requests.exceptions import RequestException
 
 from panoramic.cli.errors import ScanException, SourceNotFoundException
 from panoramic.cli.metadata import MetadataClient
 from panoramic.cli.metadata.client import JobState
-
 
 logger = logging.getLogger(__name__)
 

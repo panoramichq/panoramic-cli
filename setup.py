@@ -2,7 +2,6 @@ import re
 
 from setuptools import find_namespace_packages, setup
 
-
 with open("src/panoramic/cli/__version__.py", encoding="utf8") as f:
     version = re.search(r'__version__ = "(.*?)"', f.read()).group(1)  # type: ignore
 

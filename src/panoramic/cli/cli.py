@@ -1,6 +1,5 @@
 import logging
 import os
-
 from pathlib import Path
 from typing import Optional
 
@@ -45,6 +44,20 @@ def scan(source_id: str, filter: Optional[str]):
     except (TimeoutException, ScanException, RefreshException):
         print('Internal error occured.')
         logger.debug('Internal error occured', exc_info=True)
+
+
+@cli.command(help='Pull models from remote')
+def pull():
+    from panoramic.cli.command import pull
+
+    pull()
+
+
+@cli.command(help='Push models to remote')
+def push():
+    from panoramic.cli.command import push
+
+    push()
 
 
 @cli.command(help='Configure pano CLI options')

@@ -1,7 +1,6 @@
 from unittest.mock import Mock, patch, sentinel
 
 import pytest
-
 from requests.exceptions import HTTPError
 
 from panoramic.cli.errors import ScanException, SourceNotFoundException

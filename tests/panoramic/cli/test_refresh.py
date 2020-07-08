@@ -1,7 +1,6 @@
 from unittest.mock import Mock, patch
 
 import pytest
-
 from requests.models import HTTPError
 
 from panoramic.cli.errors import RefreshException, SourceNotFoundException
