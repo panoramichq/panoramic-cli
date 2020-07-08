@@ -35,11 +35,7 @@ class VirtualDataSourceClient(OAuth2Client):
     _company_id_query_params: Dict[str, str]
 
     def __init__(
-        self,
-        company_id: str,
-        base_url: Optional[str] = None,
-        client_id: Optional[str] = None,
-        client_secret: Optional[str] = None,
+        self, base_url: Optional[str] = None, client_id: Optional[str] = None, client_secret: Optional[str] = None
     ):
         client_id = client_id if client_id is not None else get_client_id()
         client_secret = client_secret if client_secret is not None else get_client_secret()
@@ -56,42 +52,41 @@ class VirtualDataSourceClient(OAuth2Client):
             # base_url is in it's correct form - without trailing slash
             self._base_url_with_trailing_slash = self.base_url + '/'
 
-        self.company_id = company_id
-        self._company_id_query_params = {'company_id': self.company_id}
-
         super().__init__(client_id, client_secret)
 
-    def create(self, payload: Dict) -> Any:
+    def create_virtual_data_source(self, company_id: str, payload: Dict) -> Any:
         """Create a virtual data source for a company"""
         logger.debug(
-            f'Creating virtual data source with display name {payload.get("display_name")} for company {self.company_id}'
+            f'Creating virtual data source with payload {payload} under company {company_id}'
         )
-        response = self.session.post(self.base_url, params=self._company_id_query_params)
+        response = self.session.post(self.base_url, params={'company_id': company_id})
         response.raise_for_status()
 
-    def get(self, slug: str) -> Dict[str, Any]:
+    def get_virtual_data_source(self, company_id: str, slug: str) -> Dict[str, Any]:
+        """Retrieve a virtual data source"""
+        logger.debug(f'Retrieving a virtual data source with slug {slug} under company {company_id}')
         url = urljoin(self._base_url_with_trailing_slash, slug)
-        response = self.session.get(url, params=self._company_id_query_params)
+        response = self.session.get(url, params={'company_id': company_id})
         response.raise_for_status()
         return response.json()['data']
 
-    def all(self) -> List[Dict[str, Any]]:
-        response = self.session.get(self.base_url, params=self._company_id_query_params)
+    def get_all_virtual_data_sources(self, company_id: str) -> List[Dict[str, Any]]:
+        """Retrieve all virtual data sources under a company"""
+        logger.debug(f'Retrieving all virtual data sources under company {company_id}')
+        response = self.session.get(self.base_url, params={'company_id': company_id})
         response.raise_for_status()
         return response.json()['data']
 
-    def update(self, slug: str, payload: Dict[str, Any]):
+    def update_virtual_data_source(self, company_id: str, slug: str, payload: Dict[str, Any]):
+        """Update a virtual data source"""
+        logger.debug(f'Updating virtual data source with slug {slug} under company {company_id} with payload {payload}')
         url = urljoin(self._base_url_with_trailing_slash, slug)
-        response = self.session.put(url, params=self._company_id_query_params, json=payload)
+        response = self.session.put(url, params={'company_id': company_id}, json=payload)
         response.raise_for_status()
 
-    def delete(self, slug: str):
+    def delete_virtual_data_source(self, company_id: str, slug: str):
+        """Delete a virtual data source"""
+        logger.debug(f'Deleting virtual data source with slug {slug} under company')
         url = urljoin(self._base_url_with_trailing_slash, slug)
-        response = self.session.delete(url, params=self._company_id_query_params)
+        response = self.session.delete(url, params={'company_id': company_id})
         response.raise_for_status()
-
-
-if __name__ == "__main__":
-    vdsc = VirtualDataSourceClient(company_id='50')
-    test = vdsc.all()
-    print('test')
