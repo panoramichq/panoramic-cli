@@ -10,9 +10,9 @@ from panoramic.cli.file_utils import (
     get_target_abs_filepath,
     write_yaml,
 )
-from panoramic.cli.scan import Scanner
-from panoramic.cli.refresh import Refresher
 from panoramic.cli.parser import load_scanned_tables
+from panoramic.cli.refresh import Refresher
+from panoramic.cli.scan import Scanner
 
 
 logger = logging.getLogger(__name__)
