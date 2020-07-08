@@ -27,11 +27,12 @@ class ModelClient(OAuth2Client):
         super().__init__(client_id, client_secret)
         self.base_url = base_url
 
-    def delete_model(self, name: str):
+    def delete_model(self, data_source: str, company_id: str, name: str):
         """Delete model with a given name."""
         url = urljoin(self.base_url, name)
         logger.debug(f'Deleting model with name: {name}')
-        response = self.session.delete(url, timeout=5)
+        params = {'virtual_data_source': data_source, 'company_id': company_id}
+        response = self.session.delete(url, params=params, timeout=5)
         response.raise_for_status()
 
     def upsert_model(self, data_source: str, company_id: str, model: Dict[str, Any]):

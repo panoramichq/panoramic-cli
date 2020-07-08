@@ -12,11 +12,11 @@ def mock_token_url(monkeypatch):
 @responses.activate
 def test_delete_model():
     responses.add(responses.POST, 'https://token/', json={'access_token': '123123'})
-    responses.add(responses.DELETE, 'https://diesel/model')
+    responses.add(responses.DELETE, 'https://diesel/model?virtual_data_source=test-source&company_id=test-company')
 
     client = ModelClient(base_url='https://diesel/', client_id='client-id', client_secret='client-secret')
 
-    client.delete_model('model')
+    client.delete_model('test-source', 'test-company', 'model')
 
     assert len(responses.calls) == 2
 
