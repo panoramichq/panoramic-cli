@@ -1,7 +1,7 @@
 import os
 
 
-BASE_URL = 'https://diesel.panoramicstg.com/api/v1/federated/model/'
+BASE_URL = 'https://diesel.panoramicprod.com/api/v1/federated/model/'
 
 
 def get_base_url() -> str:
