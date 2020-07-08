@@ -62,7 +62,12 @@ class VirtualDataSourceClient(OAuth2Client):
         super().__init__(client_id, client_secret)
 
     def create(self, payload: Dict) -> Any:
-        pass
+        """Create a virtual data source for a company"""
+        logger.debug(
+            f'Creating virtual data source with display name {payload.get("display_name")} for company {self.company_id}'
+        )
+        response = self.session.post(self.base_url, params=self._company_id_query_params)
+        response.raise_for_status()
 
     def get(self, slug: str) -> Dict[str, Any]:
         url = urljoin(self._base_url_with_trailing_slash, slug)
