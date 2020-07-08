@@ -32,6 +32,7 @@ class VirtualDataSourceClient(OAuth2Client):
 
     base_url: str
     _base_url_with_trailing_slash: str
+    _company_id_query_params: Dict[str, str]
 
     def __init__(
         self,
@@ -63,20 +64,21 @@ class VirtualDataSourceClient(OAuth2Client):
     def create(self, payload: Dict) -> Any:
         pass
 
-    def get(self, slug: str) -> VirtualDataSource:
+    def get(self, slug: str) -> Dict[str, Any]:
         url = urljoin(self._base_url_with_trailing_slash, slug)
         response = self.session.get(url, params=self._company_id_query_params)
         response.raise_for_status()
         return response.json()['data']
 
-    def all(self) -> List[Dict]:
+    def all(self) -> List[Dict[str, Any]]:
         response = self.session.get(self.base_url, params=self._company_id_query_params)
         response.raise_for_status()
         return response.json()['data']
 
-    def update(self, slug: str, payload: Any):
+    def update(self, slug: str, payload: Dict[str, Any]):
         url = urljoin(self._base_url_with_trailing_slash, slug)
-        pass
+        response = self.session.put(url, params=self._company_id_query_params, json=payload)
+        response.raise_for_status()
 
     def delete(self, slug: str):
         url = urljoin(self._base_url_with_trailing_slash, slug)
