@@ -16,8 +16,3 @@ class ScanException(Exception):
 class RefreshException(Exception):
 
     """Generic refresh error."""
-
-
-class ParserException(Exception):
-
-    """Generic parser error."""
