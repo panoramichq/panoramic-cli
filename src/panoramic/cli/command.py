@@ -13,7 +13,7 @@ from panoramic.cli.file_utils import (
 def scan(source_id: str, filter: Optional[str]):
     from panoramic.cli.scan import Scanner
     from panoramic.cli.refresh import Refresher
-    from panoramic.cli.parser import load_scanned_table
+    from panoramic.cli.parser import load_scanned_tables
 
     scanner = Scanner(source_id)
     refresher = Refresher(source_id)
@@ -26,8 +26,9 @@ def scan(source_id: str, filter: Optional[str]):
             refresher.refresh_table(table_name)
             raw_columns = scanner.scan_columns(table_filter=table_name)
 
-            scanned_table = load_scanned_table(raw_columns)
+            scanned_tables = load_scanned_tables(raw_columns)
+            scanned_table = scanned_tables[0]
             abs_filepath = get_target_abs_filepath(
-                scanned_table.table_file_id, FileExtension.model_yaml, FilePackage.scanned
+                scanned_table.table_file_name, FileExtension.model_yaml, FilePackage.scanned
             )
             write_yaml(abs_filepath, scanned_table.to_dict())

@@ -1,90 +1,67 @@
+import itertools
 import logging
-import re
+import operator
 
 from typing import Dict, Iterable, List
 
-from panoramic.cli.errors import ParserException
+import pydash
+
 from panoramic.cli.pano_model import (
+    DataSourceType,
     PanoModel,
     PanoModelDataSource,
     PanoModelField,
 )
-from panoramic.cli.util import peek_iterator
 
 
 logger = logging.getLogger(__name__)
 
+DREMIO_DELIMITER = '.'
 
-def _get_table_path(col: Dict) -> str:
+
+def _remove_source_from_path(table_schema: str):
     """
-    Get full table path
+    Return dremio path without the source id at the start. It can be an empty string in some cases.
     """
-    return '.'.join([col['table_schema'], col['table_name']])
+    if DREMIO_DELIMITER in table_schema:
+        _, schema_path = table_schema.split(DREMIO_DELIMITER, 1)
+        return schema_path
+    else:
+        return table_schema
 
 
-def _get_column_path(col: Dict) -> str:
-    """
-    Get full table path
-    """
-    return '.'.join([col['table_schema'], col['table_name'], col['column_name']])
-
-
-def _get_field_data_type(col: Dict) -> str:
-    """
-    Get column data type
-    """
-    # TODO: What is the correct format? Talk to @jakub
-    # TODO: Escape
-    return col['data_type']
-
-
-def _get_field_transformation(col: Dict) -> str:
-    """
-    Get column data type
-    """
-    # TODO: What is the correct format? Talk to @jakub
-    # TODO: Escape
-    return col['table_name']
-
-
-def _get_field_map(col: Dict) -> List[str]:
-    """
-    Get column data type
-    """
-    # TODO: What is the correct format? Talk to @jakub
-    # TODO: Escape
-    return [_get_column_path(col)]
-
-
-def _get_table_file_id(col: Dict) -> str:
-    """
-    Attempt to get unique and fs/url safe file name from table path
-    """
-    # TODO: Make it unique, figure out details with @jakub
-    # TODO: Make it safe for fs/url, figure out details with @jakub
-    return re.sub(r'\W+', '', _get_table_path(col))
-
-
-def load_scanned_table(raw_columns: Iterable[Dict]) -> PanoModel:
+def load_scanned_tables(raw_columns: Iterable[Dict]) -> List[PanoModel]:
     """
     Load result of metadata table columns scan into Table Model
     """
-    col, raw_columns = peek_iterator(raw_columns)
-    table_path = _get_table_path(col)
-    table_file_id = _get_table_file_id(col)
-    data_source = PanoModelDataSource(sql=table_path)
-    fields = []
+    models = []
+    columns_grouped = itertools.groupby(raw_columns, operator.itemgetter('table_schema', 'table_name'))
 
-    for col in raw_columns:
-        if table_path != _get_table_path(col):
-            raise ParserException('Unable to parse columns from multiple tables')
+    for (table_schema, table_name), columns in columns_grouped:
+        fields = []
+        schema_path = _remove_source_from_path(table_schema)
+        table_path = '.'.join([schema_path, table_name])
 
-        fields.append(
-            PanoModelField(
-                data_type=_get_field_data_type(col),
-                transformation=_get_field_transformation(col),
-                field_map=_get_field_map(col),
+        for col in columns:
+            data_type = col['data_type']
+            column_name = col['column_name']
+
+            fields.append(
+                PanoModelField(
+                    data_type=data_type,
+                    transformation=column_name,
+                    field_map=[pydash.slugify('.'.join([table_path, column_name]), separator="_").lower()],
+                )
+            )
+
+        models.append(
+            PanoModel(
+                table_file_name=pydash.slugify(table_path, separator="_").lower(),
+                data_source=PanoModelDataSource(path=table_path, data_source_type=DataSourceType.sql.value),
+                fields=fields,
+                joins=[],
+                identifiers=[],
             )
         )
 
-    return PanoModel(table_file_id=table_file_id, data_source=data_source, fields=fields, joins=[], identifiers=[])
+    return models

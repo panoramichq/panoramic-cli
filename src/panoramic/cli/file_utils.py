@@ -33,11 +33,11 @@ def get_work_dir_abs_filepath() -> Path:
     return Path().absolute()
 
 
-def get_target_abs_filepath(table_file_id: str, file_extension: FileExtension, file_package: FilePackage) -> str:
+def get_target_abs_filepath(table_file_name: str, file_extension: FileExtension, file_package: FilePackage) -> str:
     """
     Get target file abs filepath
     """
-    file_name = f'{table_file_id}{file_extension.value}'
+    file_name = f'{table_file_name}{file_extension.value}'
     return get_work_dir_abs_filepath() / file_package.value / file_name
 
 
