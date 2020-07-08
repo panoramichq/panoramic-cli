@@ -1,4 +1,4 @@
-from panoramic.cli.cli import cli
+from panoramic.cli import cli
 
 
 if __name__ == '__main__':

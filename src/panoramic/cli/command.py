@@ -1,3 +1,5 @@
+import logging
+
 from typing import Optional
 
 import click
@@ -8,13 +10,16 @@ from panoramic.cli.file_utils import (
     get_target_abs_filepath,
     write_yaml,
 )
+from panoramic.cli.scan import Scanner
+from panoramic.cli.refresh import Refresher
+from panoramic.cli.parser import load_scanned_tables
+
+
+logger = logging.getLogger(__name__)
 
 
 def scan(source_id: str, filter: Optional[str]):
-    from panoramic.cli.scan import Scanner
-    from panoramic.cli.refresh import Refresher
-    from panoramic.cli.parser import load_scanned_tables
-
+    """Scan all metdata for given source and filter."""
     scanner = Scanner(source_id)
     refresher = Refresher(source_id)
     tables = scanner.scan_tables(filter)
@@ -23,12 +28,17 @@ def scan(source_id: str, filter: Optional[str]):
             # drop source name from schema
             sourceless_schema = table['table_schema'].split('.', 1)[1]
             table_name = f'{sourceless_schema}.{table["table_name"]}'
-            refresher.refresh_table(table_name)
-            raw_columns = scanner.scan_columns(table_filter=table_name)
+            try:
+                refresher.refresh_table(table_name)
+                raw_columns = scanner.scan_columns(table_filter=table_name)
 
-            scanned_tables = load_scanned_tables(raw_columns)
-            scanned_table = scanned_tables[0]
-            abs_filepath = get_target_abs_filepath(
-                scanned_table.table_file_name, FileExtension.model_yaml, FilePackage.scanned
-            )
-            write_yaml(abs_filepath, scanned_table.to_dict())
+                scanned_tables = load_scanned_tables(raw_columns)
+                scanned_table = scanned_tables[0]
+                abs_filepath = get_target_abs_filepath(
+                    scanned_table.table_file_name, FileExtension.model_yaml, FilePackage.scanned
+                )
+                write_yaml(abs_filepath, scanned_table.to_dict())
+            except Exception:
+                print(f'Failed to scan table {table_name}')
+                logger.debug(f'Failed to scan table {table_name}', exc_info=True)
+                continue
