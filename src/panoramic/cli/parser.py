@@ -2,7 +2,7 @@ import itertools
 import logging
 import operator
 
-from typing import Dict, Iterable, List
+from typing import Dict, Iterable, List, Set
 
 import pydash
 
@@ -40,7 +40,7 @@ def load_scanned_tables(raw_columns: Iterable[Dict], api_version: str) -> List[P
 
     for (table_schema, table_name), columns in columns_grouped:
         fields = []
-        field_map_slugs = set()
+        field_map_slugs: Set[str] = set()
         schema_path = _remove_source_from_path(table_schema)
         table_path = '.'.join([schema_path, table_name])
 
