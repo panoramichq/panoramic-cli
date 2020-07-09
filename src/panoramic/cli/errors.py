@@ -21,3 +21,8 @@ class RefreshException(Exception):
 class UniqueSlugException(Exception):
 
     """Generic unique slug error."""
+
+
+class UnexpectedTablesException(Exception):
+
+    """Generic unique slug error."""

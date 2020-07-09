@@ -13,6 +13,7 @@ from panoramic.cli.file_utils import (
 from panoramic.cli.parser import load_scanned_tables
 from panoramic.cli.refresh import Refresher
 from panoramic.cli.scan import Scanner
+from panoramic.cli.errors import UnexpectedTablesException
 
 
 logger = logging.getLogger(__name__)
@@ -35,7 +36,10 @@ def scan(source_id: str, filter: Optional[str]):
                 raw_columns = scanner.scan_columns(table_filter=table_name)
 
                 scanned_tables = load_scanned_tables(raw_columns, api_version)
+                if len(scanned_tables) > 1:
+                    raise UnexpectedTablesException('Found unexpected table')
                 scanned_table = scanned_tables[0]
+
                 abs_filepath = get_target_abs_filepath(
                     scanned_table.table_file_name, FileExtension.model_yaml, FilePackage.scanned
                 )
