@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import List
+from typing import List, Dict, Any
 
 
 class DataSourceType(Enum):
@@ -22,7 +22,7 @@ class PanoModelDataSource:
         self.path = path
         self.data_source_type = data_source_type
 
-    def to_dict(self):
+    def to_dict(self) -> Dict[str, Any]:
         return {'path': self.path, 'data_source_type': self.data_source_type}
 
 
@@ -40,7 +40,7 @@ class PanoModelField:
         self.transformation = transformation
         self.data_type = data_type
 
-    def to_dict(self):
+    def to_dict(self) -> Dict[str, Any]:
         return {'field_map': self.field_map, 'transformation': self.transformation, 'data_type': self.data_type}
 
 
@@ -58,7 +58,7 @@ class PanoModelJoin:
         self.join_type = join_type
         self.relationship = relationship
 
-    def to_dict(self):
+    def to_dict(self) -> Dict[str, Any]:
         return {'field': self.field, 'join_type': self.join_type, 'relationship': self.relationship}
 
 
@@ -90,7 +90,7 @@ class PanoModel:
         self.identifiers = identifiers
         self.api_version = api_version
 
-    def to_dict(self):
+    def to_dict(self) -> Dict[str, Any]:
         # The "table_file_name" is used as file name and not being exported
         return {
             'data_source': self.data_source.to_dict(),

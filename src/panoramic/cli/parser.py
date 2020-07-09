@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 DREMIO_DELIMITER = '.'
 
 
-def _remove_source_from_path(table_schema: str):
+def _remove_source_from_path(table_schema: str) -> str:
     """
     Return dremio path without the source id at the start. It can be an empty string in some cases.
     """

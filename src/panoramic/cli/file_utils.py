@@ -2,7 +2,7 @@ import logging
 
 from enum import Enum
 from pathlib import Path
-from typing import Dict
+from typing import Dict, Any
 
 import yaml
 
@@ -49,7 +49,7 @@ def ensure_dir(abs_filepath: str) -> None:
     path_obj.mkdir(parents=True, exist_ok=True)
 
 
-def write_yaml(abs_filepath: str, yaml_dict: Dict) -> None:
+def write_yaml(abs_filepath: str, yaml_dict: Dict[str, Any]) -> None:
     """
     Writes yaml dict to path
     """
@@ -59,7 +59,7 @@ def write_yaml(abs_filepath: str, yaml_dict: Dict) -> None:
         yaml.dump(yaml_dict, f, default_flow_style=False)
 
 
-def read_yaml(abs_filepath: str) -> Dict:
+def read_yaml(abs_filepath: str) -> Dict[str, Any]:
     """
     Reads yaml dict from path
     """
