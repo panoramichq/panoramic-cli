@@ -12,7 +12,7 @@ from panoramic.cli.pano_model import (
     PanoModelDataSource,
     PanoModelField,
 )
-from panoramic.cli.util import generate_unique_slug
+from panoramic.cli.util import slug_string
 from panoramic.cli.errors import MissingSchemaException
 
 
@@ -41,7 +41,6 @@ def load_scanned_tables(raw_columns: Iterable[Dict], api_version: str) -> List[P
 
     for (table_schema, table_name), columns in columns_grouped:
         fields = []
-        field_map_slugs: Set[str] = set()
         schema_path = _remove_source_from_path(table_schema)
         table_path = '.'.join([schema_path, table_name])
 
@@ -49,10 +48,13 @@ def load_scanned_tables(raw_columns: Iterable[Dict], api_version: str) -> List[P
             data_type = col['data_type']
             column_name = col['column_name']
 
-            field_map_item = generate_unique_slug('.'.join([table_path, column_name]), field_map_slugs)
-            field_map_slugs.add(field_map_item)
-
-            fields.append(PanoModelField(data_type=data_type, transformation=column_name, field_map=[field_map_item],))
+            fields.append(
+                PanoModelField(
+                    data_type=data_type,
+                    transformation=column_name,
+                    field_map=[slug_string('.'.join([table_path, column_name]))],
+                )
+            )
 
         models.append(
             PanoModel(

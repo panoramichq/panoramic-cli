@@ -18,11 +18,6 @@ class RefreshException(Exception):
     """Generic refresh error."""
 
 
-class UniqueSlugException(Exception):
-
-    """Generic unique slug error."""
-
-
 class UnexpectedTablesException(Exception):
 
     """Generic unexpected table error."""
