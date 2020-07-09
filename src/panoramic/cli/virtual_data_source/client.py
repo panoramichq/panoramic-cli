@@ -32,7 +32,7 @@ class VirtualDataSourceClient(OAuth2Client):
         client_id: Optional[str] = None,
         client_secret: Optional[str] = None,
     ):
-        token = get_token()
+        token = token if token is not None else get_token()
         client_id = client_id if client_id is not None else get_client_id()
         client_secret = client_secret if client_secret is not None else get_client_secret()
 
