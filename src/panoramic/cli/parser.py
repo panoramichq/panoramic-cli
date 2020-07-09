@@ -33,7 +33,7 @@ def _remove_source_from_path(table_schema: str) -> str:
 
 def load_scanned_tables(raw_columns: Iterable[Dict], api_version: str) -> List[PanoModel]:
     """
-    Load result of metadata table columns scan into Table Model
+    Load result of metadata table columns scan into Model
     """
     models = []
     columns_grouped = itertools.groupby(raw_columns, operator.itemgetter('table_schema', 'table_name'))
