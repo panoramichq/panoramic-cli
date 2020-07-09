@@ -16,3 +16,8 @@ class ScanException(Exception):
 class RefreshException(Exception):
 
     """Generic refresh error."""
+
+
+class UniqueSlugException(Exception):
+
+    """Generic unique slug error."""
