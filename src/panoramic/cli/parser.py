@@ -2,10 +2,11 @@ import itertools
 import logging
 import operator
 
-from typing import Dict, Iterable, List, Set
+from typing import Dict, Iterable, List
 
 import pydash
 
+from panoramic.cli.errors import MissingSchemaException
 from panoramic.cli.pano_model import (
     DataSourceType,
     PanoModel,
@@ -13,7 +14,6 @@ from panoramic.cli.pano_model import (
     PanoModelField,
 )
 from panoramic.cli.util import slug_string
-from panoramic.cli.errors import MissingSchemaException
 
 
 logger = logging.getLogger(__name__)
