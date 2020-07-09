@@ -28,7 +28,7 @@ def _remove_source_from_path(table_schema: str):
         _, schema_path = table_schema.split(DREMIO_DELIMITER, 1)
         return schema_path
     else:
-        return table_schema
+        return ''
 
 
 def load_scanned_tables(raw_columns: Iterable[Dict], api_version: str) -> List[PanoModel]:
