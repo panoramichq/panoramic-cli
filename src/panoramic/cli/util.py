@@ -1,5 +1,6 @@
 import random
 import string
+
 from typing import Set
 
 import pydash
@@ -30,7 +31,7 @@ def generate_unique_slug(input_str: str, existing_slugs: Set[str]) -> str:
     if slug not in existing_slugs:
         return slug
 
-    for index in range(10):
+    for _ in range(10):
         candidate = f'{slug}{random_alphabet_string(5)}'.lower()
 
         if candidate not in existing_slugs:
