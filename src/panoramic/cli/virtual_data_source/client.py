@@ -1,29 +1,16 @@
 import logging
-from dataclasses import dataclass
 
 from typing import Any, Dict, Optional, List
 
 from urllib.parse import urljoin
 
+import requests
 from panoramic.auth import OAuth2Client
-from panoramic.cli.config.auth import get_client_id, get_client_secret
+from panoramic.cli.config.auth import get_client_id, get_client_secret, get_token
 from panoramic.cli.config.virtual_data_source import get_base_url
 
 
 logger = logging.getLogger(__name__)
-
-
-class VirtualDataSource:
-    slug: str
-    display_name: str
-
-    def __init__(self, slug: str, display_name: str):
-        self.slug = slug
-        self.display_name = display_name
-
-    @classmethod
-    def from_dict(cls, data: Dict) -> 'VirtualDataSource':
-        return cls(slug=data['slug'], display_name=data['display_name'])
 
 
 class VirtualDataSourceClient(OAuth2Client):
@@ -35,8 +22,13 @@ class VirtualDataSourceClient(OAuth2Client):
     _company_id_query_params: Dict[str, str]
 
     def __init__(
-        self, base_url: Optional[str] = None, client_id: Optional[str] = None, client_secret: Optional[str] = None
+        self,
+        base_url: Optional[str] = None,
+        token: Optional[str] = None,
+        client_id: Optional[str] = None,
+        client_secret: Optional[str] = None,
     ):
+        token = get_token()
         client_id = client_id if client_id is not None else get_client_id()
         client_secret = client_secret if client_secret is not None else get_client_secret()
 
@@ -52,13 +44,15 @@ class VirtualDataSourceClient(OAuth2Client):
             # base_url is in it's correct form - without trailing slash
             self._base_url_with_trailing_slash = self.base_url + '/'
 
-        super().__init__(client_id, client_secret)
+        if token:
+            self.session = requests.Session()
+            self.session.headers.update(**{'x-auth-token': token})
+        else:
+            super().__init__(client_id, client_secret)
 
     def create_virtual_data_source(self, company_id: str, payload: Dict) -> Any:
         """Create a virtual data source for a company"""
-        logger.debug(
-            f'Creating virtual data source with payload {payload} under company {company_id}'
-        )
+        logger.debug(f'Creating virtual data source with payload {payload} under company {company_id}')
         response = self.session.post(self.base_url, params={'company_id': company_id})
         response.raise_for_status()
 
@@ -85,6 +79,7 @@ class VirtualDataSourceClient(OAuth2Client):
         response.raise_for_status()
 
     def delete_virtual_data_source(self, company_id: str, slug: str):
+        # FIXME: implement route
         """Delete a virtual data source"""
         logger.debug(f'Deleting virtual data source with slug {slug} under company')
         url = urljoin(self._base_url_with_trailing_slash, slug)

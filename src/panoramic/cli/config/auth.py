@@ -5,6 +5,10 @@ from pathlib import Path
 import yaml
 
 
+def get_token() -> str:
+    return os.environ['PANO_AUTH_TOKEN']
+
+
 def get_client_id() -> str:
     try:
         return os.environ['PANO_CLIENT_ID']
