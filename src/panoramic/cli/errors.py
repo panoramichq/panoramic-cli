@@ -26,3 +26,8 @@ class UniqueSlugException(Exception):
 class UnexpectedTablesException(Exception):
 
     """Generic unexpected table error."""
+
+
+class MissingSchemaException(Exception):
+
+    """Generic missing schema error."""
