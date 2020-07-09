@@ -4,6 +4,7 @@ from typing import Optional
 
 import click
 
+from panoramic.cli.errors import UnexpectedTablesException
 from panoramic.cli.file_utils import (
     FileExtension,
     FilePackage,
@@ -13,7 +14,6 @@ from panoramic.cli.file_utils import (
 from panoramic.cli.parser import load_scanned_tables
 from panoramic.cli.refresh import Refresher
 from panoramic.cli.scan import Scanner
-from panoramic.cli.errors import UnexpectedTablesException
 
 
 logger = logging.getLogger(__name__)
