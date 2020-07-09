@@ -25,4 +25,4 @@ class UniqueSlugException(Exception):
 
 class UnexpectedTablesException(Exception):
 
-    """Generic unique slug error."""
+    """Generic unexpected table error."""

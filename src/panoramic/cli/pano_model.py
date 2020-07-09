@@ -4,7 +4,7 @@ from typing import List
 
 class DataSourceType(Enum):
     """
-    Enumeration with all available file extensions
+    Enumeration with all available datasource types
     """
 
     sql = 'sql'
