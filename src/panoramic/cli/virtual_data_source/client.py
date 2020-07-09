@@ -1,12 +1,16 @@
 import logging
 
-from typing import Any, Dict, Optional, List
-
+from typing import Any, Dict, List, Optional
 from urllib.parse import urljoin
 
 import requests
+
 from panoramic.auth import OAuth2Client
-from panoramic.cli.config.auth import get_client_id, get_client_secret, get_token
+from panoramic.cli.config.auth import (
+    get_client_id,
+    get_client_secret,
+    get_token,
+)
 from panoramic.cli.config.virtual_data_source import get_base_url
 
 
