@@ -2,7 +2,6 @@ from panoramic.cli.parser import _remove_source_from_path, load_scanned_tables
 
 
 def test_remove_source_from_path():
-    assert _remove_source_from_path('sc1') == ''
     assert _remove_source_from_path('sc1.sch') == 'sch'
     assert _remove_source_from_path('sc1.db.sch') == 'db.sch'
 
