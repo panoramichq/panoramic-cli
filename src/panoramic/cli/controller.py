@@ -16,10 +16,10 @@ def reconcile_data_sources(current_state: VirtualState, desired_state: VirtualSt
     ids_to_update = current_data_sources_by_id.keys() & desired_data_sources_by_id.keys()
 
     for id_ in ids_to_delete:
-        yield Action.with_current(current_data_sources_by_id[id_])
+        yield Action(current=current_data_sources_by_id[id_])
 
     for id_ in ids_to_create:
-        yield Action.with_desired(desired_data_sources_by_id[id_])
+        yield Action(desired=desired_data_sources_by_id[id_])
 
     for id_ in ids_to_update:
         yield Action(current=current_data_sources_by_id[id_], desired=desired_data_sources_by_id[id_])
@@ -38,10 +38,10 @@ def reconcile_models(current_state: VirtualState, desired_state: VirtualState) -
     ids_to_update = current_models_by_id.keys() & desired_models_by_id.keys()
 
     for id_ in ids_to_delete:
-        yield Action.with_current(current_models_by_id[id_])
+        yield Action(current=current_models_by_id[id_])
 
     for id_ in ids_to_create:
-        yield Action.with_desired(desired_models_by_id[id_])
+        yield Action(desired=desired_models_by_id[id_])
 
     for id_ in ids_to_update:
         yield Action(current=current_models_by_id[id_], desired=desired_models_by_id[id_])

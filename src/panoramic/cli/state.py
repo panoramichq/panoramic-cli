@@ -29,14 +29,6 @@ class Action(Generic[T]):
         self.current = current
         self.desired = desired
 
-    @staticmethod
-    def with_desired(desired: T):
-        return Action(desired=desired)
-
-    @staticmethod
-    def with_current(current: T):
-        return Action(current=current)
-
 
 class ActionList(Generic[T]):
 
