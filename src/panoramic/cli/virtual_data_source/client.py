@@ -54,38 +54,30 @@ class VirtualDataSourceClient(OAuth2Client):
         else:
             super().__init__(client_id, client_secret)
 
-    def create_virtual_data_source(self, company_id: str, payload: Dict) -> Any:
+    def upsert_virtual_data_source(self, company_id: str, company_slug: str, payload: Dict):
         """Create a virtual data source for a company"""
-        logger.debug(f'Creating virtual data source with payload {payload} under company {company_id}')
-        response = self.session.post(self.base_url, params={'company_id': company_id})
+        logger.debug(f'Upserting virtual data source with payload {payload} under company {company_id}|{company_slug}')
+        response = self.session.put(self.base_url, params={'company_id': company_id, 'company_slug': company_slug})
         response.raise_for_status()
 
-    def get_virtual_data_source(self, company_id: str, slug: str) -> Dict[str, Any]:
+    def get_virtual_data_source(self, company_id: str, company_slug: str, slug: str) -> Dict[str, Any]:
         """Retrieve a virtual data source"""
-        logger.debug(f'Retrieving a virtual data source with slug {slug} under company {company_id}')
+        logger.debug(f'Retrieving a virtual data source with slug {slug} under company {company_id}|{company_slug}')
         url = urljoin(self._base_url_with_trailing_slash, slug)
-        response = self.session.get(url, params={'company_id': company_id})
+        response = self.session.get(url, params={'company_id': company_id, 'company_slug': company_slug})
         response.raise_for_status()
         return response.json()['data']
 
-    def get_all_virtual_data_sources(self, company_id: str) -> List[Dict[str, Any]]:
+    def get_all_virtual_data_sources(self, company_id: str, company_slug: str) -> List[Dict[str, Any]]:
         """Retrieve all virtual data sources under a company"""
-        logger.debug(f'Retrieving all virtual data sources under company {company_id}')
-        response = self.session.get(self.base_url, params={'company_id': company_id})
+        logger.debug(f'Retrieving all virtual data sources under company {company_id}|{company_slug}')
+        response = self.session.get(self.base_url, params={'company_id': company_id, 'company_slug': company_slug})
         response.raise_for_status()
         return response.json()['data']
 
-    def update_virtual_data_source(self, company_id: str, slug: str, payload: Dict[str, Any]):
-        """Update a virtual data source"""
-        logger.debug(f'Updating virtual data source with slug {slug} under company {company_id} with payload {payload}')
-        url = urljoin(self._base_url_with_trailing_slash, slug)
-        response = self.session.put(url, params={'company_id': company_id}, json=payload)
-        response.raise_for_status()
-
-    def delete_virtual_data_source(self, company_id: str, slug: str):
-        # FIXME: implement route
+    def delete_virtual_data_source(self, company_id: str, company_slug: str, slug: str):
         """Delete a virtual data source"""
-        logger.debug(f'Deleting virtual data source with slug {slug} under company')
+        logger.debug(f'Deleting virtual data source with slug {slug} under company {company_id}|{company_slug}')
         url = urljoin(self._base_url_with_trailing_slash, slug)
-        response = self.session.delete(url, params={'company_id': company_id})
+        response = self.session.delete(url, params={'company_id': company_id, 'company_slug': company_slug})
         response.raise_for_status()
