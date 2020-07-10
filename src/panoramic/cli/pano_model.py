@@ -18,6 +18,14 @@ class PanoModelField:
     def to_dict(self) -> Dict[str, Any]:
         return {'field_map': self.field_map, 'transformation': self.transformation, 'data_type': self.data_type}
 
+    @classmethod
+    def from_dict(cls, inputs: Dict[str, Any]) -> 'PanoModelField':
+        return cls(
+            field_map=inputs.get('field_map', []),
+            transformation=inputs['transformation'],
+            data_type=inputs['data_type'],
+        )
+
 
 class PanoModelJoin:
     """
@@ -35,6 +43,10 @@ class PanoModelJoin:
 
     def to_dict(self) -> Dict[str, Any]:
         return {'field': self.field, 'join_type': self.join_type, 'relationship': self.relationship}
+
+    @classmethod
+    def from_dict(cls, inputs: Dict[str, Any]) -> 'PanoModelJoin':
+        return cls(field=inputs['field'], join_type=inputs['join_type'], relationship=inputs['relationship'])
 
 
 class PanoModel:
@@ -74,3 +86,39 @@ class PanoModel:
             'identifiers': self.identifiers,
             'api_version': self.api_version,
         }
+
+    @classmethod
+    def from_dict(cls, inputs: Dict[str, Any]) -> 'PanoModel':
+        return cls(
+            table_file_name=inputs['table_file_name'],
+            data_source=inputs['data_source'],
+            fields=[PanoModelField.from_dict(x) for x in inputs.get('fields', [])],
+            joins=[PanoModelJoin.from_dict(x) for x in inputs.get('joins', [])],
+            identifiers=inputs.get('identifiers', []),
+            api_version=inputs['api_version'],
+        )
+
+
+class PanoDataSource:
+    """
+    Pano Data Source
+    """
+
+    data_source_slug: str
+    display_name: str
+
+    def __init__(
+        self, data_source_slug: str, display_name: str,
+    ):
+        self.data_source_slug = data_source_slug
+        self.display_name = display_name
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            'data_source_slug': self.data_source_slug,
+            'display_name': self.display_name,
+        }
+
+    @classmethod
+    def from_dict(cls, inputs: Dict[str, Any]) -> 'PanoDataSource':
+        return cls(data_source_slug=inputs['data_source_slug'], display_name=inputs['display_name'])
