@@ -12,7 +12,7 @@ class Origin(Enum):
     REMOTE = 'REMOTE'
 
 
-T = TypeVar('T', bound=Actionable)
+T = TypeVar('T', covariant=True, bound=Actionable)
 
 
 class Action(Generic[T]):
@@ -36,6 +36,10 @@ class ActionList(Generic[T]):
 
     actions: List[Action[T]]
     direction: Tuple[Origin, Origin]
+
+    def __init__(self, *, actions: List[Action[T]], direction: Tuple[Origin, Origin]):
+        self.actions = actions
+        self.direction = direction
 
 
 class VirtualState:

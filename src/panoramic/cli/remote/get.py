@@ -12,7 +12,7 @@ def get_data_sources(company_name: str, *, limit: int = 100) -> Iterable[PanoDat
     client = VirtualDataSourceClient()
     offset = 0
     while True:
-        sources = client.get_virtual_data_sources(company_name, offset=offset, limit=limit)
+        sources = client.get_all_virtual_data_sources(company_name, offset=offset, limit=limit)
         yield from (PanoDataSource.from_dict(s) for s in sources)
         if len(sources) < limit:
             # last page
@@ -37,6 +37,8 @@ def get_models(data_source: str, company_name: str, *, limit: int = 100) -> Iter
 
 def get_state(company_name: str) -> VirtualState:
     """Build a representation of what VDS and models are on remote."""
-    data_sources = get_data_sources(company_name)
-    models = list(itertools.chain(get_models(source.data_source_slug, company_name) for source in data_sources))
+    data_sources = list(get_data_sources(company_name))
+    models = list(
+        itertools.chain.from_iterable(get_models(source.data_source_slug, company_name) for source in data_sources)
+    )
     return VirtualState.remote(data_sources=data_sources, models=models)

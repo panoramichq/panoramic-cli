@@ -31,7 +31,7 @@ def get_work_dir_abs_filepath() -> Path:
     return Path().absolute()
 
 
-def get_target_abs_filepath(table_file_name: str, file_extension: FileExtension, file_package: FilePackage) -> str:
+def get_target_abs_filepath(table_file_name: str, file_extension: FileExtension, file_package: FilePackage) -> Path:
     """
     Get target file abs filepath
     """
@@ -39,15 +39,15 @@ def get_target_abs_filepath(table_file_name: str, file_extension: FileExtension,
     return get_work_dir_abs_filepath() / file_package.value / file_name
 
 
-def ensure_dir(abs_filepath: str) -> None:
+def ensure_dir(abs_filepath: Path):
     """
     Ensure parent directory exists.
     """
-    path_obj = Path(abs_filepath).parent
+    path_obj = abs_filepath.parent
     path_obj.mkdir(parents=True, exist_ok=True)
 
 
-def write_yaml(abs_filepath: str, yaml_dict: Dict[str, Any]) -> None:
+def write_yaml(abs_filepath: Path, yaml_dict: Dict[str, Any]):
     """
     Writes yaml dict to path
     """
@@ -64,3 +64,8 @@ def read_yaml(abs_filepath: str) -> Dict[str, Any]:
     logger.debug(f'Read yaml {abs_filepath}')
     with open(abs_filepath, 'r') as f:
         return yaml.safe_load(f)
+
+
+def delete_file(abs_filepath: Path):
+    """Delete file at given path."""
+    abs_filepath.unlink(missing_ok=True)

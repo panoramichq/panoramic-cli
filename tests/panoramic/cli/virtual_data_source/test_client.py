@@ -13,15 +13,13 @@ def mock_token_url(monkeypatch):
 def test_upsert_virtual_data_source():
     responses.add(responses.POST, 'https://token/', json={'access_token': '123123'})
     responses.add(
-        responses.PUT,
-        'https://diesel/virtual?company_id=123&company_slug=company',
-        json={'display_name': 'test', 'slug': 'bug'},
+        responses.PUT, 'https://diesel/virtual?company_slug=test-company', json={'display_name': 'test', 'slug': 'bug'},
     )
 
     client = VirtualDataSourceClient(
         base_url='https://diesel/virtual/', client_id='client-id', client_secret='client-secret'
     )
-    client.upsert_virtual_data_source('123', 'company', {'display_name': 'test', 'slug': 'bug'})
+    client.upsert_virtual_data_source('test-company', {'display_name': 'test', 'slug': 'bug'})
 
 
 @responses.activate
@@ -30,31 +28,31 @@ def test_get_all_virtual_data_sources():
 
     fake_source = {'display_name': 'virtual_source', 'company_id': '50', 'slug': 'made_up_source'}
     responses.add(
-        responses.GET, 'https://diesel/virtual?company_id=50&company_slug=company', json={'data': [fake_source]},
+        responses.GET,
+        'https://diesel/virtual?company_slug=test-company&offset=200&limit=100',
+        json={'data': [fake_source]},
     )
 
     client = VirtualDataSourceClient(
         base_url='https://diesel/virtual/', client_id='client-id', client_secret='client-secret'
     )
 
-    assert client.get_all_virtual_data_sources(company_id='50', company_slug='company') == [fake_source]
+    assert client.get_all_virtual_data_sources('test-company', offset=200, limit=100) == [fake_source]
 
 
 @responses.activate
 def test_get_virtual_data_source():
     responses.add(responses.POST, 'https://token/', json={'access_token': '123123'})
 
-    fake_source = {'display_name': 'virtual_source', 'company_id': '50', 'slug': 'made_up_source'}
+    fake_source = {'display_name': 'virtual_source', 'company_id': '50', 'slug': 'test-source'}
     responses.add(
-        responses.GET,
-        'https://diesel/virtual/made_up_source?company_id=50&company_slug=company_slug',
-        json={'data': fake_source},
+        responses.GET, 'https://diesel/virtual/test-source?company_slug=test-company', json={'data': fake_source},
     )
 
     client = VirtualDataSourceClient(
         base_url='https://diesel/virtual/', client_id='client-id', client_secret='client-secret'
     )
-    remote_source = client.get_virtual_data_source('50', 'company_slug', fake_source['slug'])
+    remote_source = client.get_virtual_data_source('test-company', fake_source['slug'])
 
     assert remote_source == fake_source
 
@@ -62,9 +60,9 @@ def test_get_virtual_data_source():
 @responses.activate
 def test_delete_virtual_data_source():
     responses.add(responses.POST, 'https://token/', json={'access_token': '123123'})
-    responses.add(responses.DELETE, 'https://diesel/virtual/made_up_source?company_id=123&company_slug=boom')
+    responses.add(responses.DELETE, 'https://diesel/virtual/test-source?company_slug=test-company')
 
     client = VirtualDataSourceClient(
-        base_url='https://diesel/virtual', client_id='client-id', client_secret='client-secret'
+        base_url='https://diesel/virtual/', client_id='client-id', client_secret='client-secret'
     )
-    client.delete_virtual_data_source('123', 'boom', 'made_up_source')
+    client.delete_virtual_data_source('test-company', 'test-source')

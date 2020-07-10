@@ -84,6 +84,10 @@ class PanoModel(Actionable):
         self.identifiers = identifiers
         self.api_version = api_version
 
+    @property
+    def id(self):
+        return self.table_file_name
+
     def to_dict(self) -> Dict[str, Any]:
         # The "table_file_name" is used as file name and not being exported
         return {
@@ -117,6 +121,10 @@ class PanoDataSource(Actionable):
     ):
         self.data_source_slug = data_source_slug
         self.display_name = display_name
+
+    @property
+    def id(self):
+        return self.data_source_slug
 
     def to_dict(self) -> Dict[str, Any]:
         return {
