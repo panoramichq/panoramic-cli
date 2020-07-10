@@ -3,7 +3,10 @@ from typing import Optional
 
 import click
 
+from panoramic.cli.context import get_company_name
+from panoramic.cli.controller import reconcile
 from panoramic.cli.errors import UnexpectedTablesException
+from panoramic.cli.executor import execute
 from panoramic.cli.file_utils import (
     FileExtension,
     FilePackage,
@@ -13,9 +16,6 @@ from panoramic.cli.file_utils import (
 from panoramic.cli.parser import load_scanned_tables
 from panoramic.cli.refresh import Refresher
 from panoramic.cli.scan import Scanner
-from panoramic.cli.context import get_company_name
-from panoramic.cli.controller import reconcile
-from panoramic.cli.executor import execute
 from panoramic.cli.state import get_local, get_remote
 
 logger = logging.getLogger(__name__)
