@@ -13,10 +13,11 @@ from panoramic.cli.file_utils import (
     get_target_abs_filepath,
     write_yaml,
 )
+from panoramic.cli.local import get_state as get_local_state
 from panoramic.cli.parser import load_scanned_tables
 from panoramic.cli.refresh import Refresher
+from panoramic.cli.remote import get_state as get_remote_state
 from panoramic.cli.scan import Scanner
-from panoramic.cli.state import get_local, get_remote
 
 logger = logging.getLogger(__name__)
 
@@ -55,8 +56,8 @@ def scan(source_id: str, filter: Optional[str]):
 def pull():
     """Pull models and data sources from remote."""
     company_name = get_company_name()
-    remote_source = get_remote(company_name)
-    local_source = get_local(company_name)
+    remote_source = get_remote_state(company_name)
+    local_source = get_local_state(company_name)
 
     actions = reconcile(local_source, remote_source)
     execute(actions)
@@ -65,8 +66,8 @@ def pull():
 def push():
     """Push models and data sources to remote."""
     company_name = get_company_name()
-    remote_source = get_remote(company_name)
-    local_source = get_local(company_name)
+    remote_source = get_remote_state(company_name)
+    local_source = get_local_state(company_name)
 
     actions = reconcile(remote_source, local_source)
     execute(actions)

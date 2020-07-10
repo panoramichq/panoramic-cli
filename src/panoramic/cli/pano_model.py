@@ -1,16 +1,22 @@
+from abc import ABC
 from typing import Any, Dict, List
 
 
+class Actionable(ABC):
+
+    """Interface for object that you can perform actions on."""
+
+
 class PanoModelField:
-    """
-    Pano Model Field
-    """
+    """Field stored on a model."""
+
+    # TODO: Unify the naming
 
     field_map: List[str]
     transformation: str
     data_type: str
 
-    def __init__(self, field_map: List[str], transformation: str, data_type: str):
+    def __init__(self, *, field_map: List[str], transformation: str, data_type: str):
         self.field_map = field_map
         self.transformation = transformation
         self.data_type = data_type
@@ -28,15 +34,15 @@ class PanoModelField:
 
 
 class PanoModelJoin:
-    """
-    Pano Model Field
-    """
+    """Represent joins on other models."""
+
+    # TODO: Unify the naming
 
     field: str
     join_type: str
     relationship: str
 
-    def __init__(self, field: str, join_type: str, relationship: str):
+    def __init__(self, *, field: str, join_type: str, relationship: str):
         self.field = field
         self.join_type = join_type
         self.relationship = relationship
@@ -49,10 +55,10 @@ class PanoModelJoin:
         return cls(field=inputs['field'], join_type=inputs['join_type'], relationship=inputs['relationship'])
 
 
-class PanoModel:
-    """
-    Pano Model
-    """
+class PanoModel(Actionable):
+    """Model representing some table."""
+
+    # TODO: Unify the naming
 
     table_file_name: str
     data_source: str
@@ -63,6 +69,7 @@ class PanoModel:
 
     def __init__(
         self,
+        *,
         table_file_name: str,
         data_source: str,
         fields: List[PanoModelField],
@@ -99,10 +106,8 @@ class PanoModel:
         )
 
 
-class PanoDataSource:
-    """
-    Pano Data Source
-    """
+class PanoDataSource(Actionable):
+    """Group collection of models into one data source."""
 
     data_source_slug: str
     display_name: str
