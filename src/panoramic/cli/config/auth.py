@@ -1,8 +1,13 @@
 import os
 
 from pathlib import Path
+from typing import Optional
 
 import yaml
+
+
+def get_token() -> Optional[str]:
+    return os.environ.get('PANO_AUTH_TOKEN')
 
 
 def get_client_id() -> str:
