@@ -6,31 +6,7 @@ from requests.exceptions import HTTPError
 
 from panoramic.cli.errors import ScanException, SourceNotFoundException
 from panoramic.cli.metadata.client import TERMINAL_STATES, JobState
-from panoramic.cli.scan import Scanner, columns_to_tables
-
-
-def test_columns_to_tables():
-    assert list(
-        columns_to_tables(
-            [
-                {'table_name': 'table1', 'table_schema': 'schema1', 'column_name': 'col1',},
-                {'table_name': 'table1', 'table_schema': 'schema1', 'column_name': 'col2',},
-                {'table_name': 'table2', 'table_schema': 'schema1',},
-                {'table_name': 'table3', 'table_schema': 'schema2',},
-            ]
-        )
-    ) == [
-        {
-            'name': 'table1',
-            'schema': 'schema1',
-            'columns': [
-                {'table_name': 'table1', 'table_schema': 'schema1', 'column_name': 'col1',},
-                {'table_name': 'table1', 'table_schema': 'schema1', 'column_name': 'col2'},
-            ],
-        },
-        {'name': 'table2', 'schema': 'schema1', 'columns': [{'table_name': 'table2', 'table_schema': 'schema1',}]},
-        {'name': 'table3', 'schema': 'schema2', 'columns': [{'table_name': 'table3', 'table_schema': 'schema2',}]},
-    ]
+from panoramic.cli.scan import Scanner
 
 
 @patch('panoramic.cli.scan.MetadataClient')

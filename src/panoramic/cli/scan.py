@@ -1,6 +1,4 @@
-import itertools
 import logging
-import operator
 
 from typing import Dict, Iterable
 
@@ -14,15 +12,6 @@ from panoramic.cli.metadata.client import JobState
 
 
 logger = logging.getLogger(__name__)
-
-
-def columns_to_tables(columns: Iterable[Dict]) -> Iterable[Dict]:
-    """Map iterable of ordered column records to tables."""
-    columns_grouped = itertools.groupby(columns, operator.itemgetter('table_schema', 'table_name'))
-    return (
-        {'name': table_name, 'schema': table_schema, 'columns': list(columns)}
-        for (table_schema, table_name), columns in columns_grouped
-    )
 
 
 class Scanner:

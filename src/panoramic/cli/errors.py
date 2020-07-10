@@ -16,3 +16,13 @@ class ScanException(Exception):
 class RefreshException(Exception):
 
     """Generic refresh error."""
+
+
+class UnexpectedTablesException(Exception):
+
+    """Generic unexpected table error."""
+
+
+class MissingSchemaException(Exception):
+
+    """Generic missing schema error."""
