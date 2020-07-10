@@ -7,12 +7,7 @@ from typing import Dict, Iterable, List
 import pydash
 
 from panoramic.cli.errors import MissingSchemaException
-from panoramic.cli.pano_model import (
-    DataSourceType,
-    PanoModel,
-    PanoModelDataSource,
-    PanoModelField,
-)
+from panoramic.cli.pano_model import PanoModel, PanoModelField
 from panoramic.cli.util import slug_string
 
 
@@ -59,7 +54,7 @@ def load_scanned_tables(raw_columns: Iterable[Dict], api_version: str) -> List[P
         models.append(
             PanoModel(
                 table_file_name=pydash.slugify(table_path, separator="_").lower(),
-                data_source=PanoModelDataSource(path=table_path, data_source_type=DataSourceType.sql.value),
+                data_source=table_path,
                 fields=fields,
                 joins=[],
                 identifiers=[],

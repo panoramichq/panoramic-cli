@@ -1,29 +1,4 @@
-from enum import Enum
 from typing import Any, Dict, List
-
-
-class DataSourceType(Enum):
-    """
-    Enumeration with all available datasource types
-    """
-
-    sql = 'sql'
-
-
-class PanoModelDataSource:
-    """
-    Pano Model Data Source
-    """
-
-    path: str
-    data_source_type: DataSourceType
-
-    def __init__(self, path: str, data_source_type: DataSourceType):
-        self.path = path
-        self.data_source_type = data_source_type
-
-    def to_dict(self) -> Dict[str, Any]:
-        return {'path': self.path, 'data_source_type': self.data_source_type}
 
 
 class PanoModelField:
@@ -68,7 +43,7 @@ class PanoModel:
     """
 
     table_file_name: str
-    data_source: PanoModelDataSource
+    data_source: str
     fields: List[PanoModelField]
     joins: List[PanoModelJoin]
     identifiers: List[str]
@@ -77,7 +52,7 @@ class PanoModel:
     def __init__(
         self,
         table_file_name: str,
-        data_source: PanoModelDataSource,
+        data_source: str,
         fields: List[PanoModelField],
         joins: List[PanoModelJoin],
         identifiers: List[str],
@@ -93,7 +68,7 @@ class PanoModel:
     def to_dict(self) -> Dict[str, Any]:
         # The "table_file_name" is used as file name and not being exported
         return {
-            'data_source': self.data_source.to_dict(),
+            'data_source': self.data_source,
             'fields': [x.to_dict() for x in self.fields],
             'joins': [x.to_dict() for x in self.joins],
             'identifiers': self.identifiers,
