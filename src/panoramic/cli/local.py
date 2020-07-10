@@ -1,3 +1,4 @@
+import itertools
 from typing import Iterable
 
 from panoramic.cli.pano_model import PanoDataSource, PanoModel
@@ -11,10 +12,9 @@ def get_models(data_source: str, company_name: str) -> Iterable[PanoModel]:
 
 def get_state(company_name: str) -> VirtualState:
     """Build a representation of what VDS and models are on local filesystem."""
-    # For now hold everything in memory
-    virtual_sources = get_data_sources(company_name)
-    data_sources = [PanoDataSource(models=list(get_models(source.name, company_name))) for source in virtual_sources]
-    return VirtualState.local(data_sources=data_sources)
+    data_sources = get_data_sources(company_name)
+    models = list(itertools.chain(get_models(source.data_source_slug, company_name) for source in data_sources))
+    return VirtualState.local(data_sources=data_sources, models=models)
 
 
 def get_data_sources(company_name: str) -> Iterable[PanoDataSource]:
