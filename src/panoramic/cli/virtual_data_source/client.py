@@ -43,7 +43,7 @@ class VirtualDataSourceClient(OAuth2Client):
         self.base_url = base_url if base_url is not None else get_base_url()
         if self.base_url[-1] == '/':
             self._base_url_with_trailing_slash = self.base_url
-            self.base_url = base_url[0:-1]
+            self.base_url = self.base_url[0:-1]
         else:
             # base_url is in it's correct form - without trailing slash
             self._base_url_with_trailing_slash = self.base_url + '/'
