@@ -5,8 +5,8 @@ from panoramic.cli.state import Action, ActionList, VirtualState
 
 def reconcile_data_sources(current_state: VirtualState, desired_state: VirtualState) -> Iterator[Action]:
     """Create actions that get us from current to desired state."""
-    current_by_id = {s.data_source_slug: s for s in current_state.data_sources}
-    desired_by_id = {s.data_source_slug: s for s in desired_state.data_sources}
+    current_by_id = {s.id: s for s in current_state.data_sources}
+    desired_by_id = {s.id: s for s in desired_state.data_sources}
 
     # delete what is not desired but exists
     ids_to_delete = current_by_id.keys() - desired_by_id.keys()
@@ -54,6 +54,7 @@ def _reconcile(current_state: VirtualState, desired_state: VirtualState) -> Iter
 
 def reconcile(current_state: VirtualState, desired_state: VirtualState) -> ActionList:
     """Create actions that get us from current state to desired state."""
-    direction = (current_state.origin, desired_state.origin)
+    # We want to write from desired to current state
+    direction = (desired_state.origin, current_state.origin)
     actions = list(_reconcile(current_state, desired_state))
     return ActionList(actions=actions, direction=direction)

@@ -13,7 +13,7 @@ class FileExtension(Enum):
     Enumeration with all available file extensions
     """
 
-    model_yaml = '.model.yaml'
+    MODEL_YAML = '.model.yaml'
 
 
 class FilePackage(Enum):
@@ -21,7 +21,7 @@ class FilePackage(Enum):
     Enumeration with all available file packages
     """
 
-    scanned = 'scanned'
+    SCANNED = 'scanned'
 
 
 def get_work_dir_abs_filepath() -> Path:

@@ -3,6 +3,7 @@ from unittest.mock import ANY, call, patch
 import pytest
 
 from panoramic.cli.command import scan
+from panoramic.cli.local.file_utils import FilePackage
 
 
 @pytest.fixture
@@ -33,7 +34,7 @@ def test_scan(mock_writer, mock_scanner, mock_refresher):
     scan('test-source', 'test-filter')
 
     assert mock_refresher.refresh_table.mock_calls == [call('schema1.table1')]
-    assert mock_writer.write_model.mock_calls == [call(ANY)]
+    assert mock_writer.write_model.mock_calls == [call(ANY, FilePackage.SCANNED)]
 
 
 def test_scan_single_table_error(mock_writer, mock_scanner, mock_refresher):
@@ -46,4 +47,4 @@ def test_scan_single_table_error(mock_writer, mock_scanner, mock_refresher):
 
     scan('test-source', 'test-filter')
 
-    assert mock_writer.write_model.mock_calls == [call(ANY)]
+    assert mock_writer.write_model.mock_calls == [call(ANY, FilePackage.SCANNED)]

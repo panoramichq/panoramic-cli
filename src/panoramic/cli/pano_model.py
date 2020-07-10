@@ -113,25 +113,25 @@ class PanoModel(Actionable):
 class PanoDataSource(Actionable):
     """Group collection of models into one data source."""
 
-    data_source_slug: str
+    slug: str
     display_name: str
 
     def __init__(
-        self, data_source_slug: str, display_name: str,
+        self, *, slug: str, display_name: str,
     ):
-        self.data_source_slug = data_source_slug
+        self.slug = slug
         self.display_name = display_name
 
     @property
     def id(self):
-        return self.data_source_slug
+        return self.slug
 
     def to_dict(self) -> Dict[str, Any]:
         return {
-            'data_source_slug': self.data_source_slug,
+            'slug': self.slug,
             'display_name': self.display_name,
         }
 
     @classmethod
     def from_dict(cls, inputs: Dict[str, Any]) -> 'PanoDataSource':
-        return cls(data_source_slug=inputs['data_source_slug'], display_name=inputs['display_name'])
+        return cls(slug=inputs['slug'], display_name=inputs['display_name'])

@@ -23,7 +23,7 @@ def scan(source_id: str, filter: Optional[str]):
     api_version = 'v1'
     scanner = Scanner(source_id)
     refresher = Refresher(source_id)
-    writer = FileWriter(FilePackage.scanned)
+    writer = FileWriter()
     tables = scanner.scan_tables(table_filter=filter)
     with click.progressbar(list(tables)) as bar:
         for table in bar:
@@ -34,7 +34,7 @@ def scan(source_id: str, filter: Optional[str]):
                 refresher.refresh_table(table_name)
                 raw_columns = scanner.scan_columns(table_filter=table_name)
                 for table in load_scanned_tables(raw_columns, api_version):
-                    writer.write_model(table)
+                    writer.write_model(table, FilePackage.SCANNED)
             except Exception:
                 print(f'Failed to scan table {table_name}')
                 logger.debug(f'Failed to scan table {table_name}', exc_info=True)
@@ -44,18 +44,18 @@ def scan(source_id: str, filter: Optional[str]):
 def pull():
     """Pull models and data sources from remote."""
     company_name = get_company_name()
-    remote_source = get_remote_state(company_name)
-    local_source = get_local_state(company_name)
+    remote_state = get_remote_state(company_name)
+    local_state = get_local_state(company_name)
 
-    actions = reconcile(local_source, remote_source)
+    actions = reconcile(local_state, remote_state)
     execute(actions)
 
 
 def push():
     """Push models and data sources to remote."""
     company_name = get_company_name()
-    remote_source = get_remote_state(company_name)
-    local_source = get_local_state(company_name)
+    remote_state = get_remote_state(company_name)
+    local_state = get_local_state(company_name)
 
-    actions = reconcile(remote_source, local_source)
+    actions = reconcile(remote_state, local_state)
     execute(actions)

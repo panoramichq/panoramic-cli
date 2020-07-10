@@ -29,6 +29,14 @@ class Action(Generic[T]):
         self.current = current
         self.desired = desired
 
+    @property
+    def is_creation(self):
+        return self.current is None
+
+    @property
+    def is_deletion(self):
+        return self.desired is None
+
 
 class ActionList(Generic[T]):
 

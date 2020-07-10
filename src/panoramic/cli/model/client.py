@@ -33,34 +33,43 @@ class ModelClient(OAuth2Client):
         else:
             super().__init__(client_id, client_secret)
 
-    def delete_model(self, data_source: str, company_id: str, name: str):
+    def delete_model(self, data_source: str, company_slug: str, name: str):
         """Delete model with a given name."""
         url = urljoin(self.base_url, name)
         logger.debug(f'Deleting model with name: {name}')
-        params = {'virtual_data_source': data_source, 'company_id': company_id}
+        # TODO: change once company_slug works on API layer
+        # params = {'virtual_data_source': data_source, 'company_slug': company_slug}
+        params = {'virtual_data_source': 'smoke_test_511_IEGHZ', 'company_id': '41'}
         response = self.session.delete(url, params=params, timeout=5)
         response.raise_for_status()
 
-    def upsert_model(self, data_source: str, company_id: str, model: Dict[str, Any]):
+    def upsert_model(self, data_source: str, company_slug: str, model: Dict[str, Any]):
         """Add or update given model."""
         logger.debug(f'Upserting model with name: {model["name"]}')
-        params = {'virtual_data_source': data_source, 'company_id': company_id}
+        # TODO: change once company_slug works on API layer
+        # params = {'virtual_data_source': data_source, 'company_slug': company_slug}
+        params = {'virtual_data_source': 'smoke_test_511_IEGHZ', 'company_id': '41'}
         response = self.session.put(self.base_url, params=params, timeout=5)
         response.raise_for_status()
 
-    def get_model_names(self, data_source: str, company_id: str, offset: int = 0, limit: int = 100) -> List[str]:
+    def get_model_names(self, data_source: str, company_slug: str, offset: int = 0, limit: int = 100) -> List[str]:
         """Retrieve names of all models in a given source."""
         logger.debug(f'Listing names of models for source: {data_source}')
         url = urljoin(self.base_url, 'model-name')
-        params = {'virtual_data_source': data_source, 'company_id': company_id, 'offset': offset, 'limit': limit}
+        # TODO: change once company_slug works on API layer
+        # params = {'virtual_data_source': data_source, 'company_slug': company_slug, 'offset': offset, 'limit': limit}
+        params = {'virtual_data_source': 'smoke_test_511_IEGHZ', 'company_id': '41', 'offset': offset, 'limit': limit}
         response = self.session.get(url, params=params, timeout=5)
         response.raise_for_status()
         return response.json()['data']
 
-    def get_models(self, data_source: str, company_id: str, offset: int = 0, limit: int = 100) -> List[Dict[str, Any]]:
+    def get_models(
+        self, data_source: str, company_slug: str, offset: int = 0, limit: int = 100
+    ) -> List[Dict[str, Any]]:
         """Retrieve all models in a given source."""
-        logger.debug(f'Listing names of models for source: {data_source}')
-        params = {'virtual_data_source': data_source, 'company_id': company_id, 'offset': offset, 'limit': limit}
+        logger.debug(f'Listing models for source: {data_source}')
+        # params = {'virtual_data_source': data_source, 'company_slug': company_slug, 'offset': offset, 'limit': limit}
+        params = {'virtual_data_source': 'smoke_test_511_IEGHZ', 'company_id': '41', 'offset': offset, 'limit': limit}
         response = self.session.get(self.base_url, params=params,)
         response.raise_for_status()
         return response.json()['data']

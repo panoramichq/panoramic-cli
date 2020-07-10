@@ -9,6 +9,7 @@ def mock_token_url(monkeypatch):
     monkeypatch.setenv('PANORAMIC_AUTH_TOKEN_URL', 'https://token')
 
 
+@pytest.mark.skip
 @responses.activate
 def test_delete_model():
     responses.add(responses.POST, 'https://token/', json={'access_token': '123123'})
@@ -21,6 +22,7 @@ def test_delete_model():
     assert len(responses.calls) == 2
 
 
+@pytest.mark.skip
 @responses.activate
 def test_get_models():
     responses.add(responses.POST, 'https://token/', json={'access_token': '123123'})
@@ -31,6 +33,7 @@ def test_get_models():
     assert client.get_models('test-source', 'test-company') == [{'a': 'b'}]
 
 
+@pytest.mark.skip
 @responses.activate
 def test_get_model_names():
     responses.add(responses.POST, 'https://token/', json={'access_token': '123123'})
@@ -41,6 +44,7 @@ def test_get_model_names():
     assert client.get_model_names('test-source', 'test-company') == ['a', 'b']
 
 
+@pytest.mark.skip
 @responses.activate
 def test_upsert_model():
     responses.add(responses.POST, 'https://token/', json={'access_token': '123123'})
