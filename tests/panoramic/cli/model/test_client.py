@@ -9,6 +9,7 @@ def mock_token_url(monkeypatch):
     monkeypatch.setenv('PANORAMIC_AUTH_TOKEN_URL', 'https://token')
 
 
+# TODO: Remove test skip once authz ready
 @pytest.mark.skip
 @responses.activate
 def test_delete_model():
@@ -22,6 +23,7 @@ def test_delete_model():
     assert len(responses.calls) == 2
 
 
+# TODO: Remove test skip once authz ready
 @pytest.mark.skip
 @responses.activate
 def test_get_models():
@@ -33,6 +35,7 @@ def test_get_models():
     assert client.get_models('test-source', 'test-company') == [{'a': 'b'}]
 
 
+# TODO: Remove test skip once authz ready
 @pytest.mark.skip
 @responses.activate
 def test_get_model_names():
@@ -44,6 +47,7 @@ def test_get_model_names():
     assert client.get_model_names('test-source', 'test-company') == ['a', 'b']
 
 
+# TODO: Remove test skip once authz ready
 @pytest.mark.skip
 @responses.activate
 def test_upsert_model():
