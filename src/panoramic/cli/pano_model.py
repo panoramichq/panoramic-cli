@@ -60,7 +60,9 @@ class PanoModel(Actionable):
 
     # TODO: Unify the naming
 
+    virtual_data_source: str
     table_file_name: str
+    # TODO: remove this field
     data_source: str
     fields: List[PanoModelField]
     joins: List[PanoModelJoin]
@@ -70,6 +72,7 @@ class PanoModel(Actionable):
     def __init__(
         self,
         *,
+        virtual_data_source: str,
         table_file_name: str,
         data_source: str,
         fields: List[PanoModelField],
@@ -77,6 +80,7 @@ class PanoModel(Actionable):
         identifiers: List[str],
         api_version: str,
     ):
+        self.virtual_data_source = virtual_data_source
         self.table_file_name = table_file_name
         self.data_source = data_source
         self.fields = fields
@@ -91,6 +95,7 @@ class PanoModel(Actionable):
     def to_dict(self) -> Dict[str, Any]:
         # The "table_file_name" is used as file name and not being exported
         return {
+            'virtual_data_source': self.virtual_data_source,
             'data_source': self.data_source,
             'fields': [x.to_dict() for x in self.fields],
             'joins': [x.to_dict() for x in self.joins],
@@ -101,6 +106,7 @@ class PanoModel(Actionable):
     @classmethod
     def from_dict(cls, inputs: Dict[str, Any]) -> 'PanoModel':
         return cls(
+            virtual_data_source=inputs['virtual_data_source'],
             table_file_name=inputs['table_file_name'],
             data_source=inputs['data_source'],
             fields=[PanoModelField.from_dict(x) for x in inputs.get('fields', [])],
@@ -116,9 +122,7 @@ class PanoDataSource(Actionable):
     slug: str
     display_name: str
 
-    def __init__(
-        self, *, slug: str, display_name: str,
-    ):
+    def __init__(self, *, slug: str, display_name: str):
         self.slug = slug
         self.display_name = display_name
 
