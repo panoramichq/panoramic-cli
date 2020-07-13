@@ -9,7 +9,7 @@ from panoramic.cli.pano_model import PanoDataSource, PanoModel
 
 class FileReader:
     def read(self, package: FilePackage):
-        directory = get_work_dir_abs_filepath() / package.value
+        directory = get_work_dir_abs_filepath() / package
         data_source_path = directory / 'data_source.yaml'
         data_source = PanoDataSource.from_dict(read_yaml(data_source_path))
         models = [

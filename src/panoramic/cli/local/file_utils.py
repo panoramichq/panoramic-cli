@@ -8,20 +8,17 @@ import yaml
 logger = logging.getLogger(__name__)
 
 
+FilePackage = str
+
+SCANNED_FILE_PACKAGE: FilePackage = 'scanned'
+
+
 class FileExtension(Enum):
     """
     Enumeration with all available file extensions
     """
 
     MODEL_YAML = '.model.yaml'
-
-
-class FilePackage(Enum):
-    """
-    Enumeration with all available file packages
-    """
-
-    SCANNED = 'scanned'
 
 
 def get_work_dir_abs_filepath() -> Path:
@@ -36,7 +33,7 @@ def get_target_abs_filepath(table_file_name: str, file_extension: FileExtension,
     Get target file abs filepath
     """
     file_name = f'{table_file_name}{file_extension.value}'
-    return get_work_dir_abs_filepath() / file_package.value / file_name
+    return get_work_dir_abs_filepath() / file_package / file_name
 
 
 def ensure_dir(abs_filepath: Path):
