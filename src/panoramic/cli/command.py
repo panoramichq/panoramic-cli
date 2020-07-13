@@ -5,7 +5,7 @@ import click
 
 from panoramic.cli.context import get_company_name
 from panoramic.cli.controller import reconcile
-from panoramic.cli.executor import execute
+from panoramic.cli.executor import execute_local, execute_remote
 from panoramic.cli.local import get_state as get_local_state
 from panoramic.cli.local.file_utils import SCANNED_FILE_PACKAGE
 from panoramic.cli.local.writer import FileWriter
@@ -45,17 +45,17 @@ def pull():
     """Pull models and data sources from remote."""
     company_name = get_company_name()
     remote_state = get_remote_state(company_name)
-    local_state = get_local_state(company_name)
+    local_state = get_local_state()
 
     actions = reconcile(local_state, remote_state)
-    execute(actions)
+    execute_local(actions)
 
 
 def push():
     """Push models and data sources to remote."""
     company_name = get_company_name()
     remote_state = get_remote_state(company_name)
-    local_state = get_local_state(company_name)
+    local_state = get_local_state()
 
     actions = reconcile(remote_state, local_state)
-    execute(actions)
+    execute_remote(actions, company_name)

@@ -1,16 +1,11 @@
-from abc import ABC
-from typing import List, Tuple
-
 from panoramic.cli.local.writer import FileWriter
-from panoramic.cli.state import Action, ActionList, Origin
+from panoramic.cli.remote.writer import ApiWriter
+from panoramic.cli.state import Action, ActionList
 
 
-class Executor(ABC):
+class Executor:
 
     """Base executor class."""
-
-    def execute(self, action: Action):
-        raise NotImplementedError('execute not implemented')
 
 
 class LocalExecutor(Executor):
@@ -35,20 +30,33 @@ class LocalExecutor(Executor):
 
 class RemoteExecutor(Executor):
 
-    """Executes actions against remote."""
+    """Executes actions against remote API."""
 
-    def execute(self, action: Action):
-        raise NotImplementedError('execute not implemented')
+    def __init__(self, writer: ApiWriter):
+        self.writer = writer
+
+    def execute(self, action: Action, company_name: str):
+        if action.is_creation:
+            assert action.desired is not None
+            self.writer.write(action.desired, company_name)
+        elif action.is_deletion:
+            assert action.current is not None
+            self.writer.delete(action.current, company_name)
+        else:
+            # assume update
+            assert action.desired is not None
+            self.writer.write(action.desired, company_name)
 
 
-def get_executor_for_direction(direction: Tuple[Origin, Origin]) -> Executor:
-    return RemoteExecutor() if direction[1] == Origin.REMOTE else LocalExecutor(FileWriter())
-
-
-def execute(actions: ActionList) -> Tuple[List[Action], List[Action]]:
+def execute_local(actions: ActionList):
     """Execute actions and return successful and failed actions."""
-    executor = get_executor_for_direction(actions.direction)
+    executor = LocalExecutor(FileWriter())
     for action in actions.actions:
         executor.execute(action)
 
-    return [], []
+
+def execute_remote(actions: ActionList, company_name: str):
+    """Execute actions and return successful and failed actions."""
+    executor = RemoteExecutor(ApiWriter())
+    for action in actions.actions:
+        executor.execute(action, company_name)
