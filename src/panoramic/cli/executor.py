@@ -1,16 +1,11 @@
-from abc import ABC
-
 from panoramic.cli.local.writer import FileWriter
 from panoramic.cli.remote.writer import ApiWriter
 from panoramic.cli.state import Action, ActionList
 
 
-class Executor(ABC):
+class Executor:
 
     """Base executor class."""
-
-    def execute(self, action: Action):
-        raise NotImplementedError('execute not implemented')
 
 
 class LocalExecutor(Executor):
@@ -64,4 +59,4 @@ def execute_remote(actions: ActionList, company_name: str):
     """Execute actions and return successful and failed actions."""
     executor = RemoteExecutor(ApiWriter())
     for action in actions.actions:
-        executor.execute(action)
+        executor.execute(action, company_name)
