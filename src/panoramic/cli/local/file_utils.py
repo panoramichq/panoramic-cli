@@ -68,4 +68,5 @@ def read_yaml(abs_filepath: str) -> Dict[str, Any]:
 
 def delete_file(abs_filepath: Path):
     """Delete file at given path."""
-    abs_filepath.unlink(missing_ok=True)
+    # TODO: check file exists before deleting it
+    abs_filepath.unlink()
