@@ -3,6 +3,7 @@ from unittest.mock import ANY, call, patch
 import pytest
 
 from panoramic.cli.command import scan
+from panoramic.cli.local.file_utils import FilePackage
 
 
 @pytest.fixture
@@ -17,8 +18,13 @@ def mock_scanner():
         yield mock_scanner()
 
 
-@patch('panoramic.cli.command.write_yaml')
-def test_scan(mock_write_yaml, mock_scanner, mock_refresher):
+@pytest.fixture
+def mock_writer():
+    with patch('panoramic.cli.command.FileWriter') as mock_writer:
+        yield mock_writer()
+
+
+def test_scan(mock_writer, mock_scanner, mock_refresher):
     mock_scanner.scan_tables.return_value = [{'table_schema': 'source.schema1', 'table_name': 'table1'}]
     mock_scanner.scan_columns.return_value = [
         {'table_schema': 'source.schema1', 'table_name': 'table1', 'column_name': 'id', 'data_type': 'str'},
@@ -28,11 +34,10 @@ def test_scan(mock_write_yaml, mock_scanner, mock_refresher):
     scan('test-source', 'test-filter')
 
     assert mock_refresher.refresh_table.mock_calls == [call('schema1.table1')]
-    assert mock_write_yaml.mock_calls == [call(ANY, ANY)]
+    assert mock_writer.write_model.mock_calls == [call(ANY, FilePackage.SCANNED)]
 
 
-@patch('panoramic.cli.command.write_yaml')
-def test_scan_single_table_error(mock_write_yaml, mock_scanner, mock_refresher):
+def test_scan_single_table_error(mock_writer, mock_scanner, mock_refresher):
     mock_scanner.scan_tables.return_value = [{'table_schema': 'source.schema1', 'table_name': 'table1'}]
     mock_scanner.scan_columns.return_value = [
         {'table_schema': 'source.schema1', 'table_name': 'table1', 'column_name': 'id', 'data_type': 'str'},
@@ -42,4 +47,4 @@ def test_scan_single_table_error(mock_write_yaml, mock_scanner, mock_refresher):
 
     scan('test-source', 'test-filter')
 
-    assert mock_write_yaml.mock_calls == [call(ANY, ANY)]
+    assert mock_writer.write_model.mock_calls == [call(ANY, FilePackage.SCANNED)]

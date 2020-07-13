@@ -1,6 +1,5 @@
 import logging
 import time
-
 from enum import Enum
 from typing import Any, Dict, Iterable, List, Optional
 from urllib.parse import urljoin
@@ -9,7 +8,6 @@ from panoramic.auth import OAuth2Client
 from panoramic.cli.config.auth import get_client_id, get_client_secret
 from panoramic.cli.config.metadata import get_base_url
 from panoramic.cli.errors import TimeoutException
-
 
 logger = logging.getLogger(__name__)
 
@@ -61,19 +59,19 @@ class MetadataClient(OAuth2Client):
         response.raise_for_status()
         return response.json()['job_id']
 
-    def create_get_tables_job(self, source_id: str, table_filter: str) -> str:
+    def create_get_tables_job(self, source_id: str, table_filter: Optional[str]) -> str:
         """Starts async "get tables" job and return job id."""
         url = urljoin(self.base_url, f'{source_id}/tables')
-        params = {'table-filter': table_filter}
+        params = {} if table_filter is None else {'table-filter': table_filter}
         logger.debug(f'Requesting tables for source {source_id} and filter: {table_filter}')
         response = self.session.post(url, params=params, timeout=5)
         response.raise_for_status()
         return response.json()['job_id']
 
-    def create_get_columns_job(self, source_id: str, table_filter: str) -> str:
+    def create_get_columns_job(self, source_id: str, table_filter: Optional[str]) -> str:
         """Starts async "get columns" job and return job id."""
         url = urljoin(self.base_url, f'{source_id}/columns')
-        params = {'table-filter': table_filter}
+        params = {} if table_filter is None else {'table-filter': table_filter}
         logger.debug(f'Requesting columns for source {source_id} and filter: {table_filter}')
         response = self.session.post(url, params=params, timeout=5)
         response.raise_for_status()

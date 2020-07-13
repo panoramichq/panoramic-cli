@@ -1,7 +1,6 @@
 from unittest.mock import Mock, patch, sentinel
 
 import pytest
-
 from requests.exceptions import HTTPError
 
 from panoramic.cli.errors import ScanException, SourceNotFoundException
@@ -15,7 +14,7 @@ def test_scan_columns_completed(mock_client):
     mock_client.return_value.wait_for_terminal_state.return_value = JobState.COMPLETED
     mock_client.return_value.collect_results.return_value = [sentinel.value1, sentinel.value2]
 
-    assert list(Scanner('test-source').scan_columns('table-name')) == [sentinel.value1, sentinel.value2]
+    assert list(Scanner('test-source').scan_columns(table_filter='table-name')) == [sentinel.value1, sentinel.value2]
 
 
 @pytest.mark.parametrize('final_state', TERMINAL_STATES - {JobState.COMPLETED})
@@ -26,7 +25,7 @@ def test_scan_columns_non_completed(mock_client, final_state):
 
     # TODO: add proper exception
     with pytest.raises(Exception):
-        list(Scanner('test-source').scan_columns('table-name'))
+        list(Scanner('test-source').scan_columns(table_filter='table-name'))
 
 
 @patch('panoramic.cli.scan.MetadataClient')
@@ -34,7 +33,7 @@ def test_scan_columns_not_found(mock_client):
     mock_client.return_value.create_get_columns_job.side_effect = HTTPError(response=Mock(status=404))
 
     with pytest.raises(SourceNotFoundException):
-        list(Scanner('test-source').scan_columns('table-name', timeout=1))
+        list(Scanner('test-source').scan_columns(table_filter='table-name', timeout=1))
 
 
 @patch('panoramic.cli.scan.MetadataClient')
@@ -42,7 +41,7 @@ def test_scan_columns_generic_error(mock_client):
     mock_client.return_value.create_get_columns_job.side_effect = HTTPError(response=Mock(status=500))
 
     with pytest.raises(ScanException):
-        list(Scanner('test-source').scan_columns('table-name', timeout=1))
+        list(Scanner('test-source').scan_columns(table_filter='table-name', timeout=1))
 
 
 @patch('panoramic.cli.scan.MetadataClient')
@@ -51,7 +50,7 @@ def test_scan_tables_completed(mock_client):
     mock_client.return_value.wait_for_terminal_state.return_value = JobState.COMPLETED
     mock_client.return_value.collect_results.return_value = [sentinel.value1, sentinel.value2]
 
-    assert list(Scanner('test-source').scan_tables('table-name')) == [sentinel.value1, sentinel.value2]
+    assert list(Scanner('test-source').scan_tables(table_filter='table-name')) == [sentinel.value1, sentinel.value2]
 
 
 @pytest.mark.parametrize('final_state', TERMINAL_STATES - {JobState.COMPLETED})
@@ -62,7 +61,7 @@ def test_scan_tables_non_completed(mock_client, final_state):
 
     # TODO: add proper exception
     with pytest.raises(Exception):
-        list(Scanner('test-source').scan_tables('table-name'))
+        list(Scanner('test-source').scan_tables(table_filter='table-name'))
 
 
 @patch('panoramic.cli.scan.MetadataClient')
@@ -70,7 +69,7 @@ def test_scan_tables_not_found(mock_client):
     mock_client.return_value.create_get_tables_job.side_effect = HTTPError(response=Mock(status=404))
 
     with pytest.raises(SourceNotFoundException):
-        list(Scanner('test-source').scan_tables('table-name', timeout=1))
+        list(Scanner('test-source').scan_tables(table_filter='table-name', timeout=1))
 
 
 @patch('panoramic.cli.scan.MetadataClient')
@@ -78,4 +77,4 @@ def test_scan_tables_generic_error(mock_client):
     mock_client.return_value.create_get_tables_job.side_effect = HTTPError(response=Mock(status=500))
 
     with pytest.raises(ScanException):
-        list(Scanner('test-source').scan_tables('table-name', timeout=1))
+        list(Scanner('test-source').scan_tables(table_filter='table-name', timeout=1))

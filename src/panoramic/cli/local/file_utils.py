@@ -1,11 +1,9 @@
 import logging
-
 from enum import Enum
 from pathlib import Path
 from typing import Any, Dict
 
 import yaml
-
 
 logger = logging.getLogger(__name__)
 
@@ -15,7 +13,7 @@ class FileExtension(Enum):
     Enumeration with all available file extensions
     """
 
-    model_yaml = '.model.yaml'
+    MODEL_YAML = '.model.yaml'
 
 
 class FilePackage(Enum):
@@ -23,7 +21,7 @@ class FilePackage(Enum):
     Enumeration with all available file packages
     """
 
-    scanned = 'scanned'
+    SCANNED = 'scanned'
 
 
 def get_work_dir_abs_filepath() -> Path:
@@ -33,7 +31,7 @@ def get_work_dir_abs_filepath() -> Path:
     return Path().absolute()
 
 
-def get_target_abs_filepath(table_file_name: str, file_extension: FileExtension, file_package: FilePackage) -> str:
+def get_target_abs_filepath(table_file_name: str, file_extension: FileExtension, file_package: FilePackage) -> Path:
     """
     Get target file abs filepath
     """
@@ -41,15 +39,15 @@ def get_target_abs_filepath(table_file_name: str, file_extension: FileExtension,
     return get_work_dir_abs_filepath() / file_package.value / file_name
 
 
-def ensure_dir(abs_filepath: str) -> None:
+def ensure_dir(abs_filepath: Path):
     """
     Ensure parent directory exists.
     """
-    path_obj = Path(abs_filepath).parent
+    path_obj = abs_filepath.parent
     path_obj.mkdir(parents=True, exist_ok=True)
 
 
-def write_yaml(abs_filepath: str, yaml_dict: Dict[str, Any]) -> None:
+def write_yaml(abs_filepath: Path, yaml_dict: Dict[str, Any]):
     """
     Writes yaml dict to path
     """
@@ -66,3 +64,9 @@ def read_yaml(abs_filepath: str) -> Dict[str, Any]:
     logger.debug(f'Read yaml {abs_filepath}')
     with open(abs_filepath, 'r') as f:
         return yaml.safe_load(f)
+
+
+def delete_file(abs_filepath: Path):
+    """Delete file at given path."""
+    # TODO: check file exists before deleting it
+    abs_filepath.unlink()

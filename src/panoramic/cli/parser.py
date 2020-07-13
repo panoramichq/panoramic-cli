@@ -1,7 +1,6 @@
 import itertools
 import logging
 import operator
-
 from typing import Dict, Iterable, List
 
 import pydash
@@ -9,7 +8,6 @@ import pydash
 from panoramic.cli.errors import MissingSchemaException
 from panoramic.cli.pano_model import PanoModel
 from panoramic.cli.util import slug_string
-
 
 logger = logging.getLogger(__name__)
 

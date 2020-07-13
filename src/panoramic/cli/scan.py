@@ -1,15 +1,11 @@
 import logging
-
-from typing import Dict, Iterable
+from typing import Dict, Iterable, Optional
 
 import requests
-
 from requests.exceptions import RequestException
 
 from panoramic.cli.errors import ScanException, SourceNotFoundException
-from panoramic.cli.metadata import MetadataClient
-from panoramic.cli.metadata.client import JobState
-
+from panoramic.cli.metadata import JobState, MetadataClient
 
 logger = logging.getLogger(__name__)
 
@@ -27,7 +23,7 @@ class Scanner:
         if client is None:
             self.client = MetadataClient()
 
-    def scan_tables(self, table_filter: str, timeout: int = 60) -> Iterable[Dict]:
+    def scan_tables(self, *, table_filter: Optional[str] = None, timeout: int = 60) -> Iterable[Dict]:
         """Scan tables for a given source and filter."""
         logger.debug(f'Starting get tables job with filter {table_filter}')
         try:
@@ -46,7 +42,7 @@ class Scanner:
         except RequestException:
             raise ScanException(f'Error ocurred scanning tables for source {self.source_id}')
 
-    def scan_columns(self, table_filter: str, timeout: int = 60) -> Iterable[Dict]:
+    def scan_columns(self, *, table_filter: Optional[str] = None, timeout: int = 60) -> Iterable[Dict]:
         """Scan columns for a given source and filter."""
         logger.debug('Starting get columns job')
         try:

@@ -1,20 +1,18 @@
 import logging
-
 from typing import Optional
 
 import click
 
-from panoramic.cli.errors import UnexpectedTablesException
-from panoramic.cli.file_utils import (
-    FileExtension,
-    FilePackage,
-    get_target_abs_filepath,
-    write_yaml,
-)
+from panoramic.cli.context import get_company_name
+from panoramic.cli.controller import reconcile
+from panoramic.cli.executor import execute
+from panoramic.cli.local import get_state as get_local_state
+from panoramic.cli.local.file_utils import FilePackage
+from panoramic.cli.local.writer import FileWriter
 from panoramic.cli.parser import load_scanned_tables
 from panoramic.cli.refresh import Refresher
+from panoramic.cli.remote import get_state as get_remote_state
 from panoramic.cli.scan import Scanner
-
 
 logger = logging.getLogger(__name__)
 
@@ -25,7 +23,8 @@ def scan(source_id: str, filter: Optional[str]):
     api_version = 'v1'
     scanner = Scanner(source_id)
     refresher = Refresher(source_id)
-    tables = scanner.scan_tables(filter)
+    writer = FileWriter()
+    tables = scanner.scan_tables(table_filter=filter)
     with click.progressbar(list(tables)) as bar:
         for table in bar:
             # drop source name from schema
@@ -34,17 +33,29 @@ def scan(source_id: str, filter: Optional[str]):
             try:
                 refresher.refresh_table(table_name)
                 raw_columns = scanner.scan_columns(table_filter=table_name)
-
-                scanned_tables = load_scanned_tables(raw_columns, api_version)
-                if len(scanned_tables) > 1:
-                    raise UnexpectedTablesException('Found unexpected table')
-                scanned_table = scanned_tables[0]
-
-                abs_filepath = get_target_abs_filepath(
-                    scanned_table.table_file_name, FileExtension.model_yaml, FilePackage.scanned
-                )
-                write_yaml(abs_filepath, scanned_table.to_dict())
+                for table in load_scanned_tables(raw_columns, api_version):
+                    writer.write_model(table, FilePackage.SCANNED)
             except Exception:
                 print(f'Failed to scan table {table_name}')
                 logger.debug(f'Failed to scan table {table_name}', exc_info=True)
                 continue
+
+
+def pull():
+    """Pull models and data sources from remote."""
+    company_name = get_company_name()
+    remote_state = get_remote_state(company_name)
+    local_state = get_local_state(company_name)
+
+    actions = reconcile(local_state, remote_state)
+    execute(actions)
+
+
+def push():
+    """Push models and data sources to remote."""
+    company_name = get_company_name()
+    remote_state = get_remote_state(company_name)
+    local_state = get_local_state(company_name)
+
+    actions = reconcile(remote_state, local_state)
+    execute(actions)

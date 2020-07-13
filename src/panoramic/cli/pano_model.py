@@ -1,16 +1,22 @@
-from typing import Any, Dict, List
+from abc import ABC
+from typing import Any, Dict, List, Optional
+
+
+class Actionable(ABC):
+
+    """Interface for object that you can perform actions on."""
 
 
 class PanoModelField:
-    """
-    Pano Model Field
-    """
+    """Field stored on a model."""
+
+    # TODO: Unify the naming
 
     field_map: List[str]
     transformation: str
     data_type: str
 
-    def __init__(self, field_map: List[str], transformation: str, data_type: str):
+    def __init__(self, *, field_map: List[str], transformation: str, data_type: str):
         self.field_map = field_map
         self.transformation = transformation
         self.data_type = data_type
@@ -28,15 +34,15 @@ class PanoModelField:
 
 
 class PanoModelJoin:
-    """
-    Pano Model Field
-    """
+    """Represent joins on other models."""
+
+    # TODO: Unify the naming
 
     field: str
     join_type: str
     relationship: str
 
-    def __init__(self, field: str, join_type: str, relationship: str):
+    def __init__(self, *, field: str, join_type: str, relationship: str):
         self.field = field
         self.join_type = join_type
         self.relationship = relationship
@@ -49,12 +55,15 @@ class PanoModelJoin:
         return cls(field=inputs['field'], join_type=inputs['join_type'], relationship=inputs['relationship'])
 
 
-class PanoModel:
-    """
-    Pano Model
-    """
+class PanoModel(Actionable):
+    """Model representing some table."""
 
+    # TODO: Unify the naming
+
+    # TODO: consider splitting out because VDS non-optional with push/pulled models
+    virtual_data_source: Optional[str]
     table_file_name: str
+    # TODO: remove this field
     data_source: str
     fields: List[PanoModelField]
     joins: List[PanoModelJoin]
@@ -63,6 +72,8 @@ class PanoModel:
 
     def __init__(
         self,
+        *,
+        virtual_data_source: Optional[str],
         table_file_name: str,
         data_source: str,
         fields: List[PanoModelField],
@@ -70,6 +81,7 @@ class PanoModel:
         identifiers: List[str],
         api_version: str,
     ):
+        self.virtual_data_source = virtual_data_source
         self.table_file_name = table_file_name
         self.data_source = data_source
         self.fields = fields
@@ -77,9 +89,14 @@ class PanoModel:
         self.identifiers = identifiers
         self.api_version = api_version
 
+    @property
+    def id(self):
+        return self.table_file_name
+
     def to_dict(self) -> Dict[str, Any]:
         # The "table_file_name" is used as file name and not being exported
         return {
+            'virtual_data_source': self.virtual_data_source,
             'data_source': self.data_source,
             'fields': [x.to_dict() for x in self.fields],
             'joins': [x.to_dict() for x in self.joins],
@@ -90,6 +107,7 @@ class PanoModel:
     @classmethod
     def from_dict(cls, inputs: Dict[str, Any]) -> 'PanoModel':
         return cls(
+            virtual_data_source=inputs.get('virtual_data_source'),
             table_file_name=inputs['table_file_name'],
             data_source=inputs['data_source'],
             fields=[PanoModelField.from_dict(x) for x in inputs.get('fields', [])],
@@ -99,26 +117,26 @@ class PanoModel:
         )
 
 
-class PanoDataSource:
-    """
-    Pano Data Source
-    """
+class PanoDataSource(Actionable):
+    """Group collection of models into one data source."""
 
-    data_source_slug: str
+    slug: str
     display_name: str
 
-    def __init__(
-        self, data_source_slug: str, display_name: str,
-    ):
-        self.data_source_slug = data_source_slug
+    def __init__(self, *, slug: str, display_name: str):
+        self.slug = slug
         self.display_name = display_name
+
+    @property
+    def id(self):
+        return self.slug
 
     def to_dict(self) -> Dict[str, Any]:
         return {
-            'data_source_slug': self.data_source_slug,
+            'slug': self.slug,
             'display_name': self.display_name,
         }
 
     @classmethod
     def from_dict(cls, inputs: Dict[str, Any]) -> 'PanoDataSource':
-        return cls(data_source_slug=inputs['data_source_slug'], display_name=inputs['display_name'])
+        return cls(slug=inputs['slug'], display_name=inputs['display_name'])

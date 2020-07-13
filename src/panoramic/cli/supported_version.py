@@ -1,9 +1,7 @@
 import logging
 
 import requests
-
 from packaging import version
-
 
 URL = "https://a1.panocdn.com/updates/pano-cli/versions.json"
 
