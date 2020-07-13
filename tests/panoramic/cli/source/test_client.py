@@ -19,7 +19,7 @@ def test_get_sources():
             'data': [
                 # ... sth should be here
             ]
-        }
+        },
     )
 
     client = PhysicalDataSourceClient(
