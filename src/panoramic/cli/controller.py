@@ -15,14 +15,14 @@ def reconcile_data_sources(current_state: VirtualState, desired_state: VirtualSt
     # update what is desired and exists
     ids_to_update = current_by_id.keys() & desired_by_id.keys()
 
-    for id_ in ids_to_delete:
-        yield Action(current=current_by_id[id_])
+    for item_id in ids_to_delete:
+        yield Action(current=current_by_id[item_id])
 
-    for id_ in ids_to_create:
-        yield Action(desired=desired_by_id[id_])
+    for item_id in ids_to_create:
+        yield Action(desired=desired_by_id[item_id])
 
-    for id_ in ids_to_update:
-        yield Action(current=current_by_id[id_], desired=desired_by_id[id_])
+    for item_id in ids_to_update:
+        yield Action(current=current_by_id[item_id], desired=desired_by_id[item_id])
 
 
 def reconcile_models(current_state: VirtualState, desired_state: VirtualState) -> Iterable[Action]:
@@ -37,14 +37,14 @@ def reconcile_models(current_state: VirtualState, desired_state: VirtualState) -
     # update what is desired and exists
     ids_to_update = current_by_id.keys() & desired_by_id.keys()
 
-    for id_ in ids_to_delete:
-        yield Action(current=current_by_id[id_])
+    for item_id in ids_to_delete:
+        yield Action(current=current_by_id[item_id])
 
-    for id_ in ids_to_create:
-        yield Action(desired=desired_by_id[id_])
+    for item_id in ids_to_create:
+        yield Action(desired=desired_by_id[item_id])
 
-    for id_ in ids_to_update:
-        yield Action(current=current_by_id[id_], desired=desired_by_id[id_])
+    for item_id in ids_to_update:
+        yield Action(current=current_by_id[item_id], desired=desired_by_id[item_id])
 
 
 def _reconcile(current_state: VirtualState, desired_state: VirtualState) -> Iterable[Action]:
