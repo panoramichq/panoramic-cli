@@ -1,3 +1,4 @@
+import itertools
 from typing import Iterable, Iterator
 
 from panoramic.cli.state import Action, ActionList, VirtualState
@@ -47,14 +48,13 @@ def reconcile_models(current_state: VirtualState, desired_state: VirtualState) -
         yield Action(current=current_by_id[item_id], desired=desired_by_id[item_id])
 
 
-def _reconcile(current_state: VirtualState, desired_state: VirtualState) -> Iterable[Action]:
-    yield from reconcile_data_sources(current_state, desired_state)
-    yield from reconcile_models(current_state, desired_state)
-
-
 def reconcile(current_state: VirtualState, desired_state: VirtualState) -> ActionList:
     """Create actions that get us from current state to desired state."""
     # We want to write from desired to current state
     direction = (desired_state.origin, current_state.origin)
-    actions = list(_reconcile(current_state, desired_state))
+    actions = list(
+        itertools.chain(
+            reconcile_data_sources(current_state, desired_state), reconcile_models(current_state, desired_state)
+        )
+    )
     return ActionList(actions=actions, direction=direction)
