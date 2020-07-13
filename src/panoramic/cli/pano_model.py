@@ -1,5 +1,5 @@
 from abc import ABC
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 
 class Actionable(ABC):
@@ -60,7 +60,8 @@ class PanoModel(Actionable):
 
     # TODO: Unify the naming
 
-    virtual_data_source: str
+    # TODO: consider splitting out because VDS non-optional with push/pulled models
+    virtual_data_source: Optional[str]
     table_file_name: str
     # TODO: remove this field
     data_source: str
@@ -72,7 +73,7 @@ class PanoModel(Actionable):
     def __init__(
         self,
         *,
-        virtual_data_source: str,
+        virtual_data_source: Optional[str],
         table_file_name: str,
         data_source: str,
         fields: List[PanoModelField],
@@ -106,7 +107,7 @@ class PanoModel(Actionable):
     @classmethod
     def from_dict(cls, inputs: Dict[str, Any]) -> 'PanoModel':
         return cls(
-            virtual_data_source=inputs['virtual_data_source'],
+            virtual_data_source=inputs.get('virtual_data_source'),
             table_file_name=inputs['table_file_name'],
             data_source=inputs['data_source'],
             fields=[PanoModelField.from_dict(x) for x in inputs.get('fields', [])],

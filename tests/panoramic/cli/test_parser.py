@@ -10,6 +10,7 @@ def test_load_scanned_tables():
     expected = [
         {
             'api_version': 'v1',
+            'virtual_data_source': None,
             'data_source': 'schema1.table1',
             'fields': [
                 {'data_type': 'str', 'field_map': ['schema_1_table_1_id'], 'transformation': 'id'},
@@ -29,4 +30,5 @@ def test_load_scanned_tables():
             'v1',
         )
     ]
+
     assert output == expected
