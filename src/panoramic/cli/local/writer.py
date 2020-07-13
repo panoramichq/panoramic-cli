@@ -2,9 +2,9 @@ import logging
 from typing import Optional
 
 from panoramic.cli.local.file_utils import (
+    SCANNED_FILE_PACKAGE,
     FileExtension,
     FilePackage,
-    SCANNED_FILE_PACKAGE,
     get_target_abs_filepath,
     write_yaml,
 )
