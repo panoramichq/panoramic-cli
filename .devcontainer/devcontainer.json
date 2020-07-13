@@ -1,0 +1,27 @@
+{
+	"name": "Pano CLI",
+
+	"dockerComposeFile": [
+		"docker-compose.yaml"
+	],
+
+	"service": "app",
+
+	"workspaceFolder": "/workspace",
+
+	"settings": {
+		"terminal.integrated.shell.linux": "/bin/bash",
+    	"python.pythonPath": "/usr/local/bin/python"
+	},
+
+	"shutdownAction": "stopCompose",
+	"extensions": [
+		"ms-python.python",
+		"ms-python.vscode-pylance",
+		"eamodio.gitlens",
+		"visualstudioexptteam.vscodeintellicode",
+		"github.vscode-pull-request-github"
+	],
+
+	"postCreateCommand": "history -a; apt-get update; apt-get install -y git; make install; pip install mypy",
+}
