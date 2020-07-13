@@ -14,8 +14,16 @@ from panoramic.cli.refresh import Refresher
 from panoramic.cli.remote import get_state as get_remote_state
 from panoramic.cli.remote.executor import RemoteExecutor
 from panoramic.cli.scan import Scanner
+from panoramic.cli.sources.client import PhysicalDataSourceClient
 
 logger = logging.getLogger(__name__)
+
+
+def list_connections():
+    client = PhysicalDataSourceClient()
+
+    for source in client.get_sources(get_company_name()):
+        click.echo(source['name'])
 
 
 def scan(source_id: str, filter: Optional[str]):

@@ -64,3 +64,16 @@ def configure():
         os.mkdir(config_dir)
     with open(config_dir / 'config', 'w+') as f:
         f.write(yaml.safe_dump({'client_id': client_id, 'client_secret': client_secret}))
+
+
+@cli.command(help='List available data connections')
+def list_connections():
+    from panoramic.cli.command import list_connections
+
+    logger = logging.getLogger(__name__)
+
+    try:
+        list_connections()
+    except Exception:
+        print('Internal error occured.')
+        logger.debug('Internal error occured', exc_info=True)
