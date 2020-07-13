@@ -4,6 +4,7 @@ from typing import Optional
 from panoramic.cli.local.file_utils import (
     FileExtension,
     FilePackage,
+    SCANNED_FILE_PACKAGE,
     get_target_abs_filepath,
     write_yaml,
 )
@@ -45,7 +46,7 @@ class FileWriter:
         """Write model to local filesystem."""
         logger.debug(f'About to write model {model.id}')
         # TODO: Get package based on dataset?
-        package = package or FilePackage.SCANNED
+        package = package or SCANNED_FILE_PACKAGE
         path = get_target_abs_filepath(model.table_file_name, FileExtension.MODEL_YAML, package)
         write_yaml(path, model.to_dict())
 

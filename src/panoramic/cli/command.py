@@ -7,7 +7,7 @@ from panoramic.cli.context import get_company_name
 from panoramic.cli.controller import reconcile
 from panoramic.cli.executor import execute
 from panoramic.cli.local import get_state as get_local_state
-from panoramic.cli.local.file_utils import FilePackage
+from panoramic.cli.local.file_utils import SCANNED_FILE_PACKAGE
 from panoramic.cli.local.writer import FileWriter
 from panoramic.cli.parser import load_scanned_tables
 from panoramic.cli.refresh import Refresher
@@ -34,7 +34,7 @@ def scan(source_id: str, filter: Optional[str]):
                 refresher.refresh_table(table_name)
                 raw_columns = scanner.scan_columns(table_filter=table_name)
                 for table in load_scanned_tables(raw_columns, api_version):
-                    writer.write_model(table, FilePackage.SCANNED)
+                    writer.write_model(table, SCANNED_FILE_PACKAGE)
             except Exception:
                 print(f'Failed to scan table {table_name}')
                 logger.debug(f'Failed to scan table {table_name}', exc_info=True)
