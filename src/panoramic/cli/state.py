@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Generic, List, Optional, Tuple, TypeVar
+from typing import Generic, List, Optional, TypeVar
 
 from panoramic.cli.pano_model import Actionable, PanoDataSource, PanoModel
 
@@ -43,11 +43,9 @@ class ActionList(Generic[T]):
     """Container for actions."""
 
     actions: List[Action[T]]
-    direction: Tuple[Origin, Origin]
 
-    def __init__(self, *, actions: List[Action[T]], direction: Tuple[Origin, Origin]):
+    def __init__(self, *, actions: List[Action[T]]):
         self.actions = actions
-        self.direction = direction
 
 
 class VirtualState:

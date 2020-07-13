@@ -2,9 +2,7 @@ import logging
 from typing import Optional
 
 from panoramic.cli.local.file_utils import (
-    SCANNED_FILE_PACKAGE,
     FileExtension,
-    FilePackage,
     get_target_abs_filepath,
     write_yaml,
 )
@@ -25,31 +23,35 @@ class FileWriter:
         else:
             raise NotImplementedError(f'write not implemented for type {type(actionable)}')
 
-    def write(self, actionable: Actionable):
+    def write(self, actionable: Actionable, *, package: Optional[str] = None):
         """Write data to local filesystem."""
         if isinstance(actionable, PanoModel):
-            return self.write_model(actionable)
+            return self.write_model(actionable, package=package)
         elif isinstance(actionable, PanoDataSource):
-            return self.write_data_source(actionable)
+            return self.write_data_source(actionable, package=package)
         else:
             raise NotImplementedError(f'write not implemented for type {type(actionable)}')
 
-    def write_data_source(self, data_source: PanoDataSource):
+    def write_data_source(self, data_source: PanoDataSource, *, package: Optional[str] = None):
         """Write data source to local filesystem."""
+        if package is None:
+            # Default to name of slugified name of DS
+            package = data_source.slug
         logger.debug(f'About to write data source {data_source.id}')
 
     def delete_data_source(self, data_source: PanoDataSource):
         """Delete data source from local filesystem."""
         logger.debug(f'About to delete data source {data_source.id}')
 
-    def write_model(self, model: PanoModel, *, package: Optional[FilePackage] = None):
+    def write_model(self, model: PanoModel, *, package: Optional[str] = None):
         """Write model to local filesystem."""
+        # Default to name of slugified name of DS
         logger.debug(f'About to write model {model.id}')
-        # TODO: Get package based on dataset?
-        package = package or SCANNED_FILE_PACKAGE
-        path = get_target_abs_filepath(model.table_file_name, FileExtension.MODEL_YAML, package)
+        package_name = model.virtual_data_source if package is None else package
+        assert package_name is not None  # TODO: virtual_data_source is Optional but shouldn't be
+        path = get_target_abs_filepath(model.table_file_name, FileExtension.MODEL_YAML, package_name)
         write_yaml(path, model.to_dict())
 
-    def delete_model(self, model: PanoModel, *, package: Optional[FilePackage] = None):
+    def delete_model(self, model: PanoModel):
         """Delete model from local filesystem."""
         logger.debug(f'About to delete model {model.id}')

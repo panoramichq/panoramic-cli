@@ -1,19 +1,62 @@
+from pathlib import Path
+from typing import Any, Dict, Iterable, List, Optional
+
 from panoramic.cli.local.file_utils import (
     FileExtension,
-    FilePackage,
-    get_work_dir_abs_filepath,
+    PresetFileName,
+    SystemDirectory,
     read_yaml,
 )
-from panoramic.cli.pano_model import PanoDataSource, PanoModel
+
+
+class Package:
+
+    name: str
+    data_source_file: Path
+    model_files: List[Path]
+
+    def __init__(self, *, name: str, data_source_file: Path, model_files: List[Path]):
+        self.name = name
+        self.data_source_file = data_source_file
+        self.model_files = model_files
+
+    @property
+    def data_source(self) -> Dict[str, Any]:
+        return read_yaml(self.data_source_file)
+
+    @property
+    def models(self) -> Iterable[Dict[str, Any]]:
+        return (read_yaml(f) for f in self.model_files)
 
 
 class FileReader:
-    def read(self, package: FilePackage):
-        directory = get_work_dir_abs_filepath() / package
-        data_source_path = directory / 'data_source.yaml'
-        data_source = PanoDataSource.from_dict(read_yaml(data_source_path))
-        models = [
-            PanoModel.from_dict(read_yaml(model_path))
-            for model_path in directory.glob(f'*{FileExtension.MODEL_YAML.value}')
-        ]
-        return data_source, models
+
+    cwd: Path
+
+    def __init__(self, *, cwd: Optional[Path] = None):
+        if cwd is None:
+            cwd = Path.cwd()
+
+        self.cwd = cwd
+
+    def _is_system_dir(self, path: Path) -> bool:
+        """True when directory is a system directory."""
+        return path.name in {d.value for d in SystemDirectory}
+
+    def _has_data_source_file(self, path: Path) -> bool:
+        """True when directory contains data source file."""
+        return (path / PresetFileName.DATASET_YAML.value).exists()
+
+    def get_packages(self) -> Iterable[Package]:
+        """List of packages available in push/pull directory."""
+        package_dirs = (
+            f for f in self.cwd.iterdir() if f.is_dir() and not self._is_system_dir(f) and self._has_data_source_file(f)
+        )
+        return (
+            Package(
+                name=d.name,
+                data_source_file=d / PresetFileName.DATASET_YAML.value,
+                model_files=list(d.glob(f'*{FileExtension.MODEL_YAML}')),
+            )
+            for d in package_dirs
+        )
