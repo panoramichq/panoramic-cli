@@ -27,7 +27,7 @@ def map_model_join_from_remote(join: ModelJoin) -> PanoModelJoin:
     # TODO: there is only one field in YAML
     # TODO: there is no to_model in YAML
     return PanoModelJoin(
-        field=join.taxons[0], join_type=join.join_type, relationship=join.relationship, to_model=join.to_model
+        fields=join.taxons, join_type=join.join_type, relationship=join.relationship, to_model=join.to_model
     )
 
 
@@ -36,7 +36,7 @@ def map_model_join_from_local(join: PanoModelJoin) -> ModelJoin:
     # TODO: there is only one field in YAML
     # TODO: there is no to_model in YAML
     return ModelJoin(
-        taxons=[join.field], join_type=join.join_type, relationship=join.relationship, to_model=join.to_model
+        taxons=join.fields, join_type=join.join_type, relationship=join.relationship, to_model=join.to_model
     )
 
 

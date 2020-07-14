@@ -45,20 +45,20 @@ class PanoModelField:
 class PanoModelJoin:
     """Represent joins on other models."""
 
-    field: str
+    fields: List[str]
     join_type: str
     relationship: str
     to_model: str
 
-    def __init__(self, *, field: str, join_type: str, relationship: str, to_model: str):
-        self.field = field
+    def __init__(self, *, fields: List[str], join_type: str, relationship: str, to_model: str):
+        self.fields = fields
         self.join_type = join_type
         self.relationship = relationship
         self.to_model = to_model
 
     def to_dict(self) -> Dict[str, Any]:
         return {
-            'field': self.field,
+            'field': self.fields,
             'join_type': self.join_type,
             'relationship': self.relationship,
             'to_model': self.to_model,
@@ -67,7 +67,7 @@ class PanoModelJoin:
     @classmethod
     def from_dict(cls, inputs: Dict[str, Any]) -> 'PanoModelJoin':
         return cls(
-            field=inputs['field'],
+            fields=inputs['fields'],
             join_type=inputs['join_type'],
             relationship=inputs['relationship'],
             to_model=inputs['to_model'],
