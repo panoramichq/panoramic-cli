@@ -22,10 +22,12 @@ class Package:
 
     @property
     def data_source(self) -> Dict[str, Any]:
+        # TODO: cache this in the future
         return read_yaml(self.data_source_file)
 
     @property
     def models(self) -> Iterable[Dict[str, Any]]:
+        # TODO: cache this in the future
         return (read_yaml(f) for f in self.model_files)
 
 
