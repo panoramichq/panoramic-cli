@@ -39,18 +39,30 @@ class PanoModelJoin:
     field: str
     join_type: str
     relationship: str
+    to_model: str
 
-    def __init__(self, *, field: str, join_type: str, relationship: str):
+    def __init__(self, *, field: str, join_type: str, relationship: str, to_model: str):
         self.field = field
         self.join_type = join_type
         self.relationship = relationship
+        self.to_model = to_model
 
     def to_dict(self) -> Dict[str, Any]:
-        return {'field': self.field, 'join_type': self.join_type, 'relationship': self.relationship}
+        return {
+            'field': self.field,
+            'join_type': self.join_type,
+            'relationship': self.relationship,
+            'to_model': self.to_model,
+        }
 
     @classmethod
     def from_dict(cls, inputs: Dict[str, Any]) -> 'PanoModelJoin':
-        return cls(field=inputs['field'], join_type=inputs['join_type'], relationship=inputs['relationship'])
+        return cls(
+            field=inputs['field'],
+            join_type=inputs['join_type'],
+            relationship=inputs['relationship'],
+            to_model=inputs['to_model'],
+        )
 
 
 class PanoModel(Actionable):
