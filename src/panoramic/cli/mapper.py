@@ -24,8 +24,6 @@ def map_data_source_from_local(vds: PanoVirtualDataSource) -> VirtualDataSource:
 
 def map_model_join_from_remote(join: ModelJoin) -> PanoModelJoin:
     """Convert remote join to local join."""
-    # TODO: there is only one field in YAML
-    # TODO: there is no to_model in YAML
     return PanoModelJoin(
         fields=join.taxons, join_type=join.join_type, relationship=join.relationship, to_model=join.to_model
     )
@@ -33,8 +31,6 @@ def map_model_join_from_remote(join: ModelJoin) -> PanoModelJoin:
 
 def map_model_join_from_local(join: PanoModelJoin) -> ModelJoin:
     """Convert local join to remote join."""
-    # TODO: there is only one field in YAML
-    # TODO: there is no to_model in YAML
     return ModelJoin(
         taxons=join.fields, join_type=join.join_type, relationship=join.relationship, to_model=join.to_model
     )
@@ -48,10 +44,9 @@ def map_fields_from_remote(attributes: List[ModelAttribute]) -> Iterable[PanoMod
     for attr in attributes:
         attrs_by_key[(attr.transformation, attr.column_name)].append(attr)
 
-    # TODO: column name being ignored
     for (transformation, _), attrs in attrs_by_key.items():
         yield PanoModelField(
-            # TODO: assuming data type is the same across all attributes
+            # assuming data type is the same across all attributes
             field_map=[a.taxon for a in attrs],
             transformation=transformation,
             data_type=attrs[0].column_data_type,
@@ -63,7 +58,6 @@ def map_attributes_from_local(field: PanoModelField, identifiers: List[str]) -> 
     for field_name in field.field_map:
         yield ModelAttribute(
             column_data_type=field.data_type,
-            # TODO: do we need column name or is transformation enough?
             column_name=field.transformation,
             taxon=field_name,
             identifier=field_name in identifiers,
