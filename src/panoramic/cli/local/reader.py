@@ -9,7 +9,7 @@ from panoramic.cli.local.file_utils import (
 )
 
 
-class Package:
+class FilePackage:
 
     name: str
     data_source_file: Path
@@ -49,13 +49,13 @@ class FileReader:
         """True when directory contains data source file."""
         return (path / PresetFileName.DATASET_YAML.value).exists()
 
-    def get_packages(self) -> Iterable[Package]:
+    def get_packages(self) -> Iterable[FilePackage]:
         """List of packages available in push/pull directory."""
         package_dirs = (
             f for f in self.cwd.iterdir() if f.is_dir() and not self._is_system_dir(f) and self._has_data_source_file(f)
         )
         return (
-            Package(
+            FilePackage(
                 name=d.name,
                 data_source_file=d / PresetFileName.DATASET_YAML.value,
                 model_files=list(d.glob(f'*{FileExtension.MODEL_YAML}')),
