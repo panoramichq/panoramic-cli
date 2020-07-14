@@ -1,4 +1,6 @@
+from pathlib import Path
 from typing import Any, Dict, List
+
 import pydash
 import yaml
 import yaml.scanner
@@ -24,11 +26,10 @@ def _get_yaml_value_from_object(data: Dict[str, Any], value_path: List[str]):
         raise MissingValueException('api_version')
 
 
-def get_yaml_value(file_path: str, value_path: str):
+def get_yaml_value(file_path: Path, value_path: str):
     try:
         with open(file_path) as f:
             data = yaml.safe_load(f)
             return _get_yaml_value_from_object(data, value_path.split('.'))
     except yaml.scanner.ScannerError as error:
         raise InvalidYamlFile(error)
-

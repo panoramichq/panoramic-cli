@@ -1,12 +1,17 @@
 import os
-from pathlib import Path
 import tempfile
+from pathlib import Path
+
 import pytest
 import yaml
-from panoramic.cli.errors import InvalidYamlFile, MissingConfigFileException, MissingValueException
-from tests.panoramic.cli.util import overwrite_env
 
 from panoramic.cli.config.auth import get_client_id, get_client_secret
+from panoramic.cli.errors import (
+    InvalidYamlFile,
+    MissingConfigFileException,
+    MissingValueException,
+)
+from tests.panoramic.cli.util import overwrite_env
 
 
 def test_no_config_file():

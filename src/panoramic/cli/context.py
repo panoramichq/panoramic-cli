@@ -1,9 +1,10 @@
 from pathlib import Path
+
 from panoramic.cli.errors import MissingContextFileException
 from panoramic.cli.util import get_yaml_value
 
 
-def _get_context_yaml_value(file_path: str, value_path: str):
+def _get_context_yaml_value(file_path: Path, value_path: str):
     try:
         return get_yaml_value(file_path, value_path)
     except FileNotFoundError:

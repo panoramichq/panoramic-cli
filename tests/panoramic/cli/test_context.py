@@ -1,11 +1,16 @@
-from pathlib import Path
 import tempfile
+from pathlib import Path
+
 import pytest
 import yaml
-from panoramic.cli.errors import InvalidYamlFile, MissingContextFileException, MissingValueException
-from tests.panoramic.cli.util import changedir
 
 from panoramic.cli.context import get_api_version, get_company_slug
+from panoramic.cli.errors import (
+    InvalidYamlFile,
+    MissingContextFileException,
+    MissingValueException,
+)
+from tests.panoramic.cli.util import changedir
 
 
 def test_no_context_file():
