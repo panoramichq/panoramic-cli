@@ -6,6 +6,8 @@ class Actionable(ABC):
 
     """Interface for object that you can perform actions on."""
 
+    package: Optional[str]
+
 
 class PanoModelField:
     """Field stored on a model."""
@@ -61,33 +63,35 @@ class PanoModel(Actionable):
     # TODO: Unify the naming
 
     # TODO: consider splitting out because VDS non-optional with push/pulled models
-    virtual_data_source: Optional[str]
     table_file_name: str
-    # TODO: remove this field
     data_source: str
     fields: List[PanoModelField]
     joins: List[PanoModelJoin]
     identifiers: List[str]
     api_version: str
 
+    virtual_data_source: Optional[str]
+
     def __init__(
         self,
         *,
-        virtual_data_source: Optional[str],
         table_file_name: str,
         data_source: str,
         fields: List[PanoModelField],
         joins: List[PanoModelJoin],
         identifiers: List[str],
         api_version: str,
+        virtual_data_source: Optional[str],
+        package: Optional[str] = None,
     ):
-        self.virtual_data_source = virtual_data_source
         self.table_file_name = table_file_name
         self.data_source = data_source
         self.fields = fields
         self.joins = joins
         self.identifiers = identifiers
         self.api_version = api_version
+        self.virtual_data_source = virtual_data_source
+        self.package = package
 
     @property
     def id(self):
@@ -107,13 +111,14 @@ class PanoModel(Actionable):
     @classmethod
     def from_dict(cls, inputs: Dict[str, Any]) -> 'PanoModel':
         return cls(
-            virtual_data_source=inputs.get('virtual_data_source'),
             table_file_name=inputs['table_file_name'],
             data_source=inputs['data_source'],
             fields=[PanoModelField.from_dict(x) for x in inputs.get('fields', [])],
             joins=[PanoModelJoin.from_dict(x) for x in inputs.get('joins', [])],
             identifiers=inputs.get('identifiers', []),
             api_version=inputs['api_version'],
+            virtual_data_source=inputs.get('virtual_data_source'),
+            package=inputs.get('package'),
         )
 
 
@@ -123,9 +128,10 @@ class PanoDataSource(Actionable):
     slug: str
     display_name: str
 
-    def __init__(self, *, slug: str, display_name: str):
+    def __init__(self, *, slug: str, display_name: str, package: Optional[str] = None):
         self.slug = slug
         self.display_name = display_name
+        self.package = package
 
     @property
     def id(self):
@@ -139,4 +145,4 @@ class PanoDataSource(Actionable):
 
     @classmethod
     def from_dict(cls, inputs: Dict[str, Any]) -> 'PanoDataSource':
-        return cls(slug=inputs['slug'], display_name=inputs['display_name'])
+        return cls(slug=inputs['slug'], display_name=inputs['display_name'], package=inputs.get('package'))
