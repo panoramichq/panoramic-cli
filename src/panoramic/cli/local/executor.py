@@ -1,6 +1,6 @@
 import logging
-
 from typing import Optional
+
 from panoramic.cli.executor import Executor
 from panoramic.cli.remote.writer import RemoteWriter
 from panoramic.cli.state import Action

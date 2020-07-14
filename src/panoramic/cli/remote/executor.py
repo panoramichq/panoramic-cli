@@ -1,4 +1,5 @@
 from typing import Optional
+
 from panoramic.cli.executor import Executor
 from panoramic.cli.local.writer import FileWriter
 from panoramic.cli.state import Action

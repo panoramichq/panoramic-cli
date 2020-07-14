@@ -5,8 +5,6 @@ import click
 
 from panoramic.cli.context import get_company_name
 from panoramic.cli.controller import reconcile
-
-# from panoramic.cli.executor import execute_local, execute_remote
 from panoramic.cli.local import get_state as get_local_state
 from panoramic.cli.local.executor import RemoteExecutor
 from panoramic.cli.local.file_utils import SystemDirectory
@@ -52,8 +50,9 @@ def pull():
 
     actions = reconcile(local_state, remote_state)
     executor = LocalExecutor()
-    for action in actions.actions:
-        executor.execute(action)
+    with click.progressbar(actions.actions) as bar:
+        for action in bar:
+            executor.execute(action)
 
 
 def push():
@@ -64,5 +63,6 @@ def push():
 
     actions = reconcile(remote_state, local_state)
     executor = RemoteExecutor(company_name)
-    for action in actions.actions:
-        executor.execute(action)
+    with click.progressbar(actions.actions) as bar:
+        for action in bar:
+            executor.execute(action)
