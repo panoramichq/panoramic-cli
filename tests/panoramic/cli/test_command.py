@@ -2,7 +2,7 @@ from unittest.mock import ANY, call, patch
 
 import pytest
 
-from panoramic.cli.command import scan, list_connections
+from panoramic.cli.command import list_connections, scan
 from panoramic.cli.local.file_utils import SystemDirectory
 
 

@@ -1,10 +1,7 @@
 from typing import Any, Dict, List, Optional
 
 from panoramic.auth import OAuth2Client
-from panoramic.cli.config.auth import (
-    get_client_id,
-    get_client_secret,
-)
+from panoramic.cli.config.auth import get_client_id, get_client_secret
 from panoramic.cli.config.source import get_base_url
 
 
