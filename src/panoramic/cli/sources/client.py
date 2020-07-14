@@ -7,7 +7,7 @@ from panoramic.cli.config.source import get_base_url
 
 class PhysicalDataSourceClient(OAuth2Client):
 
-    """Metadata HTTP API client."""
+    """Physical data source HTTP API client."""
 
     base_url: str
     _base_url_with_trailing_slash: str

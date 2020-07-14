@@ -27,7 +27,7 @@ def list_connections():
 
 
 def scan(source_id: str, filter: Optional[str]):
-    """Scan all metdata for given source and filter."""
+    """Scan all metadata for given source and filter."""
     # TODO: Obtain api version
     api_version = 'v1'
     scanner = Scanner(source_id)
