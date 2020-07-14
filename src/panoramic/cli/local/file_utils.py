@@ -8,11 +8,6 @@ import yaml
 logger = logging.getLogger(__name__)
 
 
-FilePackage = str
-
-SCANNED_FILE_PACKAGE: FilePackage = 'scanned'
-
-
 class FileExtension(Enum):
     """
     Enumeration with all available file extensions
@@ -21,19 +16,16 @@ class FileExtension(Enum):
     MODEL_YAML = '.model.yaml'
 
 
-def get_work_dir_abs_filepath() -> Path:
-    """
-    Return abs filepath of current workdir
-    """
-    return Path().absolute()
+class PresetFileName(Enum):
+
+    """Enumeration with all available preset file names."""
+
+    DATASET_YAML = 'Dataset.yaml'
 
 
-def get_target_abs_filepath(table_file_name: str, file_extension: FileExtension, file_package: FilePackage) -> Path:
-    """
-    Get target file abs filepath
-    """
-    file_name = f'{table_file_name}{file_extension.value}'
-    return get_work_dir_abs_filepath() / file_package / file_name
+class SystemDirectory(Enum):
+
+    SCANNED = 'scanned'
 
 
 def ensure_dir(abs_filepath: Path):
@@ -54,7 +46,7 @@ def write_yaml(abs_filepath: Path, yaml_dict: Dict[str, Any]):
         yaml.dump(yaml_dict, f, default_flow_style=False)
 
 
-def read_yaml(abs_filepath: str) -> Dict[str, Any]:
+def read_yaml(abs_filepath: Path) -> Dict[str, Any]:
     """
     Reads yaml dict from path
     """
@@ -65,5 +57,6 @@ def read_yaml(abs_filepath: str) -> Dict[str, Any]:
 
 def delete_file(abs_filepath: Path):
     """Delete file at given path."""
-    # TODO: check file exists before deleting it
-    abs_filepath.unlink()
+    # TODO: Consider warning - wanted to delete model but not found
+    if abs_filepath.exists():
+        abs_filepath.unlink()

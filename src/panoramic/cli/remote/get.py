@@ -27,6 +27,8 @@ def get_models(data_source: str, company_name: str, *, limit: int = 100) -> Iter
     offset = 0
     while True:
         models = client.get_models(data_source, company_name, offset=offset, limit=limit)
+        for m in models:
+            m['virtual_data_source'] = data_source
         yield from (PanoModel.from_dict(d) for d in models)
         if len(models) < limit:
             # last page
