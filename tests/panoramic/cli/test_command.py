@@ -50,8 +50,14 @@ def test_scan_single_table_error(mock_writer, mock_scanner, mock_refresher):
     assert mock_writer.write_model.mock_calls == [call(ANY, package=SystemDirectory.SCANNED.value)]
 
 
-@patch('panoramic.cli.command.PhysicalDataSourceClient.get_sources')
+
+@pytest.fixture()
+def mock_physical_data_source_client():
+    with patch('panoramic.cli.command.PhysicalDataSourceClient') as client_class:
+        yield client_class()
+
+
 @patch('panoramic.cli.command.get_company_name', return_value='damn')
-def test_list_connections(mock_get_company_name, mock_source_client_get_sources):
+def test_list_connections(mock_get_company_name, mock_physical_data_source_client):
     list_connections()
-    mock_source_client_get_sources.assert_called_with('damn')
+    mock_physical_data_source_client.get_sources.assert_called_with('damn')
