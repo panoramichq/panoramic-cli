@@ -39,16 +39,16 @@ def map_model_join_from_local(join: PanoModelJoin) -> ModelJoin:
 def map_fields_from_remote(attributes: List[ModelAttribute]) -> Iterable[PanoModelField]:
     """Convert remote model to local model."""
 
-    # Anything with same transformation and column name is the same field
+    # Anything with same transformation is the same field
     attrs_by_key = defaultdict(list)
     for attr in attributes:
-        attrs_by_key[(attr.transformation, attr.column_name)].append(attr)
+        attrs_by_key[attr.transformation].append(attr)
 
-    for (transformation, _), attrs in attrs_by_key.items():
+    for transformation, attrs in attrs_by_key.items():
         yield PanoModelField(
-            # assuming data type is the same across all attributes
             field_map=[a.taxon for a in attrs],
             transformation=transformation,
+            # assuming type is the same across all attributes
             data_type=attrs[0].column_data_type,
         )
 
