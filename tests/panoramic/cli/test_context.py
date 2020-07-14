@@ -3,13 +3,13 @@ import tempfile
 import pytest
 import yaml
 from panoramic.cli.errors import InvalidYamlFile, MissingContextFileException, MissingValueException
-from tests.panoramic.cli.util import cd
+from tests.panoramic.cli.util import changedir
 
 from panoramic.cli.context import get_api_version, get_company_slug
 
 
 def test_no_context_file():
-    with tempfile.TemporaryDirectory() as tmpdirname, cd(tmpdirname):
+    with tempfile.TemporaryDirectory() as tmpdirname, changedir(tmpdirname):
         with pytest.raises(MissingContextFileException):
             get_api_version()
 
@@ -18,7 +18,7 @@ def test_no_context_file():
 
 
 def test_invalid_context_file():
-    with tempfile.TemporaryDirectory() as tmpdirname, cd(tmpdirname):
+    with tempfile.TemporaryDirectory() as tmpdirname, changedir(tmpdirname):
         with open(Path(tmpdirname) / 'pano.yaml', 'w') as f:
             f.write('api_version: some_value\ncompany_slug slug_but_missing_colon\n')
 
@@ -36,14 +36,14 @@ def test_invalid_context_file():
 
 
 def test_missing_value_context_file():
-    with tempfile.TemporaryDirectory() as tmpdirname, cd(tmpdirname):
+    with tempfile.TemporaryDirectory() as tmpdirname, changedir(tmpdirname):
         with open(Path(tmpdirname) / 'pano.yaml', 'w') as f:
             f.write(yaml.dump(dict(company_slug='company_name_12fxs')))
 
         with pytest.raises(MissingValueException):
             get_api_version()
 
-    with tempfile.TemporaryDirectory() as tmpdirname, cd(tmpdirname):
+    with tempfile.TemporaryDirectory() as tmpdirname, changedir(tmpdirname):
         with open(Path(tmpdirname) / 'pano.yaml', 'w') as f:
             f.write(yaml.dump(dict(api_version='v2')))
 
@@ -52,7 +52,7 @@ def test_missing_value_context_file():
 
 
 def test_context_file():
-    with tempfile.TemporaryDirectory() as tmpdirname, cd(tmpdirname):
+    with tempfile.TemporaryDirectory() as tmpdirname, changedir(tmpdirname):
         with open(Path(tmpdirname) / 'pano.yaml', 'w') as f:
             f.write(yaml.dump(dict(api_version='v2', company_slug='company_name_12fxs')))
 

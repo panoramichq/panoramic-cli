@@ -4,7 +4,7 @@ from contextlib import contextmanager
 
 
 @contextmanager
-def cd(new_directory_path: str):
+def changedir(new_directory_path: str):
     current_directory_path = os.getcwd()
 
     os.chdir(new_directory_path)
@@ -13,6 +13,7 @@ def cd(new_directory_path: str):
         yield
     finally:
         os.chdir(current_directory_path)
+
 
 @contextmanager
 def overwrite_env(name: str, value: str):
