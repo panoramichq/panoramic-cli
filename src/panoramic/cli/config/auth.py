@@ -21,7 +21,7 @@ def get_client_id() -> str:
     try:
         return os.environ['PANO_CLIENT_ID']
     except KeyError:
-        return _get_config_yaml_value(Path.home() / '.pano' / 'config')
+        return _get_config_yaml_value(Path.home() / '.pano' / 'config', 'client_id')
 
 
 def get_client_secret() -> str:
