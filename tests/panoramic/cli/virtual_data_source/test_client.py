@@ -9,8 +9,6 @@ def mock_token_url(monkeypatch):
     monkeypatch.setenv('PANORAMIC_AUTH_TOKEN_URL', 'https://token')
 
 
-# TODO: Remove test skip once authz ready
-@pytest.mark.skip
 @responses.activate
 def test_upsert_virtual_data_source():
     responses.add(responses.POST, 'https://token/', json={'access_token': '123123'})
@@ -24,8 +22,6 @@ def test_upsert_virtual_data_source():
     client.upsert_virtual_data_source('test-company', {'display_name': 'test', 'slug': 'bug'})
 
 
-# TODO: Remove test skip once authz ready
-@pytest.mark.skip
 @responses.activate
 def test_get_all_virtual_data_sources():
     responses.add(responses.POST, 'https://token/', json={'access_token': '123123'})
@@ -44,8 +40,6 @@ def test_get_all_virtual_data_sources():
     assert client.get_all_virtual_data_sources('test-company', offset=200, limit=100) == [fake_source]
 
 
-# TODO: Remove test skip once authz ready
-@pytest.mark.skip
 @responses.activate
 def test_get_virtual_data_source():
     responses.add(responses.POST, 'https://token/', json={'access_token': '123123'})
@@ -63,8 +57,6 @@ def test_get_virtual_data_source():
     assert remote_source == fake_source
 
 
-# TODO: Remove test skip once authz ready
-@pytest.mark.skip
 @responses.activate
 def test_delete_virtual_data_source():
     responses.add(responses.POST, 'https://token/', json={'access_token': '123123'})
