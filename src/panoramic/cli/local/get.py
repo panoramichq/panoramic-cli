@@ -17,4 +17,4 @@ def get_state() -> VirtualState:
             model['virtual_data_source'] = data_source
             models.append(PanoModel.from_dict(model))
 
-    return VirtualState.local(data_sources=data_sources, models=models)
+    return VirtualState(data_sources=data_sources, models=models)

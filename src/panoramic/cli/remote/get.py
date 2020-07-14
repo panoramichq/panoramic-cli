@@ -43,4 +43,4 @@ def get_state(company_name: str) -> VirtualState:
     models = list(
         itertools.chain.from_iterable(get_models(source.dataset_slug, company_name) for source in data_sources)
     )
-    return VirtualState.remote(data_sources=data_sources, models=models)
+    return VirtualState(data_sources=data_sources, models=models)
