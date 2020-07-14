@@ -17,15 +17,14 @@ logger = logging.getLogger(__name__)
 class FileWriter:
     """Responsible for writing data to local filesystem."""
 
+    API_VERSION = 'v1'
     cwd: Path
-    api_version: str
 
     def __init__(self, *, cwd: Optional[Path] = None):
         if cwd is None:
             cwd = Path.cwd()
 
         self.cwd = cwd
-        self.api_version = 'v1'
 
     def delete(self, actionable: Actionable):
         """Delete data from local filesystem."""
@@ -51,7 +50,7 @@ class FileWriter:
         package = package if package is not None else data_source.dataset_slug
         path = self.cwd / package / PresetFileName.DATASET_YAML.value
         logger.debug(f'About to write data source {data_source.id}')
-        write_yaml(path, add_file_api_version(data_source.to_dict(), self.api_version))
+        write_yaml(path, add_file_api_version(data_source.to_dict(), self.API_VERSION))
 
     def delete_data_source(self, data_source: PanoVirtualDataSource):
         """Delete data source from local filesystem."""
@@ -67,7 +66,7 @@ class FileWriter:
         assert package_name is not None  # TODO: virtual_data_source is Optional but shouldn't be
         path = self.cwd / package_name / f'{model.model_name}{FileExtension.MODEL_YAML.value}'
         logger.debug(f'About to write model {model.id}')
-        write_yaml(path, add_file_api_version(model.to_dict(), self.api_version))
+        write_yaml(path, add_file_api_version(model.to_dict(), self.API_VERSION))
 
     def delete_model(self, model: PanoModel):
         """Delete model from local filesystem."""
