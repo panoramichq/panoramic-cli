@@ -1,18 +1,22 @@
-from typing import Optional
+import logging
 
 from panoramic.cli.executor import Executor
-from panoramic.cli.local.writer import FileWriter
+from panoramic.cli.remote.writer import RemoteWriter
 from panoramic.cli.state import Action
 
+logger = logging.getLogger(__name__)
 
-class LocalExecutor(Executor):
 
-    """Executes actions against local filesystem."""
+class RemoteExecutor(Executor):
 
-    def __init__(self, writer: Optional[FileWriter] = None):
-        if writer is None:
-            writer = FileWriter()
-        self.writer = writer
+    """Executes actions against remote API."""
+
+    company_name: str
+    writer: RemoteWriter
+
+    def __init__(self, company_name: str):
+        self.company_name = company_name
+        self.writer = RemoteWriter(company_name)
 
     def execute(self, action: Action):
         if action.is_creation:
@@ -24,5 +28,4 @@ class LocalExecutor(Executor):
         else:
             # assume update
             assert action.desired is not None
-            assert action.current is not None
-            self.writer.write(action.desired, package=action.current.package)
+            self.writer.write(action.desired)

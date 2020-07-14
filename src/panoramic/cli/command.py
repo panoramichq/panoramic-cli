@@ -6,13 +6,13 @@ import click
 from panoramic.cli.context import get_company_name
 from panoramic.cli.controller import reconcile
 from panoramic.cli.local import get_state as get_local_state
-from panoramic.cli.local.executor import RemoteExecutor
+from panoramic.cli.local.executor import LocalExecutor
 from panoramic.cli.local.file_utils import SystemDirectory
 from panoramic.cli.local.writer import FileWriter
 from panoramic.cli.parser import load_scanned_tables
 from panoramic.cli.refresh import Refresher
 from panoramic.cli.remote import get_state as get_remote_state
-from panoramic.cli.remote.executor import LocalExecutor
+from panoramic.cli.remote.executor import RemoteExecutor
 from panoramic.cli.scan import Scanner
 
 logger = logging.getLogger(__name__)

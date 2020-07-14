@@ -1,5 +1,4 @@
 import logging
-from typing import Optional
 
 from panoramic.cli.model import ModelClient
 from panoramic.cli.pano_model import Actionable, PanoDataSource, PanoModel
@@ -16,20 +15,9 @@ class RemoteWriter:
     virtual_data_source_client: VirtualDataSourceClient
     model_client: ModelClient
 
-    def __init__(
-        self,
-        company_name: str,
-        *,
-        virtual_data_source_client: Optional[VirtualDataSourceClient] = None,
-        model_client: Optional[ModelClient] = None,
-    ):
-        if virtual_data_source_client is None:
-            virtual_data_source_client = VirtualDataSourceClient()
-        if model_client is None:
-            model_client = ModelClient()
-
-        self.virtual_data_source_client = virtual_data_source_client
-        self.model_client = model_client
+    def __init__(self, company_name: str):
+        self.virtual_data_source_client = VirtualDataSourceClient()
+        self.model_client = ModelClient()
 
     def delete(self, actionable: Actionable):
         """Delete data from remote api."""
