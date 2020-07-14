@@ -70,7 +70,8 @@ def add_file_api_version(data: Dict[str, Any], api_version: str) -> Dict[str, An
     return data
 
 
-def remove_file_api_version(data: Dict[str, Any]):
+def remove_file_api_version(data: Dict[str, Any]) -> Dict[str, Any]:
     """Remove file api version."""
     if API_VERSION_ATTRIBUTE in data:
         del data[API_VERSION_ATTRIBUTE]
+    return data
