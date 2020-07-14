@@ -22,7 +22,7 @@ class PhysicalDataSourceClient(OAuth2Client):
         client_id = client_id if client_id is not None else get_client_id()
         client_secret = client_secret if client_secret is not None else get_client_secret()
 
-        # Since we need to request api/virtual?company_id=x and api/virtual/slug?company_id=1
+        # Since we need to request api/source?company_slug=x and api/virtual/slug?company_slug=x
         # the base gets corrected to not include trailing slash
         #
         # Check https://stackoverflow.com/questions/10893374/python-confusions-with-urljoin for more context
