@@ -36,5 +36,4 @@ class PhysicalDataSourceClient(OAuth2Client):
     def get_sources(self, company_slug: str) -> List[Dict[str, Any]]:
         response = self.session.get(self.base_url, params={'company_slug': company_slug})
         response.raise_for_status()
-
         return response.json()['data']
