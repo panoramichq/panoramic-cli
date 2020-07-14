@@ -50,7 +50,6 @@ def test_scan_single_table_error(mock_writer, mock_scanner, mock_refresher):
     assert mock_writer.write_model.mock_calls == [call(ANY, package=SystemDirectory.SCANNED.value)]
 
 
-
 @pytest.fixture()
 def mock_physical_data_source_client():
     with patch('panoramic.cli.command.PhysicalDataSourceClient') as client_class:
