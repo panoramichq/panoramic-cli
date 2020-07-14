@@ -36,25 +36,17 @@ def map_model_join_from_local(join: PanoModelJoin) -> ModelJoin:
     )
 
 
-def map_fields_from_remote(attributes: List[ModelAttribute]) -> Iterable[PanoModelField]:
-    """Convert remote model to local model."""
-
-    # Anything with same transformation is the same field
-    attrs_by_key = defaultdict(list)
-    for attr in attributes:
-        attrs_by_key[attr.transformation].append(attr)
-
-    for transformation, attrs in attrs_by_key.items():
-        yield PanoModelField(
-            field_map=[a.taxon for a in attrs],
-            transformation=transformation,
-            # assuming type is the same across all attributes
-            data_type=attrs[0].column_data_type,
-        )
+def map_field_from_remote(attributes: List[ModelAttribute]) -> PanoModelField:
+    """Convert remote attributes to local field."""
+    # type and transformation are same across all attributes
+    transformation = attributes[0].transformation
+    data_type = attributes[0].column_data_type
+    assert transformation is not None and data_type is not None
+    return PanoModelField(field_map=[a.taxon for a in attributes], transformation=transformation, data_type=data_type,)
 
 
 def map_attributes_from_local(field: PanoModelField, identifiers: List[str]) -> Iterable[ModelAttribute]:
-    """Convert local model to remote model."""
+    """Convert local field to remote attributes."""
     for field_name in field.field_map:
         yield ModelAttribute(
             column_data_type=field.data_type,
@@ -67,10 +59,14 @@ def map_attributes_from_local(field: PanoModelField, identifiers: List[str]) -> 
 
 def map_model_from_remote(model: Model) -> PanoModel:
     """Convert remote model to local model."""
+    attrs_by_key = defaultdict(list)
+    for attr in model.attributes:
+        attrs_by_key[attr.transformation].append(attr)
+
     return PanoModel(
         model_name=model.name,
         data_source=model.fully_qualified_object_name,
-        fields=list(map_fields_from_remote(model.attributes)),
+        fields=[map_field_from_remote(attrs) for (_, attrs) in attrs_by_key],
         joins=[map_model_join_from_remote(j) for j in model.joins],
         identifiers=[a.taxon for a in model.attributes if a.identifier],
     )
