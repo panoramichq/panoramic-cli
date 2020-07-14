@@ -5,7 +5,7 @@ services:
       dockerfile: .devcontainer/Dockerfile
       context: ..
     environment:
-      PYTHONPATH: "/workspace/src"
+      PYTHONPATH: "/workspace:/workspace/src"
       PYTHONUNBUFFERED: 1
       HISTFILE: '/root/.bashhistory/.bash_history'
     volumes:

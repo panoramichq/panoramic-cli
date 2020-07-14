@@ -3,7 +3,7 @@ from typing import Optional
 
 import click
 
-from panoramic.cli.context import get_company_name
+from panoramic.cli.context import get_company_slug
 from panoramic.cli.controller import reconcile
 from panoramic.cli.executor import execute
 from panoramic.cli.local import get_state as get_local_state
@@ -43,9 +43,9 @@ def scan(source_id: str, filter: Optional[str]):
 
 def pull():
     """Pull models and data sources from remote."""
-    company_name = get_company_name()
-    remote_state = get_remote_state(company_name)
-    local_state = get_local_state(company_name)
+    company_slug = get_company_slug()
+    remote_state = get_remote_state(company_slug)
+    local_state = get_local_state(company_slug)
 
     actions = reconcile(local_state, remote_state)
     execute(actions)
@@ -53,9 +53,9 @@ def pull():
 
 def push():
     """Push models and data sources to remote."""
-    company_name = get_company_name()
-    remote_state = get_remote_state(company_name)
-    local_state = get_local_state(company_name)
+    company_slug = get_company_slug()
+    remote_state = get_remote_state(company_slug)
+    local_state = get_local_state(company_slug)
 
     actions = reconcile(remote_state, local_state)
     execute(actions)
