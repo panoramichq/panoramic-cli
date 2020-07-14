@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import Generic, List, Optional, TypeVar
 
-from panoramic.cli.pano_model import Actionable, PanoDataSource, PanoModel
+from panoramic.cli.pano_model import Actionable, PanoModel, PanoVirtualDataSource
 
 
 class Origin(Enum):
@@ -52,19 +52,19 @@ class VirtualState:
 
     """Represent collection of virtual data sources."""
 
-    data_sources: List[PanoDataSource]
+    data_sources: List[PanoVirtualDataSource]
     models: List[PanoModel]
     origin: Origin
 
-    def __init__(self, *, data_sources: List[PanoDataSource], models: List[PanoModel], origin: Origin):
+    def __init__(self, *, data_sources: List[PanoVirtualDataSource], models: List[PanoModel], origin: Origin):
         self.data_sources = data_sources
         self.models = models
         self.origin = origin
 
     @staticmethod
-    def remote(*, data_sources: List[PanoDataSource], models: List[PanoModel]):
+    def remote(*, data_sources: List[PanoVirtualDataSource], models: List[PanoModel]):
         return VirtualState(data_sources=data_sources, models=models, origin=Origin.REMOTE)
 
     @staticmethod
-    def local(*, data_sources: List[PanoDataSource], models: List[PanoModel]):
+    def local(*, data_sources: List[PanoVirtualDataSource], models: List[PanoModel]):
         return VirtualState(data_sources=data_sources, models=models, origin=Origin.LOCAL)

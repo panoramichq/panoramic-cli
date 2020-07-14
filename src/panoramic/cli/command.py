@@ -20,8 +20,6 @@ logger = logging.getLogger(__name__)
 
 def scan(source_id: str, filter: Optional[str]):
     """Scan all metdata for given source and filter."""
-    # TODO: Obtain api version
-    api_version = 'v1'
     scanner = Scanner(source_id)
     refresher = Refresher(source_id)
     writer = FileWriter()
@@ -34,7 +32,7 @@ def scan(source_id: str, filter: Optional[str]):
             try:
                 refresher.refresh_table(table_name)
                 raw_columns = scanner.scan_columns(table_filter=table_name)
-                for table in load_scanned_tables(raw_columns, api_version):
+                for table in load_scanned_tables(raw_columns):
                     writer.write_model(table, package=SystemDirectory.SCANNED.value)
             except Exception:
                 print(f'Failed to scan table {table_name}')
