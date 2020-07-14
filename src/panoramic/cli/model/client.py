@@ -53,6 +53,15 @@ class ModelAttribute:
             'transformation': self.transformation,
         }
 
+    def __hash__(self) -> int:
+        return hash(self.to_dict())
+
+    def __eq__(self, o: object) -> bool:
+        if not isinstance(o, self.__class__):
+            return False
+
+        return self.to_dict() == o.to_dict()
+
 
 class ModelJoin:
 
@@ -83,6 +92,15 @@ class ModelJoin:
             'relationship': self.relationship,
             'taxons': self.taxons,
         }
+
+    def __hash__(self) -> int:
+        return hash(self.to_dict())
+
+    def __eq__(self, o: object) -> bool:
+        if not isinstance(o, self.__class__):
+            return False
+
+        return self.to_dict() == o.to_dict()
 
 
 class Model:
@@ -129,6 +147,15 @@ class Model:
             'joins': [j.to_dict() for j in self.joins],
             'visibility': self.visibility,
         }
+
+    def __hash__(self) -> int:
+        return hash(self.to_dict())
+
+    def __eq__(self, o: object) -> bool:
+        if not isinstance(o, self.__class__):
+            return False
+
+        return self.to_dict() == o.to_dict()
 
 
 class ModelClient(OAuth2Client):

@@ -32,6 +32,15 @@ class PanoModelField:
             data_type=inputs['data_type'],
         )
 
+    def __hash__(self) -> int:
+        return hash(self.to_dict())
+
+    def __eq__(self, o: object) -> bool:
+        if not isinstance(o, self.__class__):
+            return False
+
+        return self.to_dict() == o.to_dict()
+
 
 class PanoModelJoin:
     """Represent joins on other models."""
@@ -63,6 +72,15 @@ class PanoModelJoin:
             relationship=inputs['relationship'],
             to_model=inputs['to_model'],
         )
+
+    def __hash__(self) -> int:
+        return hash(self.to_dict())
+
+    def __eq__(self, o: object) -> bool:
+        if not isinstance(o, self.__class__):
+            return False
+
+        return self.to_dict() == o.to_dict()
 
 
 class PanoModel(Actionable):
@@ -120,6 +138,15 @@ class PanoModel(Actionable):
             package=inputs.get('package'),
         )
 
+    def __hash__(self) -> int:
+        return hash(self.to_dict())
+
+    def __eq__(self, o: object) -> bool:
+        if not isinstance(o, self.__class__):
+            return False
+
+        return self.to_dict() == o.to_dict()
+
 
 class PanoVirtualDataSource(Actionable):
     """Group collection of models into one data source."""
@@ -148,3 +175,12 @@ class PanoVirtualDataSource(Actionable):
         return cls(
             dataset_slug=inputs['dataset_slug'], display_name=inputs['display_name'], package=inputs.get('package')
         )
+
+    def __hash__(self) -> int:
+        return hash(self.to_dict())
+
+    def __eq__(self, o: object) -> bool:
+        if not isinstance(o, self.__class__):
+            return False
+
+        return self.to_dict() == o.to_dict()
