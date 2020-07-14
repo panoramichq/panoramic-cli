@@ -28,21 +28,6 @@ class SystemDirectory(Enum):
     SCANNED = 'scanned'
 
 
-def get_work_dir_abs_filepath() -> Path:
-    """
-    Return abs filepath of current workdir
-    """
-    return Path().absolute()
-
-
-def get_target_abs_filepath(table_file_name: str, file_extension: FileExtension, package: str) -> Path:
-    """
-    Get target file abs filepath
-    """
-    file_name = f'{table_file_name}{file_extension.value}'
-    return get_work_dir_abs_filepath() / package / file_name
-
-
 def ensure_dir(abs_filepath: Path):
     """
     Ensure parent directory exists.
@@ -72,5 +57,6 @@ def read_yaml(abs_filepath: Path) -> Dict[str, Any]:
 
 def delete_file(abs_filepath: Path):
     """Delete file at given path."""
-    # TODO: check file exists before deleting it
-    abs_filepath.unlink()
+    # TODO: Consider warning - wanted to delete model but not found
+    if abs_filepath.exists():
+        abs_filepath.unlink()
