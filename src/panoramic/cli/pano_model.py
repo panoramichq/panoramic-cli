@@ -160,7 +160,7 @@ class PanoVirtualDataSource(Actionable):
         self.package = package
 
     @property
-    def id(self) -> Any:
+    def id(self) -> str:
         return self.dataset_slug
 
     def to_dict(self) -> Dict[str, Any]:
