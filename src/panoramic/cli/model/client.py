@@ -126,6 +126,7 @@ class Model:
         self.fully_qualified_object_name = fully_qualified_object_name
         self.attributes = attributes
         self.joins = joins
+        self.visibility = visibility
         self.virtual_data_source = virtual_data_source
 
     @classmethod
@@ -186,7 +187,7 @@ class ModelClient(OAuth2Client):
         logger.debug(f'Deleting model with name: {name}')
         # TODO: change once company_slug works on API layer
         # params = {'virtual_data_source': data_source, 'company_slug': company_slug}
-        params = {'virtual_data_source': 'smoke_test_511_IEGHZ', 'company_id': '41'}
+        params = {'virtual_data_source': 'my_facebook', 'company_slug': 'operam', 'company_id': '1'}
         response = self.session.delete(url, params=params, timeout=5)
         response.raise_for_status()
 
@@ -195,7 +196,7 @@ class ModelClient(OAuth2Client):
         logger.debug(f'Upserting model with name: {model.name}')
         # TODO: change once company_slug works on API layer
         # params = {'virtual_data_source': data_source, 'company_slug': company_slug}
-        params = {'virtual_data_source': 'smoke_test_511_IEGHZ', 'company_id': '41'}
+        params = {'virtual_data_source': 'my_facebook', 'company_slug': 'operam', 'company_id': '1'}
         response = self.session.put(self.base_url, json=model.to_dict(), params=params, timeout=5)
         response.raise_for_status()
 
@@ -205,7 +206,13 @@ class ModelClient(OAuth2Client):
         url = urljoin(self.base_url, 'model-name')
         # TODO: change once company_slug works on API layer
         # params = {'virtual_data_source': data_source, 'company_slug': company_slug, 'offset': offset, 'limit': limit}
-        params = {'virtual_data_source': 'smoke_test_511_IEGHZ', 'company_id': '41', 'offset': offset, 'limit': limit}
+        params = {
+            'virtual_data_source': 'my_facebook',
+            'company_id': '1',
+            'company_slug': 'operam',
+            'offset': offset,
+            'limit': limit,
+        }
         response = self.session.get(url, params=params, timeout=5)
         response.raise_for_status()
         return response.json()['data']
@@ -214,7 +221,13 @@ class ModelClient(OAuth2Client):
         """Retrieve all models in a given source."""
         logger.debug(f'Listing models for source: {data_source}')
         # params = {'virtual_data_source': data_source, 'company_slug': company_slug, 'offset': offset, 'limit': limit}
-        params = {'virtual_data_source': 'smoke_test_511_IEGHZ', 'company_id': '41', 'offset': offset, 'limit': limit}
+        params = {
+            'virtual_data_source': 'my_facebook',
+            'company_id': '1',
+            'company_slug': 'operam',
+            'offset': offset,
+            'limit': limit,
+        }
         response = self.session.get(self.base_url, params=params,)
         response.raise_for_status()
         return [Model.from_dict(d, virtual_data_source=data_source) for d in response.json()['data']]

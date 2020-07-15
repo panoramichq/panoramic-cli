@@ -17,6 +17,7 @@ class RemoteWriter:
     model_client: ModelClient
 
     def __init__(self, company_name: str):
+        self.company_name = company_name
         self.virtual_data_source_client = VirtualDataSourceClient()
         self.model_client = ModelClient()
 

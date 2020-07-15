@@ -30,11 +30,11 @@ class Action(Generic[T]):
         self.desired = desired
 
     @property
-    def is_creation(self):
+    def is_creation(self) -> bool:
         return self.current is None
 
     @property
-    def is_deletion(self):
+    def is_deletion(self) -> bool:
         return self.desired is None
 
 

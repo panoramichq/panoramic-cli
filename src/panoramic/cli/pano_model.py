@@ -113,8 +113,8 @@ class PanoModel(Actionable):
         self.package = package
 
     @property
-    def id(self):
-        return self.model_name
+    def id(self) -> Any:
+        return (self.virtual_data_source, self.model_name)
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -160,7 +160,7 @@ class PanoVirtualDataSource(Actionable):
         self.package = package
 
     @property
-    def id(self):
+    def id(self) -> Any:
         return self.dataset_slug
 
     def to_dict(self) -> Dict[str, Any]:
