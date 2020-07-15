@@ -1,7 +1,7 @@
 import pytest
 import responses
 
-from panoramic.cli.sources.client import PhysicalDataSourceClient
+from panoramic.cli.physical_data_source.client import PhysicalDataSourceClient
 
 
 @pytest.fixture(autouse=True)

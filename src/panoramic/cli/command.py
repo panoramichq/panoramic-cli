@@ -14,7 +14,7 @@ from panoramic.cli.refresh import Refresher
 from panoramic.cli.remote import get_state as get_remote_state
 from panoramic.cli.remote.executor import RemoteExecutor
 from panoramic.cli.scan import Scanner
-from panoramic.cli.sources.client import PhysicalDataSourceClient
+from panoramic.cli.physical_data_source.client import PhysicalDataSourceClient
 
 logger = logging.getLogger(__name__)
 
