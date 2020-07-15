@@ -10,6 +10,7 @@ from panoramic.cli.local.executor import LocalExecutor
 from panoramic.cli.local.file_utils import SystemDirectory
 from panoramic.cli.local.writer import FileWriter
 from panoramic.cli.parser import load_scanned_tables
+from panoramic.cli.physical_data_source.client import PhysicalDataSourceClient
 from panoramic.cli.refresh import Refresher
 from panoramic.cli.remote import get_state as get_remote_state
 from panoramic.cli.remote.executor import RemoteExecutor
@@ -18,8 +19,20 @@ from panoramic.cli.scan import Scanner
 logger = logging.getLogger(__name__)
 
 
+def list_connections():
+    client = PhysicalDataSourceClient()
+
+    sources = client.get_sources(get_company_name())
+    if len(sources) == 0:
+        click.echo('No active connections set up. Use the Panoramic UI to create and configure data connections.')
+    else:
+        for source in client.get_sources(get_company_name()):
+            click.echo(source['source_name'])
+
+
 def scan(source_id: str, filter: Optional[str]):
-    """Scan all metdata for given source and filter."""
+    """Scan all metadata for given source and filter."""
+    # TODO: Obtain api version
     scanner = Scanner(source_id)
     refresher = Refresher(source_id)
     writer = FileWriter()
