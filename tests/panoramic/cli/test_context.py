@@ -10,11 +10,12 @@ from panoramic.cli.errors import (
     MissingContextFileException,
     MissingValueException,
 )
-from tests.panoramic.cli.util import changedir
 
 
-def test_no_context_file():
-    with tempfile.TemporaryDirectory() as tmpdirname, changedir(tmpdirname):
+def test_no_context_file(monkeypatch):
+    with tempfile.TemporaryDirectory() as tmpdirname:
+        monkeypatch.chdir(tmpdirname)
+
         with pytest.raises(MissingContextFileException):
             get_api_version()
 
@@ -22,8 +23,10 @@ def test_no_context_file():
             get_company_slug()
 
 
-def test_invalid_context_file():
-    with tempfile.TemporaryDirectory() as tmpdirname, changedir(tmpdirname):
+def test_invalid_context_file(monkeypatch):
+    with tempfile.TemporaryDirectory() as tmpdirname:
+        monkeypatch.chdir(tmpdirname)
+
         with open(Path(tmpdirname) / 'pano.yaml', 'w') as f:
             f.write('api_version: some_value\ncompany_slug slug_but_missing_colon\n')
 
@@ -40,15 +43,19 @@ def test_invalid_context_file():
             assert get_company_slug()
 
 
-def test_missing_value_context_file():
-    with tempfile.TemporaryDirectory() as tmpdirname, changedir(tmpdirname):
+def test_missing_value_context_file(monkeypatch):
+    with tempfile.TemporaryDirectory() as tmpdirname:
+        monkeypatch.chdir(tmpdirname)
+
         with open(Path(tmpdirname) / 'pano.yaml', 'w') as f:
             f.write(yaml.dump(dict(company_slug='company_name_12fxs')))
 
         with pytest.raises(MissingValueException):
             get_api_version()
 
-    with tempfile.TemporaryDirectory() as tmpdirname, changedir(tmpdirname):
+    with tempfile.TemporaryDirectory() as tmpdirname:
+        monkeypatch.chdir(tmpdirname)
+
         with open(Path(tmpdirname) / 'pano.yaml', 'w') as f:
             f.write(yaml.dump(dict(api_version='v2')))
 
@@ -56,8 +63,10 @@ def test_missing_value_context_file():
             get_company_slug()
 
 
-def test_context_file():
-    with tempfile.TemporaryDirectory() as tmpdirname, changedir(tmpdirname):
+def test_context_file(monkeypatch):
+    with tempfile.TemporaryDirectory() as tmpdirname:
+        monkeypatch.chdir(tmpdirname)
+
         with open(Path(tmpdirname) / 'pano.yaml', 'w') as f:
             f.write(yaml.dump(dict(api_version='v2', company_slug='company_name_12fxs')))
 

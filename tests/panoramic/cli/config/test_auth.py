@@ -1,4 +1,3 @@
-import os
 import tempfile
 from pathlib import Path
 
@@ -11,11 +10,12 @@ from panoramic.cli.errors import (
     MissingConfigFileException,
     MissingValueException,
 )
-from tests.panoramic.cli.util import overwrite_env
 
 
-def test_no_config_file():
-    with tempfile.TemporaryDirectory() as tmpdirname, overwrite_env('HOME', tmpdirname):
+def test_no_config_file(monkeypatch):
+    with tempfile.TemporaryDirectory() as tmpdirname:
+        monkeypatch.setenv('HOME', tmpdirname)
+
         with pytest.raises(MissingConfigFileException):
             get_client_id()
 
@@ -23,9 +23,11 @@ def test_no_config_file():
             get_client_secret()
 
 
-def test_invalid_config_file():
-    with tempfile.TemporaryDirectory() as tmpdirname, overwrite_env('HOME', tmpdirname):
-        os.mkdir(Path(tmpdirname) / '.pano')
+def test_invalid_config_file(monkeypatch):
+    with tempfile.TemporaryDirectory() as tmpdirname:
+        monkeypatch.setenv('HOME', tmpdirname)
+        (Path(tmpdirname) / '.pano').mkdir()
+
         with open(Path(tmpdirname) / '.pano' / 'config', 'w') as f:
             f.write('client_id: some_value\nclient_secret slug_but_missing_colon\n')
 
@@ -42,17 +44,21 @@ def test_invalid_config_file():
             assert get_client_secret()
 
 
-def test_missing_value_config_file():
-    with tempfile.TemporaryDirectory() as tmpdirname, overwrite_env('HOME', tmpdirname):
-        os.mkdir(Path(tmpdirname) / '.pano')
+def test_missing_value_config_file(monkeypatch):
+    with tempfile.TemporaryDirectory() as tmpdirname:
+        monkeypatch.setenv('HOME', tmpdirname)
+        (Path(tmpdirname) / '.pano').mkdir()
+
         with open(Path(tmpdirname) / '.pano' / 'config', 'w') as f:
             f.write(yaml.dump(dict(client_secret='some_random_value')))
 
         with pytest.raises(MissingValueException):
             get_client_id()
 
-    with tempfile.TemporaryDirectory() as tmpdirname, overwrite_env('HOME', tmpdirname):
-        os.mkdir(Path(tmpdirname) / '.pano')
+    with tempfile.TemporaryDirectory() as tmpdirname:
+        monkeypatch.setenv('HOME', tmpdirname)
+        (Path(tmpdirname) / '.pano').mkdir()
+
         with open(Path(tmpdirname) / '.pano' / 'config', 'w') as f:
             f.write(yaml.dump(dict(client_id='another_random_value')))
 
@@ -60,9 +66,11 @@ def test_missing_value_config_file():
             get_client_secret()
 
 
-def test_config_file():
-    with tempfile.TemporaryDirectory() as tmpdirname, overwrite_env('HOME', tmpdirname):
-        os.mkdir(Path(tmpdirname) / '.pano')
+def test_config_file(monkeypatch):
+    with tempfile.TemporaryDirectory() as tmpdirname:
+        monkeypatch.setenv('HOME', tmpdirname)
+        (Path(tmpdirname) / '.pano').mkdir()
+
         with open(Path(tmpdirname) / '.pano' / 'config', 'w') as f:
             f.write(yaml.dump(dict(client_id='some_random_id', client_secret='some_random_secret')))
 
