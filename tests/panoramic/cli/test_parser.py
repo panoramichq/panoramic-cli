@@ -9,11 +9,11 @@ def test_remove_source_from_path():
 def test_load_scanned_tables():
     expected = [
         {
-            'model_name': 'schema1.table1',
-            'data_source': 'schema1.table1',
+            'model_name': 'source.schema1.table1',
+            'data_source': 'source.schema1.table1',
             'fields': [
-                {'data_type': 'str', 'field_map': ['schema1.table1.id'], 'transformation': 'id'},
-                {'data_type': 'int', 'field_map': ['schema1.table1.value'], 'transformation': 'value'},
+                {'data_type': 'str', 'field_map': ['source.schema1.table1.id'], 'transformation': 'id'},
+                {'data_type': 'int', 'field_map': ['source.schema1.table1.value'], 'transformation': 'value'},
             ],
             'identifiers': [],
             'joins': [],

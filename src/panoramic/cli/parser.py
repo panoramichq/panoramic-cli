@@ -32,19 +32,18 @@ def load_scanned_tables(raw_columns: Iterable[Dict]) -> List[PanoModel]:
 
     for (table_schema, table_name), columns in columns_grouped:
         fields = []
-        schema_path = _remove_source_from_path(table_schema)
-        table_path = '.'.join([schema_path, table_name])
-        model_name = slug_string(table_path)
+        full_table_path = '.'.join([table_schema, table_name])
+        model_name = slug_string(full_table_path)
 
         for col in columns:
             data_type = col['data_type']
             column_name = col['column_name']
-            field_path = slug_string('.'.join([table_path, column_name]))
+            field_path = slug_string('.'.join([full_table_path, column_name]))
             fields.append(dict(data_type=data_type, transformation=column_name, field_map=[field_path],))
 
         models.append(
             PanoModel.from_dict(
-                dict(model_name=model_name, data_source=table_path, fields=fields, joins=[], identifiers=[],)
+                dict(model_name=model_name, data_source=full_table_path, fields=fields, joins=[], identifiers=[],)
             )
         )
 
