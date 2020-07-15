@@ -2,10 +2,8 @@ import logging
 from typing import Any, Dict, List, Optional
 from urllib.parse import urljoin
 
-import requests
-
 from panoramic.auth import OAuth2Client
-from panoramic.cli.config.auth import get_client_id, get_client_secret, get_token
+from panoramic.cli.config.auth import get_client_id, get_client_secret
 from panoramic.cli.config.model import get_base_url
 
 logger = logging.getLogger(__name__)
@@ -158,18 +156,12 @@ class ModelClient(OAuth2Client):
     def __init__(
         self, base_url: Optional[str] = None, client_id: Optional[str] = None, client_secret: Optional[str] = None,
     ):
-        token = get_token()
         base_url = base_url if base_url is not None else get_base_url()
         client_id = client_id if client_id is not None else get_client_id()
         client_secret = client_secret if client_secret is not None else get_client_secret()
 
         self.base_url = base_url
-
-        if token is not None:
-            self.session = requests.Session()
-            self.session.headers.update(**{'x-auth-token': token})
-        else:
-            super().__init__(client_id, client_secret)
+        super().__init__(client_id, client_secret)
 
     def delete_model(self, data_source: str, company_slug: str, name: str):
         """Delete model with a given name."""
