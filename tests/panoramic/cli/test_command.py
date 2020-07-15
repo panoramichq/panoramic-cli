@@ -2,7 +2,7 @@ from unittest.mock import ANY, call, patch
 
 import pytest
 
-from panoramic.cli.command import scan
+from panoramic.cli.command import list_connections, scan
 from panoramic.cli.local.file_utils import SystemDirectory
 
 
@@ -48,3 +48,15 @@ def test_scan_single_table_error(mock_writer, mock_scanner, mock_refresher):
     scan('test-source', 'test-filter')
 
     assert mock_writer.write_model.mock_calls == [call(ANY, package=SystemDirectory.SCANNED.value)]
+
+
+@pytest.fixture()
+def mock_physical_data_source_client():
+    with patch('panoramic.cli.command.PhysicalDataSourceClient') as client_class:
+        yield client_class()
+
+
+@patch('panoramic.cli.command.get_company_name', return_value='damn')
+def test_list_connections(mock_get_company_name, mock_physical_data_source_client):
+    list_connections()
+    mock_physical_data_source_client.get_sources.assert_called_with('damn')

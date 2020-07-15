@@ -1,5 +1,5 @@
 from abc import ABC
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 
 class Actionable(ABC):
@@ -27,30 +27,58 @@ class PanoModelField:
     @classmethod
     def from_dict(cls, inputs: Dict[str, Any]) -> 'PanoModelField':
         return cls(
-            field_map=inputs.get('field_map', []),
-            transformation=inputs['transformation'],
-            data_type=inputs['data_type'],
+            field_map=inputs['field_map'], transformation=inputs['transformation'], data_type=inputs['data_type'],
         )
+
+    def __hash__(self) -> int:
+        return hash(self.to_dict())
+
+    def __eq__(self, o: object) -> bool:
+        if not isinstance(o, self.__class__):
+            return False
+
+        return self.to_dict() == o.to_dict()
 
 
 class PanoModelJoin:
     """Represent joins on other models."""
 
-    field: str
+    fields: List[str]
     join_type: str
     relationship: str
+    to_model: str
 
-    def __init__(self, *, field: str, join_type: str, relationship: str):
-        self.field = field
+    def __init__(self, *, fields: List[str], join_type: str, relationship: str, to_model: str):
+        self.fields = fields
         self.join_type = join_type
         self.relationship = relationship
+        self.to_model = to_model
 
     def to_dict(self) -> Dict[str, Any]:
-        return {'field': self.field, 'join_type': self.join_type, 'relationship': self.relationship}
+        return {
+            'fields': self.fields,
+            'join_type': self.join_type,
+            'relationship': self.relationship,
+            'to_model': self.to_model,
+        }
 
     @classmethod
     def from_dict(cls, inputs: Dict[str, Any]) -> 'PanoModelJoin':
-        return cls(field=inputs['field'], join_type=inputs['join_type'], relationship=inputs['relationship'])
+        return cls(
+            fields=inputs['fields'],
+            join_type=inputs['join_type'],
+            relationship=inputs['relationship'],
+            to_model=inputs['to_model'],
+        )
+
+    def __hash__(self) -> int:
+        return hash(self.to_dict())
+
+    def __eq__(self, o: object) -> bool:
+        if not isinstance(o, self.__class__):
+            return False
+
+        return self.to_dict() == o.to_dict()
 
 
 class PanoModel(Actionable):
@@ -83,8 +111,8 @@ class PanoModel(Actionable):
         self.package = package
 
     @property
-    def id(self):
-        return self.model_name
+    def id(self) -> Tuple[Optional[str], str]:
+        return (self.virtual_data_source, self.model_name)
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -108,6 +136,15 @@ class PanoModel(Actionable):
             package=inputs.get('package'),
         )
 
+    def __hash__(self) -> int:
+        return hash(self.to_dict())
+
+    def __eq__(self, o: object) -> bool:
+        if not isinstance(o, self.__class__):
+            return False
+
+        return self.to_dict() == o.to_dict()
+
 
 class PanoVirtualDataSource(Actionable):
     """Group collection of models into one data source."""
@@ -121,7 +158,7 @@ class PanoVirtualDataSource(Actionable):
         self.package = package
 
     @property
-    def id(self):
+    def id(self) -> str:
         return self.dataset_slug
 
     def to_dict(self) -> Dict[str, Any]:
@@ -136,3 +173,12 @@ class PanoVirtualDataSource(Actionable):
         return cls(
             dataset_slug=inputs['dataset_slug'], display_name=inputs['display_name'], package=inputs.get('package')
         )
+
+    def __hash__(self) -> int:
+        return hash(self.to_dict())
+
+    def __eq__(self, o: object) -> bool:
+        if not isinstance(o, self.__class__):
+            return False
+
+        return self.to_dict() == o.to_dict()
