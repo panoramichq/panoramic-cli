@@ -94,7 +94,7 @@ class VirtualDataSourceClient(OAuth2Client):
     def delete_virtual_data_source(self, company_slug: str, slug: str):
         """Delete a virtual data source"""
         logger.debug(f'Deleting virtual data source with slug {slug} under company {company_slug}')
-        params = {'company_slug': company_slug}
-        url = urljoin(self._base_url_with_trailing_slash, slug)
-        response = self.session.delete(url, params=params, timeout=5)
-        response.raise_for_status()
+        # params = {'company_slug': company_slug}
+        # url = urljoin(self._base_url_with_trailing_slash, slug)
+        # response = self.session.delete(url, params=params, timeout=5)
+        # response.raise_for_status()

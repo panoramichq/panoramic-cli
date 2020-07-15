@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 0.5.0 Release
+
+Remove VDS delete client call
+
 ## Version 0.4.0 Release
 
 Fix naming not including source name
