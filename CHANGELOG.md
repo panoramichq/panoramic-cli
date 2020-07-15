@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 0.6.0 Release
+
+Add informative prints
+
 ## Version 0.5.0 Release
 
 Remove VDS delete client call
