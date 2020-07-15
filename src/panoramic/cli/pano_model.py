@@ -58,7 +58,7 @@ class PanoModelJoin:
 
     def to_dict(self) -> Dict[str, Any]:
         return {
-            'field': self.fields,
+            'fields': self.fields,
             'join_type': self.join_type,
             'relationship': self.relationship,
             'to_model': self.to_model,
