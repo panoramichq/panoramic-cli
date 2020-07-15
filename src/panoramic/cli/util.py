@@ -1,3 +1,5 @@
+import re
+import unicodedata
 from pathlib import Path
 from typing import Any, Dict, List
 
@@ -5,8 +7,6 @@ import yaml
 import yaml.scanner
 
 from panoramic.cli.errors import InvalidYamlFile, MissingValueException
-import re
-import unicodedata
 
 
 def slug_string(input_str: str) -> str:

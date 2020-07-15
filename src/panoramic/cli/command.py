@@ -22,11 +22,11 @@ logger = logging.getLogger(__name__)
 def list_connections():
     client = PhysicalDataSourceClient()
 
-    sources = client.get_sources(get_company_name())
+    sources = client.get_sources(get_company_slug())
     if len(sources) == 0:
         click.echo('No active connections set up. Use the Panoramic UI to create and configure data connections.')
     else:
-        for source in client.get_sources(get_company_name()):
+        for source in client.get_sources(get_company_slug()):
             click.echo(source['source_name'])
 
 
