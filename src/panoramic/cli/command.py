@@ -3,7 +3,7 @@ from typing import Optional
 
 import click
 
-from panoramic.cli.context import get_company_name
+from panoramic.cli.context import get_company_slug
 from panoramic.cli.controller import reconcile
 from panoramic.cli.local import get_state as get_local_state
 from panoramic.cli.local.executor import LocalExecutor
@@ -22,11 +22,11 @@ logger = logging.getLogger(__name__)
 def list_connections():
     client = PhysicalDataSourceClient()
 
-    sources = client.get_sources(get_company_name())
+    sources = client.get_sources(get_company_slug())
     if len(sources) == 0:
         click.echo('No active connections set up. Use the Panoramic UI to create and configure data connections.')
     else:
-        for source in client.get_sources(get_company_name()):
+        for source in client.get_sources(get_company_slug()):
             click.echo(source['source_name'])
 
 
@@ -55,8 +55,8 @@ def scan(source_id: str, filter: Optional[str]):
 
 def pull():
     """Pull models and data sources from remote."""
-    company_name = get_company_name()
-    remote_state = get_remote_state(company_name)
+    company_slug = get_company_slug()
+    remote_state = get_remote_state(company_slug)
     local_state = get_local_state()
 
     actions = reconcile(local_state, remote_state)
@@ -68,12 +68,12 @@ def pull():
 
 def push():
     """Push models and data sources to remote."""
-    company_name = get_company_name()
-    remote_state = get_remote_state(company_name)
+    company_slug = get_company_slug()
+    remote_state = get_remote_state(company_slug)
     local_state = get_local_state()
 
     actions = reconcile(remote_state, local_state)
-    executor = RemoteExecutor(company_name)
+    executor = RemoteExecutor(company_slug)
     with click.progressbar(actions.actions) as bar:
         for action in bar:
             executor.execute(action)

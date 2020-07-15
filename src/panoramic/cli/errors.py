@@ -1,3 +1,6 @@
+from yaml.scanner import ScannerError
+
+
 class TimeoutException(Exception):
 
     """Thrown when a remote operation times out."""
@@ -26,3 +29,29 @@ class UnexpectedTablesException(Exception):
 class MissingSchemaException(Exception):
 
     """Generic missing schema error."""
+
+
+class MissingContextFileException(Exception):
+
+    """Generic missing context file error."""
+
+
+class MissingConfigFileException(Exception):
+
+    """Generic missing config file error."""
+
+
+class InvalidYamlFile(Exception):
+
+    """Yaml syntax error."""
+
+    def __init__(self, error: ScannerError):
+        super().__init__(str(error))
+
+
+class MissingValueException(Exception):
+
+    """Missing value in Yaml file"""
+
+    def __init__(self, value_name: str):
+        super().__init__(f'Missing value: {value_name}')
