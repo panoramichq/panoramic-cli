@@ -1,6 +1,6 @@
 import itertools
 from collections import defaultdict
-from typing import Iterable, List
+from typing import Iterable, List, Set
 
 from panoramic.cli.model.client import Model, ModelAttribute, ModelJoin
 from panoramic.cli.pano_model import (
@@ -41,19 +41,16 @@ def map_field_from_remote(attributes: List[ModelAttribute]) -> PanoModelField:
     # type, transformation, column_name are same across all attributes
     data_type = attributes[0].column_data_type
     assert data_type is not None
-    # TODO: API doesn't support transformation yet => fallback to column_name
-    transformation = attributes[0].transformation or attributes[0].column_name
+    transformation = attributes[0].transformation
     assert transformation is not None
     return PanoModelField(field_map=[a.taxon for a in attributes], transformation=transformation, data_type=data_type,)
 
 
-def map_attributes_from_local(field: PanoModelField, identifiers: List[str]) -> Iterable[ModelAttribute]:
+def map_attributes_from_local(field: PanoModelField, identifiers: Set[str]) -> Iterable[ModelAttribute]:
     """Convert local field to remote attributes."""
     for field_name in field.field_map:
         yield ModelAttribute(
             column_data_type=field.data_type,
-            # TODO: YAML file doesn't have column_name
-            column_name=field.transformation,
             taxon=field_name,
             identifier=field_name in identifiers,
             transformation=field.transformation,
@@ -64,7 +61,7 @@ def map_model_from_remote(model: Model) -> PanoModel:
     """Convert remote model to local model."""
     attrs_by_key = defaultdict(list)
     for attr in model.attributes:
-        attrs_by_key[(attr.transformation, attr.column_name)].append(attr)
+        attrs_by_key[attr.transformation].append(attr)
 
     return PanoModel(
         model_name=model.name,
@@ -81,7 +78,7 @@ def map_model_from_local(model: PanoModel) -> Model:
         name=model.model_name,
         fully_qualified_object_name=model.data_source,
         attributes=list(
-            itertools.chain.from_iterable(map_attributes_from_local(f, model.identifiers) for f in model.fields)
+            itertools.chain.from_iterable(map_attributes_from_local(f, set(model.identifiers)) for f in model.fields)
         ),
         joins=[map_model_join_from_local(j) for j in model.joins],
         visibility='available',  # default to available visibility
