@@ -1,7 +1,7 @@
 import pytest
 import responses
 
-from panoramic.cli.model.client import ModelClient
+from panoramic.cli.model.client import Model, ModelClient
 
 
 @pytest.fixture(autouse=True)
@@ -56,6 +56,12 @@ def test_upsert_model():
 
     client = ModelClient(base_url='https://diesel/', client_id='client-id', client_secret='client-secret')
 
-    client.upsert_model('test-source', 'test-company', {'name': 'model'})
+    client.upsert_model(
+        'test-source',
+        'test-company',
+        Model(
+            name='model', fully_qualified_object_name="db.schema.table", attributes=[], joins=[], visibility='available'
+        ),
+    )
 
     assert len(responses.calls) == 2
