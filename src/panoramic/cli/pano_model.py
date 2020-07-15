@@ -27,9 +27,7 @@ class PanoModelField:
     @classmethod
     def from_dict(cls, inputs: Dict[str, Any]) -> 'PanoModelField':
         return cls(
-            field_map=inputs.get('field_map', []),
-            transformation=inputs['transformation'],
-            data_type=inputs['data_type'],
+            field_map=inputs['field_map'], transformation=inputs['transformation'], data_type=inputs['data_type'],
         )
 
     def __hash__(self) -> int:
