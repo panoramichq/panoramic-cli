@@ -56,7 +56,7 @@ def mock_physical_data_source_client():
         yield client_class()
 
 
-@patch('panoramic.cli.command.get_company_name', return_value='damn')
-def test_list_connections(mock_get_company_name, mock_physical_data_source_client):
+@patch('panoramic.cli.command.get_company_slug', return_value='damn')
+def test_list_connections(mock_get_company_slug, mock_physical_data_source_client):
     list_connections()
     mock_physical_data_source_client.get_sources.assert_called_with('damn')
