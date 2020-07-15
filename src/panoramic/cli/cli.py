@@ -69,7 +69,7 @@ def configure():
 
     context_file = Path.cwd() / 'pano.yaml'
     with open(context_file, 'w') as f:
-        f.write(yaml.safe_dump({'company_slug': company_slug}))
+        f.write(yaml.safe_dump({'company_slug': company_slug, 'api_version': 'v1'}))
 
 
 @cli.command(help='List available data connections')
