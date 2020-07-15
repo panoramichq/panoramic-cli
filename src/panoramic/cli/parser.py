@@ -3,8 +3,6 @@ import logging
 import operator
 from typing import Dict, Iterable, List
 
-import pydash
-
 from panoramic.cli.errors import MissingSchemaException
 from panoramic.cli.pano_model import PanoModel
 from panoramic.cli.util import slug_string
@@ -25,7 +23,7 @@ def _remove_source_from_path(table_schema: str) -> str:
         raise MissingSchemaException('Unable to remove source from table path as there seems to be no schema')
 
 
-def load_scanned_tables(raw_columns: Iterable[Dict], api_version: str) -> List[PanoModel]:
+def load_scanned_tables(raw_columns: Iterable[Dict]) -> List[PanoModel]:
     """
     Load result of metadata table columns scan into Model
     """
@@ -36,7 +34,7 @@ def load_scanned_tables(raw_columns: Iterable[Dict], api_version: str) -> List[P
         fields = []
         schema_path = _remove_source_from_path(table_schema)
         table_path = '.'.join([schema_path, table_name])
-        table_file_name = pydash.slugify(table_path, separator="_").lower()
+        model_name = slug_string(table_path)
 
         for col in columns:
             data_type = col['data_type']
@@ -46,14 +44,7 @@ def load_scanned_tables(raw_columns: Iterable[Dict], api_version: str) -> List[P
 
         models.append(
             PanoModel.from_dict(
-                dict(
-                    table_file_name=table_file_name,
-                    data_source=table_path,
-                    fields=fields,
-                    joins=[],
-                    identifiers=[],
-                    api_version=api_version,
-                )
+                dict(model_name=model_name, data_source=table_path, fields=fields, joins=[], identifiers=[],)
             )
         )
 

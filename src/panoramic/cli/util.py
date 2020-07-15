@@ -6,13 +6,16 @@ import yaml
 import yaml.scanner
 
 from panoramic.cli.errors import InvalidYamlFile, MissingValueException
+import re
+import unicodedata
 
 
 def slug_string(input_str: str) -> str:
     """
     Returns lowercase slug variant of given string
     """
-    return pydash.slugify(input_str, separator="_").lower()
+    normalized = unicodedata.normalize('NFKD', input_str).encode('ascii', 'ignore').decode('utf8')
+    return re.sub('[^a-zA-Z0-9_.]', '', normalized).lower()
 
 
 def _get_yaml_value_from_object(data: Dict[str, Any], value_path: List[str]):

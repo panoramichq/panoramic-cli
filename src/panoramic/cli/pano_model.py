@@ -12,8 +12,6 @@ class Actionable(ABC):
 class PanoModelField:
     """Field stored on a model."""
 
-    # TODO: Unify the naming
-
     field_map: List[str]
     transformation: str
     data_type: str
@@ -38,8 +36,6 @@ class PanoModelField:
 class PanoModelJoin:
     """Represent joins on other models."""
 
-    # TODO: Unify the naming
-
     field: str
     join_type: str
     relationship: str
@@ -60,89 +56,83 @@ class PanoModelJoin:
 class PanoModel(Actionable):
     """Model representing some table."""
 
-    # TODO: Unify the naming
-
-    # TODO: consider splitting out because VDS non-optional with push/pulled models
-    table_file_name: str
+    model_name: str
     data_source: str
     fields: List[PanoModelField]
     joins: List[PanoModelJoin]
     identifiers: List[str]
-    api_version: str
-
     virtual_data_source: Optional[str]
 
     def __init__(
         self,
         *,
-        table_file_name: str,
+        model_name: str,
         data_source: str,
         fields: List[PanoModelField],
         joins: List[PanoModelJoin],
         identifiers: List[str],
-        api_version: str,
-        virtual_data_source: Optional[str],
+        virtual_data_source: Optional[str] = None,
         package: Optional[str] = None,
     ):
-        self.table_file_name = table_file_name
+        self.model_name = model_name
         self.data_source = data_source
         self.fields = fields
         self.joins = joins
         self.identifiers = identifiers
-        self.api_version = api_version
         self.virtual_data_source = virtual_data_source
         self.package = package
 
     @property
     def id(self):
-        return self.table_file_name
+        return self.model_name
 
     def to_dict(self) -> Dict[str, Any]:
-        # The "table_file_name" is used as file name and not being exported
         return {
-            'virtual_data_source': self.virtual_data_source,
+            'model_name': self.model_name,
             'data_source': self.data_source,
             'fields': [x.to_dict() for x in self.fields],
             'joins': [x.to_dict() for x in self.joins],
             'identifiers': self.identifiers,
-            'api_version': self.api_version,
+            # The virtual_data_source and package are not exported to yaml
         }
 
     @classmethod
     def from_dict(cls, inputs: Dict[str, Any]) -> 'PanoModel':
         return cls(
-            table_file_name=inputs['table_file_name'],
+            model_name=inputs['model_name'],
             data_source=inputs['data_source'],
             fields=[PanoModelField.from_dict(x) for x in inputs.get('fields', [])],
             joins=[PanoModelJoin.from_dict(x) for x in inputs.get('joins', [])],
             identifiers=inputs.get('identifiers', []),
-            api_version=inputs['api_version'],
             virtual_data_source=inputs.get('virtual_data_source'),
             package=inputs.get('package'),
         )
 
 
-class PanoDataSource(Actionable):
+class PanoVirtualDataSource(Actionable):
     """Group collection of models into one data source."""
 
-    slug: str
+    dataset_slug: str
     display_name: str
 
-    def __init__(self, *, slug: str, display_name: str, package: Optional[str] = None):
-        self.slug = slug
+    def __init__(self, *, dataset_slug: str, display_name: str, package: Optional[str] = None):
+        self.dataset_slug = dataset_slug
         self.display_name = display_name
         self.package = package
 
     @property
     def id(self):
-        return self.slug
+        return self.dataset_slug
 
     def to_dict(self) -> Dict[str, Any]:
         return {
-            'slug': self.slug,
+            'dataset_slug': self.dataset_slug,
             'display_name': self.display_name,
+            # The package is not exported to yaml
         }
 
     @classmethod
-    def from_dict(cls, inputs: Dict[str, Any]) -> 'PanoDataSource':
-        return cls(slug=inputs['slug'], display_name=inputs['display_name'], package=inputs.get('package'))
+    def from_dict(cls, inputs: Dict[str, Any]) -> 'PanoVirtualDataSource':
+        return cls(
+            dataset_slug=inputs['dataset_slug'], display_name=inputs['display_name'], package=inputs.get('package')
+        )

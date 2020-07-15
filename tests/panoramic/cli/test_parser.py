@@ -9,12 +9,11 @@ def test_remove_source_from_path():
 def test_load_scanned_tables():
     expected = [
         {
-            'api_version': 'v1',
-            'virtual_data_source': None,
+            'model_name': 'schema1.table1',
             'data_source': 'schema1.table1',
             'fields': [
-                {'data_type': 'str', 'field_map': ['schema_1_table_1_id'], 'transformation': 'id'},
-                {'data_type': 'int', 'field_map': ['schema_1_table_1_value'], 'transformation': 'value'},
+                {'data_type': 'str', 'field_map': ['schema1.table1.id'], 'transformation': 'id'},
+                {'data_type': 'int', 'field_map': ['schema1.table1.value'], 'transformation': 'value'},
             ],
             'identifiers': [],
             'joins': [],
@@ -27,7 +26,6 @@ def test_load_scanned_tables():
                 {'table_schema': 'source.schema1', 'table_name': 'table1', 'column_name': 'id', 'data_type': 'str'},
                 {'table_schema': 'source.schema1', 'table_name': 'table1', 'column_name': 'value', 'data_type': 'int'},
             ],
-            'v1',
         )
     ]
 
