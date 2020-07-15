@@ -2,13 +2,40 @@ import logging
 from typing import Any, Dict, List, Optional
 from urllib.parse import urljoin
 
-import requests
-
 from panoramic.auth import OAuth2Client
-from panoramic.cli.config.auth import get_client_id, get_client_secret, get_token
+from panoramic.cli.config.auth import get_client_id, get_client_secret
 from panoramic.cli.config.virtual_data_source import get_base_url
 
 logger = logging.getLogger(__name__)
+
+
+class VirtualDataSource:
+
+    slug: str
+    display_name: str
+
+    def __init__(self, *, slug: str, display_name: str):
+        self.slug = slug
+        self.display_name = display_name
+
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> 'VirtualDataSource':
+        return VirtualDataSource(slug=data['slug'], display_name=data['display_name'])
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            'slug': self.slug,
+            'display_name': self.display_name,
+        }
+
+    def __hash__(self) -> int:
+        return hash(self.to_dict())
+
+    def __eq__(self, o: object) -> bool:
+        if not isinstance(o, self.__class__):
+            return False
+
+        return self.to_dict() == o.to_dict()
 
 
 class VirtualDataSourceClient(OAuth2Client):
@@ -21,7 +48,6 @@ class VirtualDataSourceClient(OAuth2Client):
     def __init__(
         self, base_url: Optional[str] = None, client_id: Optional[str] = None, client_secret: Optional[str] = None,
     ):
-        token = get_token()
         client_id = client_id if client_id is not None else get_client_id()
         client_secret = client_secret if client_secret is not None else get_client_secret()
 
@@ -37,50 +63,38 @@ class VirtualDataSourceClient(OAuth2Client):
             # base_url is in it's correct form - without trailing slash
             self._base_url_with_trailing_slash = self.base_url + '/'
 
-        if token is not None:
-            self.session = requests.Session()
-            self.session.headers.update(**{'x-auth-token': token})
-        else:
-            super().__init__(client_id, client_secret)
+        super().__init__(client_id, client_secret)
 
-    def upsert_virtual_data_source(self, company_slug: str, payload: Dict[str, Any]):
+    def upsert_virtual_data_source(self, company_slug: str, payload: VirtualDataSource):
         """Create a virtual data source for a company"""
         logger.debug(f'Upserting virtual data source with payload {payload} under company {company_slug}')
-        # TODO: change once company_slug works on API layer
-        # params = {'company_slug': company_slug}
-        params = {'company_id': '2'}
-        response = self.session.put(self.base_url, params=params, timeout=5)
+        params = {'company_slug': company_slug}
+        response = self.session.put(self.base_url, json=payload.to_dict(), params=params, timeout=5)
         response.raise_for_status()
 
-    def get_virtual_data_source(self, company_slug: str, slug: str) -> Dict[str, Any]:
+    def get_virtual_data_source(self, company_slug: str, slug: str) -> VirtualDataSource:
         """Retrieve a virtual data source"""
         logger.debug(f'Retrieving a virtual data source with slug {slug} under company {company_slug}')
         url = urljoin(self._base_url_with_trailing_slash, slug)
-        # TODO: change once company_slug works on API layer
-        # params = {'company_slug': company_slug}
-        params = {'company_id': '2'}
+        params = {'company_slug': company_slug}
         response = self.session.get(url, params=params, timeout=5)
         response.raise_for_status()
-        return response.json()['data']
+        return VirtualDataSource.from_dict(response.json()['data'])
 
     def get_all_virtual_data_sources(
         self, company_slug: str, *, offset: int = 0, limit: int = 100
-    ) -> List[Dict[str, Any]]:
+    ) -> List[VirtualDataSource]:
         """Retrieve all virtual data sources under a company"""
         logger.debug(f'Retrieving all virtual data sources under company {company_slug}')
-        # TODO: change once company_slug works on API layer
-        # params = {'company_slug': company_slug, 'offset': offset, 'limit': limit}
-        params = {'company_id': '2'}
+        params = {'company_slug': company_slug, 'offset': offset, 'limit': limit}
         response = self.session.get(self.base_url, params=params, timeout=5)
         response.raise_for_status()
-        return response.json()['data']
+        return [VirtualDataSource.from_dict(d) for d in response.json()['data']]
 
     def delete_virtual_data_source(self, company_slug: str, slug: str):
         """Delete a virtual data source"""
         logger.debug(f'Deleting virtual data source with slug {slug} under company {company_slug}')
-        # TODO: change once company_slug works on API layer
-        # params = {'company_slug': company_slug}
-        params = {'company_id': '2'}
+        params = {'company_slug': company_slug}
         url = urljoin(self._base_url_with_trailing_slash, slug)
         response = self.session.delete(url, params=params, timeout=5)
         response.raise_for_status()

@@ -6,6 +6,7 @@ from panoramic.cli.local.file_utils import (
     PresetFileName,
     SystemDirectory,
     read_yaml,
+    remove_file_api_version,
 )
 
 
@@ -23,12 +24,12 @@ class FilePackage:
     @property
     def data_source(self) -> Dict[str, Any]:
         # TODO: cache this in the future
-        return read_yaml(self.data_source_file)
+        return remove_file_api_version(read_yaml(self.data_source_file))
 
     @property
     def models(self) -> Iterable[Dict[str, Any]]:
         # TODO: cache this in the future
-        return (read_yaml(f) for f in self.model_files)
+        return (remove_file_api_version(read_yaml(f)) for f in self.model_files)
 
 
 class FileReader:
@@ -58,7 +59,7 @@ class FileReader:
             FilePackage(
                 name=d.name,
                 data_source_file=d / PresetFileName.DATASET_YAML.value,
-                model_files=list(d.glob(f'*{FileExtension.MODEL_YAML}')),
+                model_files=list(d.glob(f'*{FileExtension.MODEL_YAML.value}')),
             )
             for d in package_dirs
         )
