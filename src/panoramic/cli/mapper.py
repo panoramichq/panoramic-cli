@@ -38,10 +38,12 @@ def map_model_join_from_local(join: PanoModelJoin) -> ModelJoin:
 
 def map_field_from_remote(attributes: List[ModelAttribute]) -> PanoModelField:
     """Convert remote attributes to local field."""
-    # type and transformation are same across all attributes
-    transformation = attributes[0].transformation
+    # type, transformation, column_name are same across all attributes
     data_type = attributes[0].column_data_type
-    assert transformation is not None and data_type is not None
+    assert data_type is not None
+    # TODO: API doesn't support transformation yet => fallback to column_name
+    transformation = attributes[0].transformation or attributes[0].column_name
+    assert transformation is not None
     return PanoModelField(field_map=[a.taxon for a in attributes], transformation=transformation, data_type=data_type,)
 
 
@@ -50,6 +52,7 @@ def map_attributes_from_local(field: PanoModelField, identifiers: List[str]) -> 
     for field_name in field.field_map:
         yield ModelAttribute(
             column_data_type=field.data_type,
+            # TODO: YAML file doesn't have column_name
             column_name=field.transformation,
             taxon=field_name,
             identifier=field_name in identifiers,
@@ -61,7 +64,7 @@ def map_model_from_remote(model: Model) -> PanoModel:
     """Convert remote model to local model."""
     attrs_by_key = defaultdict(list)
     for attr in model.attributes:
-        attrs_by_key[attr.transformation].append(attr)
+        attrs_by_key[(attr.transformation, attr.column_name)].append(attr)
 
     return PanoModel(
         model_name=model.name,
