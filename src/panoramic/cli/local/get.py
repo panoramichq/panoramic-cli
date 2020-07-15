@@ -11,10 +11,11 @@ def get_state() -> VirtualState:
     for package in packages:
         data_source = package.data_source
         data_source['package'] = package.name
-        data_sources.append(PanoVirtualDataSource.from_dict(data_source))
+        pvds = PanoVirtualDataSource.from_dict(data_source)
+        data_sources.append(pvds)
         for model in package.models:
             model['package'] = package.name
-            model['virtual_data_source'] = data_source
+            model['virtual_data_source'] = pvds.dataset_slug
             models.append(PanoModel.from_dict(model))
 
     return VirtualState(data_sources=data_sources, models=models)
