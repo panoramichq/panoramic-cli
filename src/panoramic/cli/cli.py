@@ -1,5 +1,4 @@
 import logging
-import os
 from pathlib import Path
 from typing import Optional
 
@@ -59,11 +58,18 @@ def push():
 def configure():
     client_id = click.prompt('Enter your client_id', type=str)
     client_secret = click.prompt('Enter your client_secret', hide_input=True, type=str)
+    company_slug = click.prompt('Enter your company slug', type=str)
+
     config_dir = Path.home() / '.pano'
-    if not os.path.exists(config_dir):
-        os.mkdir(config_dir)
+    if not config_dir.exists():
+        config_dir.mkdir()
+
     with open(config_dir / 'config', 'w+') as f:
         f.write(yaml.safe_dump({'client_id': client_id, 'client_secret': client_secret}))
+
+    context_file = Path.cwd() / 'pano.yaml'
+    with open(context_file, 'w') as f:
+        f.write(yaml.safe_dump({'company_slug': company_slug}))
 
 
 @cli.command(help='List available data connections')
