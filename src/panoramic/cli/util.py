@@ -1,7 +1,6 @@
 from pathlib import Path
 from typing import Any, Dict, List
 
-import pydash
 import yaml
 import yaml.scanner
 
@@ -26,7 +25,7 @@ def _get_yaml_value_from_object(data: Dict[str, Any], value_path: List[str]):
         else:
             return value
     except KeyError:
-        raise MissingValueException('api_version')
+        raise MissingValueException(value_path)
 
 
 def get_yaml_value(file_path: Path, value_path: str):
