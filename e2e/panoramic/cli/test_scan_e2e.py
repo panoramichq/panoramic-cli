@@ -1,12 +1,25 @@
+import json
+
 import pytest
 from click.testing import CliRunner
 
 from panoramic.cli import cli
 
+_TEST_JWT = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
+
+
+def scrub_access_token(response):
+    """Scrub access token from auth server response."""
+    if b'access_token' in response['body']['string']:
+        body = json.loads(response['body']['string'])
+        body['access_token'] = _TEST_JWT
+        response['body']['string'] = json.dumps(body)
+    return response
+
 
 @pytest.fixture(scope="module")
 def vcr_config():
-    return {"filter_headers": ["authorization"]}
+    return {"filter_headers": ["authorization"], 'before_record_response': scrub_access_token}
 
 
 @pytest.fixture(autouse=True)
@@ -18,10 +31,10 @@ def setup(monkeypatch):
 
 
 @pytest.mark.vcr
-def test_scan():
+def test_scan_e2e():
     runner = CliRunner()
 
-    result = runner.invoke(cli, ['scan', 'sf', '--filter', 'METRICS3_STG.ADWORDS_VIEWS.ENTITY%'])
+    result = runner.invoke(cli, ['--debug', 'scan', 'SF', '--filter', 'METRICS3_STG.ADWORDS_VIEWS.ENTITY%'])
 
     assert result.exit_code == 0
     assert result.output == ''

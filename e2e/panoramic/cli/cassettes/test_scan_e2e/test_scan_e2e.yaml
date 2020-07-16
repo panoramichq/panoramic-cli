@@ -9,12 +9,12 @@ interactions:
       Connection:
       - keep-alive
       User-Agent:
-      - pano-cli/0.1.0
+      - pano-cli/0.5.0
     method: GET
     uri: https://a1.panocdn.com/updates/pano-cli/versions.json
   response:
     body:
-      string: '{"latest_version": "0.1.0", "minimum_supported_version": "0.1.0"}'
+      string: '{"latest_version": "0.5.0", "minimum_supported_version": "0.5.0"}'
     headers:
       Accept-Ranges:
       - bytes
@@ -27,25 +27,25 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:22:30 GMT
+      - Thu, 16 Jul 2020 12:46:29 GMT
       ETag:
-      - '"2c38027bfccdb04f142b94eb70fe4c01"'
+      - '"6f6cec12a24a753e532387a3b5b72795"'
       Last-Modified:
-      - Thu, 09 Jul 2020 15:44:01 GMT
+      - Wed, 15 Jul 2020 15:39:07 GMT
       Server:
       - AmazonS3
       Via:
-      - 1.1 f88487c9214731db4c82619c9183bf7b.cloudfront.net (CloudFront)
+      - 1.1 f2cdfa9ac532d95b891a67e5bd6bab30.cloudfront.net (CloudFront)
       X-Amz-Cf-Id:
-      - 3mtLYct3B35m0fwhyBmIYFNUbLJ2ZNaWLFQ8HQJUHxrpboHyS7CQHg==
+      - n3bBS-UpLq29ZhysNRihJKmYLOEmsA9KBZyQmIIWHUeEzGJT8vabSA==
       X-Amz-Cf-Pop:
-      - IAD89-C1
+      - BUD50-C1
       X-Cache:
       - RefreshHit from cloudfront
       x-amz-replication-status:
       - COMPLETED
       x-amz-version-id:
-      - O1SnEtjkaYH5YwdM_elablqvGLhum2hl
+      - AmpsFa8j0cdkl5eOsFx13_MLd6nASHlV
     status:
       code: 200
       message: OK
@@ -68,14 +68,15 @@ interactions:
     uri: https://id.panoramichq.com/oauth2/aus5iy3utLXi3Ez4A4x6/v1/token
   response:
     body:
-      string: '{"token_type":"Bearer","expires_in":3600,"access_token":"eyJraWQiOiJXT3BZUVdDU0YtWkw0RU1OR3FHUEowWk1zNlhfY3A5UUlsaTY0MXFhNTYwIiwiYWxnIjoiUlMyNTYifQ.eyJ2ZXIiOjEsImp0aSI6IkFULmFRU244NFFkSmo1UzRLSFVmbXNUMzNncUV2MjViWVIyZXoyX1FyQ29lTWMiLCJpc3MiOiJodHRwczovL2lkLnBhbm9yYW1pY2hxLmNvbS9vYXV0aDIvYXVzNWl5M3V0TFhpM0V6NEE0eDYiLCJhdWQiOiJodHRwczovL2FwaS5wYW5vcmFtaWNzdHEuY29tIiwiaWF0IjoxNTk0NzI5MzUwLCJleHAiOjE1OTQ3MzI5NTAsImNpZCI6IjBvYWNzenFvYzhvTnl0N21mNHg2Iiwic2NwIjpbInBsYXRmb3JtIl0sInN1YiI6IjBvYWNzenFvYzhvTnl0N21mNHg2In0.VKB6o-ZlVrIsszGAXXnyOxd5OwypVXXzcIIBIdvv82dFrNB6xJ6tvGd4gXnC6dB1knmblvCD-m2SS0ws0N-KzpIL6XIdzQ7uCQkFF9DKbKoYXQpj6lo5TwhhGiUbdi2_AW17-hMGxz4C6pOyxFgUV9tiq07AOr-u2e4Cz_JT2aHLkAR-RBU4cA3_xBmLqjRtsyW7e2HMfIYrwM6XvtTVfkeACkJhyd0R0WbYSxzYkHQiC5dwknpWyBtKw2u0EzJ0fpFoo4Hw-kDbRqwyhvpsH8FPWgg7U-joiwmgW4yQY0Hd3wCatPA_Ftrfr1vcixpa24WjbGPXvD6mP513QtZJtQ","scope":"platform"}'
+      string: '{"token_type": "Bearer", "expires_in": 3600, "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+        "scope": "platform"}'
     headers:
       Connection:
       - Keep-Alive
       Content-Type:
       - application/json;charset=UTF-8
       Date:
-      - Tue, 14 Jul 2020 12:22:30 GMT
+      - Thu, 16 Jul 2020 12:46:29 GMT
       Keep-Alive:
       - timeout=5, max=100
       Server:
@@ -96,17 +97,17 @@ interactions:
       - no-cache
       set-cookie:
       - sid=""; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Path=/
-      - JSESSIONID=DF32EDBC48D4D53746A896FB5464636B; Path=/; Secure; HttpOnly
+      - JSESSIONID=568D023D3E7CB5BB1321DFFA57A97614; Path=/; Secure; HttpOnly
       x-content-type-options:
       - nosniff
       x-okta-request-id:
-      - Xw2jhkO9t3WTy6vIuf2Y2AAABAo
+      - XxBMJLkO14Qa5FDO3qhiLwAAAyc
       x-rate-limit-limit:
       - '600'
       x-rate-limit-remaining:
       - '599'
       x-rate-limit-reset:
-      - '1594729410'
+      - '1594903648'
       x-xss-protection:
       - 1; mode=block; report=https://okta.report-uri.com/r/d/xss/enforce
     status:
@@ -126,10 +127,10 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: POST
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/sf/tables?table-filter=METRICS3_STG.ADWORDS_VIEWS.ENTITY%25
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/SF/tables?table-filter=METRICS3_STG.ADWORDS_VIEWS.ENTITY%25
   response:
     body:
-      string: '{"job_id":"20f25c78-4045-2c86-d0e6-ac794544cf00"}
+      string: '{"job_id":"20efb3da-777a-eb0f-8135-e307f95fae00"}
 
         '
     headers:
@@ -140,17 +141,17 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:22:31 GMT
+      - Thu, 16 Jul 2020 12:46:29 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
       - None
       X-Kong-Proxy-Latency:
-      - '0'
+      - '1'
       X-Kong-Upstream-Latency:
-      - '204'
+      - '88'
       x-diesel-request-id:
-      - dfe4b096-1e81-4692-8c31-5ec6074230e2
+      - b4025a11-726e-457b-a849-9f080b8e39aa
     status:
       code: 200
       message: OK
@@ -166,7 +167,7 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: GET
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20f25c78-4045-2c86-d0e6-ac794544cf00
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20efb3da-777a-eb0f-8135-e307f95fae00
   response:
     body:
       string: '{"job_status":"RUNNING"}
@@ -180,17 +181,17 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:22:31 GMT
+      - Thu, 16 Jul 2020 12:46:30 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
       - None
       X-Kong-Proxy-Latency:
-      - '1'
+      - '0'
       X-Kong-Upstream-Latency:
-      - '22'
+      - '67'
       x-diesel-request-id:
-      - a18876fb-db39-4cab-8171-7c91d2d37e75
+      - 5454d621-e3b1-4520-ab1f-651e57af7e6a
     status:
       code: 200
       message: OK
@@ -206,7 +207,7 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: GET
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20f25c78-4045-2c86-d0e6-ac794544cf00
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20efb3da-777a-eb0f-8135-e307f95fae00
   response:
     body:
       string: '{"job_status":"COMPLETED"}
@@ -220,17 +221,17 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:22:32 GMT
+      - Thu, 16 Jul 2020 12:46:31 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
       - None
       X-Kong-Proxy-Latency:
-      - '1'
+      - '0'
       X-Kong-Upstream-Latency:
-      - '21'
+      - '28'
       x-diesel-request-id:
-      - 73b4a454-0075-4e5a-b3e2-24f329be1d00
+      - 96821930-81cd-4c85-b099-338239102a7d
     status:
       code: 200
       message: OK
@@ -246,7 +247,7 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: GET
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20f25c78-4045-2c86-d0e6-ac794544cf00/results?offset=0&limit=500
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20efb3da-777a-eb0f-8135-e307f95fae00/results?offset=0&limit=500
   response:
     body:
       string: '{"data":[{"table_name":"ENTITY_ACCOUNTS","table_schema":"SF.METRICS3_STG.ADWORDS_VIEWS"},{"table_name":"ENTITY_ADGROUPS","table_schema":"SF.METRICS3_STG.ADWORDS_VIEWS"},{"table_name":"ENTITY_ADGROUPS_FROM_SERVICE","table_schema":"SF.METRICS3_STG.ADWORDS_VIEWS"},{"table_name":"ENTITY_ADS","table_schema":"SF.METRICS3_STG.ADWORDS_VIEWS"},{"table_name":"ENTITY_ADS_FROM_SERVICE","table_schema":"SF.METRICS3_STG.ADWORDS_VIEWS"},{"table_name":"ENTITY_ADVIDEOS","table_schema":"SF.METRICS3_STG.ADWORDS_VIEWS"},{"table_name":"ENTITY_CAMPAIGNS","table_schema":"SF.METRICS3_STG.ADWORDS_VIEWS"},{"table_name":"ENTITY_CAMPAIGNS_CRITERION","table_schema":"SF.METRICS3_STG.ADWORDS_VIEWS"},{"table_name":"ENTITY_CAMPAIGNS_FROM_SERVICE","table_schema":"SF.METRICS3_STG.ADWORDS_VIEWS"},{"table_name":"ENTITY_USER_LISTS","table_schema":"SF.METRICS3_STG.ADWORDS_VIEWS"}]}
@@ -260,17 +261,17 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:22:33 GMT
+      - Thu, 16 Jul 2020 12:46:31 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
       - None
       X-Kong-Proxy-Latency:
-      - '1'
+      - '0'
       X-Kong-Upstream-Latency:
-      - '112'
+      - '27'
       x-diesel-request-id:
-      - 128d4592-6e5a-411b-b58d-24b55c26053d
+      - c57559fd-e775-45fc-a74e-9253e26f8f8a
     status:
       code: 200
       message: OK
@@ -293,14 +294,15 @@ interactions:
     uri: https://id.panoramichq.com/oauth2/aus5iy3utLXi3Ez4A4x6/v1/token
   response:
     body:
-      string: '{"token_type":"Bearer","expires_in":3600,"access_token":"eyJraWQiOiJXT3BZUVdDU0YtWkw0RU1OR3FHUEowWk1zNlhfY3A5UUlsaTY0MXFhNTYwIiwiYWxnIjoiUlMyNTYifQ.eyJ2ZXIiOjEsImp0aSI6IkFULjhwTzFBSXdzUlR2cHFfWk1aU21Ta2pFSVJuZzg0VkVxMGdxQVFaVnVzUFkiLCJpc3MiOiJodHRwczovL2lkLnBhbm9yYW1pY2hxLmNvbS9vYXV0aDIvYXVzNWl5M3V0TFhpM0V6NEE0eDYiLCJhdWQiOiJodHRwczovL2FwaS5wYW5vcmFtaWNzdHEuY29tIiwiaWF0IjoxNTk0NzI5MzUzLCJleHAiOjE1OTQ3MzI5NTMsImNpZCI6IjBvYWNzenFvYzhvTnl0N21mNHg2Iiwic2NwIjpbInBsYXRmb3JtIl0sInN1YiI6IjBvYWNzenFvYzhvTnl0N21mNHg2In0.eGDFEGSkPRRnW3EEiK3Up1S3R0C_zHhStId47MpmBTYagzoHC4qJKEpYyi5Kn-EjUe-UqLSknyR_RPr9jD54bbFUMSpUWmwEeccUsOqO0hXsAcSUZaasYs6ZCfjiohiAaSvoH7ctGrhRFBvasfT6Z3al_ggVzVH_Qxb8vKptS6YH4CGi7zGKDN2xZGvchSBKsdjNyxZHx3d9aFw2ZoMoAk0CZv1tLGWvh2K_5b9B3aSGv5wZMT9qz6czSePICUNIdLjjU-cXhsOxwgfXlCrlavG1M8fZbVPm4Ug3Er9vOOwpv3kFWoz2dvjvGb2MgmZB9R1dAUSfwWD7YOCcfEhVgQ","scope":"platform"}'
+      string: '{"token_type": "Bearer", "expires_in": 3600, "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+        "scope": "platform"}'
     headers:
       Connection:
       - Keep-Alive
       Content-Type:
       - application/json;charset=UTF-8
       Date:
-      - Tue, 14 Jul 2020 12:22:33 GMT
+      - Thu, 16 Jul 2020 12:46:32 GMT
       Keep-Alive:
       - timeout=5, max=100
       Server:
@@ -321,17 +323,17 @@ interactions:
       - no-cache
       set-cookie:
       - sid=""; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Path=/
-      - JSESSIONID=81345982FF7BAFE1FABAB9FDC85C60A8; Path=/; Secure; HttpOnly
+      - JSESSIONID=98D25EC78BB541C7D5FEDFF7060760DA; Path=/; Secure; HttpOnly
       x-content-type-options:
       - nosniff
       x-okta-request-id:
-      - Xw2jiVyEOUI6FXk7YAluZQAABZI
+      - XxBMKIixTQ69M@xfnro3rgAABMQ
       x-rate-limit-limit:
       - '600'
       x-rate-limit-remaining:
       - '598'
       x-rate-limit-reset:
-      - '1594729410'
+      - '1594903648'
       x-xss-protection:
       - 1; mode=block; report=https://okta.report-uri.com/r/d/xss/enforce
     status:
@@ -351,10 +353,10 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: POST
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/sf/refresh?table-name=METRICS3_STG.ADWORDS_VIEWS.ENTITY_ACCOUNTS
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/SF/refresh?table-name=METRICS3_STG.ADWORDS_VIEWS.ENTITY_ACCOUNTS
   response:
     body:
-      string: '{"job_id":"20f25c75-7946-cdc3-b6ce-74334ce1e700"}
+      string: '{"job_id":"20efb3d6-42af-645c-4fe6-6ebbb1dbff00"}
 
         '
     headers:
@@ -365,47 +367,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:22:34 GMT
-      Via:
-      - kong/2.0.3
-      X-Amzn-Trace-Id:
-      - None
-      X-Kong-Proxy-Latency:
-      - '1'
-      X-Kong-Upstream-Latency:
-      - '27'
-      x-diesel-request-id:
-      - b876e27a-809e-4270-aef9-cad523bc355c
-    status:
-      code: 200
-      message: OK
-- request:
-    body: null
-    headers:
-      Accept:
-      - '*/*'
-      Accept-Encoding:
-      - gzip, deflate
-      Connection:
-      - keep-alive
-      User-Agent:
-      - python-requests/2.24.0
-    method: GET
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20f25c75-7946-cdc3-b6ce-74334ce1e700
-  response:
-    body:
-      string: '{"job_status":"METADATA_RETRIEVAL"}
-
-        '
-    headers:
-      Connection:
-      - keep-alive
-      Content-Length:
-      - '36'
-      Content-Type:
-      - application/json
-      Date:
-      - Tue, 14 Jul 2020 12:22:34 GMT
+      - Thu, 16 Jul 2020 12:46:33 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
@@ -415,7 +377,7 @@ interactions:
       X-Kong-Upstream-Latency:
       - '26'
       x-diesel-request-id:
-      - 3ce6d842-60fb-40a1-b5a7-185320a5b936
+      - 92fd28ed-1582-4a8f-97a9-336e71a5c20d
     status:
       code: 200
       message: OK
@@ -431,7 +393,7 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: GET
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20f25c75-7946-cdc3-b6ce-74334ce1e700
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20efb3d6-42af-645c-4fe6-6ebbb1dbff00
   response:
     body:
       string: '{"job_status":"METADATA_RETRIEVAL"}
@@ -445,47 +407,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:22:35 GMT
-      Via:
-      - kong/2.0.3
-      X-Amzn-Trace-Id:
-      - None
-      X-Kong-Proxy-Latency:
-      - '1'
-      X-Kong-Upstream-Latency:
-      - '21'
-      x-diesel-request-id:
-      - 991af8a5-3a5a-473c-89b0-d25d0dd4f5ab
-    status:
-      code: 200
-      message: OK
-- request:
-    body: null
-    headers:
-      Accept:
-      - '*/*'
-      Accept-Encoding:
-      - gzip, deflate
-      Connection:
-      - keep-alive
-      User-Agent:
-      - python-requests/2.24.0
-    method: GET
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20f25c75-7946-cdc3-b6ce-74334ce1e700
-  response:
-    body:
-      string: '{"job_status":"METADATA_RETRIEVAL"}
-
-        '
-    headers:
-      Connection:
-      - keep-alive
-      Content-Length:
-      - '36'
-      Content-Type:
-      - application/json
-      Date:
-      - Tue, 14 Jul 2020 12:22:36 GMT
+      - Thu, 16 Jul 2020 12:46:33 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
@@ -493,9 +415,9 @@ interactions:
       X-Kong-Proxy-Latency:
       - '0'
       X-Kong-Upstream-Latency:
-      - '19'
+      - '23'
       x-diesel-request-id:
-      - e3396aec-a965-4c80-a5eb-e18f76c5c7e4
+      - 0409791d-68d2-43d9-ba09-3375dce99c56
     status:
       code: 200
       message: OK
@@ -511,7 +433,47 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: GET
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20f25c75-7946-cdc3-b6ce-74334ce1e700
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20efb3d6-42af-645c-4fe6-6ebbb1dbff00
+  response:
+    body:
+      string: '{"job_status":"METADATA_RETRIEVAL"}
+
+        '
+    headers:
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '36'
+      Content-Type:
+      - application/json
+      Date:
+      - Thu, 16 Jul 2020 12:46:34 GMT
+      Via:
+      - kong/2.0.3
+      X-Amzn-Trace-Id:
+      - None
+      X-Kong-Proxy-Latency:
+      - '0'
+      X-Kong-Upstream-Latency:
+      - '24'
+      x-diesel-request-id:
+      - 0ea2eec1-eedc-4770-aad6-4c63b768fe02
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.24.0
+    method: GET
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20efb3d6-42af-645c-4fe6-6ebbb1dbff00
   response:
     body:
       string: '{"job_status":"COMPLETED"}
@@ -525,7 +487,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:22:37 GMT
+      - Thu, 16 Jul 2020 12:46:35 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
@@ -533,9 +495,9 @@ interactions:
       X-Kong-Proxy-Latency:
       - '0'
       X-Kong-Upstream-Latency:
-      - '22'
+      - '21'
       x-diesel-request-id:
-      - f4dc4cfe-2a6e-4eb2-a386-25d4f0c2c01a
+      - 759b739d-cfa6-4112-83f4-0474ba0ffe39
     status:
       code: 200
       message: OK
@@ -553,10 +515,10 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: POST
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/sf/columns?table-filter=METRICS3_STG.ADWORDS_VIEWS.ENTITY_ACCOUNTS
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/SF/columns?table-filter=METRICS3_STG.ADWORDS_VIEWS.ENTITY_ACCOUNTS
   response:
     body:
-      string: '{"job_id":"20f25c70-dcfb-0fad-c418-617229d3b600"}
+      string: '{"job_id":"20efb3d4-69bf-cdb8-9413-0fb9e95d9100"}
 
         '
     headers:
@@ -567,7 +529,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:22:38 GMT
+      - Thu, 16 Jul 2020 12:46:35 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
@@ -575,9 +537,9 @@ interactions:
       X-Kong-Proxy-Latency:
       - '0'
       X-Kong-Upstream-Latency:
-      - '27'
+      - '30'
       x-diesel-request-id:
-      - 7ba15d1f-3c84-4f0e-8c91-10bcde8fd1f8
+      - d6e34c0e-4b90-429d-b3c6-6b65bd4bbb6c
     status:
       code: 200
       message: OK
@@ -593,7 +555,7 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: GET
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20f25c70-dcfb-0fad-c418-617229d3b600
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20efb3d4-69bf-cdb8-9413-0fb9e95d9100
   response:
     body:
       string: '{"job_status":"RUNNING"}
@@ -607,17 +569,17 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:22:38 GMT
+      - Thu, 16 Jul 2020 12:46:35 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
       - None
       X-Kong-Proxy-Latency:
-      - '0'
+      - '1'
       X-Kong-Upstream-Latency:
-      - '152'
+      - '20'
       x-diesel-request-id:
-      - f8b5ca21-0292-412d-95f6-be4f5b4e0931
+      - 4f52c510-0e21-4557-afbf-0af30d55437d
     status:
       code: 200
       message: OK
@@ -633,7 +595,7 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: GET
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20f25c70-dcfb-0fad-c418-617229d3b600
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20efb3d4-69bf-cdb8-9413-0fb9e95d9100
   response:
     body:
       string: '{"job_status":"COMPLETED"}
@@ -647,7 +609,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:22:39 GMT
+      - Thu, 16 Jul 2020 12:46:37 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
@@ -655,9 +617,9 @@ interactions:
       X-Kong-Proxy-Latency:
       - '0'
       X-Kong-Upstream-Latency:
-      - '19'
+      - '20'
       x-diesel-request-id:
-      - b77648b6-60ab-400a-b980-30498ae6746c
+      - 3d5980b0-aaeb-4826-b359-6de48c41b463
     status:
       code: 200
       message: OK
@@ -673,7 +635,7 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: GET
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20f25c70-dcfb-0fad-c418-617229d3b600/results?offset=0&limit=500
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20efb3d4-69bf-cdb8-9413-0fb9e95d9100/results?offset=0&limit=500
   response:
     body:
       string: '{"data":[{"column_default":null,"column_name":"__API_VERSION","data_type":"CHARACTER
@@ -699,7 +661,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:22:39 GMT
+      - Thu, 16 Jul 2020 12:46:37 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
@@ -707,9 +669,9 @@ interactions:
       X-Kong-Proxy-Latency:
       - '0'
       X-Kong-Upstream-Latency:
-      - '23'
+      - '25'
       x-diesel-request-id:
-      - bb190017-3f04-4564-992c-c2fd964b4fa3
+      - 9159855f-789f-4e95-b36f-a52ff7c86c89
     status:
       code: 200
       message: OK
@@ -727,10 +689,10 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: POST
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/sf/refresh?table-name=METRICS3_STG.ADWORDS_VIEWS.ENTITY_ADGROUPS
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/SF/refresh?table-name=METRICS3_STG.ADWORDS_VIEWS.ENTITY_ADGROUPS
   response:
     body:
-      string: '{"job_id":"20f25c6f-8857-bfaa-786e-cfd7bb33aa00"}
+      string: '{"job_id":"20efb3d2-5224-b18c-f1f2-112b95326500"}
 
         '
     headers:
@@ -741,7 +703,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:22:39 GMT
+      - Thu, 16 Jul 2020 12:46:37 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
@@ -749,9 +711,9 @@ interactions:
       X-Kong-Proxy-Latency:
       - '0'
       X-Kong-Upstream-Latency:
-      - '21'
+      - '23'
       x-diesel-request-id:
-      - 0f50b7bb-6ffe-4e4e-b105-947a1835a70f
+      - 4308c4ac-d2e0-477c-af68-d57aacfdc3ec
     status:
       code: 200
       message: OK
@@ -767,7 +729,7 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: GET
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20f25c6f-8857-bfaa-786e-cfd7bb33aa00
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20efb3d2-5224-b18c-f1f2-112b95326500
   response:
     body:
       string: '{"job_status":"METADATA_RETRIEVAL"}
@@ -781,17 +743,17 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:22:39 GMT
+      - Thu, 16 Jul 2020 12:46:37 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
       - None
       X-Kong-Proxy-Latency:
-      - '0'
+      - '1'
       X-Kong-Upstream-Latency:
-      - '21'
+      - '19'
       x-diesel-request-id:
-      - 7f676c3f-4818-4c64-9c17-54d2bc245c3c
+      - f6b43482-0afe-4feb-9406-cc2d6dc487a8
     status:
       code: 200
       message: OK
@@ -807,7 +769,47 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: GET
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20f25c6f-8857-bfaa-786e-cfd7bb33aa00
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20efb3d2-5224-b18c-f1f2-112b95326500
+  response:
+    body:
+      string: '{"job_status":"METADATA_RETRIEVAL"}
+
+        '
+    headers:
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '36'
+      Content-Type:
+      - application/json
+      Date:
+      - Thu, 16 Jul 2020 12:46:38 GMT
+      Via:
+      - kong/2.0.3
+      X-Amzn-Trace-Id:
+      - None
+      X-Kong-Proxy-Latency:
+      - '1'
+      X-Kong-Upstream-Latency:
+      - '20'
+      x-diesel-request-id:
+      - 928ea32f-f2fb-49e2-8990-94fb7cc07f91
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.24.0
+    method: GET
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20efb3d2-5224-b18c-f1f2-112b95326500
   response:
     body:
       string: '{"job_status":"COMPLETED"}
@@ -821,7 +823,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:22:41 GMT
+      - Thu, 16 Jul 2020 12:46:39 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
@@ -831,7 +833,7 @@ interactions:
       X-Kong-Upstream-Latency:
       - '20'
       x-diesel-request-id:
-      - f6f12c5a-0fee-4ef5-bc98-ec6690969de0
+      - ce63b6f4-3112-44dd-8e92-b4a9f7baf6fe
     status:
       code: 200
       message: OK
@@ -849,10 +851,10 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: POST
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/sf/columns?table-filter=METRICS3_STG.ADWORDS_VIEWS.ENTITY_ADGROUPS
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/SF/columns?table-filter=METRICS3_STG.ADWORDS_VIEWS.ENTITY_ADGROUPS
   response:
     body:
-      string: '{"job_id":"20f25c6e-765d-6aba-11aa-ba7baefc8600"}
+      string: '{"job_id":"20efb3cf-1951-6c7b-3ed7-975c35431400"}
 
         '
     headers:
@@ -863,7 +865,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:22:41 GMT
+      - Thu, 16 Jul 2020 12:46:40 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
@@ -871,9 +873,9 @@ interactions:
       X-Kong-Proxy-Latency:
       - '0'
       X-Kong-Upstream-Latency:
-      - '23'
+      - '25'
       x-diesel-request-id:
-      - f6865cdd-3b19-496f-8ed2-6d8a2d85092c
+      - f2540722-e6cf-4625-ab00-a19f94f65b62
     status:
       code: 200
       message: OK
@@ -889,7 +891,7 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: GET
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20f25c6e-765d-6aba-11aa-ba7baefc8600
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20efb3cf-1951-6c7b-3ed7-975c35431400
   response:
     body:
       string: '{"job_status":"RUNNING"}
@@ -903,7 +905,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:22:41 GMT
+      - Thu, 16 Jul 2020 12:46:40 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
@@ -913,7 +915,7 @@ interactions:
       X-Kong-Upstream-Latency:
       - '19'
       x-diesel-request-id:
-      - b03b2270-22b1-4114-851a-710dd65c8da7
+      - a8f0f0ca-1c71-4afb-a84e-b5378c369a8a
     status:
       code: 200
       message: OK
@@ -929,7 +931,7 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: GET
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20f25c6e-765d-6aba-11aa-ba7baefc8600
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20efb3cf-1951-6c7b-3ed7-975c35431400
   response:
     body:
       string: '{"job_status":"COMPLETED"}
@@ -943,7 +945,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:22:42 GMT
+      - Thu, 16 Jul 2020 12:46:41 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
@@ -951,9 +953,9 @@ interactions:
       X-Kong-Proxy-Latency:
       - '0'
       X-Kong-Upstream-Latency:
-      - '20'
+      - '112'
       x-diesel-request-id:
-      - 1d4a2e61-9fa9-44b4-ae05-45abdb52d72a
+      - 976e4e66-442c-46fd-9ce9-4ce5c78759de
     status:
       code: 200
       message: OK
@@ -969,7 +971,7 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: GET
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20f25c6e-765d-6aba-11aa-ba7baefc8600/results?offset=0&limit=500
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20efb3cf-1951-6c7b-3ed7-975c35431400/results?offset=0&limit=500
   response:
     body:
       string: '{"data":[{"column_default":null,"column_name":"__RECORD_ID","data_type":"CHARACTER
@@ -993,129 +995,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:22:42 GMT
-      Via:
-      - kong/2.0.3
-      X-Amzn-Trace-Id:
-      - None
-      X-Kong-Proxy-Latency:
-      - '0'
-      X-Kong-Upstream-Latency:
-      - '26'
-      x-diesel-request-id:
-      - 17225552-2770-4a23-8441-a0b80e046777
-    status:
-      code: 200
-      message: OK
-- request:
-    body: null
-    headers:
-      Accept:
-      - '*/*'
-      Accept-Encoding:
-      - gzip, deflate
-      Connection:
-      - keep-alive
-      Content-Length:
-      - '0'
-      User-Agent:
-      - python-requests/2.24.0
-    method: POST
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/sf/refresh?table-name=METRICS3_STG.ADWORDS_VIEWS.ENTITY_ADGROUPS_FROM_SERVICE
-  response:
-    body:
-      string: '{"job_id":"20f25c6d-16cb-9d6c-ffdc-4589e700e700"}
-
-        '
-    headers:
-      Connection:
-      - keep-alive
-      Content-Length:
-      - '50'
-      Content-Type:
-      - application/json
-      Date:
-      - Tue, 14 Jul 2020 12:22:42 GMT
-      Via:
-      - kong/2.0.3
-      X-Amzn-Trace-Id:
-      - None
-      X-Kong-Proxy-Latency:
-      - '0'
-      X-Kong-Upstream-Latency:
-      - '29'
-      x-diesel-request-id:
-      - 16b67eda-72e1-4156-9333-3e1d76617f81
-    status:
-      code: 200
-      message: OK
-- request:
-    body: null
-    headers:
-      Accept:
-      - '*/*'
-      Accept-Encoding:
-      - gzip, deflate
-      Connection:
-      - keep-alive
-      User-Agent:
-      - python-requests/2.24.0
-    method: GET
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20f25c6d-16cb-9d6c-ffdc-4589e700e700
-  response:
-    body:
-      string: '{"job_status":"METADATA_RETRIEVAL"}
-
-        '
-    headers:
-      Connection:
-      - keep-alive
-      Content-Length:
-      - '36'
-      Content-Type:
-      - application/json
-      Date:
-      - Tue, 14 Jul 2020 12:22:42 GMT
-      Via:
-      - kong/2.0.3
-      X-Amzn-Trace-Id:
-      - None
-      X-Kong-Proxy-Latency:
-      - '0'
-      X-Kong-Upstream-Latency:
-      - '22'
-      x-diesel-request-id:
-      - a16137a2-aa5d-4420-bd8f-395432e0cbca
-    status:
-      code: 200
-      message: OK
-- request:
-    body: null
-    headers:
-      Accept:
-      - '*/*'
-      Accept-Encoding:
-      - gzip, deflate
-      Connection:
-      - keep-alive
-      User-Agent:
-      - python-requests/2.24.0
-    method: GET
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20f25c6d-16cb-9d6c-ffdc-4589e700e700
-  response:
-    body:
-      string: '{"job_status":"METADATA_RETRIEVAL"}
-
-        '
-    headers:
-      Connection:
-      - keep-alive
-      Content-Length:
-      - '36'
-      Content-Type:
-      - application/json
-      Date:
-      - Tue, 14 Jul 2020 12:22:44 GMT
+      - Thu, 16 Jul 2020 12:46:41 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
@@ -1123,121 +1003,41 @@ interactions:
       X-Kong-Proxy-Latency:
       - '1'
       X-Kong-Upstream-Latency:
-      - '24'
-      x-diesel-request-id:
-      - 516733f6-0809-46c7-bb9b-5a237408b6e6
-    status:
-      code: 200
-      message: OK
-- request:
-    body: null
-    headers:
-      Accept:
-      - '*/*'
-      Accept-Encoding:
-      - gzip, deflate
-      Connection:
-      - keep-alive
-      User-Agent:
-      - python-requests/2.24.0
-    method: GET
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20f25c6d-16cb-9d6c-ffdc-4589e700e700
-  response:
-    body:
-      string: '{"job_status":"COMPLETED"}
-
-        '
-    headers:
-      Connection:
-      - keep-alive
-      Content-Length:
-      - '27'
-      Content-Type:
-      - application/json
-      Date:
-      - Tue, 14 Jul 2020 12:22:45 GMT
-      Via:
-      - kong/2.0.3
-      X-Amzn-Trace-Id:
-      - None
-      X-Kong-Proxy-Latency:
-      - '0'
-      X-Kong-Upstream-Latency:
-      - '19'
-      x-diesel-request-id:
-      - 07d81d3f-199c-48dc-9fe7-387a6b8342f0
-    status:
-      code: 200
-      message: OK
-- request:
-    body: null
-    headers:
-      Accept:
-      - '*/*'
-      Accept-Encoding:
-      - gzip, deflate
-      Connection:
-      - keep-alive
-      Content-Length:
-      - '0'
-      User-Agent:
-      - python-requests/2.24.0
-    method: POST
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/sf/columns?table-filter=METRICS3_STG.ADWORDS_VIEWS.ENTITY_ADGROUPS_FROM_SERVICE
-  response:
-    body:
-      string: '{"job_id":"20f25c69-a6c5-5a50-8f00-1c69fe05e300"}
-
-        '
-    headers:
-      Connection:
-      - keep-alive
-      Content-Length:
-      - '50'
-      Content-Type:
-      - application/json
-      Date:
-      - Tue, 14 Jul 2020 12:22:45 GMT
-      Via:
-      - kong/2.0.3
-      X-Amzn-Trace-Id:
-      - None
-      X-Kong-Proxy-Latency:
-      - '1'
-      X-Kong-Upstream-Latency:
-      - '23'
-      x-diesel-request-id:
-      - 1d588d3c-5f4c-439d-9128-5b86ace23088
-    status:
-      code: 200
-      message: OK
-- request:
-    body: null
-    headers:
-      Accept:
-      - '*/*'
-      Accept-Encoding:
-      - gzip, deflate
-      Connection:
-      - keep-alive
-      User-Agent:
-      - python-requests/2.24.0
-    method: GET
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20f25c69-a6c5-5a50-8f00-1c69fe05e300
-  response:
-    body:
-      string: '{"job_status":"RUNNING"}
-
-        '
-    headers:
-      Connection:
-      - keep-alive
-      Content-Length:
       - '25'
+      x-diesel-request-id:
+      - d86fe4cf-f6b5-4dc8-9e92-12500d2e6c6f
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '0'
+      User-Agent:
+      - python-requests/2.24.0
+    method: POST
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/SF/refresh?table-name=METRICS3_STG.ADWORDS_VIEWS.ENTITY_ADGROUPS_FROM_SERVICE
+  response:
+    body:
+      string: '{"job_id":"20efb3ce-3000-2268-6f5b-35f19a014300"}
+
+        '
+    headers:
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '50'
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:22:45 GMT
+      - Thu, 16 Jul 2020 12:46:41 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
@@ -1245,9 +1045,9 @@ interactions:
       X-Kong-Proxy-Latency:
       - '1'
       X-Kong-Upstream-Latency:
-      - '23'
+      - '25'
       x-diesel-request-id:
-      - 54419bfc-8df8-4e5b-aa93-225c8f5f8397
+      - 1e954713-3408-4018-bc55-418fba66767a
     status:
       code: 200
       message: OK
@@ -1263,21 +1063,21 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: GET
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20f25c69-a6c5-5a50-8f00-1c69fe05e300
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20efb3ce-3000-2268-6f5b-35f19a014300
   response:
     body:
-      string: '{"job_status":"COMPLETED"}
+      string: '{"job_status":"METADATA_RETRIEVAL"}
 
         '
     headers:
       Connection:
       - keep-alive
       Content-Length:
-      - '27'
+      - '36'
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:22:46 GMT
+      - Thu, 16 Jul 2020 12:46:42 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
@@ -1287,7 +1087,7 @@ interactions:
       X-Kong-Upstream-Latency:
       - '20'
       x-diesel-request-id:
-      - 9f0cab6c-c4a9-47a4-b824-991d90b84954
+      - 10bf6af2-0ba0-471b-8332-4c6956d8e3fb
     status:
       code: 200
       message: OK
@@ -1303,7 +1103,169 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: GET
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20f25c69-a6c5-5a50-8f00-1c69fe05e300/results?offset=0&limit=500
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20efb3ce-3000-2268-6f5b-35f19a014300
+  response:
+    body:
+      string: '{"job_status":"METADATA_RETRIEVAL"}
+
+        '
+    headers:
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '36'
+      Content-Type:
+      - application/json
+      Date:
+      - Thu, 16 Jul 2020 12:46:43 GMT
+      Via:
+      - kong/2.0.3
+      X-Amzn-Trace-Id:
+      - None
+      X-Kong-Proxy-Latency:
+      - '0'
+      X-Kong-Upstream-Latency:
+      - '21'
+      x-diesel-request-id:
+      - cb1e3932-bc19-4c4f-9e70-46665db2f1c1
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.24.0
+    method: GET
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20efb3ce-3000-2268-6f5b-35f19a014300
+  response:
+    body:
+      string: '{"job_status":"COMPLETED"}
+
+        '
+    headers:
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '27'
+      Content-Type:
+      - application/json
+      Date:
+      - Thu, 16 Jul 2020 12:46:44 GMT
+      Via:
+      - kong/2.0.3
+      X-Amzn-Trace-Id:
+      - None
+      X-Kong-Proxy-Latency:
+      - '0'
+      X-Kong-Upstream-Latency:
+      - '21'
+      x-diesel-request-id:
+      - dd8ff3f6-06c1-4ad2-97ee-4b1cb333471c
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '0'
+      User-Agent:
+      - python-requests/2.24.0
+    method: POST
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/SF/columns?table-filter=METRICS3_STG.ADWORDS_VIEWS.ENTITY_ADGROUPS_FROM_SERVICE
+  response:
+    body:
+      string: '{"job_id":"20efb3cb-2774-d722-013b-8fe6e5676500"}
+
+        '
+    headers:
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '50'
+      Content-Type:
+      - application/json
+      Date:
+      - Thu, 16 Jul 2020 12:46:44 GMT
+      Via:
+      - kong/2.0.3
+      X-Amzn-Trace-Id:
+      - None
+      X-Kong-Proxy-Latency:
+      - '0'
+      X-Kong-Upstream-Latency:
+      - '24'
+      x-diesel-request-id:
+      - f2ac52de-659b-4533-a9aa-972d34457293
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.24.0
+    method: GET
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20efb3cb-2774-d722-013b-8fe6e5676500
+  response:
+    body:
+      string: '{"job_status":"COMPLETED"}
+
+        '
+    headers:
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '27'
+      Content-Type:
+      - application/json
+      Date:
+      - Thu, 16 Jul 2020 12:46:45 GMT
+      Via:
+      - kong/2.0.3
+      X-Amzn-Trace-Id:
+      - None
+      X-Kong-Proxy-Latency:
+      - '1'
+      X-Kong-Upstream-Latency:
+      - '830'
+      x-diesel-request-id:
+      - cb4573f3-a6ee-4e1f-8ab3-78d95aaf4a9f
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.24.0
+    method: GET
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20efb3cb-2774-d722-013b-8fe6e5676500/results?offset=0&limit=500
   response:
     body:
       string: '{"data":[{"column_default":null,"column_name":"__RECORD_ID","data_type":"CHARACTER
@@ -1337,7 +1299,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:22:47 GMT
+      - Thu, 16 Jul 2020 12:46:47 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
@@ -1345,9 +1307,9 @@ interactions:
       X-Kong-Proxy-Latency:
       - '1'
       X-Kong-Upstream-Latency:
-      - '22'
+      - '1349'
       x-diesel-request-id:
-      - d877a484-4671-4239-93fd-43d7310d8739
+      - 4b58c507-2734-4d89-95ef-c1ce6c8ef352
     status:
       code: 200
       message: OK
@@ -1365,10 +1327,10 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: POST
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/sf/refresh?table-name=METRICS3_STG.ADWORDS_VIEWS.ENTITY_ADS
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/SF/refresh?table-name=METRICS3_STG.ADWORDS_VIEWS.ENTITY_ADS
   response:
     body:
-      string: '{"job_id":"20f25c67-d8bb-6cd8-4240-e662db039f00"}
+      string: '{"job_id":"20efb3c5-ab89-769f-747d-3419cba33400"}
 
         '
     headers:
@@ -1379,7 +1341,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:22:47 GMT
+      - Thu, 16 Jul 2020 12:46:51 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
@@ -1387,9 +1349,9 @@ interactions:
       X-Kong-Proxy-Latency:
       - '1'
       X-Kong-Upstream-Latency:
-      - '22'
+      - '3731'
       x-diesel-request-id:
-      - e42e0bf3-e57e-416a-8e7e-f30c26224fe5
+      - c3519347-c868-4c06-8394-98415f430c10
     status:
       code: 200
       message: OK
@@ -1405,87 +1367,7 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: GET
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20f25c67-d8bb-6cd8-4240-e662db039f00
-  response:
-    body:
-      string: '{"job_status":"METADATA_RETRIEVAL"}
-
-        '
-    headers:
-      Connection:
-      - keep-alive
-      Content-Length:
-      - '36'
-      Content-Type:
-      - application/json
-      Date:
-      - Tue, 14 Jul 2020 12:22:47 GMT
-      Via:
-      - kong/2.0.3
-      X-Amzn-Trace-Id:
-      - None
-      X-Kong-Proxy-Latency:
-      - '1'
-      X-Kong-Upstream-Latency:
-      - '20'
-      x-diesel-request-id:
-      - 5b9d6738-6138-4ad6-bbe5-e2edc51ec258
-    status:
-      code: 200
-      message: OK
-- request:
-    body: null
-    headers:
-      Accept:
-      - '*/*'
-      Accept-Encoding:
-      - gzip, deflate
-      Connection:
-      - keep-alive
-      User-Agent:
-      - python-requests/2.24.0
-    method: GET
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20f25c67-d8bb-6cd8-4240-e662db039f00
-  response:
-    body:
-      string: '{"job_status":"METADATA_RETRIEVAL"}
-
-        '
-    headers:
-      Connection:
-      - keep-alive
-      Content-Length:
-      - '36'
-      Content-Type:
-      - application/json
-      Date:
-      - Tue, 14 Jul 2020 12:22:48 GMT
-      Via:
-      - kong/2.0.3
-      X-Amzn-Trace-Id:
-      - None
-      X-Kong-Proxy-Latency:
-      - '0'
-      X-Kong-Upstream-Latency:
-      - '19'
-      x-diesel-request-id:
-      - 598b7513-f706-487d-b0aa-0c781199b3ce
-    status:
-      code: 200
-      message: OK
-- request:
-    body: null
-    headers:
-      Accept:
-      - '*/*'
-      Accept-Encoding:
-      - gzip, deflate
-      Connection:
-      - keep-alive
-      User-Agent:
-      - python-requests/2.24.0
-    method: GET
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20f25c67-d8bb-6cd8-4240-e662db039f00
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20efb3c5-ab89-769f-747d-3419cba33400
   response:
     body:
       string: '{"job_status":"COMPLETED"}
@@ -1499,7 +1381,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:22:49 GMT
+      - Thu, 16 Jul 2020 12:46:54 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
@@ -1507,9 +1389,9 @@ interactions:
       X-Kong-Proxy-Latency:
       - '0'
       X-Kong-Upstream-Latency:
-      - '22'
+      - '3194'
       x-diesel-request-id:
-      - 0ba84b9e-63f3-45a4-b166-80b27776c804
+      - ec9b054b-cf38-454d-874a-ccf762b625d8
     status:
       code: 200
       message: OK
@@ -1527,10 +1409,10 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: POST
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/sf/columns?table-filter=METRICS3_STG.ADWORDS_VIEWS.ENTITY_ADS
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/SF/columns?table-filter=METRICS3_STG.ADWORDS_VIEWS.ENTITY_ADS
   response:
     body:
-      string: '{"job_id":"20f25c65-a718-d3c2-f88d-c87417d15d00"}
+      string: '{"job_id":"20efb3c0-c4cd-9382-f4e5-445fdee6f900"}
 
         '
     headers:
@@ -1541,17 +1423,17 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:22:49 GMT
+      - Thu, 16 Jul 2020 12:46:54 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
       - None
       X-Kong-Proxy-Latency:
-      - '1'
+      - '0'
       X-Kong-Upstream-Latency:
-      - '25'
+      - '29'
       x-diesel-request-id:
-      - ab4044e9-32a4-431b-ac3a-d2493c562442
+      - a1c07449-2127-459a-9205-5d313b87cc7b
     status:
       code: 200
       message: OK
@@ -1567,7 +1449,7 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: GET
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20f25c65-a718-d3c2-f88d-c87417d15d00
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20efb3c0-c4cd-9382-f4e5-445fdee6f900
   response:
     body:
       string: '{"job_status":"RUNNING"}
@@ -1581,7 +1463,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:22:49 GMT
+      - Thu, 16 Jul 2020 12:46:54 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
@@ -1589,9 +1471,9 @@ interactions:
       X-Kong-Proxy-Latency:
       - '0'
       X-Kong-Upstream-Latency:
-      - '20'
+      - '27'
       x-diesel-request-id:
-      - cf0e4eb4-19df-4e8c-a7e5-1f5aa16122db
+      - 7ac889de-ca6d-4a7a-9bf8-6d92f3cda147
     status:
       code: 200
       message: OK
@@ -1607,7 +1489,7 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: GET
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20f25c65-a718-d3c2-f88d-c87417d15d00
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20efb3c0-c4cd-9382-f4e5-445fdee6f900
   response:
     body:
       string: '{"job_status":"COMPLETED"}
@@ -1621,17 +1503,17 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:22:51 GMT
+      - Thu, 16 Jul 2020 12:46:56 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
       - None
       X-Kong-Proxy-Latency:
-      - '0'
+      - '1'
       X-Kong-Upstream-Latency:
-      - '18'
+      - '21'
       x-diesel-request-id:
-      - 38e40645-3a0a-4457-8342-648e7cc547cc
+      - 07e947ef-6c5a-42ee-b1a5-aaa384d2ed8e
     status:
       code: 200
       message: OK
@@ -1647,7 +1529,7 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: GET
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20f25c65-a718-d3c2-f88d-c87417d15d00/results?offset=0&limit=500
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20efb3c0-c4cd-9382-f4e5-445fdee6f900/results?offset=0&limit=500
   response:
     body:
       string: '{"data":[{"column_default":null,"column_name":"AD_ID","data_type":"CHARACTER
@@ -1677,7 +1559,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:22:51 GMT
+      - Thu, 16 Jul 2020 12:46:56 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
@@ -1685,9 +1567,9 @@ interactions:
       X-Kong-Proxy-Latency:
       - '0'
       X-Kong-Upstream-Latency:
-      - '27'
+      - '26'
       x-diesel-request-id:
-      - 2f31a906-f1af-4c64-a98b-203946c1b748
+      - 5d2b5c77-5c33-4490-bfd3-7ddb8d8af2cf
     status:
       code: 200
       message: OK
@@ -1705,10 +1587,10 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: POST
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/sf/refresh?table-name=METRICS3_STG.ADWORDS_VIEWS.ENTITY_ADS_FROM_SERVICE
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/SF/refresh?table-name=METRICS3_STG.ADWORDS_VIEWS.ENTITY_ADS_FROM_SERVICE
   response:
     body:
-      string: '{"job_id":"20f25c64-7602-b988-a7f9-0a2a01b4a300"}
+      string: '{"job_id":"20efb3bf-6dbd-ce57-c0a9-ce0eeb0d1700"}
 
         '
     headers:
@@ -1719,7 +1601,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:22:51 GMT
+      - Thu, 16 Jul 2020 12:46:56 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
@@ -1727,9 +1609,9 @@ interactions:
       X-Kong-Proxy-Latency:
       - '0'
       X-Kong-Upstream-Latency:
-      - '26'
+      - '25'
       x-diesel-request-id:
-      - 617f2398-7e08-4027-b53f-c6c30a50f00c
+      - c5d983e8-dc82-4ad1-9c7a-953682f237f9
     status:
       code: 200
       message: OK
@@ -1745,7 +1627,7 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: GET
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20f25c64-7602-b988-a7f9-0a2a01b4a300
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20efb3bf-6dbd-ce57-c0a9-ce0eeb0d1700
   response:
     body:
       string: '{"job_status":"METADATA_RETRIEVAL"}
@@ -1759,7 +1641,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:22:51 GMT
+      - Thu, 16 Jul 2020 12:46:56 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
@@ -1767,9 +1649,9 @@ interactions:
       X-Kong-Proxy-Latency:
       - '0'
       X-Kong-Upstream-Latency:
-      - '16'
+      - '20'
       x-diesel-request-id:
-      - 35a26363-b5fd-477e-8f40-bce9d834beb2
+      - e14c9714-62a3-44ec-bf9e-f67e42dbb218
     status:
       code: 200
       message: OK
@@ -1785,7 +1667,7 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: GET
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20f25c64-7602-b988-a7f9-0a2a01b4a300
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20efb3bf-6dbd-ce57-c0a9-ce0eeb0d1700
   response:
     body:
       string: '{"job_status":"METADATA_RETRIEVAL"}
@@ -1799,7 +1681,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:22:52 GMT
+      - Thu, 16 Jul 2020 12:46:57 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
@@ -1809,7 +1691,7 @@ interactions:
       X-Kong-Upstream-Latency:
       - '21'
       x-diesel-request-id:
-      - 2c21b175-1ccd-4975-8ceb-5ca3bf0d0a20
+      - 959bf4ab-c5b0-4189-b1d7-d15b9d72d6ed
     status:
       code: 200
       message: OK
@@ -1825,47 +1707,7 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: GET
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20f25c64-7602-b988-a7f9-0a2a01b4a300
-  response:
-    body:
-      string: '{"job_status":"METADATA_RETRIEVAL"}
-
-        '
-    headers:
-      Connection:
-      - keep-alive
-      Content-Length:
-      - '36'
-      Content-Type:
-      - application/json
-      Date:
-      - Tue, 14 Jul 2020 12:22:53 GMT
-      Via:
-      - kong/2.0.3
-      X-Amzn-Trace-Id:
-      - None
-      X-Kong-Proxy-Latency:
-      - '0'
-      X-Kong-Upstream-Latency:
-      - '24'
-      x-diesel-request-id:
-      - 49e2daaa-62f0-44bb-933d-8a4516d7c4c2
-    status:
-      code: 200
-      message: OK
-- request:
-    body: null
-    headers:
-      Accept:
-      - '*/*'
-      Accept-Encoding:
-      - gzip, deflate
-      Connection:
-      - keep-alive
-      User-Agent:
-      - python-requests/2.24.0
-    method: GET
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20f25c64-7602-b988-a7f9-0a2a01b4a300
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20efb3bf-6dbd-ce57-c0a9-ce0eeb0d1700
   response:
     body:
       string: '{"job_status":"COMPLETED"}
@@ -1879,17 +1721,17 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:22:55 GMT
+      - Thu, 16 Jul 2020 12:46:59 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
       - None
       X-Kong-Proxy-Latency:
-      - '1'
+      - '0'
       X-Kong-Upstream-Latency:
-      - '21'
+      - '50'
       x-diesel-request-id:
-      - 5be250e9-8e49-401c-917b-9369f3658899
+      - 3f006324-0fa2-4477-8a11-bccf7561864a
     status:
       code: 200
       message: OK
@@ -1907,10 +1749,10 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: POST
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/sf/columns?table-filter=METRICS3_STG.ADWORDS_VIEWS.ENTITY_ADS_FROM_SERVICE
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/SF/columns?table-filter=METRICS3_STG.ADWORDS_VIEWS.ENTITY_ADS_FROM_SERVICE
   response:
     body:
-      string: '{"job_id":"20f25c60-5b7f-d70a-cc8f-0d4b79737600"}
+      string: '{"job_id":"20efb3bc-6821-0802-b6ee-96f2aaad0500"}
 
         '
     headers:
@@ -1921,17 +1763,17 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:22:55 GMT
+      - Thu, 16 Jul 2020 12:46:59 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
       - None
       X-Kong-Proxy-Latency:
-      - '1'
+      - '0'
       X-Kong-Upstream-Latency:
-      - '26'
+      - '25'
       x-diesel-request-id:
-      - b3db2d0f-f9e2-4a9a-b7aa-dda3f91e3492
+      - ba42c2ef-b319-4987-b1c1-4adc71e98f30
     status:
       code: 200
       message: OK
@@ -1947,7 +1789,7 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: GET
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20f25c60-5b7f-d70a-cc8f-0d4b79737600
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20efb3bc-6821-0802-b6ee-96f2aaad0500
   response:
     body:
       string: '{"job_status":"RUNNING"}
@@ -1961,7 +1803,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:22:55 GMT
+      - Thu, 16 Jul 2020 12:46:59 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
@@ -1969,9 +1811,9 @@ interactions:
       X-Kong-Proxy-Latency:
       - '1'
       X-Kong-Upstream-Latency:
-      - '26'
+      - '24'
       x-diesel-request-id:
-      - d7ddaa06-61e5-40e5-adfd-7426e83fd839
+      - a58db3f2-6ad5-49c0-94fb-49e15b820e65
     status:
       code: 200
       message: OK
@@ -1987,7 +1829,7 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: GET
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20f25c60-5b7f-d70a-cc8f-0d4b79737600
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20efb3bc-6821-0802-b6ee-96f2aaad0500
   response:
     body:
       string: '{"job_status":"COMPLETED"}
@@ -2001,17 +1843,17 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:22:56 GMT
+      - Thu, 16 Jul 2020 12:47:00 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
       - None
       X-Kong-Proxy-Latency:
-      - '1'
+      - '0'
       X-Kong-Upstream-Latency:
-      - '17'
+      - '19'
       x-diesel-request-id:
-      - 1a1282ea-7bad-49f4-a652-f0cc0cf43561
+      - 32c46baf-7791-41db-954e-f839619132db
     status:
       code: 200
       message: OK
@@ -2027,7 +1869,7 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: GET
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20f25c60-5b7f-d70a-cc8f-0d4b79737600/results?offset=0&limit=500
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20efb3bc-6821-0802-b6ee-96f2aaad0500/results?offset=0&limit=500
   response:
     body:
       string: '{"data":[{"column_default":null,"column_name":"AD_ID","data_type":"CHARACTER
@@ -2073,17 +1915,17 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:22:56 GMT
+      - Thu, 16 Jul 2020 12:47:00 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
       - None
       X-Kong-Proxy-Latency:
-      - '1'
+      - '0'
       X-Kong-Upstream-Latency:
-      - '24'
+      - '27'
       x-diesel-request-id:
-      - f5774b37-9350-4166-bb83-ad68f8be4384
+      - 5a81c52e-fb73-42e5-a2b4-b83b70978673
     status:
       code: 200
       message: OK
@@ -2101,10 +1943,10 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: POST
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/sf/refresh?table-name=METRICS3_STG.ADWORDS_VIEWS.ENTITY_ADVIDEOS
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/SF/refresh?table-name=METRICS3_STG.ADWORDS_VIEWS.ENTITY_ADVIDEOS
   response:
     body:
-      string: '{"job_id":"20f25c5e-bc2c-904d-fcaa-7ddd831b3b00"}
+      string: '{"job_id":"20efb3b9-d2b0-0e88-7d26-97c67dce5100"}
 
         '
     headers:
@@ -2115,17 +1957,17 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:22:56 GMT
+      - Thu, 16 Jul 2020 12:47:01 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
       - None
       X-Kong-Proxy-Latency:
-      - '1'
+      - '4'
       X-Kong-Upstream-Latency:
-      - '25'
+      - '186'
       x-diesel-request-id:
-      - 409e0ded-cea3-418f-8047-658057f4d357
+      - 3437f1cb-e41a-426b-839d-0291fecda9ed
     status:
       code: 200
       message: OK
@@ -2141,7 +1983,7 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: GET
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20f25c5e-bc2c-904d-fcaa-7ddd831b3b00
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20efb3b9-d2b0-0e88-7d26-97c67dce5100
   response:
     body:
       string: '{"job_status":"METADATA_RETRIEVAL"}
@@ -2155,17 +1997,17 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:22:56 GMT
+      - Thu, 16 Jul 2020 12:47:01 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
       - None
       X-Kong-Proxy-Latency:
-      - '1'
+      - '0'
       X-Kong-Upstream-Latency:
-      - '20'
+      - '22'
       x-diesel-request-id:
-      - de95f1ab-6445-4513-a6f6-465da191156f
+      - 237f74f0-be73-4497-97c9-f7726800908f
     status:
       code: 200
       message: OK
@@ -2181,7 +2023,7 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: GET
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20f25c5e-bc2c-904d-fcaa-7ddd831b3b00
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20efb3b9-d2b0-0e88-7d26-97c67dce5100
   response:
     body:
       string: '{"job_status":"COMPLETED"}
@@ -2195,17 +2037,17 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:22:58 GMT
+      - Thu, 16 Jul 2020 12:47:02 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
       - None
       X-Kong-Proxy-Latency:
-      - '1'
+      - '0'
       X-Kong-Upstream-Latency:
-      - '20'
+      - '25'
       x-diesel-request-id:
-      - a379f8e7-a04f-44a5-90e9-68c668a565af
+      - 4ec387e3-4936-4ca4-97c0-6555bf65fe6c
     status:
       code: 200
       message: OK
@@ -2223,10 +2065,10 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: POST
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/sf/columns?table-filter=METRICS3_STG.ADWORDS_VIEWS.ENTITY_ADVIDEOS
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/SF/columns?table-filter=METRICS3_STG.ADWORDS_VIEWS.ENTITY_ADVIDEOS
   response:
     body:
-      string: '{"job_id":"20f25c5c-8308-9092-ed9a-22bec125a000"}
+      string: '{"job_id":"20efb3b8-fea5-4d7a-b11a-53074670d500"}
 
         '
     headers:
@@ -2237,7 +2079,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:22:58 GMT
+      - Thu, 16 Jul 2020 12:47:02 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
@@ -2245,9 +2087,9 @@ interactions:
       X-Kong-Proxy-Latency:
       - '1'
       X-Kong-Upstream-Latency:
-      - '24'
+      - '33'
       x-diesel-request-id:
-      - 91aab5df-c184-4a65-a4f1-6c41f8bf5960
+      - 2f7a0b57-008d-430a-87a5-0ab2be4ffe72
     status:
       code: 200
       message: OK
@@ -2263,7 +2105,7 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: GET
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20f25c5c-8308-9092-ed9a-22bec125a000
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20efb3b8-fea5-4d7a-b11a-53074670d500
   response:
     body:
       string: '{"job_status":"RUNNING"}
@@ -2277,7 +2119,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:22:58 GMT
+      - Thu, 16 Jul 2020 12:47:02 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
@@ -2285,9 +2127,9 @@ interactions:
       X-Kong-Proxy-Latency:
       - '1'
       X-Kong-Upstream-Latency:
-      - '19'
+      - '25'
       x-diesel-request-id:
-      - 4f2af742-1106-4b14-8849-237664a7fccd
+      - c44f7f19-76a1-47f1-a96d-79eb2310f1ea
     status:
       code: 200
       message: OK
@@ -2303,7 +2145,7 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: GET
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20f25c5c-8308-9092-ed9a-22bec125a000
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20efb3b8-fea5-4d7a-b11a-53074670d500
   response:
     body:
       string: '{"job_status":"COMPLETED"}
@@ -2317,17 +2159,17 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:22:59 GMT
+      - Thu, 16 Jul 2020 12:47:04 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
       - None
       X-Kong-Proxy-Latency:
-      - '1'
+      - '0'
       X-Kong-Upstream-Latency:
-      - '21'
+      - '29'
       x-diesel-request-id:
-      - 7ee16821-939a-4176-a791-f1b5626a7bf8
+      - 0a8d8647-015c-4b9e-9d3b-7d643688c403
     status:
       code: 200
       message: OK
@@ -2343,7 +2185,7 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: GET
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20f25c5c-8308-9092-ed9a-22bec125a000/results?offset=0&limit=500
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20efb3b8-fea5-4d7a-b11a-53074670d500/results?offset=0&limit=500
   response:
     body:
       string: '{"data":[{"column_default":null,"column_name":"__RECORD_ID","data_type":"CHARACTER
@@ -2367,17 +2209,17 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:22:59 GMT
+      - Thu, 16 Jul 2020 12:47:04 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
       - None
       X-Kong-Proxy-Latency:
-      - '1'
+      - '0'
       X-Kong-Upstream-Latency:
-      - '24'
+      - '29'
       x-diesel-request-id:
-      - 0226b250-9451-4c92-aa1f-0bda36045ee2
+      - b88157a9-5fb9-4e9f-a7d3-3afa7f839667
     status:
       code: 200
       message: OK
@@ -2395,10 +2237,10 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: POST
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/sf/refresh?table-name=METRICS3_STG.ADWORDS_VIEWS.ENTITY_CAMPAIGNS
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/SF/refresh?table-name=METRICS3_STG.ADWORDS_VIEWS.ENTITY_CAMPAIGNS
   response:
     body:
-      string: '{"job_id":"20f25c5b-9790-d09c-3d86-0db0c39f7c00"}
+      string: '{"job_id":"20efb3b7-4fbc-35e0-ef75-322fc3eade00"}
 
         '
     headers:
@@ -2409,17 +2251,97 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:22:59 GMT
+      - Thu, 16 Jul 2020 12:47:04 GMT
+      Via:
+      - kong/2.0.3
+      X-Amzn-Trace-Id:
+      - None
+      X-Kong-Proxy-Latency:
+      - '0'
+      X-Kong-Upstream-Latency:
+      - '26'
+      x-diesel-request-id:
+      - b2af3ef1-a174-4672-9ccf-e7a3a6344995
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.24.0
+    method: GET
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20efb3b7-4fbc-35e0-ef75-322fc3eade00
+  response:
+    body:
+      string: '{"job_status":"METADATA_RETRIEVAL"}
+
+        '
+    headers:
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '36'
+      Content-Type:
+      - application/json
+      Date:
+      - Thu, 16 Jul 2020 12:47:04 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
       - None
       X-Kong-Proxy-Latency:
       - '1'
+      X-Kong-Upstream-Latency:
+      - '19'
+      x-diesel-request-id:
+      - 5d0cf05b-7681-459b-a3b0-8f6cd671697d
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.24.0
+    method: GET
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20efb3b7-4fbc-35e0-ef75-322fc3eade00
+  response:
+    body:
+      string: '{"job_status":"METADATA_RETRIEVAL"}
+
+        '
+    headers:
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '36'
+      Content-Type:
+      - application/json
+      Date:
+      - Thu, 16 Jul 2020 12:47:05 GMT
+      Via:
+      - kong/2.0.3
+      X-Amzn-Trace-Id:
+      - None
+      X-Kong-Proxy-Latency:
+      - '0'
       X-Kong-Upstream-Latency:
       - '25'
       x-diesel-request-id:
-      - ad183131-0093-4654-90d1-87944f28e665
+      - d37dad01-bc82-495a-a0e1-edd7621a4f0a
     status:
       code: 200
       message: OK
@@ -2435,127 +2357,7 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: GET
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20f25c5b-9790-d09c-3d86-0db0c39f7c00
-  response:
-    body:
-      string: '{"job_status":"METADATA_RETRIEVAL"}
-
-        '
-    headers:
-      Connection:
-      - keep-alive
-      Content-Length:
-      - '36'
-      Content-Type:
-      - application/json
-      Date:
-      - Tue, 14 Jul 2020 12:23:00 GMT
-      Via:
-      - kong/2.0.3
-      X-Amzn-Trace-Id:
-      - None
-      X-Kong-Proxy-Latency:
-      - '1'
-      X-Kong-Upstream-Latency:
-      - '16'
-      x-diesel-request-id:
-      - dcc594a9-ee5f-4da1-863a-85c3e9bf6d66
-    status:
-      code: 200
-      message: OK
-- request:
-    body: null
-    headers:
-      Accept:
-      - '*/*'
-      Accept-Encoding:
-      - gzip, deflate
-      Connection:
-      - keep-alive
-      User-Agent:
-      - python-requests/2.24.0
-    method: GET
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20f25c5b-9790-d09c-3d86-0db0c39f7c00
-  response:
-    body:
-      string: '{"job_status":"METADATA_RETRIEVAL"}
-
-        '
-    headers:
-      Connection:
-      - keep-alive
-      Content-Length:
-      - '36'
-      Content-Type:
-      - application/json
-      Date:
-      - Tue, 14 Jul 2020 12:23:01 GMT
-      Via:
-      - kong/2.0.3
-      X-Amzn-Trace-Id:
-      - None
-      X-Kong-Proxy-Latency:
-      - '0'
-      X-Kong-Upstream-Latency:
-      - '18'
-      x-diesel-request-id:
-      - 2a35744b-d943-41eb-b371-e9bd43a0de54
-    status:
-      code: 200
-      message: OK
-- request:
-    body: null
-    headers:
-      Accept:
-      - '*/*'
-      Accept-Encoding:
-      - gzip, deflate
-      Connection:
-      - keep-alive
-      User-Agent:
-      - python-requests/2.24.0
-    method: GET
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20f25c5b-9790-d09c-3d86-0db0c39f7c00
-  response:
-    body:
-      string: '{"job_status":"METADATA_RETRIEVAL"}
-
-        '
-    headers:
-      Connection:
-      - keep-alive
-      Content-Length:
-      - '36'
-      Content-Type:
-      - application/json
-      Date:
-      - Tue, 14 Jul 2020 12:23:02 GMT
-      Via:
-      - kong/2.0.3
-      X-Amzn-Trace-Id:
-      - None
-      X-Kong-Proxy-Latency:
-      - '0'
-      X-Kong-Upstream-Latency:
-      - '47'
-      x-diesel-request-id:
-      - 0d777503-ac7f-4b22-8720-788a9badd355
-    status:
-      code: 200
-      message: OK
-- request:
-    body: null
-    headers:
-      Accept:
-      - '*/*'
-      Accept-Encoding:
-      - gzip, deflate
-      Connection:
-      - keep-alive
-      User-Agent:
-      - python-requests/2.24.0
-    method: GET
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20f25c5b-9790-d09c-3d86-0db0c39f7c00
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20efb3b7-4fbc-35e0-ef75-322fc3eade00
   response:
     body:
       string: '{"job_status":"COMPLETED"}
@@ -2569,7 +2371,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:23:03 GMT
+      - Thu, 16 Jul 2020 12:47:07 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
@@ -2577,9 +2379,9 @@ interactions:
       X-Kong-Proxy-Latency:
       - '0'
       X-Kong-Upstream-Latency:
-      - '23'
+      - '24'
       x-diesel-request-id:
-      - 2dc55002-7675-4561-a9cf-5609242ba044
+      - 486c58f2-7d04-4506-bd8d-01c1e8be02b8
     status:
       code: 200
       message: OK
@@ -2597,10 +2399,10 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: POST
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/sf/columns?table-filter=METRICS3_STG.ADWORDS_VIEWS.ENTITY_CAMPAIGNS
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/SF/columns?table-filter=METRICS3_STG.ADWORDS_VIEWS.ENTITY_CAMPAIGNS
   response:
     body:
-      string: '{"job_id":"20f25c57-82f7-5741-743b-c1767410fb00"}
+      string: '{"job_id":"20efb3b3-9a07-04a7-fc2b-c956dc37ac00"}
 
         '
     headers:
@@ -2611,17 +2413,17 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:23:03 GMT
+      - Thu, 16 Jul 2020 12:47:07 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
       - None
       X-Kong-Proxy-Latency:
-      - '0'
+      - '1'
       X-Kong-Upstream-Latency:
-      - '56'
+      - '28'
       x-diesel-request-id:
-      - 98423043-3491-4403-80ea-e7d17730bbca
+      - fedae4aa-a03a-4a96-abf6-832d4889ec40
     status:
       code: 200
       message: OK
@@ -2637,7 +2439,7 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: GET
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20f25c57-82f7-5741-743b-c1767410fb00
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20efb3b3-9a07-04a7-fc2b-c956dc37ac00
   response:
     body:
       string: '{"job_status":"RUNNING"}
@@ -2651,17 +2453,17 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:23:03 GMT
+      - Thu, 16 Jul 2020 12:47:07 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
       - None
       X-Kong-Proxy-Latency:
-      - '0'
+      - '1'
       X-Kong-Upstream-Latency:
-      - '18'
+      - '21'
       x-diesel-request-id:
-      - 65443817-182a-4e06-8984-65722448bd75
+      - 3a2e111e-8d19-42e1-91f5-159e6c4b7651
     status:
       code: 200
       message: OK
@@ -2677,7 +2479,7 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: GET
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20f25c57-82f7-5741-743b-c1767410fb00
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20efb3b3-9a07-04a7-fc2b-c956dc37ac00
   response:
     body:
       string: '{"job_status":"COMPLETED"}
@@ -2691,7 +2493,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:23:05 GMT
+      - Thu, 16 Jul 2020 12:47:08 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
@@ -2699,9 +2501,9 @@ interactions:
       X-Kong-Proxy-Latency:
       - '0'
       X-Kong-Upstream-Latency:
-      - '22'
+      - '136'
       x-diesel-request-id:
-      - 7f87ed22-3428-4cfa-834d-a5a91521b06b
+      - 2090a0c3-3cbb-48ad-a25c-6e3fb6280183
     status:
       code: 200
       message: OK
@@ -2717,7 +2519,7 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: GET
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20f25c57-82f7-5741-743b-c1767410fb00/results?offset=0&limit=500
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20efb3b3-9a07-04a7-fc2b-c956dc37ac00/results?offset=0&limit=500
   response:
     body:
       string: '{"data":[{"column_default":null,"column_name":"CAMPAIGN_ID","data_type":"CHARACTER
@@ -2741,7 +2543,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:23:05 GMT
+      - Thu, 16 Jul 2020 12:47:09 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
@@ -2749,9 +2551,9 @@ interactions:
       X-Kong-Proxy-Latency:
       - '0'
       X-Kong-Upstream-Latency:
-      - '22'
+      - '33'
       x-diesel-request-id:
-      - 91ca5723-1a0c-437d-ab04-c5165ca67fa4
+      - fe1d950f-3aff-478f-8938-1c21b71e0cd4
     status:
       code: 200
       message: OK
@@ -2769,10 +2571,10 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: POST
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/sf/refresh?table-name=METRICS3_STG.ADWORDS_VIEWS.ENTITY_CAMPAIGNS_CRITERION
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/SF/refresh?table-name=METRICS3_STG.ADWORDS_VIEWS.ENTITY_CAMPAIGNS_CRITERION
   response:
     body:
-      string: '{"job_id":"20f25c55-c16d-2eb5-411a-4cf1e63c1900"}
+      string: '{"job_id":"20efb3b1-fbf8-1601-c767-6720a8600400"}
 
         '
     headers:
@@ -2783,7 +2585,47 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:23:05 GMT
+      - Thu, 16 Jul 2020 12:47:09 GMT
+      Via:
+      - kong/2.0.3
+      X-Amzn-Trace-Id:
+      - None
+      X-Kong-Proxy-Latency:
+      - '1'
+      X-Kong-Upstream-Latency:
+      - '30'
+      x-diesel-request-id:
+      - b277f7be-7136-449b-8c22-23fd77e374fe
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.24.0
+    method: GET
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20efb3b1-fbf8-1601-c767-6720a8600400
+  response:
+    body:
+      string: '{"job_status":"METADATA_RETRIEVAL"}
+
+        '
+    headers:
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '36'
+      Content-Type:
+      - application/json
+      Date:
+      - Thu, 16 Jul 2020 12:47:09 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
@@ -2791,9 +2633,9 @@ interactions:
       X-Kong-Proxy-Latency:
       - '0'
       X-Kong-Upstream-Latency:
-      - '27'
+      - '25'
       x-diesel-request-id:
-      - 0c62304a-28cc-49ee-abee-9dfef4005e85
+      - e7b94fb0-25fd-4d16-88d8-7562e71e23fa
     status:
       code: 200
       message: OK
@@ -2809,7 +2651,7 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: GET
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20f25c55-c16d-2eb5-411a-4cf1e63c1900
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20efb3b1-fbf8-1601-c767-6720a8600400
   response:
     body:
       string: '{"job_status":"METADATA_RETRIEVAL"}
@@ -2823,17 +2665,17 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:23:05 GMT
+      - Thu, 16 Jul 2020 12:47:10 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
       - None
       X-Kong-Proxy-Latency:
-      - '1'
+      - '0'
       X-Kong-Upstream-Latency:
-      - '23'
+      - '26'
       x-diesel-request-id:
-      - ea7f1add-3b6c-4ce3-bcc4-6f6be1ab9439
+      - 276eceda-8e86-42b0-8928-435d22720cd5
     status:
       code: 200
       message: OK
@@ -2849,47 +2691,7 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: GET
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20f25c55-c16d-2eb5-411a-4cf1e63c1900
-  response:
-    body:
-      string: '{"job_status":"METADATA_RETRIEVAL"}
-
-        '
-    headers:
-      Connection:
-      - keep-alive
-      Content-Length:
-      - '36'
-      Content-Type:
-      - application/json
-      Date:
-      - Tue, 14 Jul 2020 12:23:06 GMT
-      Via:
-      - kong/2.0.3
-      X-Amzn-Trace-Id:
-      - None
-      X-Kong-Proxy-Latency:
-      - '1'
-      X-Kong-Upstream-Latency:
-      - '18'
-      x-diesel-request-id:
-      - 37c31c33-38c0-4dd0-8b03-5001b57e0858
-    status:
-      code: 200
-      message: OK
-- request:
-    body: null
-    headers:
-      Accept:
-      - '*/*'
-      Accept-Encoding:
-      - gzip, deflate
-      Connection:
-      - keep-alive
-      User-Agent:
-      - python-requests/2.24.0
-    method: GET
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20f25c55-c16d-2eb5-411a-4cf1e63c1900
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20efb3b1-fbf8-1601-c767-6720a8600400
   response:
     body:
       string: '{"job_status":"COMPLETED"}
@@ -2903,7 +2705,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:23:08 GMT
+      - Thu, 16 Jul 2020 12:47:11 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
@@ -2911,9 +2713,9 @@ interactions:
       X-Kong-Proxy-Latency:
       - '1'
       X-Kong-Upstream-Latency:
-      - '18'
+      - '19'
       x-diesel-request-id:
-      - 832a208e-10d7-44ca-8016-4332cab06da2
+      - b041b925-2ee1-49c3-9465-464fdef7b3b7
     status:
       code: 200
       message: OK
@@ -2931,10 +2733,10 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: POST
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/sf/columns?table-filter=METRICS3_STG.ADWORDS_VIEWS.ENTITY_CAMPAIGNS_CRITERION
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/SF/columns?table-filter=METRICS3_STG.ADWORDS_VIEWS.ENTITY_CAMPAIGNS_CRITERION
   response:
     body:
-      string: '{"job_id":"20f25c53-573a-948f-74fd-a6a19f89af00"}
+      string: '{"job_id":"20efb3ae-9864-3382-210e-f71a3c6ac300"}
 
         '
     headers:
@@ -2945,7 +2747,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:23:08 GMT
+      - Thu, 16 Jul 2020 12:47:12 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
@@ -2953,9 +2755,9 @@ interactions:
       X-Kong-Proxy-Latency:
       - '1'
       X-Kong-Upstream-Latency:
-      - '32'
+      - '29'
       x-diesel-request-id:
-      - 740a5ad8-770e-4298-8c48-9e31f1ca5c58
+      - 3d7e5c51-83be-44d9-a783-6950e10d8a36
     status:
       code: 200
       message: OK
@@ -2971,7 +2773,7 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: GET
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20f25c53-573a-948f-74fd-a6a19f89af00
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20efb3ae-9864-3382-210e-f71a3c6ac300
   response:
     body:
       string: '{"job_status":"RUNNING"}
@@ -2985,17 +2787,17 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:23:08 GMT
+      - Thu, 16 Jul 2020 12:47:12 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
       - None
       X-Kong-Proxy-Latency:
-      - '1'
+      - '0'
       X-Kong-Upstream-Latency:
-      - '24'
+      - '20'
       x-diesel-request-id:
-      - 10bac431-5436-43ae-a38e-7f133d5cd071
+      - 0ee88b6a-ea80-4de2-9d12-4e5c89fd5985
     status:
       code: 200
       message: OK
@@ -3011,7 +2813,7 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: GET
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20f25c53-573a-948f-74fd-a6a19f89af00
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20efb3ae-9864-3382-210e-f71a3c6ac300
   response:
     body:
       string: '{"job_status":"COMPLETED"}
@@ -3025,7 +2827,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:23:09 GMT
+      - Thu, 16 Jul 2020 12:47:13 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
@@ -3033,9 +2835,9 @@ interactions:
       X-Kong-Proxy-Latency:
       - '1'
       X-Kong-Upstream-Latency:
-      - '16'
+      - '64'
       x-diesel-request-id:
-      - f36b8c4c-8a39-4ac1-bea6-d7dcc47ca879
+      - 8840c1ae-44db-4032-bafd-d9954ac3c7c1
     status:
       code: 200
       message: OK
@@ -3051,7 +2853,7 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: GET
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20f25c53-573a-948f-74fd-a6a19f89af00/results?offset=0&limit=500
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20efb3ae-9864-3382-210e-f71a3c6ac300/results?offset=0&limit=500
   response:
     body:
       string: '{"data":[{"column_default":null,"column_name":"__RECORD_ID","data_type":"CHARACTER
@@ -3079,7 +2881,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:23:09 GMT
+      - Thu, 16 Jul 2020 12:47:13 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
@@ -3087,9 +2889,9 @@ interactions:
       X-Kong-Proxy-Latency:
       - '1'
       X-Kong-Upstream-Latency:
-      - '23'
+      - '37'
       x-diesel-request-id:
-      - 2455d09a-8057-4c2c-9d7b-9ef52f348526
+      - 0750fb84-aa79-400d-bccd-8e7b12254811
     status:
       code: 200
       message: OK
@@ -3107,10 +2909,10 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: POST
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/sf/refresh?table-name=METRICS3_STG.ADWORDS_VIEWS.ENTITY_CAMPAIGNS_FROM_SERVICE
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/SF/refresh?table-name=METRICS3_STG.ADWORDS_VIEWS.ENTITY_CAMPAIGNS_FROM_SERVICE
   response:
     body:
-      string: '{"job_id":"20f25c50-b305-7609-fd03-82c32dafd800"}
+      string: '{"job_id":"20efb3ac-e5e1-9c86-5fe1-8b28824f0400"}
 
         '
     headers:
@@ -3121,17 +2923,17 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:23:10 GMT
+      - Thu, 16 Jul 2020 12:47:14 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
       - None
       X-Kong-Proxy-Latency:
-      - '1'
+      - '0'
       X-Kong-Upstream-Latency:
-      - '24'
+      - '32'
       x-diesel-request-id:
-      - 52fd80d4-893d-4112-8403-c483f64d40e9
+      - f3a118f4-f151-4cf2-b5f4-1772f4d0596c
     status:
       code: 200
       message: OK
@@ -3147,7 +2949,7 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: GET
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20f25c50-b305-7609-fd03-82c32dafd800
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20efb3ac-e5e1-9c86-5fe1-8b28824f0400
   response:
     body:
       string: '{"job_status":"METADATA_RETRIEVAL"}
@@ -3161,7 +2963,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:23:10 GMT
+      - Thu, 16 Jul 2020 12:47:14 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
@@ -3171,7 +2973,7 @@ interactions:
       X-Kong-Upstream-Latency:
       - '20'
       x-diesel-request-id:
-      - ad51b859-7400-4386-b718-57fa3ad35f25
+      - 12a467c3-48c8-4a68-8d2c-74c07c379665
     status:
       code: 200
       message: OK
@@ -3187,7 +2989,7 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: GET
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20f25c50-b305-7609-fd03-82c32dafd800
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20efb3ac-e5e1-9c86-5fe1-8b28824f0400
   response:
     body:
       string: '{"job_status":"METADATA_RETRIEVAL"}
@@ -3201,7 +3003,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:23:11 GMT
+      - Thu, 16 Jul 2020 12:47:15 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
@@ -3209,9 +3011,9 @@ interactions:
       X-Kong-Proxy-Latency:
       - '0'
       X-Kong-Upstream-Latency:
-      - '19'
+      - '20'
       x-diesel-request-id:
-      - 544fddc1-1b5d-42b2-8acc-0e556eb836d8
+      - 051ba91c-d570-464c-9cea-fb60f2db15ae
     status:
       code: 200
       message: OK
@@ -3227,7 +3029,47 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: GET
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20f25c50-b305-7609-fd03-82c32dafd800
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20efb3ac-e5e1-9c86-5fe1-8b28824f0400
+  response:
+    body:
+      string: '{"job_status":"METADATA_RETRIEVAL"}
+
+        '
+    headers:
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '36'
+      Content-Type:
+      - application/json
+      Date:
+      - Thu, 16 Jul 2020 12:47:16 GMT
+      Via:
+      - kong/2.0.3
+      X-Amzn-Trace-Id:
+      - None
+      X-Kong-Proxy-Latency:
+      - '1'
+      X-Kong-Upstream-Latency:
+      - '23'
+      x-diesel-request-id:
+      - 6da3b979-ecf0-4740-af9d-a60ee6cfae6a
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.24.0
+    method: GET
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20efb3ac-e5e1-9c86-5fe1-8b28824f0400
   response:
     body:
       string: '{"job_status":"COMPLETED"}
@@ -3241,17 +3083,17 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:23:12 GMT
+      - Thu, 16 Jul 2020 12:47:17 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
       - None
       X-Kong-Proxy-Latency:
-      - '0'
+      - '1'
       X-Kong-Upstream-Latency:
-      - '21'
+      - '25'
       x-diesel-request-id:
-      - f70a0c58-55f6-4d24-bc69-d72b0d771e3d
+      - 99bcaa06-4c56-44d6-8b7c-9a51742132f7
     status:
       code: 200
       message: OK
@@ -3269,10 +3111,10 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: POST
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/sf/columns?table-filter=METRICS3_STG.ADWORDS_VIEWS.ENTITY_CAMPAIGNS_FROM_SERVICE
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/SF/columns?table-filter=METRICS3_STG.ADWORDS_VIEWS.ENTITY_CAMPAIGNS_FROM_SERVICE
   response:
     body:
-      string: '{"job_id":"20f25c4f-2338-e42c-8ca9-4dc9ebd53f00"}
+      string: '{"job_id":"20efb3a9-2e0d-11c7-afa9-87f6d1f65f00"}
 
         '
     headers:
@@ -3283,17 +3125,17 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:23:12 GMT
+      - Thu, 16 Jul 2020 12:47:18 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
       - None
       X-Kong-Proxy-Latency:
-      - '0'
+      - '1'
       X-Kong-Upstream-Latency:
-      - '27'
+      - '30'
       x-diesel-request-id:
-      - fb4bb99c-9a5b-4f59-9579-6e2cf7896b4c
+      - ca828938-785c-43f9-b964-06438e549242
     status:
       code: 200
       message: OK
@@ -3309,7 +3151,7 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: GET
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20f25c4f-2338-e42c-8ca9-4dc9ebd53f00
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20efb3a9-2e0d-11c7-afa9-87f6d1f65f00
   response:
     body:
       string: '{"job_status":"RUNNING"}
@@ -3323,17 +3165,17 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:23:13 GMT
+      - Thu, 16 Jul 2020 12:47:18 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
       - None
       X-Kong-Proxy-Latency:
-      - '0'
+      - '1'
       X-Kong-Upstream-Latency:
-      - '20'
+      - '37'
       x-diesel-request-id:
-      - 00d7acff-12d9-4c4a-8aee-d741af077c4c
+      - 85e09972-da51-45cd-9456-0861d3fca157
     status:
       code: 200
       message: OK
@@ -3349,7 +3191,7 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: GET
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20f25c4f-2338-e42c-8ca9-4dc9ebd53f00
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20efb3a9-2e0d-11c7-afa9-87f6d1f65f00
   response:
     body:
       string: '{"job_status":"COMPLETED"}
@@ -3363,7 +3205,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:23:14 GMT
+      - Thu, 16 Jul 2020 12:47:19 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
@@ -3371,9 +3213,9 @@ interactions:
       X-Kong-Proxy-Latency:
       - '0'
       X-Kong-Upstream-Latency:
-      - '22'
+      - '20'
       x-diesel-request-id:
-      - 3ed06dd0-a9ae-4010-bab0-e607c6c476ae
+      - ea5e1e5a-2429-4030-b0aa-9ff7b36480a6
     status:
       code: 200
       message: OK
@@ -3389,7 +3231,7 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: GET
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20f25c4f-2338-e42c-8ca9-4dc9ebd53f00/results?offset=0&limit=500
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20efb3a9-2e0d-11c7-afa9-87f6d1f65f00/results?offset=0&limit=500
   response:
     body:
       string: '{"data":[{"column_default":null,"column_name":"__RECORD_ID","data_type":"CHARACTER
@@ -3423,7 +3265,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:23:14 GMT
+      - Thu, 16 Jul 2020 12:47:19 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
@@ -3431,9 +3273,9 @@ interactions:
       X-Kong-Proxy-Latency:
       - '0'
       X-Kong-Upstream-Latency:
-      - '30'
+      - '31'
       x-diesel-request-id:
-      - 2af7d8f4-4beb-40dd-862d-63ba5ae18979
+      - 56faddeb-7921-40cd-9123-a43aeea38701
     status:
       code: 200
       message: OK
@@ -3451,10 +3293,10 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: POST
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/sf/refresh?table-name=METRICS3_STG.ADWORDS_VIEWS.ENTITY_USER_LISTS
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/SF/refresh?table-name=METRICS3_STG.ADWORDS_VIEWS.ENTITY_USER_LISTS
   response:
     body:
-      string: '{"job_id":"20f25c4c-8104-7803-6d25-a7a2214f3700"}
+      string: '{"job_id":"20efb3a8-2ea2-9eb1-274d-158efc346300"}
 
         '
     headers:
@@ -3465,17 +3307,17 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:23:14 GMT
+      - Thu, 16 Jul 2020 12:47:19 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
       - None
       X-Kong-Proxy-Latency:
-      - '0'
+      - '1'
       X-Kong-Upstream-Latency:
-      - '26'
+      - '27'
       x-diesel-request-id:
-      - 8fe30ad4-2d53-4dfc-a801-8763687681d9
+      - 98bc225f-c3c9-4ae5-8dfd-08dfc8c8624f
     status:
       code: 200
       message: OK
@@ -3491,87 +3333,7 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: GET
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20f25c4c-8104-7803-6d25-a7a2214f3700
-  response:
-    body:
-      string: '{"job_status":"METADATA_RETRIEVAL"}
-
-        '
-    headers:
-      Connection:
-      - keep-alive
-      Content-Length:
-      - '36'
-      Content-Type:
-      - application/json
-      Date:
-      - Tue, 14 Jul 2020 12:23:14 GMT
-      Via:
-      - kong/2.0.3
-      X-Amzn-Trace-Id:
-      - None
-      X-Kong-Proxy-Latency:
-      - '0'
-      X-Kong-Upstream-Latency:
-      - '21'
-      x-diesel-request-id:
-      - 034b42ed-2a20-4410-aa66-8a2e73f64aaa
-    status:
-      code: 200
-      message: OK
-- request:
-    body: null
-    headers:
-      Accept:
-      - '*/*'
-      Accept-Encoding:
-      - gzip, deflate
-      Connection:
-      - keep-alive
-      User-Agent:
-      - python-requests/2.24.0
-    method: GET
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20f25c4c-8104-7803-6d25-a7a2214f3700
-  response:
-    body:
-      string: '{"job_status":"METADATA_RETRIEVAL"}
-
-        '
-    headers:
-      Connection:
-      - keep-alive
-      Content-Length:
-      - '36'
-      Content-Type:
-      - application/json
-      Date:
-      - Tue, 14 Jul 2020 12:23:15 GMT
-      Via:
-      - kong/2.0.3
-      X-Amzn-Trace-Id:
-      - None
-      X-Kong-Proxy-Latency:
-      - '0'
-      X-Kong-Upstream-Latency:
-      - '24'
-      x-diesel-request-id:
-      - 635f6cfb-11f2-4697-bd54-36505d146e49
-    status:
-      code: 200
-      message: OK
-- request:
-    body: null
-    headers:
-      Accept:
-      - '*/*'
-      Accept-Encoding:
-      - gzip, deflate
-      Connection:
-      - keep-alive
-      User-Agent:
-      - python-requests/2.24.0
-    method: GET
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20f25c4c-8104-7803-6d25-a7a2214f3700
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20efb3a8-2ea2-9eb1-274d-158efc346300
   response:
     body:
       string: '{"job_status":"COMPLETED"}
@@ -3585,17 +3347,17 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:23:17 GMT
+      - Thu, 16 Jul 2020 12:47:22 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
       - None
       X-Kong-Proxy-Latency:
-      - '1'
+      - '0'
       X-Kong-Upstream-Latency:
-      - '20'
+      - '2271'
       x-diesel-request-id:
-      - 01f7d8a8-4838-43e9-b87a-f199ca1c74cc
+      - 501eca6c-0be1-44e4-848f-1f25f39964c1
     status:
       code: 200
       message: OK
@@ -3613,10 +3375,10 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: POST
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/sf/columns?table-filter=METRICS3_STG.ADWORDS_VIEWS.ENTITY_USER_LISTS
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/SF/columns?table-filter=METRICS3_STG.ADWORDS_VIEWS.ENTITY_USER_LISTS
   response:
     body:
-      string: '{"job_id":"20f25c4a-338b-8ec2-0f2e-7b035fbf3700"}
+      string: '{"job_id":"20efb3a5-7f36-6b8e-59f4-d7bd11fc5c00"}
 
         '
     headers:
@@ -3627,7 +3389,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:23:17 GMT
+      - Thu, 16 Jul 2020 12:47:22 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
@@ -3635,9 +3397,9 @@ interactions:
       X-Kong-Proxy-Latency:
       - '1'
       X-Kong-Upstream-Latency:
-      - '23'
+      - '25'
       x-diesel-request-id:
-      - 775bf8e8-6399-46e1-87d7-382f390748f7
+      - b0e1dbb8-1e89-4d26-b7d9-cd793c5328f4
     status:
       code: 200
       message: OK
@@ -3653,7 +3415,7 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: GET
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20f25c4a-338b-8ec2-0f2e-7b035fbf3700
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20efb3a5-7f36-6b8e-59f4-d7bd11fc5c00
   response:
     body:
       string: '{"job_status":"RUNNING"}
@@ -3667,17 +3429,17 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:23:17 GMT
+      - Thu, 16 Jul 2020 12:47:22 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
       - None
       X-Kong-Proxy-Latency:
-      - '1'
+      - '0'
       X-Kong-Upstream-Latency:
-      - '20'
+      - '24'
       x-diesel-request-id:
-      - 5645ed85-87ca-4833-95b4-96ec613d1f13
+      - ccd9d439-8ea8-41e2-8b99-441fc04d64fc
     status:
       code: 200
       message: OK
@@ -3693,7 +3455,7 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: GET
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20f25c4a-338b-8ec2-0f2e-7b035fbf3700
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20efb3a5-7f36-6b8e-59f4-d7bd11fc5c00
   response:
     body:
       string: '{"job_status":"COMPLETED"}
@@ -3707,17 +3469,17 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:23:18 GMT
+      - Thu, 16 Jul 2020 12:47:24 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
       - None
       X-Kong-Proxy-Latency:
-      - '1'
+      - '0'
       X-Kong-Upstream-Latency:
-      - '20'
+      - '51'
       x-diesel-request-id:
-      - fbfb9689-3b13-47dc-b2fc-43db14006e97
+      - fad0ce06-6f46-48b7-8a52-d86d67d4a669
     status:
       code: 200
       message: OK
@@ -3733,7 +3495,7 @@ interactions:
       User-Agent:
       - python-requests/2.24.0
     method: GET
-    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20f25c4a-338b-8ec2-0f2e-7b035fbf3700/results?offset=0&limit=500
+    uri: https://diesel.panoramicstg.com/api/v1/federated/metadata/job/20efb3a5-7f36-6b8e-59f4-d7bd11fc5c00/results?offset=0&limit=500
   response:
     body:
       string: '{"data":[{"column_default":null,"column_name":"__RECORD_ID","data_type":"CHARACTER
@@ -3763,17 +3525,17 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 14 Jul 2020 12:23:18 GMT
+      - Thu, 16 Jul 2020 12:47:26 GMT
       Via:
       - kong/2.0.3
       X-Amzn-Trace-Id:
       - None
       X-Kong-Proxy-Latency:
-      - '1'
+      - '0'
       X-Kong-Upstream-Latency:
-      - '27'
+      - '1828'
       x-diesel-request-id:
-      - c915a203-cfa1-4363-8012-faa376c9da1c
+      - 08017f5b-e7c8-4343-9d9f-50efa37b78c7
     status:
       code: 200
       message: OK
