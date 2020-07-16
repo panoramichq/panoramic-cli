@@ -2,6 +2,8 @@ import logging
 from pathlib import Path
 from typing import Optional
 
+from tqdm import tqdm
+
 from panoramic.cli.local.file_utils import (
     FileExtension,
     PresetFileName,
@@ -51,7 +53,7 @@ class FileWriter:
         path = self.cwd / package / PresetFileName.DATASET_YAML.value
         logger.debug(f'About to write data source {data_source.id}')
         write_yaml(path, add_file_api_version(data_source.to_dict(), self.API_VERSION))
-        print(f'Updated dataset {data_source.dataset_slug}')
+        tqdm.write(f'Updated dataset {data_source.dataset_slug}')
 
     def delete_data_source(self, data_source: PanoVirtualDataSource):
         """Delete data source from local filesystem."""
@@ -59,7 +61,7 @@ class FileWriter:
         path = self.cwd / data_source.package / PresetFileName.DATASET_YAML.value
         logger.debug(f'About to delete data source {data_source.id}')
         delete_file(path)
-        print(f'Deleted dataset {data_source.dataset_slug}')
+        tqdm.write(f'Deleted dataset {data_source.dataset_slug}')
 
     def write_model(self, model: PanoModel, *, package: Optional[str] = None):
         """Write model to local filesystem."""
@@ -69,7 +71,7 @@ class FileWriter:
         path = self.cwd / package_name / f'{model.model_name}{FileExtension.MODEL_YAML.value}'
         logger.debug(f'About to write model {model.id}')
         write_yaml(path, add_file_api_version(model.to_dict(), self.API_VERSION))
-        print(f'Updated model {model.model_name}')
+        tqdm.write(f'Updated model {model.model_name}')
 
     def delete_model(self, model: PanoModel):
         """Delete model from local filesystem."""
@@ -77,4 +79,4 @@ class FileWriter:
         path = self.cwd / model.package / f'{model.model_name}{FileExtension.MODEL_YAML.value}'
         logger.debug(f'About to delete model {model.id}')
         delete_file(path)
-        print(f'Deleted model {model.model_name}')
+        tqdm.write(f'Deleted model {model.model_name}')

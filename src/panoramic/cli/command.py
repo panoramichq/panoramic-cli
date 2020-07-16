@@ -62,7 +62,7 @@ def pull():
 
     actions = reconcile(local_state, remote_state)
     executor = LocalExecutor()
-    with click.progressbar(actions.actions) as bar:
+    with tqdm(actions.actions) as bar:
         for action in bar:
             executor.execute(action)
 
@@ -75,6 +75,6 @@ def push():
 
     actions = reconcile(remote_state, local_state)
     executor = RemoteExecutor(company_slug)
-    with click.progressbar(actions.actions) as bar:
+    with tqdm(actions.actions) as bar:
         for action in bar:
             executor.execute(action)
