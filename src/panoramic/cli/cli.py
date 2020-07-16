@@ -43,14 +43,20 @@ def scan(source_id: str, filter: Optional[str]):
 def pull():
     from panoramic.cli.command import pull
 
-    pull()
+    try:
+        pull()
+    except Exception as e:
+        print(e)
 
 
 @cli.command(help='Push models to remote')
 def push():
     from panoramic.cli.command import push
 
-    push()
+    try:
+        push()
+    except Exception as e:
+        print(e)
 
 
 @cli.command(help='Configure pano CLI options')
