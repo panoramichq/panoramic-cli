@@ -45,7 +45,7 @@ class ModelAttribute:
         return hash(self.to_dict())
 
     def __eq__(self, o: object) -> bool:
-        if not isinstance(o, self.__class__):
+        if not isinstance(o, ModelAttribute):
             return False
 
         return self.to_dict() == o.to_dict()
@@ -85,7 +85,7 @@ class ModelJoin:
         return hash(self.to_dict())
 
     def __eq__(self, o: object) -> bool:
-        if not isinstance(o, self.__class__):
+        if not isinstance(o, ModelJoin):
             return False
 
         return self.to_dict() == o.to_dict()
@@ -141,7 +141,7 @@ class Model:
         return hash(self.to_dict())
 
     def __eq__(self, o: object) -> bool:
-        if not isinstance(o, self.__class__):
+        if not isinstance(o, Model):
             return False
 
         return self.to_dict() == o.to_dict()

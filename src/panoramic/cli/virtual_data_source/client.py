@@ -32,7 +32,7 @@ class VirtualDataSource:
         return hash(self.to_dict())
 
     def __eq__(self, o: object) -> bool:
-        if not isinstance(o, self.__class__):
+        if not isinstance(o, VirtualDataSource):
             return False
 
         return self.to_dict() == o.to_dict()
