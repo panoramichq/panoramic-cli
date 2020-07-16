@@ -2,6 +2,9 @@ import logging
 
 import requests
 from packaging import version
+from tqdm import tqdm
+
+from panoramic.cli.logging import log_error
 
 URL = "https://a1.panocdn.com/updates/pano-cli/versions.json"
 
@@ -29,13 +32,13 @@ def is_version_supported(current_version: str) -> bool:
     """
     try:
         minimum_supported_version = __fetch_minimum_supported_version(current_version)
-    except requests.exceptions.RequestException:
-        logger.debug("Failed to connect to remote server to verify minimum supported CLI version.", exc_info=True)
-        print("ERROR: Failed to connect to remote server to verify minimum supported CLI version.")
+    except requests.exceptions.RequestException as request_exception:
+        log_error(
+            logger, "Failed to connect to remote server to verify minimum supported CLI version.", request_exception
+        )
         return False
-    except (KeyError, TypeError):
-        logger.debug("Failed to verify minimum supported CLI version.", exc_info=True)
-        print("ERROR: Failed to verify minimum supported CLI version.")
+    except (KeyError, TypeError) as err:
+        log_error(logger, "Failed to verify minimum supported CLI version.", err)
         return False
 
     if version.parse(current_version) < version.parse(minimum_supported_version):
@@ -44,6 +47,6 @@ def is_version_supported(current_version: str) -> bool:
             f"Please update to version '{minimum_supported_version}' or higher.\n"
             "To update run: `pip install --upgrade pano-cli`.\n"
         )
-        print(message)
+        tqdm.write(message)
         return False
     return True

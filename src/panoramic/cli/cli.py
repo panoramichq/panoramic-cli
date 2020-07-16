@@ -7,6 +7,7 @@ import yaml
 
 from panoramic.cli.__version__ import __version__
 from panoramic.cli.errors import SourceNotFoundException
+from panoramic.cli.logging import log_error
 
 
 @click.group(context_settings={'help_option_names': ["-h", "--help"]})
@@ -32,12 +33,10 @@ def scan(source_id: str, filter: Optional[str]):
     logger = logging.getLogger(__name__)
     try:
         scan(source_id, filter)
-    except SourceNotFoundException as e:
-        print(e)
-        logger.debug('Source not found', exc_info=True)
-    except (Exception):
-        print('Internal error occured.')
-        logger.debug('Internal error occured', exc_info=True)
+    except SourceNotFoundException as source_exception:
+        log_error(logger, 'Source not found', source_exception)
+    except Exception as e:
+        log_error(logger, 'Internal error occured.', e)
 
 
 @cli.command(help='Pull models from remote')
@@ -80,6 +79,5 @@ def list_connections():
 
     try:
         list_connections()
-    except Exception:
-        print('Internal error occured.')
-        logger.debug('Internal error occured', exc_info=True)
+    except Exception as e:
+        log_error(logger, 'Internal error occured.', e)
