@@ -34,7 +34,7 @@ class PanoModelField:
         return hash(self.to_dict())
 
     def __eq__(self, o: object) -> bool:
-        if not isinstance(o, self.__class__):
+        if not isinstance(o, PanoModelField):
             return False
 
         return self.to_dict() == o.to_dict()
@@ -75,7 +75,7 @@ class PanoModelJoin:
         return hash(self.to_dict())
 
     def __eq__(self, o: object) -> bool:
-        if not isinstance(o, self.__class__):
+        if not isinstance(o, PanoModelJoin):
             return False
 
         return self.to_dict() == o.to_dict()
@@ -140,7 +140,7 @@ class PanoModel(Actionable):
         return hash(self.to_dict())
 
     def __eq__(self, o: object) -> bool:
-        if not isinstance(o, self.__class__):
+        if not isinstance(o, PanoModel):
             return False
 
         return self.to_dict() == o.to_dict()
@@ -178,7 +178,7 @@ class PanoVirtualDataSource(Actionable):
         return hash(self.to_dict())
 
     def __eq__(self, o: object) -> bool:
-        if not isinstance(o, self.__class__):
+        if not isinstance(o, PanoVirtualDataSource):
             return False
 
         return self.to_dict() == o.to_dict()
