@@ -4,6 +4,7 @@ from typing import Optional
 
 import click
 import yaml
+from dotenv import load_dotenv
 
 from panoramic.cli.__version__ import __version__
 from panoramic.cli.errors import SourceNotFoundException
@@ -17,6 +18,8 @@ def cli(debug):
     if debug:
         logger = logging.getLogger()
         logger.setLevel("DEBUG")
+
+    load_dotenv()
 
     from panoramic.cli.supported_version import is_version_supported
 
