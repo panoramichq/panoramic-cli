@@ -2,6 +2,7 @@ import logging
 from typing import Optional
 
 import click
+from tqdm import tqdm
 
 from panoramic.cli.context import get_company_slug
 from panoramic.cli.controller import reconcile
@@ -9,6 +10,7 @@ from panoramic.cli.local import get_state as get_local_state
 from panoramic.cli.local.executor import LocalExecutor
 from panoramic.cli.local.file_utils import SystemDirectory
 from panoramic.cli.local.writer import FileWriter
+from panoramic.cli.logging import log_error
 from panoramic.cli.parser import load_scanned_tables
 from panoramic.cli.physical_data_source.client import PhysicalDataSourceClient
 from panoramic.cli.refresh import Refresher
@@ -37,7 +39,7 @@ def scan(source_id: str, filter: Optional[str]):
     refresher = Refresher(source_id)
     writer = FileWriter()
     tables = scanner.scan_tables(table_filter=filter)
-    with click.progressbar(list(tables)) as bar:
+    with tqdm(tables) as bar:
         for table in bar:
             # drop source name from schema
             sourceless_schema = table['table_schema'].split('.', 1)[1]
@@ -47,9 +49,8 @@ def scan(source_id: str, filter: Optional[str]):
                 raw_columns = scanner.scan_columns(table_filter=table_name)
                 for table in load_scanned_tables(raw_columns):
                     writer.write_model(table, package=SystemDirectory.SCANNED.value)
-            except Exception:
-                print(f'Failed to scan table {table_name}')
-                logger.debug(f'Failed to scan table {table_name}', exc_info=True)
+            except Exception as e:
+                log_error(logger, f'Failed to scan table {table_name}', e)
                 continue
 
 
@@ -61,7 +62,7 @@ def pull():
 
     actions = reconcile(local_state, remote_state)
     executor = LocalExecutor()
-    with click.progressbar(actions.actions) as bar:
+    with tqdm(actions.actions) as bar:
         for action in bar:
             executor.execute(action)
 
@@ -74,6 +75,6 @@ def push():
 
     actions = reconcile(remote_state, local_state)
     executor = RemoteExecutor(company_slug)
-    with click.progressbar(actions.actions) as bar:
+    with tqdm(actions.actions) as bar:
         for action in bar:
             executor.execute(action)
