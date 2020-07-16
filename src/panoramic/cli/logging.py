@@ -11,8 +11,5 @@ def configure_logging():
 
 
 def log_error(logger: logging.Logger, message, exc: Exception):
-    if logger.level == logging.DEBUG:
-        # This means we are in a debug mode
-        logger.debug(message, exc_info=exc)
-    else:
-        tqdm.write(f'ERROR: {message}')
+    tqdm.write(f'ERROR: {message}')
+    logger.debug(message, exc_info=exc)
