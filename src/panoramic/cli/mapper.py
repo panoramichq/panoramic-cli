@@ -66,9 +66,10 @@ def map_model_from_remote(model: Model) -> PanoModel:
     return PanoModel(
         model_name=model.name,
         data_source=model.fully_qualified_object_name,
-        fields=[map_field_from_remote(attrs) for (_, attrs) in attrs_by_key],
+        fields=[map_field_from_remote(attrs) for (_, attrs) in attrs_by_key.items()],
         joins=[map_model_join_from_remote(j) for j in model.joins],
         identifiers=[a.taxon for a in model.attributes if a.identifier],
+        virtual_data_source=model.virtual_data_source,
     )
 
 
