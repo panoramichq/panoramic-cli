@@ -39,7 +39,7 @@ def scan(source_id: str, filter: Optional[str]):
     refresher = Refresher(source_id)
     writer = FileWriter()
     tables = scanner.scan_tables(table_filter=filter)
-    with tqdm(tables) as bar:
+    with tqdm(list(tables)) as bar:
         for table in bar:
             # drop source name from schema
             sourceless_schema = table['table_schema'].split('.', 1)[1]
