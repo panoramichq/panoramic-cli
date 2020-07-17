@@ -6,6 +6,7 @@ import click
 import yaml
 
 from panoramic.cli.__version__ import __version__
+from panoramic.cli.context import ContextAwareCommand
 from panoramic.cli.errors import SourceNotFoundException
 from panoramic.cli.logging import log_error
 
@@ -24,7 +25,7 @@ def cli(debug):
         exit(1)
 
 
-@cli.command(help='Scan models from source')
+@cli.command(help='Scan models from source', cls=ContextAwareCommand)
 @click.argument('source-id', type=str, required=True)
 @click.option('--filter', '-f', type=str, help='Filter down what schemas to scan')
 def scan(source_id: str, filter: Optional[str]):
@@ -39,14 +40,14 @@ def scan(source_id: str, filter: Optional[str]):
         log_error(logger, 'Internal error occured.', e)
 
 
-@cli.command(help='Pull models from remote')
+@cli.command(help='Pull models from remote', cls=ContextAwareCommand)
 def pull():
     from panoramic.cli.command import pull
 
     pull()
 
 
-@cli.command(help='Push models to remote')
+@cli.command(help='Push models to remote', cls=ContextAwareCommand)
 def push():
     from panoramic.cli.command import push
 
@@ -71,7 +72,7 @@ def configure():
         f.write(yaml.safe_dump({'company_slug': company_slug, 'api_version': 'v1'}))
 
 
-@cli.command(help='List available data connections')
+@cli.command(help='List available data connections', cls=ContextAwareCommand)
 def list_connections():
     from panoramic.cli.command import list_connections
 

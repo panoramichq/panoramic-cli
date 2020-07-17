@@ -1,7 +1,19 @@
 from pathlib import Path
 
-from panoramic.cli.errors import MissingContextFileException
+from click.core import Command, Context
+
+from panoramic.cli.errors import CriticalError, MissingContextFileException
 from panoramic.cli.util import get_yaml_value
+
+
+class ContextAwareCommand(Command):
+
+    """Perform context file check before running command."""
+
+    def invoke(self, ctx: Context):
+        if not (Path.cwd() / 'pano.yaml').exists():
+            raise CriticalError('Context file (pano.yaml) not found in working directory.')
+        return super().invoke(ctx)
 
 
 def _get_context_yaml_value(file_path: Path, value_path: str):
