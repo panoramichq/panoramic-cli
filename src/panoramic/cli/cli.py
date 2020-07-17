@@ -19,7 +19,7 @@ def cli(debug):
         logger = logging.getLogger()
         logger.setLevel("DEBUG")
 
-    load_dotenv()
+    load_dotenv(dotenv_path=Path.cwd() / '.env')
 
     from panoramic.cli.supported_version import is_version_supported
 
