@@ -1,0 +1,692 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - pano-cli/0.6.0
+    method: GET
+    uri: https://a1.panocdn.com/updates/pano-cli/versions.json
+  response:
+    body:
+      string: '{"latest_version": "0.5.0", "minimum_supported_version": "0.5.0"}'
+    headers:
+      Accept-Ranges:
+      - bytes
+      Cache-Control:
+      - max-age=60
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '65'
+      Content-Type:
+      - application/json
+      Date:
+      - Thu, 16 Jul 2020 14:13:43 GMT
+      ETag:
+      - '"6f6cec12a24a753e532387a3b5b72795"'
+      Last-Modified:
+      - Wed, 15 Jul 2020 15:39:07 GMT
+      Server:
+      - AmazonS3
+      Via:
+      - 1.1 cc83cc27259d9c51b700240a5e4b94bd.cloudfront.net (CloudFront)
+      X-Amz-Cf-Id:
+      - Y4Ks9wmA11xoMJXwCbEdoNlBwEmRHMZ2E0BnMioCD68tOg5qdvop8Q==
+      X-Amz-Cf-Pop:
+      - BUD50-C1
+      X-Cache:
+      - Miss from cloudfront
+      x-amz-replication-status:
+      - COMPLETED
+      x-amz-version-id:
+      - AmpsFa8j0cdkl5eOsFx13_MLd6nASHlV
+    status:
+      code: 200
+      message: OK
+- request:
+    body: grant_type=client_credentials&scope=platform
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '44'
+      Content-Type:
+      - application/x-www-form-urlencoded;charset=UTF-8
+      User-Agent:
+      - python-requests/2.24.0
+    method: POST
+    uri: https://id.panoramichq.com/oauth2/aus5iy3utLXi3Ez4A4x6/v1/token
+  response:
+    body:
+      string: '{"token_type": "Bearer", "expires_in": 3600, "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+        "scope": "platform"}'
+    headers:
+      Connection:
+      - Keep-Alive
+      Content-Type:
+      - application/json;charset=UTF-8
+      Date:
+      - Thu, 16 Jul 2020 14:13:44 GMT
+      Keep-Alive:
+      - timeout=5, max=100
+      Server:
+      - nginx
+      Strict-Transport-Security:
+      - max-age=315360000
+      Transfer-Encoding:
+      - chunked
+      X-Robots-Tag:
+      - none
+      cache-control:
+      - no-cache, no-store
+      expires:
+      - '0'
+      p3p:
+      - CP="HONK"
+      pragma:
+      - no-cache
+      set-cookie:
+      - sid=""; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Path=/
+      - JSESSIONID=DEBBAB2176B02BD867485D5D7FBE0DE0; Path=/; Secure; HttpOnly
+      x-content-type-options:
+      - nosniff
+      x-okta-request-id:
+      - XxBgmJAuIFi7psWDIh-oVwAAAmk
+      x-rate-limit-limit:
+      - '600'
+      x-rate-limit-remaining:
+      - '598'
+      x-rate-limit-reset:
+      - '1594908872'
+      x-xss-protection:
+      - 1; mode=block; report=https://okta.report-uri.com/r/d/xss/enforce
+    status:
+      code: 200
+      message: OK
+- request:
+    body: grant_type=client_credentials&scope=platform
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '44'
+      Content-Type:
+      - application/x-www-form-urlencoded;charset=UTF-8
+      User-Agent:
+      - python-requests/2.24.0
+    method: POST
+    uri: https://id.panoramichq.com/oauth2/aus5iy3utLXi3Ez4A4x6/v1/token
+  response:
+    body:
+      string: '{"token_type": "Bearer", "expires_in": 3600, "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+        "scope": "platform"}'
+    headers:
+      Connection:
+      - Keep-Alive
+      Content-Type:
+      - application/json;charset=UTF-8
+      Date:
+      - Thu, 16 Jul 2020 14:13:49 GMT
+      Keep-Alive:
+      - timeout=5, max=100
+      Server:
+      - nginx
+      Strict-Transport-Security:
+      - max-age=315360000
+      Transfer-Encoding:
+      - chunked
+      X-Robots-Tag:
+      - none
+      cache-control:
+      - no-cache, no-store
+      expires:
+      - '0'
+      p3p:
+      - CP="HONK"
+      pragma:
+      - no-cache
+      set-cookie:
+      - sid=""; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Path=/
+      - JSESSIONID=04B6F63B00B34FF8037FB3EB2B7EB77D; Path=/; Secure; HttpOnly
+      x-content-type-options:
+      - nosniff
+      x-okta-request-id:
+      - XxBgnUrKRvZ6T-5oVMrrbQAACA4
+      x-rate-limit-limit:
+      - '600'
+      x-rate-limit-remaining:
+      - '597'
+      x-rate-limit-reset:
+      - '1594908872'
+      x-xss-protection:
+      - 1; mode=block; report=https://okta.report-uri.com/r/d/xss/enforce
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.24.0
+    method: GET
+    uri: https://diesel.panoramicstg.com/api/v1/federated/model/?virtual_data_source=test_dataset&company_slug=operam&offset=0&limit=100
+  response:
+    body:
+      string: '{"data":[]}
+
+        '
+    headers:
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '12'
+      Content-Type:
+      - application/json
+      Date:
+      - Thu, 16 Jul 2020 14:13:51 GMT
+      Via:
+      - kong/2.0.3
+      X-Amzn-Trace-Id:
+      - None
+      X-Kong-Proxy-Latency:
+      - '0'
+      X-Kong-Upstream-Latency:
+      - '14'
+      x-diesel-request-id:
+      - a4d370c1-2ea2-4bfe-b87d-206e9a86f660
+    status:
+      code: 200
+      message: OK
+- request:
+    body: grant_type=client_credentials&scope=platform
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '44'
+      Content-Type:
+      - application/x-www-form-urlencoded;charset=UTF-8
+      User-Agent:
+      - python-requests/2.24.0
+    method: POST
+    uri: https://id.panoramichq.com/oauth2/aus5iy3utLXi3Ez4A4x6/v1/token
+  response:
+    body:
+      string: '{"token_type": "Bearer", "expires_in": 3600, "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+        "scope": "platform"}'
+    headers:
+      Connection:
+      - Keep-Alive
+      Content-Type:
+      - application/json;charset=UTF-8
+      Date:
+      - Thu, 16 Jul 2020 14:13:53 GMT
+      Keep-Alive:
+      - timeout=5, max=100
+      Server:
+      - nginx
+      Strict-Transport-Security:
+      - max-age=315360000
+      Transfer-Encoding:
+      - chunked
+      X-Robots-Tag:
+      - none
+      cache-control:
+      - no-cache, no-store
+      expires:
+      - '0'
+      p3p:
+      - CP="HONK"
+      pragma:
+      - no-cache
+      set-cookie:
+      - sid=""; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Path=/
+      - JSESSIONID=AF491E3D90BF9A5265CB5B3E99AFBE60; Path=/; Secure; HttpOnly
+      x-content-type-options:
+      - nosniff
+      x-okta-request-id:
+      - XxBgoS3vYvdyTgEppTDBhQAABAY
+      x-rate-limit-limit:
+      - '600'
+      x-rate-limit-remaining:
+      - '596'
+      x-rate-limit-reset:
+      - '1594908872'
+      x-xss-protection:
+      - 1; mode=block; report=https://okta.report-uri.com/r/d/xss/enforce
+    status:
+      code: 200
+      message: OK
+- request:
+    body: grant_type=client_credentials&scope=platform
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '44'
+      Content-Type:
+      - application/x-www-form-urlencoded;charset=UTF-8
+      User-Agent:
+      - python-requests/2.24.0
+    method: POST
+    uri: https://id.panoramichq.com/oauth2/aus5iy3utLXi3Ez4A4x6/v1/token
+  response:
+    body:
+      string: '{"token_type": "Bearer", "expires_in": 3600, "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+        "scope": "platform"}'
+    headers:
+      Connection:
+      - Keep-Alive
+      Content-Type:
+      - application/json;charset=UTF-8
+      Date:
+      - Thu, 16 Jul 2020 14:13:58 GMT
+      Keep-Alive:
+      - timeout=5, max=100
+      Server:
+      - nginx
+      Strict-Transport-Security:
+      - max-age=315360000
+      Transfer-Encoding:
+      - chunked
+      X-Robots-Tag:
+      - none
+      cache-control:
+      - no-cache, no-store
+      expires:
+      - '0'
+      p3p:
+      - CP="HONK"
+      pragma:
+      - no-cache
+      set-cookie:
+      - sid=""; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Path=/
+      - JSESSIONID=575D50C6768974890A0C13E849BFCD19; Path=/; Secure; HttpOnly
+      x-content-type-options:
+      - nosniff
+      x-okta-request-id:
+      - XxBgppAuIFi7psWDIh-ojgAAApk
+      x-rate-limit-limit:
+      - '600'
+      x-rate-limit-remaining:
+      - '595'
+      x-rate-limit-reset:
+      - '1594908872'
+      x-xss-protection:
+      - 1; mode=block; report=https://okta.report-uri.com/r/d/xss/enforce
+    status:
+      code: 200
+      message: OK
+- request:
+    body: grant_type=client_credentials&scope=platform
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '44'
+      Content-Type:
+      - application/x-www-form-urlencoded;charset=UTF-8
+      User-Agent:
+      - python-requests/2.24.0
+    method: POST
+    uri: https://id.panoramichq.com/oauth2/aus5iy3utLXi3Ez4A4x6/v1/token
+  response:
+    body:
+      string: '{"token_type": "Bearer", "expires_in": 3600, "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+        "scope": "platform"}'
+    headers:
+      Connection:
+      - Keep-Alive
+      Content-Type:
+      - application/json;charset=UTF-8
+      Date:
+      - Thu, 16 Jul 2020 14:14:01 GMT
+      Keep-Alive:
+      - timeout=5, max=100
+      Server:
+      - nginx
+      Strict-Transport-Security:
+      - max-age=315360000
+      Transfer-Encoding:
+      - chunked
+      X-Robots-Tag:
+      - none
+      cache-control:
+      - no-cache, no-store
+      expires:
+      - '0'
+      p3p:
+      - CP="HONK"
+      pragma:
+      - no-cache
+      set-cookie:
+      - sid=""; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Path=/
+      - JSESSIONID=81E441B0B6ADB08BA2B3B155C5535198; Path=/; Secure; HttpOnly
+      x-content-type-options:
+      - nosniff
+      x-okta-request-id:
+      - XxBgqUpg6lQRGvRAj@c45gAAAQE
+      x-rate-limit-limit:
+      - '600'
+      x-rate-limit-remaining:
+      - '594'
+      x-rate-limit-reset:
+      - '1594908872'
+      x-xss-protection:
+      - 1; mode=block; report=https://okta.report-uri.com/r/d/xss/enforce
+    status:
+      code: 200
+      message: OK
+- request:
+    body: grant_type=client_credentials&scope=platform
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '44'
+      Content-Type:
+      - application/x-www-form-urlencoded;charset=UTF-8
+      User-Agent:
+      - python-requests/2.24.0
+    method: POST
+    uri: https://id.panoramichq.com/oauth2/aus5iy3utLXi3Ez4A4x6/v1/token
+  response:
+    body:
+      string: '{"token_type": "Bearer", "expires_in": 3600, "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+        "scope": "platform"}'
+    headers:
+      Connection:
+      - Keep-Alive
+      Content-Type:
+      - application/json;charset=UTF-8
+      Date:
+      - Thu, 16 Jul 2020 14:14:03 GMT
+      Keep-Alive:
+      - timeout=5, max=100
+      Server:
+      - nginx
+      Strict-Transport-Security:
+      - max-age=315360000
+      Transfer-Encoding:
+      - chunked
+      X-Robots-Tag:
+      - none
+      cache-control:
+      - no-cache, no-store
+      expires:
+      - '0'
+      p3p:
+      - CP="HONK"
+      pragma:
+      - no-cache
+      set-cookie:
+      - sid=""; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Path=/
+      - JSESSIONID=19B1CD4C1692193A770465BDE11ACB19; Path=/; Secure; HttpOnly
+      x-content-type-options:
+      - nosniff
+      x-okta-request-id:
+      - XxBgq6fgaArzhz-CCSqrqgAAA1U
+      x-rate-limit-limit:
+      - '600'
+      x-rate-limit-remaining:
+      - '593'
+      x-rate-limit-reset:
+      - '1594908872'
+      x-xss-protection:
+      - 1; mode=block; report=https://okta.report-uri.com/r/d/xss/enforce
+    status:
+      code: 200
+      message: OK
+- request:
+    body: grant_type=client_credentials&scope=platform
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '44'
+      Content-Type:
+      - application/x-www-form-urlencoded;charset=UTF-8
+      User-Agent:
+      - python-requests/2.24.0
+    method: POST
+    uri: https://id.panoramichq.com/oauth2/aus5iy3utLXi3Ez4A4x6/v1/token
+  response:
+    body:
+      string: '{"token_type": "Bearer", "expires_in": 3600, "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+        "scope": "platform"}'
+    headers:
+      Connection:
+      - Keep-Alive
+      Content-Type:
+      - application/json;charset=UTF-8
+      Date:
+      - Thu, 16 Jul 2020 14:14:06 GMT
+      Keep-Alive:
+      - timeout=5, max=100
+      Server:
+      - nginx
+      Strict-Transport-Security:
+      - max-age=315360000
+      Transfer-Encoding:
+      - chunked
+      X-Robots-Tag:
+      - none
+      cache-control:
+      - no-cache, no-store
+      expires:
+      - '0'
+      p3p:
+      - CP="HONK"
+      pragma:
+      - no-cache
+      set-cookie:
+      - sid=""; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Path=/
+      - JSESSIONID=B593182A438A69A86730CF98EABC0EB3; Path=/; Secure; HttpOnly
+      x-content-type-options:
+      - nosniff
+      x-okta-request-id:
+      - XxBgredKYic2Y-K6Zk8PYgAABCc
+      x-rate-limit-limit:
+      - '600'
+      x-rate-limit-remaining:
+      - '592'
+      x-rate-limit-reset:
+      - '1594908872'
+      x-xss-protection:
+      - 1; mode=block; report=https://okta.report-uri.com/r/d/xss/enforce
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '{"slug": "test_dataset", "display_name": "Test Dataset"}'
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '56'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.24.0
+    method: PUT
+    uri: https://diesel.panoramicstg.com/api/v1/federated/virtual-data-source?company_slug=operam
+  response:
+    body:
+      string: '{"data":{"display_name":"Test Dataset","global_slug":"operam_v_d_s_test_dataset","slug":"test_dataset"}}
+
+        '
+    headers:
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '105'
+      Content-Type:
+      - application/json
+      Date:
+      - Thu, 16 Jul 2020 14:14:07 GMT
+      Via:
+      - kong/2.0.3
+      X-Amzn-Trace-Id:
+      - None
+      X-Kong-Proxy-Latency:
+      - '1'
+      X-Kong-Upstream-Latency:
+      - '6'
+      x-diesel-request-id:
+      - 15796521-ab31-448a-9e99-83e6957bc4dd
+    status:
+      code: 201
+      message: CREATED
+- request:
+    body: grant_type=client_credentials&scope=platform
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '44'
+      Content-Type:
+      - application/x-www-form-urlencoded;charset=UTF-8
+      User-Agent:
+      - python-requests/2.24.0
+    method: POST
+    uri: https://id.panoramichq.com/oauth2/aus5iy3utLXi3Ez4A4x6/v1/token
+  response:
+    body:
+      string: '{"token_type": "Bearer", "expires_in": 3600, "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+        "scope": "platform"}'
+    headers:
+      Connection:
+      - Keep-Alive
+      Content-Type:
+      - application/json;charset=UTF-8
+      Date:
+      - Thu, 16 Jul 2020 14:14:08 GMT
+      Keep-Alive:
+      - timeout=5, max=100
+      Server:
+      - nginx
+      Strict-Transport-Security:
+      - max-age=315360000
+      Transfer-Encoding:
+      - chunked
+      X-Robots-Tag:
+      - none
+      cache-control:
+      - no-cache, no-store
+      expires:
+      - '0'
+      p3p:
+      - CP="HONK"
+      pragma:
+      - no-cache
+      set-cookie:
+      - sid=""; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Path=/
+      - JSESSIONID=5CC0E37493BC5CB5BD9D1E0C73CE92CD; Path=/; Secure; HttpOnly
+      x-content-type-options:
+      - nosniff
+      x-okta-request-id:
+      - XxBgsEpg6lQRGvRAj@c4-QAAAMw
+      x-rate-limit-limit:
+      - '600'
+      x-rate-limit-remaining:
+      - '591'
+      x-rate-limit-reset:
+      - '1594908872'
+      x-xss-protection:
+      - 1; mode=block; report=https://okta.report-uri.com/r/d/xss/enforce
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '{"name": "test_model", "fully_qualified_object_name": "SF.DBNAME.SCHEMANAME.TABLENAME",
+      "attributes": [{"column_data_type": "CHARACTER VARYING", "taxon": "test_field",
+      "identifier": true, "transformation": "column"}], "joins": [{"to_model": "other_model",
+      "join_type": "left", "relationship": "many_to_one", "taxons": ["test_field"]}],
+      "visibility": "available"}'
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '362'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.24.0
+    method: PUT
+    uri: https://diesel.panoramicstg.com/api/v1/federated/model/?virtual_data_source=test_dataset&company_slug=operam
+  response:
+    body:
+      string: ''
+    headers:
+      Connection:
+      - keep-alive
+      Content-Type:
+      - text/html; charset=utf-8
+      Date:
+      - Thu, 16 Jul 2020 14:14:09 GMT
+      Via:
+      - kong/2.0.3
+      X-Amzn-Trace-Id:
+      - None
+      X-Kong-Proxy-Latency:
+      - '1'
+      X-Kong-Upstream-Latency:
+      - '26'
+      x-diesel-request-id:
+      - 7488fb92-7eec-4956-8ff7-9f86a9f104bb
+    status:
+      code: 204
+      message: NO CONTENT
+version: 1
