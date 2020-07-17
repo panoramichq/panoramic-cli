@@ -1,4 +1,5 @@
 import logging
+from concurrent.futures import ThreadPoolExecutor
 from typing import Optional
 
 import click
@@ -32,26 +33,31 @@ def list_connections():
             click.echo(source['source_name'])
 
 
-def scan(source_id: str, filter: Optional[str]):
+def scan(source_id: str, filter: Optional[str], parallel: int = 1):
     """Scan all metadata for given source and filter."""
     # TODO: Obtain api version
     scanner = Scanner(source_id)
     refresher = Refresher(source_id)
     writer = FileWriter()
     tables = scanner.scan_tables(table_filter=filter)
-    with tqdm(tables) as bar:
-        for table in bar:
-            # drop source name from schema
-            sourceless_schema = table['table_schema'].split('.', 1)[1]
-            table_name = f'{sourceless_schema}.{table["table_name"]}'
-            try:
-                refresher.refresh_table(table_name)
-                raw_columns = scanner.scan_columns(table_filter=table_name)
-                for table in load_scanned_tables(raw_columns):
-                    writer.write_model(table, package=SystemDirectory.SCANNED.value)
-            except Exception as e:
-                log_error(logger, f'Failed to scan table {table_name}', e)
-                continue
+    executor = ThreadPoolExecutor(max_workers=parallel)
+
+    def _process_table(table):
+        # drop source name from schema
+        sourceless_schema = table['table_schema'].split('.', 1)[1]
+        table_name = f'{sourceless_schema}.{table["table_name"]}'
+
+        try:
+            refresher.refresh_table(table_name)
+            raw_columns = scanner.scan_columns(table_filter=table_name)
+            for table in load_scanned_tables(raw_columns):
+                writer.write_model(table, package=SystemDirectory.SCANNED.value)
+        except Exception as e:
+            log_error(logger, f'Failed to scan table {table_name}', e)
+
+    with tqdm(tables) as tables_it:
+        for _ in executor.map(_process_table, tables_it):
+            pass
 
 
 def pull():
