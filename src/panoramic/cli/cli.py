@@ -43,20 +43,22 @@ def scan(source_id: str, filter: Optional[str]):
 def pull():
     from panoramic.cli.command import pull
 
+    logger = logging.getLogger(__name__)
     try:
         pull()
     except Exception as e:
-        print(e)
+        log_error(logger, 'Internal error ocurred', e)
 
 
 @cli.command(help='Push models to remote')
 def push():
     from panoramic.cli.command import push
 
+    logger = logging.getLogger(__name__)
     try:
         push()
     except Exception as e:
-        print(e)
+        log_error(logger, 'Internal error ocurred', e)
 
 
 @cli.command(help='Configure pano CLI options')
