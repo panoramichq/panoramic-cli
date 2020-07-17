@@ -55,7 +55,7 @@ def scan(source_id: str, filter: Optional[str], parallel: int = 1):
         except Exception as e:
             log_error(logger, f'Failed to scan table {table_name}', e)
 
-    with tqdm(tables) as tables_it:
+    with tqdm(list(tables)) as tables_it:
         for _ in executor.map(_process_table, tables_it):
             pass
 
