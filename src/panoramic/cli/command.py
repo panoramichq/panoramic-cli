@@ -57,7 +57,8 @@ def scan(source_id: str, filter: Optional[str], parallel: int = 1):
                 writer.write_model(table, package=SystemDirectory.SCANNED.value)
         except Exception as e:
             log_error(logger, f'Failed to scan table {table_name}', e)
-        progress_bar.update()
+        finally:
+            progress_bar.update()
 
     for _ in executor.map(_process_table, tables):
         pass
