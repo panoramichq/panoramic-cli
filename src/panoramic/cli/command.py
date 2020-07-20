@@ -42,6 +42,9 @@ def scan(source_id: str, filter: Optional[str], parallel: int = 1):
     tables = scanner.scan_tables(table_filter=filter)
     executor = ThreadPoolExecutor(max_workers=parallel)
 
+    tables = list(tables)
+    progress_bar = tqdm(total=len(tables))
+
     def _process_table(table):
         # drop source name from schema
         sourceless_schema = table['table_schema'].split('.', 1)[1]
@@ -54,10 +57,10 @@ def scan(source_id: str, filter: Optional[str], parallel: int = 1):
                 writer.write_model(table, package=SystemDirectory.SCANNED.value)
         except Exception as e:
             log_error(logger, f'Failed to scan table {table_name}', e)
+        progress_bar.update()
 
-    with tqdm(list(tables)) as tables_it:
-        for _ in executor.map(_process_table, tables_it):
-            pass
+    for _ in executor.map(_process_table, tables):
+        pass
 
 
 def pull():
