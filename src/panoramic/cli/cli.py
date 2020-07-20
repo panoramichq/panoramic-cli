@@ -30,7 +30,7 @@ def cli(debug):
 @cli.command(help='Scan models from source')
 @click.argument('source-id', type=str, required=True)
 @click.option('--filter', '-f', type=str, help='Filter down what schemas to scan')
-@click.option('--parallel', '-p', type=int, default=8, help='Parallelize table')
+@click.option('--parallel', '-p', type=int, default=8, help='Parallelize metadata scan')
 def scan(source_id: str, filter: Optional[str], parallel: Optional[int]):
     from panoramic.cli.command import scan
 
