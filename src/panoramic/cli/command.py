@@ -35,9 +35,9 @@ def list_connections():
 
 def scan(source_id: str, filter: Optional[str], parallel: int = 1):
     """Scan all metadata for given source and filter."""
-    # TODO: Obtain api version
-    scanner = Scanner(source_id)
-    refresher = Refresher(source_id)
+    company_slug = get_company_slug()
+    scanner = Scanner(company_slug, source_id)
+    refresher = Refresher(company_slug, source_id)
     writer = FileWriter()
     tables = scanner.scan_tables(table_filter=filter)
     executor = ThreadPoolExecutor(max_workers=parallel)

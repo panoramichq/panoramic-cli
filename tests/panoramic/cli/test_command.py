@@ -6,6 +6,12 @@ from panoramic.cli.command import list_connections, scan
 from panoramic.cli.local.file_utils import SystemDirectory
 
 
+@pytest.fixture(autouse=True)
+def mock_get_company_slug():
+    with patch('panoramic.cli.command.get_company_slug', return_value='test-company') as mock_get_company_slug:
+        yield mock_get_company_slug
+
+
 @pytest.fixture
 def mock_refresher():
     with patch('panoramic.cli.command.Refresher') as mock_scanner:
@@ -56,7 +62,6 @@ def mock_physical_data_source_client():
         yield client_class()
 
 
-@patch('panoramic.cli.command.get_company_slug', return_value='damn')
-def test_list_connections(mock_get_company_slug, mock_physical_data_source_client):
+def test_list_connections(mock_physical_data_source_client):
     list_connections()
-    mock_physical_data_source_client.get_sources.assert_called_with('damn')
+    mock_physical_data_source_client.get_sources.assert_called_with('test-company')
