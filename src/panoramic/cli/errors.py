@@ -1,3 +1,4 @@
+from click.exceptions import ClickException
 from yaml.scanner import ScannerError
 
 
@@ -55,3 +56,13 @@ class MissingValueException(Exception):
 
     def __init__(self, value_name: str):
         super().__init__(f'Missing value: {value_name}')
+
+
+class CriticalError(ClickException):
+
+    """Aborts command execution."""
+
+
+class PartialError(ClickException):
+
+    """Command execution can continue."""
