@@ -17,7 +17,8 @@ class Scanner:
     source_id: str
     client: MetadataClient
 
-    def __init__(self, source_id: str, client: MetadataClient = None):
+    def __init__(self, company_id: str, source_id: str, client: MetadataClient = None):
+        self.company_id = company_id
         self.source_id = source_id
 
         if client is None:
@@ -27,7 +28,7 @@ class Scanner:
         """Scan tables for a given source and filter."""
         logger.debug(f'Starting get tables job with filter {table_filter}')
         try:
-            job_id = self.client.create_get_tables_job(self.source_id, table_filter)
+            job_id = self.client.create_get_tables_job(self.company_id, self.source_id, table_filter)
             logger.debug(f'Get tables job with id {job_id} started with filter {table_filter}')
         except RequestException as e:
             if e.response and e.response.status == requests.codes.not_found:
@@ -46,7 +47,7 @@ class Scanner:
         """Scan columns for a given source and filter."""
         logger.debug('Starting get columns job')
         try:
-            job_id = self.client.create_get_columns_job(self.source_id, table_filter)
+            job_id = self.client.create_get_columns_job(self.company_id, self.source_id, table_filter)
             logger.debug(f'Get columns job with id {job_id} started with filter {table_filter}')
         except requests.HTTPError as e:
             if e.response.status == requests.codes.not_found:

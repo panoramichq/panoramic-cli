@@ -16,7 +16,8 @@ class Refresher:
     source_id: str
     client: MetadataClient
 
-    def __init__(self, source_id: str, client: MetadataClient = None):
+    def __init__(self, company_id: str, source_id: str, client: MetadataClient = None):
+        self.company_id = company_id
         self.source_id = source_id
 
         if client is None:
@@ -26,7 +27,7 @@ class Refresher:
         """Scan columns for a given source and scope."""
         logger.debug(f'Starting refresh metadata job for table {table_name}')
         try:
-            job_id = self.client.create_refresh_job(self.source_id, table_name)
+            job_id = self.client.create_refresh_job(self.company_id, self.source_id, table_name)
             logger.debug(f'Refresh metadata job with id {job_id} started for table {table_name}')
         except RequestException as e:
             if e.response.status == requests.codes.not_found:

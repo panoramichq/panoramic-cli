@@ -50,28 +50,36 @@ class MetadataClient(OAuth2Client):
         super().__init__(client_id, client_secret)
         self.base_url = base_url
 
-    def create_refresh_job(self, source_id: str, table_name: str):
+    def create_refresh_job(self, company_slug: str, source_id: str, table_name: str):
         """Starts async "refresh metadata" job and return job id."""
         url = urljoin(self.base_url, f'{source_id}/refresh')
-        params = {'table-name': table_name}
+        params = {'table_name': table_name, 'company_slug': company_slug}
         logger.debug(f'Refreshing table for source {source_id} and name: {table_name}')
         response = self.session.post(url, params=params, timeout=5)
         response.raise_for_status()
         return response.json()['job_id']
 
-    def create_get_tables_job(self, source_id: str, table_filter: Optional[str]) -> str:
+    def create_get_tables_job(self, company_slug: str, source_id: str, table_filter: Optional[str]) -> str:
         """Starts async "get tables" job and return job id."""
         url = urljoin(self.base_url, f'{source_id}/tables')
-        params = {} if table_filter is None else {'table-filter': table_filter}
+        params = (
+            {'company_slug': company_slug}
+            if table_filter is None
+            else {'company_slug': company_slug, 'table_filter': table_filter}
+        )
         logger.debug(f'Requesting tables for source {source_id} and filter: {table_filter}')
         response = self.session.post(url, params=params, timeout=5)
         response.raise_for_status()
         return response.json()['job_id']
 
-    def create_get_columns_job(self, source_id: str, table_filter: Optional[str]) -> str:
+    def create_get_columns_job(self, company_slug: str, source_id: str, table_filter: Optional[str]) -> str:
         """Starts async "get columns" job and return job id."""
         url = urljoin(self.base_url, f'{source_id}/columns')
-        params = {} if table_filter is None else {'table-filter': table_filter}
+        params = (
+            {'company_slug': company_slug}
+            if table_filter is None
+            else {'company_slug': company_slug, 'table_filter': table_filter}
+        )
         logger.debug(f'Requesting columns for source {source_id} and filter: {table_filter}')
         response = self.session.post(url, params=params, timeout=5)
         response.raise_for_status()

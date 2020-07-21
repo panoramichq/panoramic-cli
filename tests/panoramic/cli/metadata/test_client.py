@@ -13,36 +13,42 @@ def mock_token_url(monkeypatch):
 def test_create_get_columns_job():
     responses.add(responses.POST, 'https://token/', json={'access_token': '123123'})
     responses.add(
-        responses.POST, 'https://diesel/test-source/columns?table-filter=test-filter', json={'job_id': 'test-job-id'}
+        responses.POST,
+        'https://diesel/test-source/columns?company_slug=test-company&table_filter=test-filter',
+        json={'job_id': 'test-job-id'},
     )
 
     client = MetadataClient(base_url='https://diesel/', client_id='client-id', client_secret='client-secret')
 
-    assert client.create_get_columns_job('test-source', 'test-filter') == 'test-job-id'
+    assert client.create_get_columns_job('test-company', 'test-source', 'test-filter') == 'test-job-id'
 
 
 @responses.activate
 def test_create_get_tables_job():
     responses.add(responses.POST, 'https://token/', json={'access_token': '123123'})
     responses.add(
-        responses.POST, 'https://diesel/test-source/tables?table-filter=test-filter', json={'job_id': 'test-job-id'}
+        responses.POST,
+        'https://diesel/test-source/tables?company_slug=test-company&table_filter=test-filter',
+        json={'job_id': 'test-job-id'},
     )
 
     client = MetadataClient(base_url='https://diesel/', client_id='client-id', client_secret='client-secret')
 
-    assert client.create_get_tables_job('test-source', 'test-filter') == 'test-job-id'
+    assert client.create_get_tables_job('test-company', 'test-source', 'test-filter') == 'test-job-id'
 
 
 @responses.activate
 def test_create_refresh_job():
     responses.add(responses.POST, 'https://token/', json={'access_token': '123123'})
     responses.add(
-        responses.POST, 'https://diesel/test-source/refresh?table-name=test-table', json={'job_id': 'test-job-id'}
+        responses.POST,
+        'https://diesel/test-source/refresh?company_slug=test-company&table_name=test-table',
+        json={'job_id': 'test-job-id'},
     )
 
     client = MetadataClient(base_url='https://diesel/', client_id='client-id', client_secret='client-secret')
 
-    assert client.create_refresh_job('test-source', 'test-table') == 'test-job-id'
+    assert client.create_refresh_job('test-company', 'test-source', 'test-table') == 'test-job-id'
 
 
 @responses.activate
