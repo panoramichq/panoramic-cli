@@ -88,4 +88,3 @@ def push():
     with tqdm(actions.actions) as bar:
         for action in bar:
             executor.execute(action)
-
