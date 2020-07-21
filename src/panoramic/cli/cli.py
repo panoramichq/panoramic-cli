@@ -31,12 +31,13 @@ def cli(debug):
 @cli.command(help='Scan models from source', cls=ContextAwareCommand)
 @click.argument('source-id', type=str, required=True)
 @click.option('--filter', '-f', type=str, help='Filter down what schemas to scan')
-def scan(source_id: str, filter: Optional[str]):
+@click.option('--parallel', '-p', type=int, default=8, help='Parallelize metadata scan')
+def scan(source_id: str, filter: Optional[str], parallel: Optional[int]):
     from panoramic.cli.command import scan
 
     logger = logging.getLogger(__name__)
     try:
-        scan(source_id, filter)
+        scan(source_id, filter, parallel)
     except SourceNotFoundException as source_exception:
         log_error(logger, 'Source not found', source_exception)
     except Exception as e:
