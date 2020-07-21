@@ -1,12 +1,13 @@
 import logging
 from pathlib import Path
-from typing import Optional
+from typing import List, Optional
 
 import click
 import yaml
 from dotenv import load_dotenv
 
 from panoramic.cli.__version__ import __version__
+from panoramic.cli.companies.client import CompaniesClient
 from panoramic.cli.context import ContextAwareCommand
 from panoramic.cli.errors import SourceNotFoundException
 from panoramic.cli.logging import log_error
@@ -70,7 +71,6 @@ def push():
 def configure():
     client_id = click.prompt('Enter your client_id', type=str)
     client_secret = click.prompt('Enter your client_secret', hide_input=True, type=str)
-    company_slug = click.prompt('Enter your company slug', type=str)
 
     config_dir = Path.home() / '.pano'
     if not config_dir.exists():
@@ -79,9 +79,17 @@ def configure():
     with open(config_dir / 'config', 'w+') as f:
         f.write(yaml.safe_dump({'client_id': client_id, 'client_secret': client_secret}))
 
-    context_file = Path.cwd() / 'pano.yaml'
-    with open(context_file, 'w') as f:
-        f.write(yaml.safe_dump({'company_slug': company_slug, 'api_version': 'v1'}))
+
+@cli.command(help='Initialize metadata repository')
+def init():
+    from panoramic.cli.command import init
+
+    logger = logging.getLogger(__name__)
+
+    try:
+        init()
+    except Exception as e:
+        log_error(logger, 'Internal error occured.', e)
 
 
 @cli.command(help='List available data connections', cls=ContextAwareCommand)
