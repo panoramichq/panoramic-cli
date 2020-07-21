@@ -1,13 +1,10 @@
 import logging
 from concurrent.futures import ThreadPoolExecutor
-from pathlib import Path
-from typing import List, Optional
+from typing import Optional
 
 import click
-import yaml
 from tqdm import tqdm
 
-from panoramic.cli.companies.client import CompaniesClient
 from panoramic.cli.context import get_company_slug
 from panoramic.cli.controller import reconcile
 from panoramic.cli.local import get_state as get_local_state
@@ -92,33 +89,3 @@ def push():
         for action in bar:
             executor.execute(action)
 
-
-def init():
-    """Initialize metadata repository."""
-    logger = logging.getLogger(__name__)
-
-    def get_companies() -> List[str]:
-        client = CompaniesClient()
-
-        try:
-            return client.get_companies()
-        except Exception as error:
-            log_error(logger, 'Failed to fetch available companies', error)
-            return []
-
-    def get_company_prompt_text(companies: List[str]) -> str:
-        base_text = 'Enter your company slug'
-        if len(companies) == 0:
-            return base_text
-        elif len(companies) > 3:
-            return f'{base_text} (Available - {{{",".join(companies)}}},...)'
-        else:
-            return f'{base_text} (Available - {{{",".join(companies)}}})'
-
-    companies = get_companies()
-
-    company_slug = click.prompt(get_company_prompt_text(companies), type=str, default=next(iter(companies), None))
-
-    context_file = Path.cwd() / 'pano.yaml'
-    with open(context_file, 'w') as f:
-        f.write(yaml.safe_dump({'company_slug': company_slug, 'api_version': 'v1'}))

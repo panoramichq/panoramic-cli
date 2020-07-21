@@ -82,14 +82,30 @@ def configure():
 
 @cli.command(help='Initialize metadata repository')
 def init():
-    from panoramic.cli.command import init
+    def get_company_prompt_text(companies: List[str]) -> str:
+        base_text = 'Enter your company slug'
+        if len(companies) == 0:
+            return base_text
+        elif len(companies) > 3:
+            return f'{base_text} (Available - {{{",".join(companies)}}},...)'
+        else:
+            return f'{base_text} (Available - {{{",".join(companies)}}})'
 
     logger = logging.getLogger(__name__)
 
+    client = CompaniesClient()
+
     try:
-        init()
-    except Exception as e:
-        log_error(logger, 'Internal error occured.', e)
+        companies = client.get_companies()
+    except Exception as error:
+        log_error(logger, 'Failed to fetch available companies', error)
+        companies = []
+
+    company_slug = click.prompt(get_company_prompt_text(companies), type=str, default=next(iter(companies), None))
+
+    context_file = Path.cwd() / 'pano.yaml'
+    with open(context_file, 'w') as f:
+        f.write(yaml.safe_dump({'company_slug': company_slug, 'api_version': 'v1'}))
 
 
 @cli.command(help='List available data connections', cls=ContextAwareCommand)
