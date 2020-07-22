@@ -83,7 +83,6 @@ def configure():
 @cli.command(help='Initialize metadata repository')
 def init():
     logger = logging.getLogger(__name__)
-
     client = CompaniesClient()
 
     try:
