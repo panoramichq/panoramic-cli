@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 0.7.1 Release
+
+Fix company_slug support in pano scan command
+
 ## Version 0.6.0 Release
 
 Add informative prints
