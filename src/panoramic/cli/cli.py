@@ -82,15 +82,6 @@ def configure():
 
 @cli.command(help='Initialize metadata repository')
 def init():
-    def get_company_prompt_text(companies: List[str]) -> str:
-        base_text = 'Enter your company slug'
-        if len(companies) == 0:
-            return base_text
-        elif len(companies) > 3:
-            return f'{base_text} (Available - {{{",".join(companies)}}},...)'
-        else:
-            return f'{base_text} (Available - {{{",".join(companies)}}})'
-
     logger = logging.getLogger(__name__)
 
     client = CompaniesClient()
@@ -101,7 +92,15 @@ def init():
         log_error(logger, 'Failed to fetch available companies', error)
         companies = []
 
-    company_slug = click.prompt(get_company_prompt_text(companies), type=str, default=next(iter(companies), None))
+    base_text = 'Enter your company slug'
+    if len(companies) == 0:
+        prompt_text = base_text
+    elif len(companies) > 3:
+        prompt_text = f'{base_text} (Available - {{{",".join(companies)}}},...)'
+    else:
+        prompt_text = f'{base_text} (Available - {{{",".join(companies)}}})'
+
+    company_slug = click.prompt(prompt_text, type=str, default=next(iter(companies), None))
 
     context_file = Path.cwd() / 'pano.yaml'
     with open(context_file, 'w') as f:
