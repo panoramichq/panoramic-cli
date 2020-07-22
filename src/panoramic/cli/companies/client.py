@@ -22,6 +22,6 @@ class CompaniesClient(OAuth2Client):
         self.base_url = base_url
 
     def get_companies(self) -> List[str]:
-        response = self.session.get(self.base_url, verify=False)
+        response = self.session.get(self.base_url)
         response.raise_for_status()
         return response.json()['data']
