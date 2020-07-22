@@ -87,7 +87,7 @@ def init():
         if len(companies) == 0:
             return base_text
         elif len(companies) > 3:
-            return f'{base_text} (Available - {{{",".join(companies)}}},...)'
+            return f'{base_text} ({", ".join(companies)}, ...)'
         else:
             return f'{base_text} ({", ".join(companies)})'
 
