@@ -89,7 +89,7 @@ def init():
         elif len(companies) > 3:
             return f'{base_text} (Available - {{{",".join(companies)}}},...)'
         else:
-            return f'{base_text} (Available - {{{",".join(companies)}}})'
+            return f'{base_text} ({", ".join(companies)})'
 
     logger = logging.getLogger(__name__)
 
