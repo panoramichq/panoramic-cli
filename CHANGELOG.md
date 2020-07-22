@@ -1,6 +1,10 @@
 # Changelog
 
-## Version 0.7.1 Release
+## Version 0.7.3 Release
+
+Change base url for companies endpoint to have slash at the end
+
+## Version 0.7.2 Release
 
 Fix companies client not checking HTTPS certificate
 
