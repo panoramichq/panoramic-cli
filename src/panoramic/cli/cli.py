@@ -69,7 +69,7 @@ def push():
 
 @cli.command(help='Configure pano CLI options')
 def configure():
-    client_id = click.prompt('Enter your client_id', type=str)
+    client_id = click.prompt('Enter your client id', type=str)
     client_secret = click.prompt('Enter your client secret', hide_input=True, type=str)
 
     config_dir = Path.home() / '.pano'
