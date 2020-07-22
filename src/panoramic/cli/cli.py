@@ -7,6 +7,7 @@ import yaml
 from dotenv import load_dotenv
 
 from panoramic.cli.__version__ import __version__
+from panoramic.cli.companies.client import CompaniesClient
 from panoramic.cli.context import ContextAwareCommand
 from panoramic.cli.errors import SourceNotFoundException
 from panoramic.cli.logging import log_error
@@ -68,9 +69,8 @@ def push():
 
 @cli.command(help='Configure pano CLI options')
 def configure():
-    client_id = click.prompt('Enter your client_id', type=str)
-    client_secret = click.prompt('Enter your client_secret', hide_input=True, type=str)
-    company_slug = click.prompt('Enter your company slug', type=str)
+    client_id = click.prompt('Enter your client id', type=str)
+    client_secret = click.prompt('Enter your client secret', hide_input=True, type=str)
 
     config_dir = Path.home() / '.pano'
     if not config_dir.exists():
@@ -78,6 +78,29 @@ def configure():
 
     with open(config_dir / 'config', 'w+') as f:
         f.write(yaml.safe_dump({'client_id': client_id, 'client_secret': client_secret}))
+
+
+@cli.command(help='Initialize metadata repository')
+def init():
+    logger = logging.getLogger(__name__)
+
+    client = CompaniesClient()
+
+    try:
+        companies = client.get_companies()
+    except Exception as error:
+        log_error(logger, 'Failed to fetch available companies', error)
+        companies = []
+
+    base_text = 'Enter your company slug'
+    if len(companies) == 0:
+        prompt_text = base_text
+    elif len(companies) > 3:
+        prompt_text = f'{base_text} (Available - {{{",".join(companies)}}},...)'
+    else:
+        prompt_text = f'{base_text} (Available - {{{",".join(companies)}}})'
+
+    company_slug = click.prompt(prompt_text, type=str, default=next(iter(companies), None))
 
     context_file = Path.cwd() / 'pano.yaml'
     with open(context_file, 'w') as f:
