@@ -10,6 +10,7 @@ from panoramic.cli.__version__ import __version__
 from panoramic.cli.companies.client import CompaniesClient
 from panoramic.cli.context import ContextAwareCommand
 from panoramic.cli.errors import SourceNotFoundException
+from panoramic.cli.local.file_utils import PresetFileName
 from panoramic.cli.logging import log_error
 
 
@@ -102,7 +103,7 @@ def init():
 
     company_slug = click.prompt(prompt_text, type=str, default=next(iter(companies), None))
 
-    context_file = Path.cwd() / 'pano.yaml'
+    context_file = Path.cwd() / PresetFileName.CONTEXT.value
     with open(context_file, 'w') as f:
         f.write(yaml.safe_dump({'company_slug': company_slug, 'api_version': 'v1'}))
 

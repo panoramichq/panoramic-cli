@@ -11,6 +11,7 @@ from panoramic.cli.errors import (
     MissingContextFileException,
     MissingValueException,
 )
+from panoramic.cli.local.file_utils import PresetFileName
 
 
 def test_context_aware_command_no_context(monkeypatch, tmpdir):
@@ -22,7 +23,7 @@ def test_context_aware_command_no_context(monkeypatch, tmpdir):
 def test_context_aware_command_context_exists(monkeypatch, tmpdir):
     """Check command succeeds when context exists."""
     monkeypatch.chdir(tmpdir)
-    (tmpdir / 'pano.yaml').ensure()
+    (tmpdir / PresetFileName.CONTEXT.value).ensure()
 
     def test_callback():
         return 10
@@ -46,7 +47,7 @@ def test_no_context_file(monkeypatch, tmpdir):
 def test_invalid_context_file(monkeypatch, tmpdir):
     monkeypatch.chdir(tmpdir)
 
-    with open(tmpdir / 'pano.yaml', 'w') as f:
+    with open(tmpdir / PresetFileName.CONTEXT.value, 'w') as f:
         f.write('api_version: some_value\ncompany_slug slug_but_missing_colon\n')
 
     with pytest.raises(
@@ -65,7 +66,7 @@ def test_invalid_context_file(monkeypatch, tmpdir):
 def test_missing_value_context_file(monkeypatch, tmpdir):
     monkeypatch.chdir(tmpdir)
 
-    with open(tmpdir / 'pano.yaml', 'w') as f:
+    with open(tmpdir / PresetFileName.CONTEXT.value, 'w') as f:
         f.write(yaml.dump(dict(company_slug='company_name_12fxs')))
 
     with pytest.raises(MissingValueException):
@@ -73,7 +74,7 @@ def test_missing_value_context_file(monkeypatch, tmpdir):
 
     monkeypatch.chdir(tmpdir)
 
-    with open(tmpdir / 'pano.yaml', 'w') as f:
+    with open(tmpdir / PresetFileName.CONTEXT.value, 'w') as f:
         f.write(yaml.dump(dict(api_version='v2')))
 
     with pytest.raises(MissingValueException):
@@ -83,7 +84,7 @@ def test_missing_value_context_file(monkeypatch, tmpdir):
 def test_context_file(monkeypatch, tmpdir):
     monkeypatch.chdir(tmpdir)
 
-    with open(tmpdir / 'pano.yaml', 'w') as f:
+    with open(tmpdir / PresetFileName.CONTEXT.value, 'w') as f:
         f.write(yaml.dump(dict(api_version='v2', company_slug='company_name_12fxs')))
 
     assert get_api_version() == 'v2'
