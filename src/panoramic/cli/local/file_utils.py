@@ -27,6 +27,10 @@ class Paths:
     def config_file(cls) -> Path:
         return cls.config_dir() / PresetFileName.CONFIG.value
 
+    @staticmethod
+    def scanned_dir() -> Path:
+        return Path.cwd() / SystemDirectory.SCANNED.value
+
 
 class FileExtension(Enum):
     """

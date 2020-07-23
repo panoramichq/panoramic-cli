@@ -10,7 +10,7 @@ from panoramic.cli.context import get_company_slug
 from panoramic.cli.controller import reconcile
 from panoramic.cli.local import get_state as get_local_state
 from panoramic.cli.local.executor import LocalExecutor
-from panoramic.cli.local.file_utils import Paths, SystemDirectory, write_yaml
+from panoramic.cli.local.file_utils import Paths, write_yaml
 from panoramic.cli.local.writer import FileWriter
 from panoramic.cli.logging import echo_error, echo_info
 from panoramic.cli.parser import load_scanned_tables
@@ -97,7 +97,7 @@ def scan(source_id: str, table_filter: Optional[str], parallel: int = 1):
             refresher.refresh_table(table_name)
             raw_columns = scanner.scan_columns(table_filter=table_name)
             for model in load_scanned_tables(raw_columns):
-                writer.write_model(model, package=SystemDirectory.SCANNED.value)
+                writer.write_scanned_model(model)
                 echo_info(f'Discovered model {model.model_name}')
         except Exception:
             error_msg = f'Metadata could not be scanned for table {table_name}'

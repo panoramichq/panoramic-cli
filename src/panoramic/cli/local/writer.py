@@ -6,6 +6,7 @@ from tqdm import tqdm
 
 from panoramic.cli.local.file_utils import (
     FileExtension,
+    Paths,
     PresetFileName,
     add_file_api_version,
     delete_file,
@@ -62,6 +63,12 @@ class FileWriter:
         logger.debug(f'About to delete data source {data_source.id}')
         delete_file(path)
         tqdm.write(f'Deleted dataset {data_source.dataset_slug}')
+
+    def write_scanned_model(self, model: PanoModel):
+        """Write scanned model to local filesystem."""
+        path = Paths.scanned_dir() / f'{model.model_name}{FileExtension.MODEL_YAML.value}'
+        logger.debug(f'About to write model {model.id}')
+        write_yaml(path, add_file_api_version(model.to_dict(), self.API_VERSION))
 
     def write_model(self, model: PanoModel, *, package: Optional[str] = None):
         """Write model to local filesystem."""
