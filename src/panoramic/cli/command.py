@@ -65,7 +65,7 @@ def list_connections():
         echo_error('No data connections found')
     else:
         for source in client.get_sources(get_company_slug()):
-            click.echo(source['source_name'])
+            echo_info(source['source_name'])
 
 
 def list_companies():
@@ -75,7 +75,7 @@ def list_companies():
         echo_error('No companies found')
     else:
         for company in companies:
-            click.echo(company)
+            echo_info(company)
 
 
 def scan(source_id: str, table_filter: Optional[str], parallel: int = 1):
