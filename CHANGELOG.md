@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 0.7.4 Release
+
+Remove special slash handling
+
 ## Version 0.7.3 Release
 
 Change base url for companies endpoint to have slash at the end
