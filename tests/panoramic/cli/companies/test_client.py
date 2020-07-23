@@ -10,7 +10,7 @@ def mock_token_url(monkeypatch):
 
 
 @responses.activate
-def test_create_get_columns_job():
+def test_get_companies():
     responses.add(responses.POST, 'https://token/', json={'access_token': '123123'})
     responses.add(
         responses.GET,
