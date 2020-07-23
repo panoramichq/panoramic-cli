@@ -10,7 +10,7 @@ from panoramic.cli.local.file_utils import Paths
 
 @pytest.mark.vcr
 def test_init_e2e(monkeypatch, tmpdir):
-    monkeypatch.chdir(tmpdir)
+    monkeypatch.chdir(str(tmpdir))
     runner = CliRunner()
 
     result = runner.invoke(cli, ['init'], input='test-company')
@@ -23,7 +23,7 @@ def test_init_e2e(monkeypatch, tmpdir):
 @pytest.mark.vcr
 @patch('panoramic.cli.command.initialize')
 def test_init_error_e2e(mock_init, monkeypatch, tmpdir):
-    monkeypatch.chdir(tmpdir)
+    monkeypatch.chdir(str(tmpdir))
     runner = CliRunner()
 
     mock_init.side_effect = Exception('Test Exception')
