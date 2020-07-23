@@ -5,16 +5,34 @@ import pytest
 from click.testing import CliRunner
 
 from panoramic.cli import cli
+from panoramic.cli.local.file_utils import Paths
 
 
 @pytest.mark.vcr
 def test_scan_e2e(monkeypatch):
-    monkeypatch.chdir(Path('e2e') / 'scenarios' / 'pano-scan')
+    test_dir = Path('e2e') / 'scenarios' / 'pano-scan'
+    monkeypatch.chdir(test_dir)
     runner = CliRunner()
+
+    # Clean scanned directory
+    for f in Paths.scanned_dir().glob('*'):
+        f.unlink()
 
     result = runner.invoke(cli, ['scan', 'SF', '--filter', 'METRICS3_STG.ADWORDS_VIEWS.ENTITY%'])
 
     assert result.exit_code == 0
+    assert {f.name for f in Paths.scanned_dir().iterdir()} == {
+        'sf.metrics3_stg.adwords_views.entity_accounts.model.yaml',
+        'sf.metrics3_stg.adwords_views.entity_adgroups.model.yaml',
+        'sf.metrics3_stg.adwords_views.entity_adgroups_from_service.model.yaml',
+        'sf.metrics3_stg.adwords_views.entity_ads.model.yaml',
+        'sf.metrics3_stg.adwords_views.entity_ads_from_service.model.yaml',
+        'sf.metrics3_stg.adwords_views.entity_advideos.model.yaml',
+        'sf.metrics3_stg.adwords_views.entity_campaigns.model.yaml',
+        'sf.metrics3_stg.adwords_views.entity_campaigns_criterion.model.yaml',
+        'sf.metrics3_stg.adwords_views.entity_campaigns_from_service.model.yaml',
+        'sf.metrics3_stg.adwords_views.entity_user_lists.model.yaml',
+    }
 
 
 @pytest.mark.vcr
