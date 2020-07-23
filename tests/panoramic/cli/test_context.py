@@ -16,6 +16,7 @@ from panoramic.cli.local.file_utils import PresetFileName
 
 def test_context_aware_command_no_context(monkeypatch, tmpdir):
     """Check command fails when no context."""
+    monkeypatch.chdir(tmpdir)
     with pytest.raises(CriticalError):
         ContextAwareCommand(name='test-command').invoke(Mock())
 

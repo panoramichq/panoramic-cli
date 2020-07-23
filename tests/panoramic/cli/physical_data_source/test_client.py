@@ -14,7 +14,7 @@ def test_get_sources():
     responses.add(responses.POST, 'https://token/', json={'access_token': '123123'})
     responses.add(
         responses.GET,
-        'https://diesel/source?company_slug=company_name',
+        'https://diesel/source/?company_slug=company_name',
         json={
             'data': [
                 # ... sth should be here
