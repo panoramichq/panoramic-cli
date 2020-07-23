@@ -3,7 +3,6 @@ from unittest.mock import ANY, call, patch
 import pytest
 
 from panoramic.cli.command import list_connections, scan
-from panoramic.cli.local.file_utils import SystemDirectory
 
 
 @pytest.fixture(autouse=True)
@@ -40,7 +39,7 @@ def test_scan(mock_writer, mock_scanner, mock_refresher):
     scan('test-source', 'test-filter')
 
     assert mock_refresher.refresh_table.mock_calls == [call('schema1.table1')]
-    assert mock_writer.write_model.mock_calls == [call(ANY, package=SystemDirectory.SCANNED.value)]
+    assert mock_writer.write_scanned_model.mock_calls == [call(ANY)]
 
 
 def test_scan_single_table_error(mock_writer, mock_scanner, mock_refresher):
@@ -53,7 +52,7 @@ def test_scan_single_table_error(mock_writer, mock_scanner, mock_refresher):
 
     scan('test-source', 'test-filter')
 
-    assert mock_writer.write_model.mock_calls == [call(ANY, package=SystemDirectory.SCANNED.value)]
+    assert mock_writer.write_scanned_model.mock_calls == [call(ANY)]
 
 
 @pytest.fixture()
