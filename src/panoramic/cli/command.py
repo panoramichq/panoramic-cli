@@ -10,7 +10,7 @@ from panoramic.cli.context import get_company_slug
 from panoramic.cli.controller import reconcile
 from panoramic.cli.local import get_state as get_local_state
 from panoramic.cli.local.executor import LocalExecutor
-from panoramic.cli.local.file_utils import SystemDirectory
+from panoramic.cli.local.file_utils import Paths, SystemDirectory, write_yaml
 from panoramic.cli.local.writer import FileWriter
 from panoramic.cli.logging import echo_error, echo_info
 from panoramic.cli.parser import load_scanned_tables
@@ -21,6 +21,40 @@ from panoramic.cli.remote.executor import RemoteExecutor
 from panoramic.cli.scan import Scanner
 
 logger = logging.getLogger(__name__)
+
+
+def configure():
+    """Global configuration for CLI."""
+    client_id = click.prompt('Enter your client id', type=str)
+    client_secret = click.prompt('Enter your client secret', hide_input=True, type=str)
+
+    config_file = Paths.config_file()
+    if not config_file.parent.exists():
+        config_file.parent.mkdir()
+
+    write_yaml(config_file, {'client_id': client_id, 'client_secret': client_secret})
+
+
+def initialize():
+    """Initialize context."""
+    client = CompaniesClient()
+
+    try:
+        companies = client.get_companies()
+    except Exception:
+        logger.debug('Failed to fetch available companies', exc_info=True)
+        companies = []
+
+    base_text = 'Enter your company slug'
+    if len(companies) == 0:
+        prompt_text = base_text
+    elif len(companies) > 3:
+        prompt_text = f'{base_text} (Available - {{{",".join(companies)}}},...)'
+    else:
+        prompt_text = f'{base_text} (Available - {{{",".join(companies)}}})'
+
+    company_slug = click.prompt(prompt_text, type=str, default=next(iter(companies), None))
+    write_yaml(Paths.context_file(), {'company_slug': company_slug, 'api_version': 'v1'})
 
 
 def list_connections():
