@@ -8,8 +8,6 @@ from panoramic.cli.util import slug_string
 
 logger = logging.getLogger(__name__)
 
-DREMIO_DELIMITER = '.'
-
 
 def load_scanned_tables(raw_columns: Iterable[Dict]) -> List[PanoModel]:
     """

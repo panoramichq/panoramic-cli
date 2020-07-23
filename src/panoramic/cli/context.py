@@ -2,7 +2,7 @@ from pathlib import Path
 
 from click.core import Command, Context
 
-from panoramic.cli.errors import CriticalError, MissingContextFileException
+from panoramic.cli.errors import MissingContextFileException
 from panoramic.cli.local.file_utils import PresetFileName
 from panoramic.cli.util import get_yaml_value
 
@@ -13,7 +13,9 @@ class ContextAwareCommand(Command):
 
     def invoke(self, ctx: Context):
         if not (Path.cwd() / PresetFileName.CONTEXT.value).exists():
-            raise CriticalError(f'Context file ({PresetFileName.CONTEXT.value}) not found in working directory.')
+            raise MissingContextFileException(
+                f'Context file ({PresetFileName.CONTEXT.value}) not found in working directory.'
+            )
         return super().invoke(ctx)
 
 

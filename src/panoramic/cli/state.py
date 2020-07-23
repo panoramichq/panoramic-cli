@@ -27,6 +27,18 @@ class Action(Generic[T]):
     def is_deletion(self) -> bool:
         return self.desired is None
 
+    @property
+    def description(self) -> str:
+        if self.is_deletion:
+            assert self.current is not None
+            return f'DELETE: {self.current.id}'
+        elif self.is_creation:
+            assert self.desired is not None
+            return f'CREATE: {self.desired.id}'
+        else:
+            assert self.desired is not None
+            return f'UPDATE: {self.desired.id}'
+
 
 class ActionList(Generic[T]):
 

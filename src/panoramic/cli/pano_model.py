@@ -8,6 +8,10 @@ class Actionable(ABC):
 
     package: Optional[str]
 
+    @property
+    def id(_) -> Any:
+        raise NotImplementedError('id not implemented for base class')
+
 
 class PanoModelField:
     """Field stored on a model."""

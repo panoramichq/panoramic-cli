@@ -28,7 +28,7 @@ def list_connections():
 
     sources = client.get_sources(get_company_slug())
     if len(sources) == 0:
-        click.echo('No active connections set up. Use the Panoramic UI to create and configure data connections.')
+        echo_error('No data connections found')
     else:
         for source in client.get_sources(get_company_slug()):
             click.echo(source['source_name'])
@@ -36,8 +36,12 @@ def list_connections():
 
 def list_companies():
     client = CompaniesClient()
-    for company in client.get_companies():
-        click.echo(company)
+    companies = client.get_companies()
+    if len(companies) == 0:
+        echo_error('No companies found')
+    else:
+        for company in companies:
+            click.echo(company)
 
 
 def scan(source_id: str, table_filter: Optional[str], parallel: int = 1):
@@ -60,7 +64,7 @@ def scan(source_id: str, table_filter: Optional[str], parallel: int = 1):
             raw_columns = scanner.scan_columns(table_filter=table_name)
             for model in load_scanned_tables(raw_columns):
                 writer.write_model(model, package=SystemDirectory.SCANNED.value)
-                echo_info(f'Scanned model {model.model_name}')
+                echo_info(f'Discovered model {model.model_name}')
         except Exception:
             error_msg = f'Metadata could not be scanned for table {table_name}'
             echo_error(error_msg)
@@ -83,7 +87,12 @@ def pull():
     executor = LocalExecutor()
     with tqdm(actions.actions) as bar:
         for action in bar:
-            executor.execute(action)
+            try:
+                executor.execute(action)
+            except Exception:
+                error_msg = f'Failed to execute action {action.description}'
+                echo_error(error_msg)
+                logger.debug(error_msg)
 
 
 def push():
@@ -96,4 +105,9 @@ def push():
     executor = RemoteExecutor(company_slug)
     with tqdm(actions.actions) as bar:
         for action in bar:
-            executor.execute(action)
+            try:
+                executor.execute(action)
+            except Exception:
+                error_msg = f'Failed to execute action {action.description}'
+                echo_error(error_msg)
+                logger.debug(error_msg)

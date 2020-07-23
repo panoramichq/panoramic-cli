@@ -40,8 +40,7 @@ def scan(source_id: str, filter: Optional[str], parallel: int):
     try:
         scan_command(source_id, filter, parallel)
     except Exception:
-        error_msg = 'Internal error occurred'
-        echo_error(error_msg, exc_info=True)
+        echo_error('Internal error occurred', exc_info=True)
         sys.exit(1)
 
 
@@ -49,22 +48,22 @@ def scan(source_id: str, filter: Optional[str], parallel: int):
 def pull():
     from panoramic.cli.command import pull
 
-    logger = logging.getLogger(__name__)
     try:
         pull()
-    except Exception as e:
-        log_error(logger, 'Internal error ocurred', e)
+    except Exception:
+        echo_error('Internal error occurred', exc_info=True)
+        sys.exit(1)
 
 
 @cli.command(help='Push models to remote', cls=ContextAwareCommand)
 def push():
     from panoramic.cli.command import push
 
-    logger = logging.getLogger(__name__)
     try:
         push()
-    except Exception as e:
-        log_error(logger, 'Internal error ocurred', e)
+    except Exception:
+        echo_error('Internal error occurred', exc_info=True)
+        sys.exit(1)
 
 
 @cli.command(help='Configure pano CLI options')
@@ -72,6 +71,7 @@ def configure():
     client_id = click.prompt('Enter your client id', type=str)
     client_secret = click.prompt('Enter your client secret', hide_input=True, type=str)
 
+    # TODO: Use PresetFileName here
     config_dir = Path.home() / '.pano'
     if not config_dir.exists():
         config_dir.mkdir()
@@ -82,6 +82,7 @@ def configure():
 
 @cli.command(help='Initialize metadata repository')
 def init():
+    # TODO: move to command
     logger = logging.getLogger(__name__)
 
     client = CompaniesClient()
@@ -111,21 +112,17 @@ def init():
 def list_connections():
     from panoramic.cli.command import list_connections
 
-    logger = logging.getLogger(__name__)
-
     try:
         list_connections()
-    except Exception as e:
-        log_error(logger, 'Internal error occured.', e)
+    except Exception:
+        echo_error('Internal error occurred', exc_info=True)
+        sys.exit(1)
 
 
 @cli.command(help='List available data connections')
 def list_companies():
-    from panoramic.cli.command import list_companies
-
-    logger = logging.getLogger(__name__)
-
     try:
         list_companies()
-    except Exception as e:
-        log_error(logger, 'Internal error occured.', e)
+    except Exception:
+        echo_error('Internal error occurred', exc_info=True)
+        sys.exit(1)

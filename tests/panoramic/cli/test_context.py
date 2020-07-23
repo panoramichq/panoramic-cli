@@ -6,7 +6,6 @@ from click.core import Context
 
 from panoramic.cli.context import ContextAwareCommand, get_api_version, get_company_slug
 from panoramic.cli.errors import (
-    CriticalError,
     InvalidYamlFile,
     MissingContextFileException,
     MissingValueException,
@@ -17,7 +16,7 @@ from panoramic.cli.local.file_utils import PresetFileName
 def test_context_aware_command_no_context(monkeypatch, tmpdir):
     """Check command fails when no context."""
     monkeypatch.chdir(tmpdir)
-    with pytest.raises(CriticalError):
+    with pytest.raises(MissingContextFileException):
         ContextAwareCommand(name='test-command').invoke(Mock())
 
 
