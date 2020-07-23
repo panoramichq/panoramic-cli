@@ -2,8 +2,6 @@ import logging
 from pathlib import Path
 from typing import Optional
 
-from tqdm import tqdm
-
 from panoramic.cli.local.file_utils import (
     FileExtension,
     Paths,
@@ -54,7 +52,6 @@ class FileWriter:
         path = self.cwd / package / PresetFileName.DATASET_YAML.value
         logger.debug(f'About to write data source {data_source.id}')
         write_yaml(path, add_file_api_version(data_source.to_dict(), self.API_VERSION))
-        tqdm.write(f'Updated dataset {data_source.dataset_slug}')
 
     def delete_data_source(self, data_source: PanoVirtualDataSource):
         """Delete data source from local filesystem."""
@@ -62,7 +59,6 @@ class FileWriter:
         path = self.cwd / data_source.package / PresetFileName.DATASET_YAML.value
         logger.debug(f'About to delete data source {data_source.id}')
         delete_file(path)
-        tqdm.write(f'Deleted dataset {data_source.dataset_slug}')
 
     def write_scanned_model(self, model: PanoModel):
         """Write scanned model to local filesystem."""
@@ -85,4 +81,3 @@ class FileWriter:
         path = self.cwd / model.package / f'{model.model_name}{FileExtension.MODEL_YAML.value}'
         logger.debug(f'About to delete model {model.id}')
         delete_file(path)
-        tqdm.write(f'Deleted model {model.model_name}')
