@@ -1,0 +1,200 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - pano-cli/0.7.4
+    method: GET
+    uri: https://a1.panocdn.com/updates/pano-cli/versions.json
+  response:
+    body:
+      string: '{"latest_version": "0.7.4", "minimum_supported_version": "0.7.4"}'
+    headers:
+      Accept-Ranges:
+      - bytes
+      Age:
+      - '51'
+      Cache-Control:
+      - max-age=60
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '65'
+      Content-Type:
+      - application/json
+      Date:
+      - Thu, 23 Jul 2020 19:00:46 GMT
+      ETag:
+      - '"6867b00a67be82dc6de1129f91a96f9f"'
+      Last-Modified:
+      - Thu, 23 Jul 2020 14:02:32 GMT
+      Server:
+      - AmazonS3
+      Via:
+      - 1.1 cb41e4c888d6077f0196a8e9993a2655.cloudfront.net (CloudFront)
+      X-Amz-Cf-Id:
+      - O8VGxqMSnJ-V2GAB-gAQB02xjYzLpI37-sWAJxMNQj1K8qhmtQasAg==
+      X-Amz-Cf-Pop:
+      - IAD89-C1
+      X-Cache:
+      - Hit from cloudfront
+      x-amz-replication-status:
+      - COMPLETED
+      x-amz-version-id:
+      - zOCc8ujgfqK83SnQvzD1gK57thi41wdB
+    status:
+      code: 200
+      message: OK
+- request:
+    body: grant_type=client_credentials&scope=platform
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '44'
+      Content-Type:
+      - application/x-www-form-urlencoded;charset=UTF-8
+      User-Agent:
+      - python-requests/2.24.0
+    method: POST
+    uri: https://id.panoramichq.com/oauth2/aus5iy3utLXi3Ez4A4x6/v1/token
+  response:
+    body:
+      string: '{"token_type": "Bearer", "expires_in": 3600, "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+        "scope": "platform"}'
+    headers:
+      Connection:
+      - Keep-Alive
+      Content-Type:
+      - application/json;charset=UTF-8
+      Date:
+      - Thu, 23 Jul 2020 19:01:37 GMT
+      Keep-Alive:
+      - timeout=5, max=100
+      Server:
+      - nginx
+      Strict-Transport-Security:
+      - max-age=315360000
+      Transfer-Encoding:
+      - chunked
+      X-Robots-Tag:
+      - none
+      cache-control:
+      - no-cache, no-store
+      expires:
+      - '0'
+      p3p:
+      - CP="HONK"
+      pragma:
+      - no-cache
+      set-cookie:
+      - sid=""; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Path=/
+      - JSESSIONID=7BF47920C44B5ECCEED1C7580FDBAD45; Path=/; Secure; HttpOnly
+      x-content-type-options:
+      - nosniff
+      x-okta-request-id:
+      - XxnekGCLJbrvwkxKOUInbQAAAbw
+      x-rate-limit-limit:
+      - '600'
+      x-rate-limit-remaining:
+      - '598'
+      x-rate-limit-reset:
+      - '1595530942'
+      x-xss-protection:
+      - 1; mode=block; report=https://okta.report-uri.com/r/d/xss/enforce
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.24.0
+    method: GET
+    uri: https://diesel.panoramicstg.com/api/v1/federated/physical-data-source/?company_slug=operam
+  response:
+    body:
+      string: '{"data":[{"company_id":"1","created_at":"2020-07-07T13:37:46.302000+00:00","created_by":null,"display_name":"Snowflake","source_id":"a631f5ee-301d-47e5-b1a5-33aa3832a475","source_name":"SF","updated_at":"2020-07-07T13:37:47.696000+00:00"},{"company_id":"1","created_at":"2020-07-16T15:13:33.833844+00:00","created_by":{},"display_name":"All
+        hands demo","source_id":"e21fd592-776f-4897-8f37-8e7b42b1b067","source_name":"all_hands_demo_1_1","updated_at":null}]}
+
+        '
+    headers:
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '460'
+      Content-Type:
+      - application/json
+      Date:
+      - Thu, 23 Jul 2020 19:01:37 GMT
+      Via:
+      - kong/2.0.3
+      X-Amzn-Trace-Id:
+      - None
+      X-Kong-Proxy-Latency:
+      - '0'
+      X-Kong-Upstream-Latency:
+      - '6'
+      x-diesel-request-id:
+      - bcb1bcef-ebeb-4f66-b1fa-af12bd9bfdf5
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.24.0
+    method: GET
+    uri: https://diesel.panoramicstg.com/api/v1/federated/physical-data-source/?company_slug=operam
+  response:
+    body:
+      string: '{"data":[{"company_id":"1","created_at":"2020-07-07T13:37:46.302000+00:00","created_by":null,"display_name":"Snowflake","source_id":"a631f5ee-301d-47e5-b1a5-33aa3832a475","source_name":"SF","updated_at":"2020-07-07T13:37:47.696000+00:00"},{"company_id":"1","created_at":"2020-07-16T15:13:33.833844+00:00","created_by":{},"display_name":"All
+        hands demo","source_id":"e21fd592-776f-4897-8f37-8e7b42b1b067","source_name":"all_hands_demo_1_1","updated_at":null}]}
+
+        '
+    headers:
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '460'
+      Content-Type:
+      - application/json
+      Date:
+      - Thu, 23 Jul 2020 19:01:37 GMT
+      Via:
+      - kong/2.0.3
+      X-Amzn-Trace-Id:
+      - None
+      X-Kong-Proxy-Latency:
+      - '0'
+      X-Kong-Upstream-Latency:
+      - '7'
+      x-diesel-request-id:
+      - 6efdfa44-e4ce-4501-a760-dea71323880d
+    status:
+      code: 200
+      message: OK
+version: 1

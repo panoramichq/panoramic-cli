@@ -1,0 +1,52 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - pano-cli/0.7.4
+    method: GET
+    uri: https://a1.panocdn.com/updates/pano-cli/versions.json
+  response:
+    body:
+      string: '{"latest_version": "0.7.4", "minimum_supported_version": "0.7.4"}'
+    headers:
+      Accept-Ranges:
+      - bytes
+      Cache-Control:
+      - max-age=60
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '65'
+      Content-Type:
+      - application/json
+      Date:
+      - Thu, 23 Jul 2020 19:11:02 GMT
+      ETag:
+      - '"6867b00a67be82dc6de1129f91a96f9f"'
+      Last-Modified:
+      - Thu, 23 Jul 2020 14:02:32 GMT
+      Server:
+      - AmazonS3
+      Via:
+      - 1.1 5195de19cbc5ce842ac6538e9a6850cb.cloudfront.net (CloudFront)
+      X-Amz-Cf-Id:
+      - j132PKTNm9zTE1KXSpV8RM8g5-PZdEzVIIXV_w6uDGH8MN1p3ETCsg==
+      X-Amz-Cf-Pop:
+      - IAD89-C1
+      X-Cache:
+      - RefreshHit from cloudfront
+      x-amz-replication-status:
+      - COMPLETED
+      x-amz-version-id:
+      - zOCc8ujgfqK83SnQvzD1gK57thi41wdB
+    status:
+      code: 200
+      message: OK
+version: 1
