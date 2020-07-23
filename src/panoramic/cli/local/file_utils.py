@@ -23,6 +23,7 @@ class PresetFileName(Enum):
     """Enumeration with all available preset file names."""
 
     DATASET_YAML = 'dataset.yaml'
+    CONTEXT = 'pano.yaml'
 
 
 class SystemDirectory(Enum):
