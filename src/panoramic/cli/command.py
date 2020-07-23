@@ -5,6 +5,7 @@ from typing import Optional
 import click
 from tqdm import tqdm
 
+from panoramic.cli.companies.client import CompaniesClient
 from panoramic.cli.context import get_company_slug
 from panoramic.cli.controller import reconcile
 from panoramic.cli.local import get_state as get_local_state
@@ -31,6 +32,12 @@ def list_connections():
     else:
         for source in client.get_sources(get_company_slug()):
             click.echo(source['source_name'])
+
+
+def list_companies():
+    client = CompaniesClient()
+    for company in client.get_companies():
+        click.echo(company)
 
 
 def scan(source_id: str, filter: Optional[str], parallel: int = 1):

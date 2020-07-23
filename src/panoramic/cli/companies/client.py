@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import Optional, Set
 
 from panoramic.auth import OAuth2Client
 from panoramic.cli.config.auth import get_client_id, get_client_secret
@@ -21,7 +21,7 @@ class CompaniesClient(OAuth2Client):
         super().__init__(client_id, client_secret)
         self.base_url = base_url
 
-    def get_companies(self) -> List[str]:
+    def get_companies(self) -> Set[str]:
         response = self.session.get(self.base_url)
         response.raise_for_status()
-        return response.json()['data']
+        return set(response.json()['data'])
