@@ -31,12 +31,14 @@ class Refresher:
             logger.debug(f'Refresh metadata job with id {job_id} started for table {table_name}')
         except RequestException as e:
             if e.response.status == requests.codes.not_found:
-                raise SourceNotFoundException(f'Source {self.source_id} not found')
-            raise RefreshException(f'Error ocurred scanning columns for source {self.source_id}')
+                raise SourceNotFoundException(self.source_id)
+            raise RefreshException(self.source_id, table_name)
 
         try:
             state = self.client.wait_for_terminal_state(job_id, timeout=timeout)
             if state != JobState.COMPLETED:
-                raise RefreshException(f'Scan job {job_id} failed')
+                raise RefreshException(self.source_id, table_name)
+
+            logger.debug(f'Refresh metadata job with id {job_id} completed for table {table_name}')
         except RequestException:
-            raise RefreshException(f'Error ocurred scanning columns for source {self.source_id}')
+            raise RefreshException(self.source_id, table_name)

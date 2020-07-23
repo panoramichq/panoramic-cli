@@ -4,4 +4,4 @@ from panoramic.cli.logging import configure_logging
 configure_logging()
 
 
-__all__ = [cli]
+__all__ = ['cli']

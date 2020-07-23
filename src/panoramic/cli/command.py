@@ -1,6 +1,6 @@
 import logging
 from concurrent.futures import ThreadPoolExecutor
-from typing import Optional
+from typing import Any, Dict, Optional
 
 import click
 from tqdm import tqdm
@@ -12,7 +12,7 @@ from panoramic.cli.local import get_state as get_local_state
 from panoramic.cli.local.executor import LocalExecutor
 from panoramic.cli.local.file_utils import SystemDirectory
 from panoramic.cli.local.writer import FileWriter
-from panoramic.cli.logging import log_error
+from panoramic.cli.logging import echo_error, echo_info
 from panoramic.cli.parser import load_scanned_tables
 from panoramic.cli.physical_data_source.client import PhysicalDataSourceClient
 from panoramic.cli.refresh import Refresher
@@ -40,19 +40,17 @@ def list_companies():
         click.echo(company)
 
 
-def scan(source_id: str, filter: Optional[str], parallel: int = 1):
+def scan(source_id: str, table_filter: Optional[str], parallel: int = 1):
     """Scan all metadata for given source and filter."""
     company_slug = get_company_slug()
     scanner = Scanner(company_slug, source_id)
     refresher = Refresher(company_slug, source_id)
     writer = FileWriter()
-    tables = scanner.scan_tables(table_filter=filter)
-    executor = ThreadPoolExecutor(max_workers=parallel)
 
-    tables = list(tables)
+    tables = list(scanner.scan_tables(table_filter=table_filter))
     progress_bar = tqdm(total=len(tables))
 
-    def _process_table(table):
+    def _process_table(table: Dict[str, Any]):
         # drop source name from schema
         sourceless_schema = table['table_schema'].split('.', 1)[1]
         table_name = f'{sourceless_schema}.{table["table_name"]}'
@@ -60,13 +58,17 @@ def scan(source_id: str, filter: Optional[str], parallel: int = 1):
         try:
             refresher.refresh_table(table_name)
             raw_columns = scanner.scan_columns(table_filter=table_name)
-            for table in load_scanned_tables(raw_columns):
-                writer.write_model(table, package=SystemDirectory.SCANNED.value)
-        except Exception as e:
-            log_error(logger, f'Failed to scan table {table_name}', e)
+            for model in load_scanned_tables(raw_columns):
+                writer.write_model(model, package=SystemDirectory.SCANNED.value)
+                echo_info(f'Scanned model {model.model_name}')
+        except Exception:
+            error_msg = f'Metadata could not be scanned for table {table_name}'
+            echo_error(error_msg)
+            logger.debug(error_msg, exc_info=True)
         finally:
             progress_bar.update()
 
+    executor = ThreadPoolExecutor(max_workers=parallel)
     for _ in executor.map(_process_table, tables):
         pass
 

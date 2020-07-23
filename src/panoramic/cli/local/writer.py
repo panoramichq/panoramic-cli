@@ -71,7 +71,6 @@ class FileWriter:
         path = self.cwd / package_name / f'{model.model_name}{FileExtension.MODEL_YAML.value}'
         logger.debug(f'About to write model {model.id}')
         write_yaml(path, add_file_api_version(model.to_dict(), self.API_VERSION))
-        tqdm.write(f'Updated model {model.model_name}')
 
     def delete_model(self, model: PanoModel):
         """Delete model from local filesystem."""

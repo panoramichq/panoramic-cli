@@ -1,4 +1,5 @@
 import logging
+import sys
 from pathlib import Path
 from typing import Optional
 
@@ -9,9 +10,8 @@ from dotenv import load_dotenv
 from panoramic.cli.__version__ import __version__
 from panoramic.cli.companies.client import CompaniesClient
 from panoramic.cli.context import ContextAwareCommand
-from panoramic.cli.errors import SourceNotFoundException
 from panoramic.cli.local.file_utils import PresetFileName
-from panoramic.cli.logging import log_error
+from panoramic.cli.logging import echo_error, log_error
 
 
 @click.group(context_settings={'help_option_names': ["-h", "--help"]})
@@ -22,7 +22,7 @@ def cli(debug):
         logger = logging.getLogger()
         logger.setLevel("DEBUG")
 
-    load_dotenv(dotenv_path=Path.cwd() / '.env')
+    load_dotenv(dotenv_path=Path.cwd() / PresetFileName.DOTENV.value)
 
     from panoramic.cli.supported_version import is_version_supported
 
@@ -35,15 +35,14 @@ def cli(debug):
 @click.option('--filter', '-f', type=str, help='Filter down what schemas to scan')
 @click.option('--parallel', '-p', type=int, default=8, help='Parallelize metadata scan')
 def scan(source_id: str, filter: Optional[str], parallel: int):
-    from panoramic.cli.command import scan
+    from panoramic.cli.command import scan as scan_command
 
-    logger = logging.getLogger(__name__)
     try:
-        scan(source_id, filter, parallel)
-    except SourceNotFoundException as source_exception:
-        log_error(logger, 'Source not found', source_exception)
-    except Exception as e:
-        log_error(logger, 'Internal error occured.', e)
+        scan_command(source_id, filter, parallel)
+    except Exception:
+        error_msg = 'Internal error occurred'
+        echo_error(error_msg, exc_info=True)
+        sys.exit(1)
 
 
 @cli.command(help='Pull models from remote', cls=ContextAwareCommand)

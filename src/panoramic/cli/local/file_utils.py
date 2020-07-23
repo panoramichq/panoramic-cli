@@ -24,6 +24,7 @@ class PresetFileName(Enum):
 
     DATASET_YAML = 'dataset.yaml'
     CONTEXT = 'pano.yaml'
+    DOTENV = '.env'
 
 
 class SystemDirectory(Enum):
