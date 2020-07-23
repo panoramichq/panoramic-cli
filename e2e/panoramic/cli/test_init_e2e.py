@@ -15,6 +15,7 @@ def test_init_e2e(monkeypatch, tmpdir):
 
     result = runner.invoke(cli, ['init'], input='test-company')
 
+    print(result.stdout)
     assert result.exit_code == 0
     with Paths.context_file().open() as f:
         assert yaml.safe_load(f.read()) == {'company_slug': 'test-company', 'api_version': 'v1'}
