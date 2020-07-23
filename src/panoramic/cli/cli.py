@@ -118,3 +118,15 @@ def list_connections():
         list_connections()
     except Exception as e:
         log_error(logger, 'Internal error occured.', e)
+
+
+@cli.command(help='List available data connections')
+def list_companies():
+    from panoramic.cli.command import list_companies
+
+    logger = logging.getLogger(__name__)
+
+    try:
+        list_companies()
+    except Exception as e:
+        log_error(logger, 'Internal error occured.', e)
