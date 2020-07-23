@@ -11,6 +11,8 @@ _TEST_JWT = (
 
 @pytest.fixture(autouse=True)
 def setup(monkeypatch):
+    monkeypatch.setenv('PANO_CLIENT_ID', 'test-client-id')
+    monkeypatch.setenv('PANO_CLIENT_SECRET', 'test-client-secret')
     monkeypatch.setenv('PANORAMIC_AUTH_TOKEN_URL', 'https://id.panoramichq.com/oauth2/aus5iy3utLXi3Ez4A4x6/v1/token')
     monkeypatch.setenv('PANO_METADATA_BASE_URL', 'https://diesel.panoramicstg.com/api/v1/federated/metadata/')
     monkeypatch.setenv('PANO_MODEL_BASE_URL', 'https://diesel.panoramicstg.com/api/v1/federated/model/')
