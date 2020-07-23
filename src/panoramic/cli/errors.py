@@ -1,5 +1,9 @@
+import functools
+import sys
 from pathlib import Path
-from typing import Optional
+from typing import Callable, Optional
+
+from panoramic.cli.logging import echo_error
 
 
 class TimeoutException(Exception):
@@ -72,3 +76,17 @@ class InvalidYamlFile(Exception):
 
     def __init__(self, path: Path):
         super().__init__(f'Error parsing YAML from file {path.absolute}')
+
+
+def handle_exception(f: Callable):
+    """Print exception and exit with error code."""
+
+    @functools.wraps(f)
+    def wrapped(*args, **kwargs):
+        try:
+            return f(*args, **kwargs)
+        except Exception:
+            echo_error('Internal error occurred', exc_info=True)
+            sys.exit(1)
+
+    return wrapped

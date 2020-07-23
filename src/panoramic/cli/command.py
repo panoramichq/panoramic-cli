@@ -126,7 +126,7 @@ def pull():
             except Exception:
                 error_msg = f'Failed to execute action {action.description}'
                 echo_error(error_msg)
-                logger.debug(error_msg)
+                logger.debug(error_msg, exc_info=True)
 
 
 def push():
@@ -144,4 +144,4 @@ def push():
             except Exception:
                 error_msg = f'Failed to execute action {action.description}'
                 echo_error(error_msg)
-                logger.debug(error_msg)
+                logger.debug(error_msg, exc_info=True)
