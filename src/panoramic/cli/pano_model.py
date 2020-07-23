@@ -88,6 +88,8 @@ class PanoModelJoin:
 class PanoModel(Actionable):
     """Model representing some table."""
 
+    API_VERSION = 'v1'
+
     model_name: str
     data_source: str
     fields: List[PanoModelField]
@@ -120,6 +122,7 @@ class PanoModel(Actionable):
 
     def to_dict(self) -> Dict[str, Any]:
         return {
+            'api_version': self.API_VERSION,
             'model_name': self.model_name,
             'data_source': self.data_source,
             'fields': [x.to_dict() for x in self.fields],
@@ -153,6 +156,8 @@ class PanoModel(Actionable):
 class PanoVirtualDataSource(Actionable):
     """Group collection of models into one data source."""
 
+    API_VERSION = 'v1'
+
     dataset_slug: str
     display_name: str
 
@@ -167,6 +172,7 @@ class PanoVirtualDataSource(Actionable):
 
     def to_dict(self) -> Dict[str, Any]:
         return {
+            'api_version': self.API_VERSION,
             'dataset_slug': self.dataset_slug,
             'display_name': self.display_name,
             # The package is not exported to yaml

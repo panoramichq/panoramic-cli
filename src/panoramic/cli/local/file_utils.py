@@ -88,16 +88,3 @@ def delete_file(abs_filepath: Path):
     # TODO: Consider warning - wanted to delete model but not found
     if abs_filepath.exists():
         abs_filepath.unlink()
-
-
-def add_file_api_version(data: Dict[str, Any], api_version: str) -> Dict[str, Any]:
-    """Add file api version."""
-    data[API_VERSION_ATTRIBUTE] = api_version
-    return data
-
-
-def remove_file_api_version(data: Dict[str, Any]) -> Dict[str, Any]:
-    """Remove file api version."""
-    if API_VERSION_ATTRIBUTE in data:
-        del data[API_VERSION_ATTRIBUTE]
-    return data

@@ -4,6 +4,7 @@ from panoramic.cli.parser import load_scanned_tables
 def test_load_scanned_tables():
     expected = [
         {
+            'api_version': 'v1',
             'model_name': 'source.schema1.table1',
             'data_source': 'source.schema1.table1',
             'fields': [

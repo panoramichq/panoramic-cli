@@ -7,7 +7,6 @@ from panoramic.cli.local.file_utils import (
     PresetFileName,
     SystemDirectory,
     read_yaml,
-    remove_file_api_version,
 )
 
 
@@ -25,7 +24,7 @@ class FilePackage:
     def read_data_source(self) -> Dict[str, Any]:
         """Parse data source file."""
         try:
-            return remove_file_api_version(read_yaml(self.data_source_file))
+            return read_yaml(self.data_source_file)
         except Exception:
             raise InvalidYamlFile(self.data_source_file)
 
@@ -33,7 +32,7 @@ class FilePackage:
         """Parse model files."""
         for f in self.model_files:
             try:
-                yield remove_file_api_version(read_yaml(f))
+                yield read_yaml(f)
             except Exception:
                 raise InvalidYamlFile(f)
 
