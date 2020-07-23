@@ -10,6 +10,24 @@ logger = logging.getLogger(__name__)
 API_VERSION_ATTRIBUTE = 'api_version'
 
 
+class Paths:
+    @staticmethod
+    def context_file() -> Path:
+        return Path.cwd() / PresetFileName.CONTEXT.value
+
+    @staticmethod
+    def dotenv_file() -> Path:
+        return Path.cwd() / PresetFileName.DOTENV.value
+
+    @staticmethod
+    def config_dir() -> Path:
+        return Path.home() / PresetFileName.CONFIG_DIR.value
+
+    @classmethod
+    def config_file(cls) -> Path:
+        return cls.config_dir() / PresetFileName.CONFIG.value
+
+
 class FileExtension(Enum):
     """
     Enumeration with all available file extensions
@@ -25,6 +43,8 @@ class PresetFileName(Enum):
     DATASET_YAML = 'dataset.yaml'
     CONTEXT = 'pano.yaml'
     DOTENV = '.env'
+    CONFIG_DIR = '.pano'
+    CONFIG = 'config'
 
 
 class SystemDirectory(Enum):

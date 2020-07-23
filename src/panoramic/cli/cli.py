@@ -1,6 +1,5 @@
 import logging
 import sys
-from pathlib import Path
 from typing import Optional
 
 import click
@@ -10,7 +9,7 @@ from dotenv import load_dotenv
 from panoramic.cli.__version__ import __version__
 from panoramic.cli.companies.client import CompaniesClient
 from panoramic.cli.context import ContextAwareCommand
-from panoramic.cli.local.file_utils import PresetFileName
+from panoramic.cli.local.file_utils import Paths
 from panoramic.cli.logging import echo_error, log_error
 
 
@@ -22,7 +21,7 @@ def cli(debug):
         logger = logging.getLogger()
         logger.setLevel("DEBUG")
 
-    load_dotenv(dotenv_path=Path.cwd() / PresetFileName.DOTENV.value)
+    load_dotenv(dotenv_path=Paths.dotenv_file())
 
     from panoramic.cli.supported_version import is_version_supported
 
@@ -71,12 +70,11 @@ def configure():
     client_id = click.prompt('Enter your client id', type=str)
     client_secret = click.prompt('Enter your client secret', hide_input=True, type=str)
 
-    # TODO: Use PresetFileName here
-    config_dir = Path.home() / '.pano'
-    if not config_dir.exists():
-        config_dir.mkdir()
+    config_file = Paths.config_file()
+    if not config_file.parent.exists():
+        config_file.parent.mkdir()
 
-    with open(config_dir / 'config', 'w+') as f:
+    with open(config_file, 'w+') as f:
         f.write(yaml.safe_dump({'client_id': client_id, 'client_secret': client_secret}))
 
 
@@ -103,7 +101,7 @@ def init():
 
     company_slug = click.prompt(prompt_text, type=str, default=next(iter(companies), None))
 
-    context_file = Path.cwd() / PresetFileName.CONTEXT.value
+    context_file = Paths.context_file()
     with open(context_file, 'w') as f:
         f.write(yaml.safe_dump({'company_slug': company_slug, 'api_version': 'v1'}))
 
