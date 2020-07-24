@@ -1,4 +1,4 @@
-from unittest.mock import ANY, call, patch
+from unittest.mock import call, patch
 
 import pytest
 
@@ -39,7 +39,7 @@ def test_scan(mock_writer, mock_scanner, mock_refresher):
     scan('test-source', 'test-filter')
 
     assert mock_refresher.refresh_table.mock_calls == [call('schema1.table1')]
-    assert mock_writer.write_scanned_model.mock_calls == [call(ANY)]
+    assert mock_writer.write_scanned_model.call_count == 1
 
 
 def test_scan_single_table_error(mock_writer, mock_scanner, mock_refresher):
@@ -52,7 +52,7 @@ def test_scan_single_table_error(mock_writer, mock_scanner, mock_refresher):
 
     scan('test-source', 'test-filter')
 
-    assert mock_writer.write_scanned_model.mock_calls == [call(ANY)]
+    assert mock_writer.write_scanned_model.call_count == 1
 
 
 @pytest.fixture()
