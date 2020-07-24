@@ -19,7 +19,7 @@ interactions:
       Accept-Ranges:
       - bytes
       Age:
-      - '34'
+      - '5'
       Cache-Control:
       - max-age=60
       Connection:
@@ -29,7 +29,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Thu, 23 Jul 2020 18:55:30 GMT
+      - Fri, 24 Jul 2020 08:58:06 GMT
       ETag:
       - '"6867b00a67be82dc6de1129f91a96f9f"'
       Last-Modified:
@@ -37,9 +37,9 @@ interactions:
       Server:
       - AmazonS3
       Via:
-      - 1.1 041a4887d523cabe8177e269cc358163.cloudfront.net (CloudFront)
+      - 1.1 7a99ed3f39c18af8fe138a695e5f657d.cloudfront.net (CloudFront)
       X-Amz-Cf-Id:
-      - wevdfSKh5KGLX__azzwk_n3IM2MgV2PSz1l-6GTc8e7V_Tlt90OE-Q==
+      - WdKgSMzVkFjh4WKFBGBhb6XoECD1sf43ikrjweld9iwg3OXANZV7Kg==
       X-Amz-Cf-Pop:
       - IAD89-C1
       X-Cache:
@@ -48,6 +48,110 @@ interactions:
       - COMPLETED
       x-amz-version-id:
       - zOCc8ujgfqK83SnQvzD1gK57thi41wdB
+    status:
+      code: 200
+      message: OK
+- request:
+    body: grant_type=client_credentials&scope=platform
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '44'
+      Content-Type:
+      - application/x-www-form-urlencoded;charset=UTF-8
+      User-Agent:
+      - python-requests/2.24.0
+    method: POST
+    uri: https://id.panoramichq.com/oauth2/aus5iy3utLXi3Ez4A4x6/v1/token
+  response:
+    body:
+      string: '{"token_type": "Bearer", "expires_in": 3600, "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+        "scope": "platform"}'
+    headers:
+      Connection:
+      - Keep-Alive
+      Content-Type:
+      - application/json;charset=UTF-8
+      Date:
+      - Fri, 24 Jul 2020 08:58:11 GMT
+      Keep-Alive:
+      - timeout=5, max=100
+      Server:
+      - nginx
+      Strict-Transport-Security:
+      - max-age=315360000
+      Transfer-Encoding:
+      - chunked
+      X-Robots-Tag:
+      - none
+      cache-control:
+      - no-cache, no-store
+      expires:
+      - '0'
+      p3p:
+      - CP="HONK"
+      pragma:
+      - no-cache
+      set-cookie:
+      - sid=""; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Path=/
+      - JSESSIONID=34FA7CD2520C86B52E7C010B993E503C; Path=/; Secure; HttpOnly
+      x-content-type-options:
+      - nosniff
+      x-okta-request-id:
+      - XxqiozdMq8Gtd5hX1OpnlwAABNY
+      x-rate-limit-limit:
+      - '600'
+      x-rate-limit-remaining:
+      - '598'
+      x-rate-limit-reset:
+      - '1595581147'
+      x-xss-protection:
+      - 1; mode=block; report=https://okta.report-uri.com/r/d/xss/enforce
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.24.0
+    method: GET
+    uri: https://diesel.panoramicstg.com/api/v1/federated/companies/
+  response:
+    body:
+      string: '{"data":["westeros-knights","operam"]}
+
+        '
+    headers:
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '39'
+      Content-Type:
+      - application/json
+      Date:
+      - Fri, 24 Jul 2020 08:58:11 GMT
+      Via:
+      - kong/2.0.3
+      X-Amzn-Trace-Id:
+      - None
+      X-Kong-Proxy-Latency:
+      - '0'
+      X-Kong-Upstream-Latency:
+      - '4'
+      x-diesel-request-id:
+      - 4dc05b01-982a-4eee-8af4-2f9b288f6f08
     status:
       code: 200
       message: OK

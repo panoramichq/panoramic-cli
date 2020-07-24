@@ -1,0 +1,82 @@
+api_version: v1
+data_source: SF.METRICS3_STG.ADWORDS_VIEWS.ENTITY_ACCOUNTS
+fields:
+- data_type: CHARACTER VARYING
+  field_map:
+  - sf.metrics3_stg.adwords_views.entity_accounts.__api_version
+  transformation: __API_VERSION
+- data_type: CHARACTER VARYING
+  field_map:
+  - sf.metrics3_stg.adwords_views.entity_accounts.__data
+  transformation: __DATA
+- data_type: TIMESTAMP
+  field_map:
+  - sf.metrics3_stg.adwords_views.entity_accounts.__extracted_at
+  transformation: __EXTRACTED_AT
+- data_type: TIMESTAMP
+  field_map:
+  - sf.metrics3_stg.adwords_views.entity_accounts.__processed_at
+  transformation: __PROCESSED_AT
+- data_type: CHARACTER VARYING
+  field_map:
+  - sf.metrics3_stg.adwords_views.entity_accounts.__record_id
+  transformation: __RECORD_ID
+- data_type: CHARACTER VARYING
+  field_map:
+  - sf.metrics3_stg.adwords_views.entity_accounts.customer_id
+  transformation: CUSTOMER_ID
+- data_type: CHARACTER VARYING
+  field_map:
+  - sf.metrics3_stg.adwords_views.entity_accounts.conversion_tracking_settings__effective_conversion_tracking_id
+  transformation: CONVERSION_TRACKING_SETTINGS__EFFECTIVE_CONVERSION_TRACKING_ID
+- data_type: BOOLEAN
+  field_map:
+  - sf.metrics3_stg.adwords_views.entity_accounts.conversion_tracking_settings__uses_cross_account_conversion_tracking
+  transformation: CONVERSION_TRACKING_SETTINGS__USES_CROSS_ACCOUNT_CONVERSION_TRACKING
+- data_type: CHARACTER VARYING
+  field_map:
+  - sf.metrics3_stg.adwords_views.entity_accounts.descriptive_name
+  transformation: DESCRIPTIVE_NAME
+- data_type: CHARACTER VARYING
+  field_map:
+  - sf.metrics3_stg.adwords_views.entity_accounts.currency_code
+  transformation: CURRENCY_CODE
+- data_type: BOOLEAN
+  field_map:
+  - sf.metrics3_stg.adwords_views.entity_accounts.auto_tagging_enabled
+  transformation: AUTO_TAGGING_ENABLED
+- data_type: BOOLEAN
+  field_map:
+  - sf.metrics3_stg.adwords_views.entity_accounts.can_manage_clients
+  transformation: CAN_MANAGE_CLIENTS
+- data_type: CHARACTER VARYING
+  field_map:
+  - sf.metrics3_stg.adwords_views.entity_accounts.date_timezone
+  transformation: DATE_TIMEZONE
+- data_type: CHARACTER VARYING
+  field_map:
+  - sf.metrics3_stg.adwords_views.entity_accounts.final_url_suffix
+  transformation: FINAL_URL_SUFFIX
+- data_type: BOOLEAN
+  field_map:
+  - sf.metrics3_stg.adwords_views.entity_accounts.parallel_tracking_enabled
+  transformation: PARALLEL_TRACKING_ENABLED
+- data_type: CHARACTER VARYING
+  field_map:
+  - sf.metrics3_stg.adwords_views.entity_accounts.remarketing_settings__google_global_site_tag
+  transformation: REMARKETING_SETTINGS__GOOGLE_GLOBAL_SITE_TAG
+- data_type: CHARACTER VARYING
+  field_map:
+  - sf.metrics3_stg.adwords_views.entity_accounts.remarketing_settings__snippet
+  transformation: REMARKETING_SETTINGS__SNIPPET
+- data_type: BOOLEAN
+  field_map:
+  - sf.metrics3_stg.adwords_views.entity_accounts.test_account
+  transformation: TEST_ACCOUNT
+- data_type: CHARACTER VARYING
+  field_map:
+  - sf.metrics3_stg.adwords_views.entity_accounts.tracking_url_template
+  transformation: TRACKING_URL_TEMPLATE
+identifiers: []
+joins: []
+model_name: sf.metrics3_stg.adwords_views.entity_accounts

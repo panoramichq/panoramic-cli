@@ -1,0 +1,54 @@
+api_version: v1
+data_source: SF.METRICS3_STG.ADWORDS_VIEWS.ENTITY_ADGROUPS
+fields:
+- data_type: CHARACTER VARYING
+  field_map:
+  - sf.metrics3_stg.adwords_views.entity_adgroups.__record_id
+  transformation: __RECORD_ID
+- data_type: CHARACTER VARYING
+  field_map:
+  - sf.metrics3_stg.adwords_views.entity_adgroups.__data
+  transformation: __DATA
+- data_type: TIMESTAMP
+  field_map:
+  - sf.metrics3_stg.adwords_views.entity_adgroups.__processed_at
+  transformation: __PROCESSED_AT
+- data_type: TIMESTAMP
+  field_map:
+  - sf.metrics3_stg.adwords_views.entity_adgroups.__extracted_at
+  transformation: __EXTRACTED_AT
+- data_type: CHARACTER VARYING
+  field_map:
+  - sf.metrics3_stg.adwords_views.entity_adgroups.__api_version
+  transformation: __API_VERSION
+- data_type: CHARACTER VARYING
+  field_map:
+  - sf.metrics3_stg.adwords_views.entity_adgroups.customer_id
+  transformation: CUSTOMER_ID
+- data_type: CHARACTER VARYING
+  field_map:
+  - sf.metrics3_stg.adwords_views.entity_adgroups.ad_group_id
+  transformation: AD_GROUP_ID
+- data_type: CHARACTER VARYING
+  field_map:
+  - sf.metrics3_stg.adwords_views.entity_adgroups.campaign_id
+  transformation: CAMPAIGN_ID
+- data_type: CHARACTER VARYING
+  field_map:
+  - sf.metrics3_stg.adwords_views.entity_adgroups.ad_group
+  transformation: AD_GROUP
+- data_type: CHARACTER VARYING
+  field_map:
+  - sf.metrics3_stg.adwords_views.entity_adgroups.ad_group_state
+  transformation: AD_GROUP_STATE
+- data_type: CHARACTER VARYING
+  field_map:
+  - sf.metrics3_stg.adwords_views.entity_adgroups.ad_group_type
+  transformation: AD_GROUP_TYPE
+- data_type: CHARACTER VARYING
+  field_map:
+  - sf.metrics3_stg.adwords_views.entity_adgroups.labels
+  transformation: LABELS
+identifiers: []
+joins: []
+model_name: sf.metrics3_stg.adwords_views.entity_adgroups

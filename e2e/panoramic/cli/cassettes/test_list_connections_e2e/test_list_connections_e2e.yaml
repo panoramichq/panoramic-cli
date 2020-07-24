@@ -19,7 +19,7 @@ interactions:
       Accept-Ranges:
       - bytes
       Age:
-      - '52'
+      - '8'
       Cache-Control:
       - max-age=60
       Connection:
@@ -29,7 +29,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Thu, 23 Jul 2020 19:59:38 GMT
+      - Fri, 24 Jul 2020 08:58:06 GMT
       ETag:
       - '"6867b00a67be82dc6de1129f91a96f9f"'
       Last-Modified:
@@ -37,11 +37,11 @@ interactions:
       Server:
       - AmazonS3
       Via:
-      - 1.1 f92491812e422470607f365e923929b5.cloudfront.net (CloudFront)
+      - 1.1 d1cde188ada6755fe03b8541b71fce4a.cloudfront.net (CloudFront)
       X-Amz-Cf-Id:
-      - rBsrANVZtLZnMDZUH8Y6Kmy-FrtlW-LmfvigXO9FR6Ta-cy4ZTZriw==
+      - lI7scjVWR2tQ7AfPWtFRuzIEavPiDe7FywesR97BFB4AUCAMH06U_w==
       X-Amz-Cf-Pop:
-      - IAD79-C1
+      - IAD89-C1
       X-Cache:
       - Hit from cloudfront
       x-amz-replication-status:
@@ -70,30 +70,131 @@ interactions:
     uri: https://id.panoramichq.com/oauth2/aus5iy3utLXi3Ez4A4x6/v1/token
   response:
     body:
-      string: '{"errorCode":"invalid_client","errorSummary":"Invalid value for ''client_id''
-        parameter.","errorLink":"invalid_client","errorId":"oae9VV6KBmuQY-VtUya0ORpQA","errorCauses":[]}'
+      string: '{"token_type": "Bearer", "expires_in": 3600, "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+        "scope": "platform"}'
     headers:
       Connection:
-      - close
+      - Keep-Alive
       Content-Type:
       - application/json;charset=UTF-8
       Date:
-      - Thu, 23 Jul 2020 20:00:30 GMT
+      - Fri, 24 Jul 2020 08:58:13 GMT
+      Keep-Alive:
+      - timeout=5, max=100
       Server:
       - nginx
+      Strict-Transport-Security:
+      - max-age=315360000
       Transfer-Encoding:
       - chunked
+      X-Robots-Tag:
+      - none
+      cache-control:
+      - no-cache, no-store
+      expires:
+      - '0'
       p3p:
       - CP="HONK"
+      pragma:
+      - no-cache
       set-cookie:
       - sid=""; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Path=/
+      - JSESSIONID=890D0D7B43C0E16F8E040A6CBCAC5E6E; Path=/; Secure; HttpOnly
       x-content-type-options:
       - nosniff
       x-okta-request-id:
-      - XxnsXl2pGLGWAf5yRz@CsAAACKE
+      - XxqipUuBRwECdsHKO709WAAAAEo
+      x-rate-limit-limit:
+      - '600'
+      x-rate-limit-remaining:
+      - '597'
+      x-rate-limit-reset:
+      - '1595581147'
       x-xss-protection:
       - 1; mode=block; report=https://okta.report-uri.com/r/d/xss/enforce
     status:
-      code: 400
-      message: Bad Request
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.24.0
+    method: GET
+    uri: https://diesel.panoramicstg.com/api/v1/federated/physical-data-source/?company_slug=operam
+  response:
+    body:
+      string: '{"data":[{"company_id":"1","created_at":"2020-07-07T13:37:46.302000+00:00","created_by":null,"display_name":"Snowflake","source_id":"a631f5ee-301d-47e5-b1a5-33aa3832a475","source_name":"SF","updated_at":"2020-07-07T13:37:47.696000+00:00"},{"company_id":"1","created_at":"2020-07-16T15:13:33.833844+00:00","created_by":{},"display_name":"All
+        hands demo","source_id":"e21fd592-776f-4897-8f37-8e7b42b1b067","source_name":"all_hands_demo_1_1","updated_at":null}]}
+
+        '
+    headers:
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '460'
+      Content-Type:
+      - application/json
+      Date:
+      - Fri, 24 Jul 2020 08:58:14 GMT
+      Via:
+      - kong/2.0.3
+      X-Amzn-Trace-Id:
+      - None
+      X-Kong-Proxy-Latency:
+      - '0'
+      X-Kong-Upstream-Latency:
+      - '6'
+      x-diesel-request-id:
+      - 861ff219-8f33-4112-acfb-9573e86425fc
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.24.0
+    method: GET
+    uri: https://diesel.panoramicstg.com/api/v1/federated/physical-data-source/?company_slug=operam
+  response:
+    body:
+      string: '{"data":[{"company_id":"1","created_at":"2020-07-07T13:37:46.302000+00:00","created_by":null,"display_name":"Snowflake","source_id":"a631f5ee-301d-47e5-b1a5-33aa3832a475","source_name":"SF","updated_at":"2020-07-07T13:37:47.696000+00:00"},{"company_id":"1","created_at":"2020-07-16T15:13:33.833844+00:00","created_by":{},"display_name":"All
+        hands demo","source_id":"e21fd592-776f-4897-8f37-8e7b42b1b067","source_name":"all_hands_demo_1_1","updated_at":null}]}
+
+        '
+    headers:
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '460'
+      Content-Type:
+      - application/json
+      Date:
+      - Fri, 24 Jul 2020 08:58:14 GMT
+      Via:
+      - kong/2.0.3
+      X-Amzn-Trace-Id:
+      - None
+      X-Kong-Proxy-Latency:
+      - '1'
+      X-Kong-Upstream-Latency:
+      - '331'
+      x-diesel-request-id:
+      - a7df312c-636a-4c09-a06a-ef05a71c978f
+    status:
+      code: 200
+      message: OK
 version: 1

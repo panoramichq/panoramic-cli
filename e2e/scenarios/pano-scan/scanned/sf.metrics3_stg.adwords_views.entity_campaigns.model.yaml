@@ -1,0 +1,66 @@
+api_version: v1
+data_source: SF.METRICS3_STG.ADWORDS_VIEWS.ENTITY_CAMPAIGNS
+fields:
+- data_type: CHARACTER VARYING
+  field_map:
+  - sf.metrics3_stg.adwords_views.entity_campaigns.campaign_id
+  transformation: CAMPAIGN_ID
+- data_type: CHARACTER VARYING
+  field_map:
+  - sf.metrics3_stg.adwords_views.entity_campaigns.customer_id
+  transformation: CUSTOMER_ID
+- data_type: CHARACTER VARYING
+  field_map:
+  - sf.metrics3_stg.adwords_views.entity_campaigns.__data
+  transformation: __DATA
+- data_type: CHARACTER VARYING
+  field_map:
+  - sf.metrics3_stg.adwords_views.entity_campaigns.__api_version
+  transformation: __API_VERSION
+- data_type: TIMESTAMP
+  field_map:
+  - sf.metrics3_stg.adwords_views.entity_campaigns.__processed_at
+  transformation: __PROCESSED_AT
+- data_type: TIMESTAMP
+  field_map:
+  - sf.metrics3_stg.adwords_views.entity_campaigns.__extracted_at
+  transformation: __EXTRACTED_AT
+- data_type: CHARACTER VARYING
+  field_map:
+  - sf.metrics3_stg.adwords_views.entity_campaigns.__record_id
+  transformation: __RECORD_ID
+- data_type: CHARACTER VARYING
+  field_map:
+  - sf.metrics3_stg.adwords_views.entity_campaigns.campaign
+  transformation: CAMPAIGN
+- data_type: DECIMAL
+  field_map:
+  - sf.metrics3_stg.adwords_views.entity_campaigns.budget
+  transformation: BUDGET
+- data_type: TIMESTAMP
+  field_map:
+  - sf.metrics3_stg.adwords_views.entity_campaigns.start_date
+  transformation: START_DATE
+- data_type: TIMESTAMP
+  field_map:
+  - sf.metrics3_stg.adwords_views.entity_campaigns.end_date
+  transformation: END_DATE
+- data_type: CHARACTER VARYING
+  field_map:
+  - sf.metrics3_stg.adwords_views.entity_campaigns.advertising_channel
+  transformation: ADVERTISING_CHANNEL
+- data_type: CHARACTER VARYING
+  field_map:
+  - sf.metrics3_stg.adwords_views.entity_campaigns.bid_strategy_type
+  transformation: BID_STRATEGY_TYPE
+- data_type: CHARACTER VARYING
+  field_map:
+  - sf.metrics3_stg.adwords_views.entity_campaigns.campaign_serving_status
+  transformation: CAMPAIGN_SERVING_STATUS
+- data_type: CHARACTER VARYING
+  field_map:
+  - sf.metrics3_stg.adwords_views.entity_campaigns.campaign_state
+  transformation: CAMPAIGN_STATE
+identifiers: []
+joins: []
+model_name: sf.metrics3_stg.adwords_views.entity_campaigns
