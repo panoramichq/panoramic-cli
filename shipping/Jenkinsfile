@@ -10,6 +10,10 @@ pipeline {
             values 'py36', 'py37', 'py38', 'lint', 'manifest'
           }
         }
+        environment {
+          PANO_CLIENT_ID = 'test-client-id'
+          PANO_CLIENT_SECRET = 'test-client-secret'
+        }
         stages {
           stage('RunTox') {
             steps {

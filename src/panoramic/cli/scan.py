@@ -24,6 +24,9 @@ class Scanner:
         if client is None:
             self.client = MetadataClient()
 
+    def fetch_token(self):
+        self.client.fetch_token()
+
     def scan_tables(self, *, table_filter: Optional[str] = None, timeout: int = 60) -> Iterable[Dict]:
         """Scan tables for a given source and filter."""
         logger.debug(f'Starting get tables job with filter {table_filter}')

@@ -18,7 +18,7 @@ def test_scan_e2e(monkeypatch):
     for f in Paths.scanned_dir().glob('*'):
         f.unlink()
 
-    result = runner.invoke(cli, ['scan', 'SF', '--filter', 'METRICS3_STG.ADWORDS_VIEWS.ENTITY%'])
+    result = runner.invoke(cli, ['scan', 'SF', '--parallel', '1', '--filter', 'METRICS3_STG.ADWORDS_VIEWS.ENTITY%'])
 
     assert result.exit_code == 0
     assert {f.name for f in Paths.scanned_dir().iterdir()} == {

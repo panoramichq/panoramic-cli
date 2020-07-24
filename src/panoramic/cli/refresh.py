@@ -23,6 +23,9 @@ class Refresher:
         if client is None:
             self.client = MetadataClient()
 
+    def fetch_token(self):
+        self.client.fetch_token()
+
     def refresh_table(self, table_name: str, timeout: int = 60):
         """Scan columns for a given source and scope."""
         logger.debug(f'Starting refresh metadata job for table {table_name}')

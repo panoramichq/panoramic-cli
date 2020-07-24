@@ -82,7 +82,9 @@ def scan(source_id: str, table_filter: Optional[str], parallel: int = 1):
     """Scan all metadata for given source and filter."""
     company_slug = get_company_slug()
     scanner = Scanner(company_slug, source_id)
+    scanner.fetch_token()
     refresher = Refresher(company_slug, source_id)
+    refresher.fetch_token()
     writer = FileWriter()
 
     tables = list(scanner.scan_tables(table_filter=table_filter))
