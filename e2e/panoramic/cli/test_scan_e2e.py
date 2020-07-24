@@ -20,6 +20,8 @@ def test_scan_e2e(monkeypatch):
 
     result = runner.invoke(cli, ['scan', 'SF', '--parallel', '1', '--filter', 'METRICS3_STG.ADWORDS_VIEWS.ENTITY%'])
 
+    print(result.stdout)
+
     assert result.exit_code == 0
     assert {f.name for f in Paths.scanned_dir().iterdir()} == {
         'sf.metrics3_stg.adwords_views.entity_accounts.model.yaml',
