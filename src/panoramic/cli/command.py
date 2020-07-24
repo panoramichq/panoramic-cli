@@ -49,7 +49,7 @@ def initialize():
     if len(companies) == 0:
         prompt_text = base_text
     elif len(companies) > 3:
-        prompt_text = f'{base_text} (Available - {{{",".join(companies)}}},...)'
+        prompt_text = f'{base_text} (Available - {{{",".join(list(companies)[:3])}}},...)'
     else:
         prompt_text = f'{base_text} (Available - {{{",".join(companies)}}})'
 
