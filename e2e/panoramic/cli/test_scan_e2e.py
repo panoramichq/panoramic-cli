@@ -8,15 +8,25 @@ from panoramic.cli import cli
 from panoramic.cli.local.file_utils import Paths
 
 
-@pytest.mark.vcr
-def test_scan_e2e(monkeypatch):
+@pytest.fixture(autouse=True)
+def handle_scanned_dir(monkeypatch):
     test_dir = Path('e2e') / 'scenarios' / 'pano-scan'
     monkeypatch.chdir(test_dir)
-    runner = CliRunner()
 
     # Clean scanned directory
     for f in Paths.scanned_dir().glob('*'):
         f.unlink()
+
+    yield
+
+    # Clean scanned directory
+    for f in Paths.scanned_dir().glob('*'):
+        f.unlink()
+
+
+@pytest.mark.vcr
+def test_scan_e2e():
+    runner = CliRunner()
 
     result = runner.invoke(cli, ['scan', 'SF', '--parallel', '1', '--filter', 'METRICS3_STG.ADWORDS_VIEWS.ENTITY%'])
 
@@ -37,8 +47,7 @@ def test_scan_e2e(monkeypatch):
 
 @pytest.mark.vcr
 @patch('panoramic.cli.command.scan')
-def test_scan_error_e2e(mock_scan, monkeypatch):
-    monkeypatch.chdir(Path('e2e') / 'scenarios' / 'pano-scan')
+def test_scan_error_e2e(mock_scan):
     mock_scan.side_effect = Exception('Test Exception')
     runner = CliRunner()
 
