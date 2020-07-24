@@ -12,6 +12,12 @@ from panoramic.cli.errors import (
 from panoramic.cli.local.file_utils import Paths
 
 
+@pytest.fixture(autouse=True)
+def remove_client_creds_env(monkeypatch):
+    monkeypatch.delenv('PANO_CLIENT_ID', raising=False)
+    monkeypatch.delenv('PANO_CLIENT_SECRET', raising=False)
+
+
 def test_no_config_file(monkeypatch):
     with tempfile.TemporaryDirectory() as tmpdirname:
         monkeypatch.setenv('HOME', tmpdirname)
