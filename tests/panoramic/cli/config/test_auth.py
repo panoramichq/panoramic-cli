@@ -1,5 +1,4 @@
 import tempfile
-from pathlib import Path
 
 import pytest
 import yaml
@@ -10,6 +9,13 @@ from panoramic.cli.errors import (
     MissingConfigFileException,
     MissingValueException,
 )
+from panoramic.cli.local.file_utils import Paths
+
+
+@pytest.fixture(autouse=True)
+def remove_client_creds_env(monkeypatch):
+    monkeypatch.delenv('PANO_CLIENT_ID', raising=False)
+    monkeypatch.delenv('PANO_CLIENT_SECRET', raising=False)
 
 
 def test_no_config_file(monkeypatch):
@@ -26,30 +32,24 @@ def test_no_config_file(monkeypatch):
 def test_invalid_config_file(monkeypatch):
     with tempfile.TemporaryDirectory() as tmpdirname:
         monkeypatch.setenv('HOME', tmpdirname)
-        (Path(tmpdirname) / '.pano').mkdir()
+        Paths.config_dir().mkdir()
 
-        with open(Path(tmpdirname) / '.pano' / 'config', 'w') as f:
+        with open(Paths.config_file(), 'w') as f:
             f.write('client_id: some_value\nclient_secret slug_but_missing_colon\n')
 
-        with pytest.raises(
-            InvalidYamlFile,
-            match=f'while scanning a simple key\n  in "{tmpdirname}/.pano/config", line 2, column 1\ncould not find expected \':\'\n  in "{tmpdirname}/.pano/config", line 3, column 1',
-        ):
+        with pytest.raises(InvalidYamlFile):
             assert get_client_id()
 
-        with pytest.raises(
-            InvalidYamlFile,
-            match=f'while scanning a simple key\n  in "{tmpdirname}/.pano/config", line 2, column 1\ncould not find expected \':\'\n  in "{tmpdirname}/.pano/config", line 3, column 1',
-        ):
+        with pytest.raises(InvalidYamlFile):
             assert get_client_secret()
 
 
 def test_missing_value_config_file(monkeypatch):
     with tempfile.TemporaryDirectory() as tmpdirname:
         monkeypatch.setenv('HOME', tmpdirname)
-        (Path(tmpdirname) / '.pano').mkdir()
+        Paths.config_dir().mkdir()
 
-        with open(Path(tmpdirname) / '.pano' / 'config', 'w') as f:
+        with open(Paths.config_file(), 'w') as f:
             f.write(yaml.dump(dict(client_secret='some_random_value')))
 
         with pytest.raises(MissingValueException):
@@ -57,9 +57,9 @@ def test_missing_value_config_file(monkeypatch):
 
     with tempfile.TemporaryDirectory() as tmpdirname:
         monkeypatch.setenv('HOME', tmpdirname)
-        (Path(tmpdirname) / '.pano').mkdir()
+        Paths.config_dir().mkdir()
 
-        with open(Path(tmpdirname) / '.pano' / 'config', 'w') as f:
+        with open(Paths.config_file(), 'w') as f:
             f.write(yaml.dump(dict(client_id='another_random_value')))
 
         with pytest.raises(MissingValueException):
@@ -69,9 +69,9 @@ def test_missing_value_config_file(monkeypatch):
 def test_config_file(monkeypatch):
     with tempfile.TemporaryDirectory() as tmpdirname:
         monkeypatch.setenv('HOME', tmpdirname)
-        (Path(tmpdirname) / '.pano').mkdir()
+        Paths.config_dir().mkdir()
 
-        with open(Path(tmpdirname) / '.pano' / 'config', 'w') as f:
+        with open(Paths.config_file(), 'w') as f:
             f.write(yaml.dump(dict(client_id='some_random_id', client_secret='some_random_secret')))
 
         assert get_client_id() == 'some_random_id'

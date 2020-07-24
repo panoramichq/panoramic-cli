@@ -33,5 +33,5 @@ def get_yaml_value(file_path: Path, value_path: str):
         with open(file_path) as f:
             data = yaml.safe_load(f)
             return _get_yaml_value_from_object(data, value_path.split('.'))
-    except yaml.scanner.ScannerError as error:
-        raise InvalidYamlFile(error)
+    except yaml.scanner.ScannerError:
+        raise InvalidYamlFile(file_path)

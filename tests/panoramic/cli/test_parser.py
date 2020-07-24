@@ -1,14 +1,10 @@
-from panoramic.cli.parser import _remove_source_from_path, load_scanned_tables
-
-
-def test_remove_source_from_path():
-    assert _remove_source_from_path('sc1.sch') == 'sch'
-    assert _remove_source_from_path('sc1.db.sch') == 'db.sch'
+from panoramic.cli.parser import load_scanned_tables
 
 
 def test_load_scanned_tables():
     expected = [
         {
+            'api_version': 'v1',
             'model_name': 'source.schema1.table1',
             'data_source': 'source.schema1.table1',
             'fields': [

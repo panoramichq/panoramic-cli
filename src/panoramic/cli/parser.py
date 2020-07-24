@@ -3,24 +3,10 @@ import logging
 import operator
 from typing import Dict, Iterable, List
 
-from panoramic.cli.errors import MissingSchemaException
 from panoramic.cli.pano_model import PanoModel
 from panoramic.cli.util import slug_string
 
 logger = logging.getLogger(__name__)
-
-DREMIO_DELIMITER = '.'
-
-
-def _remove_source_from_path(table_schema: str) -> str:
-    """
-    Return dremio path without the source id at the start
-    """
-    if DREMIO_DELIMITER in table_schema:
-        _, schema_path = table_schema.split(DREMIO_DELIMITER, 1)
-        return schema_path
-    else:
-        raise MissingSchemaException('Unable to remove source from table path as there seems to be no schema')
 
 
 def load_scanned_tables(raw_columns: Iterable[Dict]) -> List[PanoModel]:

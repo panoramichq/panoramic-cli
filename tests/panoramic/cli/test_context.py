@@ -6,25 +6,24 @@ from click.core import Context
 
 from panoramic.cli.context import ContextAwareCommand, get_api_version, get_company_slug
 from panoramic.cli.errors import (
-    CriticalError,
     InvalidYamlFile,
     MissingContextFileException,
     MissingValueException,
 )
-from panoramic.cli.local.file_utils import PresetFileName
+from panoramic.cli.local.file_utils import Paths
 
 
 def test_context_aware_command_no_context(monkeypatch, tmpdir):
     """Check command fails when no context."""
     monkeypatch.chdir(tmpdir)
-    with pytest.raises(CriticalError):
+    with pytest.raises(MissingContextFileException):
         ContextAwareCommand(name='test-command').invoke(Mock())
 
 
 def test_context_aware_command_context_exists(monkeypatch, tmpdir):
     """Check command succeeds when context exists."""
     monkeypatch.chdir(tmpdir)
-    (tmpdir / PresetFileName.CONTEXT.value).ensure()
+    Paths.context_file().touch()
 
     def test_callback():
         return 10
@@ -48,26 +47,20 @@ def test_no_context_file(monkeypatch, tmpdir):
 def test_invalid_context_file(monkeypatch, tmpdir):
     monkeypatch.chdir(tmpdir)
 
-    with open(tmpdir / PresetFileName.CONTEXT.value, 'w') as f:
+    with open(Paths.context_file(), 'w') as f:
         f.write('api_version: some_value\ncompany_slug slug_but_missing_colon\n')
 
-    with pytest.raises(
-        InvalidYamlFile,
-        match=f'while scanning a simple key\n  in "{tmpdir}/pano.yaml", line 2, column 1\ncould not find expected \':\'\n  in "{tmpdir}/pano.yaml", line 3, column 1',
-    ):
+    with pytest.raises(InvalidYamlFile):
         assert get_api_version()
 
-    with pytest.raises(
-        InvalidYamlFile,
-        match=f'while scanning a simple key\n  in "{tmpdir}/pano.yaml", line 2, column 1\ncould not find expected \':\'\n  in "{tmpdir}/pano.yaml", line 3, column 1',
-    ):
+    with pytest.raises(InvalidYamlFile):
         assert get_company_slug()
 
 
 def test_missing_value_context_file(monkeypatch, tmpdir):
     monkeypatch.chdir(tmpdir)
 
-    with open(tmpdir / PresetFileName.CONTEXT.value, 'w') as f:
+    with open(Paths.context_file(), 'w') as f:
         f.write(yaml.dump(dict(company_slug='company_name_12fxs')))
 
     with pytest.raises(MissingValueException):
@@ -75,7 +68,7 @@ def test_missing_value_context_file(monkeypatch, tmpdir):
 
     monkeypatch.chdir(tmpdir)
 
-    with open(tmpdir / PresetFileName.CONTEXT.value, 'w') as f:
+    with open(Paths.context_file(), 'w') as f:
         f.write(yaml.dump(dict(api_version='v2')))
 
     with pytest.raises(MissingValueException):
@@ -85,7 +78,7 @@ def test_missing_value_context_file(monkeypatch, tmpdir):
 def test_context_file(monkeypatch, tmpdir):
     monkeypatch.chdir(tmpdir)
 
-    with open(tmpdir / PresetFileName.CONTEXT.value, 'w') as f:
+    with open(Paths.context_file(), 'w') as f:
         f.write(yaml.dump(dict(api_version='v2', company_slug='company_name_12fxs')))
 
     assert get_api_version() == 'v2'

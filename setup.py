@@ -28,7 +28,7 @@ setup(
         "Programming Language :: Python :: 3.8",
     ],
     install_requires=[
-        'panoramic-auth>=0.1.0',
+        'panoramic-auth>=0.2.0',
         'requests>=2.24.0',
         'click>=7.1.2',
         'PyYAML==5.3.1',

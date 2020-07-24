@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 
 from panoramic.cli.errors import MissingConfigFileException
+from panoramic.cli.local.file_utils import Paths
 from panoramic.cli.util import get_yaml_value
 
 
@@ -16,11 +17,11 @@ def get_client_id() -> str:
     try:
         return os.environ['PANO_CLIENT_ID']
     except KeyError:
-        return _get_config_yaml_value(Path.home() / '.pano' / 'config', 'client_id')
+        return _get_config_yaml_value(Paths.config_file(), 'client_id')
 
 
 def get_client_secret() -> str:
     try:
         return os.environ['PANO_CLIENT_SECRET']
     except KeyError:
-        return _get_config_yaml_value(Path.home() / '.pano' / 'config', 'client_secret')
+        return _get_config_yaml_value(Paths.config_file(), 'client_secret')

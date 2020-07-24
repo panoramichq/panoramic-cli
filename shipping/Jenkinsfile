@@ -10,6 +10,10 @@ pipeline {
             values 'py36', 'py37', 'py38', 'lint', 'manifest'
           }
         }
+        environment {
+          PANO_CLIENT_ID = 'test-client-id'
+          PANO_CLIENT_SECRET = 'test-client-secret'
+        }
         stages {
           stage('RunTox') {
             steps {
@@ -17,7 +21,7 @@ pipeline {
                 def images = [py36: 'python:3.6', py37: 'python:3.7', py38: 'python:3.8']
                 def image = images.get(TOX_ENV, 'python:3.7')
                 withCredentials([file(credentialsId: 'ARTIFACTORY_PIPCONF', variable: 'PIPCONF_PATH')]) {
-                  docker.image(image).inside('-v ${PIPCONF_PATH}:/etc/pip.conf') {
+                  docker.image(image).inside('-v ${PIPCONF_PATH}:/etc/pip.conf -e PANO_CLIENT_ID -e PANO_CLIENT_SECRET') {
                     sh "pip install --upgrade tox && tox -r -e ${TOX_ENV}"
                   }
                 }
