@@ -19,7 +19,7 @@ interactions:
       Accept-Ranges:
       - bytes
       Age:
-      - '14'
+      - '1'
       Cache-Control:
       - max-age=60
       Connection:
@@ -29,7 +29,7 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Fri, 24 Jul 2020 08:59:08 GMT
+      - Fri, 24 Jul 2020 08:58:06 GMT
       ETag:
       - '"6867b00a67be82dc6de1129f91a96f9f"'
       Last-Modified:
@@ -37,9 +37,9 @@ interactions:
       Server:
       - AmazonS3
       Via:
-      - 1.1 7a99ed3f39c18af8fe138a695e5f657d.cloudfront.net (CloudFront)
+      - 1.1 88b63cb2f8aab28c7291262ffc15282f.cloudfront.net (CloudFront)
       X-Amz-Cf-Id:
-      - YQZnRAiuCJuDIByZPLyuJbH-oO5QNtu3YC9ttR3Q_BBUk5E3hBBhTg==
+      - 78H1QSEltPAK3xrKDOTN5hGAfc-TxPDuUFTeDVR98gKXSA2Ghn_LiA==
       X-Amz-Cf-Pop:
       - IAD89-C1
       X-Cache:
