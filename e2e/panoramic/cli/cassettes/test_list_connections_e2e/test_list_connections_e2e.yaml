@@ -1,0 +1,99 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - pano-cli/0.7.4
+    method: GET
+    uri: https://a1.panocdn.com/updates/pano-cli/versions.json
+  response:
+    body:
+      string: '{"latest_version": "0.7.4", "minimum_supported_version": "0.7.4"}'
+    headers:
+      Accept-Ranges:
+      - bytes
+      Age:
+      - '52'
+      Cache-Control:
+      - max-age=60
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '65'
+      Content-Type:
+      - application/json
+      Date:
+      - Thu, 23 Jul 2020 19:59:38 GMT
+      ETag:
+      - '"6867b00a67be82dc6de1129f91a96f9f"'
+      Last-Modified:
+      - Thu, 23 Jul 2020 14:02:32 GMT
+      Server:
+      - AmazonS3
+      Via:
+      - 1.1 f92491812e422470607f365e923929b5.cloudfront.net (CloudFront)
+      X-Amz-Cf-Id:
+      - rBsrANVZtLZnMDZUH8Y6Kmy-FrtlW-LmfvigXO9FR6Ta-cy4ZTZriw==
+      X-Amz-Cf-Pop:
+      - IAD79-C1
+      X-Cache:
+      - Hit from cloudfront
+      x-amz-replication-status:
+      - COMPLETED
+      x-amz-version-id:
+      - zOCc8ujgfqK83SnQvzD1gK57thi41wdB
+    status:
+      code: 200
+      message: OK
+- request:
+    body: grant_type=client_credentials&scope=platform
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '44'
+      Content-Type:
+      - application/x-www-form-urlencoded;charset=UTF-8
+      User-Agent:
+      - python-requests/2.24.0
+    method: POST
+    uri: https://id.panoramichq.com/oauth2/aus5iy3utLXi3Ez4A4x6/v1/token
+  response:
+    body:
+      string: '{"errorCode":"invalid_client","errorSummary":"Invalid value for ''client_id''
+        parameter.","errorLink":"invalid_client","errorId":"oae9VV6KBmuQY-VtUya0ORpQA","errorCauses":[]}'
+    headers:
+      Connection:
+      - close
+      Content-Type:
+      - application/json;charset=UTF-8
+      Date:
+      - Thu, 23 Jul 2020 20:00:30 GMT
+      Server:
+      - nginx
+      Transfer-Encoding:
+      - chunked
+      p3p:
+      - CP="HONK"
+      set-cookie:
+      - sid=""; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Path=/
+      x-content-type-options:
+      - nosniff
+      x-okta-request-id:
+      - XxnsXl2pGLGWAf5yRz@CsAAACKE
+      x-xss-protection:
+      - 1; mode=block; report=https://okta.report-uri.com/r/d/xss/enforce
+    status:
+      code: 400
+      message: Bad Request
+version: 1
