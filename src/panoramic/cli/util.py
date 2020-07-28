@@ -25,7 +25,7 @@ def _get_yaml_value_from_object(data: Dict[str, Any], value_path: List[str]):
         else:
             return value
     except KeyError:
-        raise MissingValueException(value_path)
+        raise MissingValueException('.'.join(value_path))
 
 
 def get_yaml_value(file_path: Path, value_path: str):

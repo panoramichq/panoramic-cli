@@ -1,6 +1,6 @@
 import itertools
 from collections import defaultdict
-from typing import Iterable, List, Set
+from typing import Dict, Iterable, List, Set, Tuple
 
 from panoramic.cli.model.client import Model, ModelAttribute, ModelJoin
 from panoramic.cli.pano_model import (
@@ -36,35 +36,47 @@ def map_model_join_from_local(join: PanoModelJoin) -> ModelJoin:
     )
 
 
-def map_field_from_remote(transformation: str, attributes: List[ModelAttribute]) -> PanoModelField:
+def map_field_from_remote(uid: str, transformation: str, attributes: List[ModelAttribute]) -> PanoModelField:
     """Convert remote attributes to local field."""
     # type is same across all attributes
     data_type = attributes[0].column_data_type
+
     assert data_type is not None
-    return PanoModelField(field_map=[a.taxon for a in attributes], transformation=transformation, data_type=data_type,)
+
+    return PanoModelField(
+        uid=uid,
+        # Do not explode uid model attribute into field_map
+        field_map=[a.taxon for a in attributes if a.taxon != uid],
+        data_reference=transformation,
+        data_type=data_type,
+    )
 
 
 def map_attributes_from_local(field: PanoModelField, identifiers: Set[str]) -> Iterable[ModelAttribute]:
     """Convert local field to remote attributes."""
-    for field_name in field.field_map:
+    # Add uid as extra model attribute
+    for field_name in [field.uid, *field.field_map]:
         yield ModelAttribute(
+            uid=field.uid,
             column_data_type=field.data_type,
             taxon=field_name,
             identifier=field_name in identifiers,
-            transformation=field.transformation,
+            transformation=field.data_reference,
         )
 
 
 def map_model_from_remote(model: Model) -> PanoModel:
     """Convert remote model to local model."""
-    attrs_by_key = defaultdict(list)
+    attrs_by_key: Dict[Tuple[str, str], List[ModelAttribute]] = defaultdict(list)
     for attr in model.attributes:
-        attrs_by_key[attr.transformation].append(attr)
+        attrs_by_key[(attr.uid, attr.transformation)].append(attr)
 
     return PanoModel(
         model_name=model.name,
         data_source=model.fully_qualified_object_name,
-        fields=[map_field_from_remote(transformation, attrs) for (transformation, attrs) in attrs_by_key.items()],
+        fields=[
+            map_field_from_remote(uid, transformation, attrs) for ((uid, transformation), attrs) in attrs_by_key.items()
+        ],
         joins=[map_model_join_from_remote(j) for j in model.joins],
         identifiers=[a.taxon for a in model.attributes if a.identifier],
         virtual_data_source=model.virtual_data_source,

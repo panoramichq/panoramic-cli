@@ -12,22 +12,32 @@ class Actionable(ABC):
 class PanoModelField:
     """Field stored on a model."""
 
+    uid: str
     field_map: List[str]
-    transformation: str
+    data_reference: str
     data_type: str
 
-    def __init__(self, *, field_map: List[str], transformation: str, data_type: str):
+    def __init__(self, *, uid: str, field_map: List[str], data_reference: str, data_type: str):
+        self.uid = uid
         self.field_map = field_map
-        self.transformation = transformation
+        self.data_reference = data_reference
         self.data_type = data_type
 
     def to_dict(self) -> Dict[str, Any]:
-        return {'field_map': self.field_map, 'transformation': self.transformation, 'data_type': self.data_type}
+        return {
+            'uid': self.uid,
+            'field_map': self.field_map,
+            'data_reference': self.data_reference,
+            'data_type': self.data_type,
+        }
 
     @classmethod
     def from_dict(cls, inputs: Dict[str, Any]) -> 'PanoModelField':
         return cls(
-            field_map=inputs['field_map'], transformation=inputs['transformation'], data_type=inputs['data_type'],
+            uid=inputs['uid'],
+            field_map=inputs['field_map'],
+            data_reference=inputs['data_reference'],
+            data_type=inputs['data_type'],
         )
 
     def __hash__(self) -> int:

@@ -4,7 +4,7 @@ import operator
 from typing import Dict, Iterable, List
 
 from panoramic.cli.errors import MissingSchemaException
-from panoramic.cli.pano_model import PanoModel
+from panoramic.cli.pano_model import PanoModel, PanoModelField
 from panoramic.cli.util import slug_string
 
 logger = logging.getLogger(__name__)
@@ -38,13 +38,19 @@ def load_scanned_tables(raw_columns: Iterable[Dict]) -> List[PanoModel]:
         for col in columns:
             data_type = col['data_type']
             column_name = col['column_name']
-            field_path = slug_string('.'.join([full_table_path, column_name]))
-            fields.append(dict(data_type=data_type, transformation=column_name, field_map=[field_path],))
+            unique_field_path = slug_string('.'.join([full_table_path, column_name]))
+            column_name_slug = slug_string(column_name)
+            fields.append(
+                PanoModelField(
+                    uid=unique_field_path,
+                    data_type=data_type,
+                    data_reference=column_name,
+                    field_map=[column_name_slug],
+                )
+            )
 
         models.append(
-            PanoModel.from_dict(
-                dict(model_name=model_name, data_source=full_table_path, fields=fields, joins=[], identifiers=[],)
-            )
+            PanoModel(model_name=model_name, data_source=full_table_path, fields=fields, joins=[], identifiers=[])
         )
 
     return models
