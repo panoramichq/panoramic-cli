@@ -75,4 +75,3 @@ def test_from_local_to_remote(local_model_fixture, remote_model_fixture):
     remote_model = map_model_from_local(local_model_fixture)
 
     assert remote_model.to_dict() == expected_remote_model
-
