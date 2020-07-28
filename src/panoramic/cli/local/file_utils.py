@@ -10,6 +10,28 @@ logger = logging.getLogger(__name__)
 API_VERSION_ATTRIBUTE = 'api_version'
 
 
+class Paths:
+    @staticmethod
+    def context_file() -> Path:
+        return Path.cwd() / PresetFileName.CONTEXT.value
+
+    @staticmethod
+    def dotenv_file() -> Path:
+        return Path.cwd() / PresetFileName.DOTENV.value
+
+    @staticmethod
+    def config_dir() -> Path:
+        return Path.home() / PresetFileName.CONFIG_DIR.value
+
+    @classmethod
+    def config_file(cls) -> Path:
+        return cls.config_dir() / PresetFileName.CONFIG.value
+
+    @staticmethod
+    def scanned_dir() -> Path:
+        return Path.cwd() / SystemDirectory.SCANNED.value
+
+
 class FileExtension(Enum):
     """
     Enumeration with all available file extensions
@@ -24,6 +46,9 @@ class PresetFileName(Enum):
 
     DATASET_YAML = 'dataset.yaml'
     CONTEXT = 'pano.yaml'
+    DOTENV = '.env'
+    CONFIG_DIR = '.pano'
+    CONFIG = 'config'
 
 
 class SystemDirectory(Enum):
@@ -63,16 +88,3 @@ def delete_file(abs_filepath: Path):
     # TODO: Consider warning - wanted to delete model but not found
     if abs_filepath.exists():
         abs_filepath.unlink()
-
-
-def add_file_api_version(data: Dict[str, Any], api_version: str) -> Dict[str, Any]:
-    """Add file api version."""
-    data[API_VERSION_ATTRIBUTE] = api_version
-    return data
-
-
-def remove_file_api_version(data: Dict[str, Any]) -> Dict[str, Any]:
-    """Remove file api version."""
-    if API_VERSION_ATTRIBUTE in data:
-        del data[API_VERSION_ATTRIBUTE]
-    return data

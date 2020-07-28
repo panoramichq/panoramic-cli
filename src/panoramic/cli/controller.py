@@ -50,7 +50,6 @@ def reconcile_models(current_state: VirtualState, desired_state: VirtualState) -
 
 def reconcile(current_state: VirtualState, desired_state: VirtualState) -> ActionList:
     """Create actions that get us from current state to desired state."""
-    # We want to write from desired to current state
     actions = list(
         itertools.chain(
             reconcile_data_sources(current_state, desired_state), reconcile_models(current_state, desired_state)

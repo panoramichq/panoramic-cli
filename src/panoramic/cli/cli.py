@@ -1,28 +1,25 @@
 import logging
-from pathlib import Path
 from typing import Optional
 
 import click
-import yaml
 from dotenv import load_dotenv
 
 from panoramic.cli.__version__ import __version__
-from panoramic.cli.companies.client import CompaniesClient
 from panoramic.cli.context import ContextAwareCommand
-from panoramic.cli.errors import SourceNotFoundException
-from panoramic.cli.local.file_utils import PresetFileName
-from panoramic.cli.logging import log_error
+from panoramic.cli.errors import handle_exception
+from panoramic.cli.local.file_utils import Paths
 
 
 @click.group(context_settings={'help_option_names': ["-h", "--help"]})
 @click.option('--debug', is_flag=True, help='Enables debug mode')
 @click.version_option(__version__)
+@handle_exception
 def cli(debug):
     if debug:
         logger = logging.getLogger()
         logger.setLevel("DEBUG")
 
-    load_dotenv(dotenv_path=Path.cwd() / '.env')
+    load_dotenv(dotenv_path=Paths.dotenv_file())
 
     from panoramic.cli.supported_version import is_version_supported
 
@@ -34,99 +31,56 @@ def cli(debug):
 @click.argument('source-id', type=str, required=True)
 @click.option('--filter', '-f', type=str, help='Filter down what schemas to scan')
 @click.option('--parallel', '-p', type=int, default=8, help='Parallelize metadata scan')
+@handle_exception
 def scan(source_id: str, filter: Optional[str], parallel: int):
-    from panoramic.cli.command import scan
+    from panoramic.cli.command import scan as scan_command
 
-    logger = logging.getLogger(__name__)
-    try:
-        scan(source_id, filter, parallel)
-    except SourceNotFoundException as source_exception:
-        log_error(logger, 'Source not found', source_exception)
-    except Exception as e:
-        log_error(logger, 'Internal error occured.', e)
+    scan_command(source_id, filter, parallel)
 
 
 @cli.command(help='Pull models from remote', cls=ContextAwareCommand)
+@handle_exception
 def pull():
-    from panoramic.cli.command import pull
+    from panoramic.cli.command import pull as pull_command
 
-    logger = logging.getLogger(__name__)
-    try:
-        pull()
-    except Exception as e:
-        log_error(logger, 'Internal error ocurred', e)
+    pull_command()
 
 
 @cli.command(help='Push models to remote', cls=ContextAwareCommand)
+@handle_exception
 def push():
-    from panoramic.cli.command import push
+    from panoramic.cli.command import push as push_command
 
-    logger = logging.getLogger(__name__)
-    try:
-        push()
-    except Exception as e:
-        log_error(logger, 'Internal error ocurred', e)
+    push_command()
 
 
 @cli.command(help='Configure pano CLI options')
+@handle_exception
 def configure():
-    client_id = click.prompt('Enter your client id', type=str)
-    client_secret = click.prompt('Enter your client secret', hide_input=True, type=str)
+    from panoramic.cli.command import configure as config_command
 
-    config_dir = Path.home() / '.pano'
-    if not config_dir.exists():
-        config_dir.mkdir()
-
-    with open(config_dir / 'config', 'w+') as f:
-        f.write(yaml.safe_dump({'client_id': client_id, 'client_secret': client_secret}))
+    config_command()
 
 
 @cli.command(help='Initialize metadata repository')
+@handle_exception
 def init():
-    logger = logging.getLogger(__name__)
+    from panoramic.cli.command import initialize
 
-    client = CompaniesClient()
-
-    try:
-        companies = client.get_companies()
-    except Exception as error:
-        log_error(logger, 'Failed to fetch available companies', error)
-        companies = []
-
-    base_text = 'Enter your company slug'
-    if len(companies) == 0:
-        prompt_text = base_text
-    elif len(companies) > 3:
-        prompt_text = f'{base_text} (Available - {{{",".join(companies)}}},...)'
-    else:
-        prompt_text = f'{base_text} (Available - {{{",".join(companies)}}})'
-
-    company_slug = click.prompt(prompt_text, type=str, default=next(iter(companies), None))
-
-    context_file = Path.cwd() / PresetFileName.CONTEXT.value
-    with open(context_file, 'w') as f:
-        f.write(yaml.safe_dump({'company_slug': company_slug, 'api_version': 'v1'}))
+    initialize()
 
 
 @cli.command(help='List available data connections', cls=ContextAwareCommand)
+@handle_exception
 def list_connections():
-    from panoramic.cli.command import list_connections
+    from panoramic.cli.command import list_connections as list_connections_command
 
-    logger = logging.getLogger(__name__)
-
-    try:
-        list_connections()
-    except Exception as e:
-        log_error(logger, 'Internal error occured.', e)
+    list_connections_command()
 
 
 @cli.command(help='List available data connections')
+@handle_exception
 def list_companies():
-    from panoramic.cli.command import list_companies
+    from panoramic.cli.command import list_companies as list_companies_command
 
-    logger = logging.getLogger(__name__)
-
-    try:
-        list_companies()
-    except Exception as e:
-        log_error(logger, 'Internal error occured.', e)
+    list_companies_command()
