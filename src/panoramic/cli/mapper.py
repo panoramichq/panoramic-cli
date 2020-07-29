@@ -69,7 +69,10 @@ def map_model_from_remote(model: Model) -> PanoModel:
     """Convert remote model to local model."""
     attrs_by_key: Dict[Tuple[str, str], List[ModelAttribute]] = defaultdict(list)
     for attr in model.attributes:
-        attrs_by_key[(attr.uid, attr.transformation)].append(attr)
+        if attr.uid is not None:
+            # Skip fields that do not have uid .. they shouldn't be there in the first place
+            # TODO: possibly try to recreate the uid here?
+            attrs_by_key[(attr.uid, attr.transformation)].append(attr)
 
     return PanoModel(
         model_name=model.name,
