@@ -3,7 +3,12 @@ from collections import defaultdict
 from typing import Dict, Iterable, List, Optional, Set, Tuple
 
 from panoramic.cli.model.client import Model, ModelAttribute, ModelJoin
-from panoramic.cli.pano_model import PanoModel, PanoModelField, PanoModelJoin, PanoVirtualDataSource
+from panoramic.cli.pano_model import (
+    PanoModel,
+    PanoModelField,
+    PanoModelJoin,
+    PanoVirtualDataSource,
+)
 from panoramic.cli.virtual_data_source.client import VirtualDataSource
 
 
