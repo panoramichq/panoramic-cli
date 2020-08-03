@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 0.8.0 Release
+
+Add new uid field and change how scan generates models
+
 ## Version 0.7.4 Release
 
 Remove special slash handling
