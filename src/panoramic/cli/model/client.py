@@ -11,14 +11,16 @@ logger = logging.getLogger(__name__)
 
 class ModelAttribute:
 
+    uid: Optional[str]
     column_data_type: Optional[str]
     taxon: str
     identifier: bool
     transformation: str
 
     def __init__(
-        self, *, column_data_type: Optional[str], taxon: str, identifier: bool, transformation: str,
+        self, *, uid: Optional[str], column_data_type: Optional[str], taxon: str, identifier: bool, transformation: str,
     ):
+        self.uid = uid
         self.column_data_type = column_data_type
         self.taxon = taxon
         self.identifier = identifier
@@ -27,6 +29,7 @@ class ModelAttribute:
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> 'ModelAttribute':
         return cls(
+            uid=data.get('uid'),
             column_data_type=data.get('column_data_type'),
             taxon=data['taxon'],
             identifier=data['identifier'],
@@ -35,6 +38,7 @@ class ModelAttribute:
 
     def to_dict(self) -> Dict[str, Any]:
         return {
+            'uid': self.uid,
             'column_data_type': self.column_data_type,
             'taxon': self.taxon,
             'identifier': self.identifier,

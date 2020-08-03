@@ -2,10 +2,11 @@ api_version: v1
 model_name: test_model
 data_source: SF.DBNAME.SCHEMANAME.TABLENAME
 fields:
-  - data_type: CHARACTER VARYING
+  - uid: sf.dbname.schemaname.tablename.test_field
+    data_type: CHARACTER VARYING
     field_map:
       - test_field
-    transformation: column
+    data_reference: column
 joins:
   - to_model: other_model
     relationship: many_to_one

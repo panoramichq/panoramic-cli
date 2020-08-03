@@ -8,8 +8,13 @@ def test_load_scanned_tables():
             'model_name': 'source.schema1.table1',
             'data_source': 'source.schema1.table1',
             'fields': [
-                {'data_type': 'str', 'field_map': ['source.schema1.table1.id'], 'transformation': 'id'},
-                {'data_type': 'int', 'field_map': ['source.schema1.table1.value'], 'transformation': 'value'},
+                {'uid': 'source.schema1.table1.id', 'data_type': 'str', 'field_map': ['id'], 'data_reference': 'id',},
+                {
+                    'uid': 'source.schema1.table1.value',
+                    'data_type': 'int',
+                    'field_map': ['value'],
+                    'data_reference': 'value',
+                },
             ],
             'identifiers': [],
             'joins': [],
