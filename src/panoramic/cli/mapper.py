@@ -1,14 +1,9 @@
 import itertools
 from collections import defaultdict
-from typing import Dict, Iterable, List, Set, Tuple
+from typing import Dict, Iterable, List, Optional, Set, Tuple
 
 from panoramic.cli.model.client import Model, ModelAttribute, ModelJoin
-from panoramic.cli.pano_model import (
-    PanoModel,
-    PanoModelField,
-    PanoModelJoin,
-    PanoVirtualDataSource,
-)
+from panoramic.cli.pano_model import PanoModel, PanoModelField, PanoModelJoin, PanoVirtualDataSource
 from panoramic.cli.virtual_data_source.client import VirtualDataSource
 
 
@@ -36,7 +31,7 @@ def map_model_join_from_local(join: PanoModelJoin) -> ModelJoin:
     )
 
 
-def map_field_from_remote(uid: str, transformation: str, attributes: List[ModelAttribute]) -> PanoModelField:
+def map_field_from_remote(uid: Optional[str], transformation: str, attributes: List[ModelAttribute]) -> PanoModelField:
     """Convert remote attributes to local field."""
     # type is same across all attributes
     data_type = attributes[0].column_data_type
@@ -55,7 +50,17 @@ def map_field_from_remote(uid: str, transformation: str, attributes: List[ModelA
 def map_attributes_from_local(field: PanoModelField, identifiers: Set[str]) -> Iterable[ModelAttribute]:
     """Convert local field to remote attributes."""
     # Add uid as extra model attribute
-    for field_name in [field.uid, *field.field_map]:
+
+    if field.uid is not None:
+        yield ModelAttribute(
+            uid=field.uid,
+            column_data_type=field.data_type,
+            taxon=field.uid,
+            identifier=field.uid in identifiers,
+            transformation=field.data_reference,
+        )
+
+    for field_name in field.field_map:
         yield ModelAttribute(
             uid=field.uid,
             column_data_type=field.data_type,
@@ -69,10 +74,7 @@ def map_model_from_remote(model: Model) -> PanoModel:
     """Convert remote model to local model."""
     attrs_by_key: Dict[Tuple[str, str], List[ModelAttribute]] = defaultdict(list)
     for attr in model.attributes:
-        if attr.uid is not None:
-            # Skip fields that do not have uid .. they shouldn't be there in the first place
-            # TODO: possibly try to recreate the uid here?
-            attrs_by_key[(attr.uid, attr.transformation)].append(attr)
+        attrs_by_key[(attr.uid, attr.transformation)].append(attr)
 
     return PanoModel(
         model_name=model.name,

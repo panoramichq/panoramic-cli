@@ -16,12 +16,12 @@ class Actionable(ABC):
 class PanoModelField:
     """Field stored on a model."""
 
-    uid: str
+    uid: Optional[str]
     field_map: List[str]
     data_reference: str
     data_type: str
 
-    def __init__(self, *, uid: str, field_map: List[str], data_reference: str, data_type: str):
+    def __init__(self, *, uid: Optional[str], field_map: List[str], data_reference: str, data_type: str):
         self.uid = uid
         self.field_map = field_map
         self.data_reference = data_reference
@@ -38,7 +38,7 @@ class PanoModelField:
     @classmethod
     def from_dict(cls, inputs: Dict[str, Any]) -> 'PanoModelField':
         return cls(
-            uid=inputs['uid'],
+            uid=inputs.get('uid'),
             field_map=inputs['field_map'],
             data_reference=inputs['data_reference'],
             data_type=inputs['data_type'],
