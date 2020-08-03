@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 0.8.1 Release
+
+Proper release for 0.8.0
+
 ## Version 0.8.0 Release
 
 Add new uid field and change how scan generates models
