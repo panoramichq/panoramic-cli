@@ -3,6 +3,7 @@ import os
 import sys
 import traceback
 
+from requests.exceptions import RequestException
 from tqdm import tqdm
 
 
@@ -25,3 +26,9 @@ def configure_logging():
 def log_error(logger: logging.Logger, message, exc: Exception):
     tqdm.write(f'Error: {message}')
     logger.debug(message, exc_info=exc)
+
+
+def log_diesel_request_exception(logger: logging.Logger, exc: RequestException):
+    logger.error(
+        f'Request {exc.request.url} failed, debug ID: {exc.response.headers.get("x-diesel-request-id", "N/A")}'
+    )
