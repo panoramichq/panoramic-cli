@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 0.8.2 Release
+
+Set minimum supported version to 0.7.4
+
 ## Version 0.8.1 Release
 
 Proper release for 0.8.0
