@@ -8,6 +8,7 @@ from tqdm import tqdm
 from panoramic.cli.companies.client import CompaniesClient
 from panoramic.cli.context import get_company_slug
 from panoramic.cli.controller import reconcile
+from panoramic.cli.identifier_generator import IdentifierGenerator
 from panoramic.cli.local import get_state as get_local_state
 from panoramic.cli.local.executor import LocalExecutor
 from panoramic.cli.local.file_utils import Paths, write_yaml
@@ -85,6 +86,10 @@ def scan(source_id: str, table_filter: Optional[str], parallel: int = 1):
     scanner.fetch_token()
     refresher = Refresher(company_slug, source_id)
     refresher.fetch_token()
+
+    id_generator = IdentifierGenerator(company_slug, source_id)
+    id_generator.fetch_token()
+
     writer = FileWriter()
 
     tables = list(scanner.scan_tables(table_filter=table_filter))
@@ -97,8 +102,10 @@ def scan(source_id: str, table_filter: Optional[str], parallel: int = 1):
 
         try:
             refresher.refresh_table(table_name)
+            identifiers = id_generator.generate(table_name)
             raw_columns = scanner.scan_columns(table_filter=table_name)
             for model in load_scanned_tables(raw_columns):
+                model.identifiers = identifiers
                 writer.write_scanned_model(model)
                 echo_info(f'Discovered model {model.model_name}')
         except Exception:

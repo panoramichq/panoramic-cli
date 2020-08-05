@@ -29,6 +29,14 @@ class MissingValueException(Exception):
         super().__init__(f'Missing value: {value_name}')
 
 
+class IdentifierException(Exception):
+
+    """Error refreshing metadata."""
+
+    def __init__(self, source_name: str, table_name: str):
+        super().__init__(f'Identifiers could not be generated for table {table_name} in data connection {source_name}')
+
+
 class RefreshException(Exception):
 
     """Error refreshing metadata."""
