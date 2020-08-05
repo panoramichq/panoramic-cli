@@ -28,7 +28,7 @@ def test_refresher_non_completed(mock_client, final_state):
 
 @patch('panoramic.cli.refresh.MetadataClient')
 def test_refresher_not_found(mock_client):
-    mock_client.return_value.create_refresh_job.side_effect = HTTPError(response=Mock(status=404))
+    mock_client.return_value.create_refresh_job.side_effect = HTTPError(response=Mock(status_code=404))
 
     with pytest.raises(SourceNotFoundException):
         Refresher('test-company', 'test-source').refresh_table('table-name')
@@ -36,7 +36,7 @@ def test_refresher_not_found(mock_client):
 
 @patch('panoramic.cli.refresh.MetadataClient')
 def test_refresher_generic_error(mock_client):
-    mock_client.return_value.create_refresh_job.side_effect = HTTPError(response=Mock(status=500))
+    mock_client.return_value.create_refresh_job.side_effect = HTTPError(response=Mock(status_code=500))
 
     with pytest.raises(RefreshException):
         Refresher('test-company', 'test-source').refresh_table('table-name')
