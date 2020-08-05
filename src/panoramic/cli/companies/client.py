@@ -1,7 +1,7 @@
 from typing import Optional, Set
 
 from panoramic.auth import OAuth2Client
-from panoramic.cli.baseclient import VersionedClient
+from panoramic.cli.clients import VersionedClient
 from panoramic.cli.config.auth import get_client_id, get_client_secret
 from panoramic.cli.config.companies import get_base_url
 
