@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 0.8.3 Release
+
+Fix status code checks in clients and hide requests.oauthlib logs.
+
 ## Version 0.8.2 Release
 
 Set minimum supported version to 0.7.4
