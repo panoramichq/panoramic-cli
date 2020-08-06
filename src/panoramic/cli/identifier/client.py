@@ -55,12 +55,11 @@ class IdentifierClient(OAuth2Client):
         response.raise_for_status()
         return JobState(response.json()['data']['status'])
 
-    def get_job_results(self, job_id: str, offset: int = 0, limit: int = 500) -> Dict[str, Any]:
+    def get_job_results(self, job_id: str) -> Dict[str, Any]:
         """Get results of an async job."""
-        url = urljoin(self.base_url, f'job/{job_id}/results')
-        params = {'offset': offset, 'limit': limit}
+        url = urljoin(self.base_url, f'job/{job_id}')
         logger.debug(f'Getting job results for job {job_id}')
-        response = self.session.get(url, params=params, timeout=5)
+        response = self.session.get(url, timeout=5)
         response.raise_for_status()
         return response.json()['data']
 

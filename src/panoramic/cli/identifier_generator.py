@@ -34,7 +34,7 @@ class IdentifierGenerator:
             job_id = self.client.create_identifier_job(self.company_slug, self.source_id, table_name)
             logger.debug(f'Identifier generator job with id {job_id} started for table {table_name}')
         except RequestException as e:
-            if e.response.status == requests.codes.not_found:
+            if e.response is not None and e.response.status_code == requests.codes.not_found:
                 raise SourceNotFoundException(self.source_id)
             raise IdentifierException(self.source_id, table_name)
 
