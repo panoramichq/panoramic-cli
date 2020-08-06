@@ -79,7 +79,7 @@ def list_companies():
             echo_info(company)
 
 
-def scan(source_id: str, table_filter: Optional[str], parallel: int = 1):
+def scan(source_id: str, table_filter: Optional[str], parallel: int = 1, generate_identifiers: bool = False):
     """Scan all metadata for given source and filter."""
     company_slug = get_company_slug()
     scanner = Scanner(company_slug, source_id)
@@ -87,8 +87,9 @@ def scan(source_id: str, table_filter: Optional[str], parallel: int = 1):
     refresher = Refresher(company_slug, source_id)
     refresher.fetch_token()
 
-    id_generator = IdentifierGenerator(company_slug, source_id)
-    id_generator.fetch_token()
+    if generate_identifiers:
+        id_generator = IdentifierGenerator(company_slug, source_id)
+        id_generator.fetch_token()
 
     writer = FileWriter()
 
@@ -102,7 +103,10 @@ def scan(source_id: str, table_filter: Optional[str], parallel: int = 1):
 
         try:
             refresher.refresh_table(table_name)
-            identifiers = id_generator.generate(table_name)
+            if generate_identifiers:
+                identifiers = id_generator.generate(table_name)
+            else:
+                identifiers = []
             raw_columns = scanner.scan_columns(table_filter=table_name)
             for model in load_scanned_tables(raw_columns):
                 model.identifiers = identifiers

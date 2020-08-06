@@ -30,12 +30,13 @@ def cli(debug):
 @cli.command(help='Scan models from source', cls=ContextAwareCommand)
 @click.argument('source-id', type=str, required=True)
 @click.option('--filter', '-f', type=str, help='Filter down what schemas to scan')
+@click.option('--generate-identifiers', '-i', type=bool, default=False, help='Generate identifiers for models')
 @click.option('--parallel', '-p', type=int, default=8, help='Parallelize metadata scan')
 @handle_exception
-def scan(source_id: str, filter: Optional[str], parallel: int):
+def scan(source_id: str, filter: Optional[str], parallel: int, generate_identifiers: bool):
     from panoramic.cli.command import scan as scan_command
 
-    scan_command(source_id, filter, parallel)
+    scan_command(source_id, filter, parallel, generate_identifiers)
 
 
 @cli.command(help='Pull models from remote', cls=ContextAwareCommand)
