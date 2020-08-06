@@ -1,0 +1,34 @@
+language: python
+python: 3.7
+dist: xenial
+cache: pip
+matrix:
+  include:
+  - python: 3.6
+    env: TOXENV=py36
+  - python: 3.7
+    env: TOXENV=py37
+  - python: 3.8
+    env: TOXENV=py38
+install:
+- pip install -U setuptools
+- pip install tox
+script: tox
+deploy:
+  - provider: pypi
+    user: __token__
+    password:
+      secure: "JpjV9uwfnWOLTlU8W8JfJOdP0C12WGH44QPhLgvjYlFa+Qwxv5N8WRnFrKKmUn3hICc9tRyXo+z4ycOHwRzxsG0tPgpqgUNxNkAh1+t9fmpTRt5UGu4+d/hx5xgcEQjjk+w6IJFzOKIrOZXfPr3Cc7e8YQNKXt999K9jSlTOST4Dv7IlHBrW0PaUQe6pNQAgn6SB/58+bDlfP00G+zlSdkEX75W2gIzIjFrnf74+URtSU5scEF6ZYp/fZ2vUzeaXtbGKRleQJXvjNbJfqEcs0M/oXUUQxUxJkvfLi/48DesJTBTicSvvnWu0EC7r5tIRJE5QLVaF4Ltg2Kh+JY+3cRKdVSgVJsCGsRgxPH+IrWo4GI3rpSzV0RKBf3rCGlCMPMLFXkn3igR+mFOb+iX6LL2/oiJ4198WUhHsUt3ir5PodAWMry+NLWnAUCKSUOAopABd7lPYilOgkIORJApDI9zVquE/iwdwWEJr+26Xo3hSpwHp8m0OZb8NWlmYv8Ho1KKjOZ8Uvt/Ap+88W06wq3jPVnsSakEKDDapr+acCsChFGaIvcrh3A/l1+CeYErqP3g01oezjBzFNjgl3NhT1nAi2+n7UyuMtlW+v4LKMCmnBR956ZKrRgU7up5Jf1DJUVF0QPsHTh383JA4MR29PdoIWcLfBiBTjcfY9wqOeRM="
+    distributions: sdist bdist_wheel
+    on:
+      tags: true
+      condition: $TOXENV = py36
+      repo: panoramichq/panoramic-cli
+  - provider: releases
+    api_key:
+      secure: "ALG8OMrdtYv+kG/hFRvU6dWn130wiEv/S81lAzCkDHAsr+bqIFbdIpCm3Fdua0gwE+eDjmBOzcEPJAaPhYn+jN96GihLhfE1Yq+/epRj8gN/4OYrW2mOsCaWmfTjV6lhp8j8+dV8jb/5JITB0g8Tj4KHO/OVkOt1MKqLSV/mV9voepcjKOEmLFG0GLGOM1JSVBoeTVASKlSC5QCvhojgfKBr/hhtaPRMf2pPcNjumGunUd1d4P86X6DIbwOKE0ulV8dJKJ17t9vRM9CcI4NxIyhDf5bP29WwCDh8xyjIgzub42ix3dGX9VuLKnJMkHjHQndRHwU3MiMUMSKlOHA8NzleipAamYqANyU5VUtXjQadQ45RDk7vDrswRCUqLDMzQm/ZuAaIbZBBAmUEN8bbO9hN54i62jsJuI3FYMcgCDS3fPYclq/odHO6nbhwg0bAceekwXCzSBHMGJh8bV6mmubQcmqMFyATM33MgHrCJNMZmpCIdV80w2LLU/dlgX205Rm5mDJxnZu4IY2IaPFgqtmL5IdSD1A4lS/fsJyqcqdPbjA4d1c3l9fb6ZnLqf7JiLc9gdNJXJ/ztStBOjPwZdkLHBb8yB6H2fuhPRLuvUQ918YnDQqv6n4QuHGL/eTJbgpw0niRY460lcq06ePam1mp9F1+rEsnMi2ztYFqwiM="
+    skip_cleanup: true
+    on:
+      tags: true
+      condition: $TOXENV = py36
+      repo: panoramichq/panoramic-cli
