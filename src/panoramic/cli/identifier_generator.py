@@ -22,7 +22,9 @@ class IdentifierGenerator:
         self.source_id = source_id
 
         if client is None:
-            self.client = IdentifierClient()
+            client = IdentifierClient()
+
+        self.client = client
 
     def fetch_token(self):
         self.client.fetch_token()
