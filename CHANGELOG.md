@@ -1,5 +1,21 @@
 # Changelog
 
+## Version 0.8.3 Release
+
+Fix status code checks in clients and hide requests.oauthlib logs.
+
+## Version 0.8.2 Release
+
+Set minimum supported version to 0.7.4
+
+## Version 0.8.1 Release
+
+Proper release for 0.8.0
+
+## Version 0.8.0 Release
+
+Add new uid field and change how scan generates models
+
 ## Version 0.7.4 Release
 
 Remove special slash handling

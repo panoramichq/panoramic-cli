@@ -33,7 +33,7 @@ def test_scan_columns_non_completed(mock_client, final_state):
 
 @patch('panoramic.cli.scan.MetadataClient')
 def test_scan_columns_not_found(mock_client):
-    mock_client.return_value.create_get_columns_job.side_effect = HTTPError(response=Mock(status=404))
+    mock_client.return_value.create_get_columns_job.side_effect = HTTPError(response=Mock(status_code=404))
 
     with pytest.raises(SourceNotFoundException):
         list(Scanner('test-company', 'test-source').scan_columns(table_filter='table-name', timeout=1))
@@ -41,7 +41,7 @@ def test_scan_columns_not_found(mock_client):
 
 @patch('panoramic.cli.scan.MetadataClient')
 def test_scan_columns_generic_error(mock_client):
-    mock_client.return_value.create_get_columns_job.side_effect = HTTPError(response=Mock(status=500))
+    mock_client.return_value.create_get_columns_job.side_effect = HTTPError(response=Mock(status_code=500))
 
     with pytest.raises(ScanException):
         list(Scanner('test-company', 'test-source').scan_columns(table_filter='table-name', timeout=1))
@@ -72,7 +72,7 @@ def test_scan_tables_non_completed(mock_client, final_state):
 
 @patch('panoramic.cli.scan.MetadataClient')
 def test_scan_tables_not_found(mock_client):
-    mock_client.return_value.create_get_tables_job.side_effect = HTTPError(response=Mock(status=404))
+    mock_client.return_value.create_get_tables_job.side_effect = HTTPError(response=Mock(status_code=404))
 
     with pytest.raises(SourceNotFoundException):
         list(Scanner('test-company', 'test-source').scan_tables(table_filter='table-name', timeout=1))
@@ -80,7 +80,7 @@ def test_scan_tables_not_found(mock_client):
 
 @patch('panoramic.cli.scan.MetadataClient')
 def test_scan_tables_generic_error(mock_client):
-    mock_client.return_value.create_get_tables_job.side_effect = HTTPError(response=Mock(status=500))
+    mock_client.return_value.create_get_tables_job.side_effect = HTTPError(response=Mock(status_code=500))
 
     with pytest.raises(ScanException):
         list(Scanner('test-company', 'test-source').scan_tables(table_filter='table-name', timeout=1))

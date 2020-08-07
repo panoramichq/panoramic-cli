@@ -19,7 +19,10 @@ def echo_info(msg: str):
 
 def configure_logging():
     log_level = os.environ.get('LOG_LEVEL', 'ERROR').upper()
-    logging.basicConfig(stream=sys.stdout, level=log_level, format='%(levelname)s: %(message)s')
+    logging.basicConfig(stream=sys.stdout, level=log_level)
+
+    # Hide auth logs from output
+    logging.getLogger('requests_oauthlib').setLevel(logging.INFO)
 
 
 def log_error(logger: logging.Logger, message, exc: Exception):

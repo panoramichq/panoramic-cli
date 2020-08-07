@@ -34,7 +34,7 @@ class Scanner:
             job_id = self.client.create_get_tables_job(self.company_slug, self.source_id, table_filter)
             logger.debug(f'Get tables job with id {job_id} started with filter {table_filter}')
         except RequestException as e:
-            if e.response and e.response.status == requests.codes.not_found:
+            if e.response is not None and e.response.status_code == requests.codes.not_found:
                 raise SourceNotFoundException(self.source_id).extract_request_id(e)
             raise ScanException(self.source_id, table_filter).extract_request_id(e)
 
@@ -55,7 +55,7 @@ class Scanner:
             job_id = self.client.create_get_columns_job(self.company_slug, self.source_id, table_filter)
             logger.debug(f'Get columns job with id {job_id} started with filter {table_filter}')
         except requests.HTTPError as e:
-            if e.response.status == requests.codes.not_found:
+            if e.response is not None and e.response.status_code == requests.codes.not_found:
                 raise SourceNotFoundException(self.source_id).extract_request_id(e)
             raise ScanException(self.source_id, table_filter).extract_request_id(e)
 
