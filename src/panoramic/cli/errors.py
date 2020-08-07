@@ -18,8 +18,7 @@ class CliBaseException(Exception):
         return self
 
     def extract_request_id(self, exc: RequestException):
-        response = getattr(exc, 'response')
-        headers = getattr(response, 'headers', {})
+        headers = getattr(exc.response, 'headers', {})
         return self.add_request_id(headers.get(DIESEL_REQUEST_ID_HEADER))
 
     def __str__(self) -> str:
