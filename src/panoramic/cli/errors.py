@@ -3,25 +3,52 @@ import sys
 from pathlib import Path
 from typing import Callable, Optional
 
+from requests.exceptions import RequestException
+
 from panoramic.cli.logging import echo_error
 
+DIESEL_REQUEST_ID_HEADER = 'x-diesel-request-id'
 
-class TimeoutException(Exception):
+
+class CliBaseException(Exception):
+    request_id: Optional[str] = None
+
+    def add_request_id(self, request_id: str):
+        self.request_id = request_id
+        return self
+
+    def extract_request_id(self, exc: RequestException):
+        response = getattr(exc, 'response')
+        headers = getattr(response, 'headers', {})
+        return self.add_request_id(headers.get(DIESEL_REQUEST_ID_HEADER))
+
+    def __str__(self) -> str:
+        if self.request_id is not None:
+            return f'{super().__str__()} (RequestId: {self.request_id})'
+        return super().__str__()
+
+    def __repr__(self) -> str:
+        if self.request_id is not None:
+            return f'{super().__repr__()} (RequestId: {self.request_id})'
+        return super().__repr__()
+
+
+class TimeoutException(CliBaseException):
 
     """Thrown when a remote operation times out."""
 
 
-class MissingContextFileException(Exception):
+class MissingContextFileException(CliBaseException):
 
     """Generic missing context file error."""
 
 
-class MissingConfigFileException(Exception):
+class MissingConfigFileException(CliBaseException):
 
     """Generic missing config file error."""
 
 
-class MissingValueException(Exception):
+class MissingValueException(CliBaseException):
 
     """Missing value in Yaml file"""
 
@@ -29,7 +56,7 @@ class MissingValueException(Exception):
         super().__init__(f'Missing value: {value_name}')
 
 
-class RefreshException(Exception):
+class RefreshException(CliBaseException):
 
     """Error refreshing metadata."""
 
@@ -37,7 +64,7 @@ class RefreshException(Exception):
         super().__init__(f'Metadata could not be refreshed for table {table_name} in data connection {source_name}')
 
 
-class SourceNotFoundException(Exception):
+class SourceNotFoundException(CliBaseException):
 
     """Thrown when a source cannot be found."""
 
@@ -45,7 +72,7 @@ class SourceNotFoundException(Exception):
         super().__init__(f'Data connection {source_name} not found. Has it been connected?')
 
 
-class ScanException(Exception):
+class ScanException(CliBaseException):
 
     """Error scanning metadata."""
 
@@ -54,7 +81,7 @@ class ScanException(Exception):
         super().__init__(f'Metadata could not be scanned for table(s){table_msg}in data counnection: {source_name}')
 
 
-class VirtualDataSourceException(Exception):
+class VirtualDataSourceException(CliBaseException):
 
     """Error fetching virtual data sources."""
 
@@ -62,7 +89,7 @@ class VirtualDataSourceException(Exception):
         super().__init__(f'Error fetching datasets for company {company_slug}')
 
 
-class ModelException(Exception):
+class ModelException(CliBaseException):
 
     """Error fetching models."""
 
@@ -70,7 +97,7 @@ class ModelException(Exception):
         super().__init__(f'Error fetching models for company {company_slug} and dataset {dataset_name}')
 
 
-class InvalidYamlFile(Exception):
+class InvalidYamlFile(CliBaseException):
 
     """YAML syntax error."""
 

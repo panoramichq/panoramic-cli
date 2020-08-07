@@ -5,7 +5,6 @@ from typing import Iterable
 from requests.exceptions import RequestException
 
 from panoramic.cli.errors import ModelException, VirtualDataSourceException
-from panoramic.cli.logging import log_diesel_request_exception
 from panoramic.cli.mapper import map_data_source_from_remote, map_model_from_remote
 from panoramic.cli.model import ModelClient
 from panoramic.cli.pano_model import PanoModel, PanoVirtualDataSource
@@ -23,8 +22,7 @@ def get_data_sources(company_slug: str, *, limit: int = 100) -> Iterable[PanoVir
         try:
             sources = client.get_all_virtual_data_sources(company_slug, offset=offset, limit=limit)
         except RequestException as e:
-            log_diesel_request_exception(logger, e)
-            raise VirtualDataSourceException(company_slug)
+            raise VirtualDataSourceException(company_slug).extract_request_id(e)
 
         yield from (map_data_source_from_remote(s) for s in sources)
         if len(sources) < limit:
@@ -42,8 +40,7 @@ def get_models(data_source: str, company_slug: str, *, limit: int = 100) -> Iter
         try:
             models = client.get_models(data_source, company_slug, offset=offset, limit=limit)
         except RequestException as e:
-            log_diesel_request_exception(logger, e)
-            raise ModelException(company_slug, data_source)
+            raise ModelException(company_slug, data_source).extract_request_id(e)
 
         yield from (map_model_from_remote(m) for m in models)
         if len(models) < limit:

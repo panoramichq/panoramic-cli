@@ -4,7 +4,6 @@ import requests
 from requests.exceptions import RequestException
 
 from panoramic.cli.errors import RefreshException, SourceNotFoundException
-from panoramic.cli.logging import log_diesel_request_exception
 from panoramic.cli.metadata import JobState, MetadataClient
 
 logger = logging.getLogger(__name__)
@@ -34,10 +33,9 @@ class Refresher:
             job_id = self.client.create_refresh_job(self.company_slug, self.source_id, table_name)
             logger.debug(f'Refresh metadata job with id {job_id} started for table {table_name}')
         except RequestException as e:
-            log_diesel_request_exception(logger, e)
             if e.response.status == requests.codes.not_found:
-                raise SourceNotFoundException(self.source_id)
-            raise RefreshException(self.source_id, table_name)
+                raise SourceNotFoundException(self.source_id).extract_request_id(e)
+            raise RefreshException(self.source_id, table_name).extract_request_id(e)
 
         try:
             state = self.client.wait_for_terminal_state(job_id, timeout=timeout)
@@ -46,5 +44,4 @@ class Refresher:
 
             logger.debug(f'Refresh metadata job with id {job_id} completed for table {table_name}')
         except RequestException as e:
-            log_diesel_request_exception(logger, e)
-            raise RefreshException(self.source_id, table_name)
+            raise RefreshException(self.source_id, table_name).extract_request_id(e)
