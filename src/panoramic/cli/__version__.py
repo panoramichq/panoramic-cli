@@ -1,2 +1,2 @@
-__version__ = "0.9.0b1"
+__version__ = "0.8.3"
 __minimum_supported_version__ = "0.7.4"
