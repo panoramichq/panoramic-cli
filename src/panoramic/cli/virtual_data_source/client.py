@@ -3,6 +3,7 @@ from typing import Any, Dict, List, Optional
 from urllib.parse import urljoin
 
 from panoramic.auth import OAuth2Client
+from panoramic.cli.clients import VersionedClient
 from panoramic.cli.config.auth import get_client_id, get_client_secret
 from panoramic.cli.config.virtual_data_source import get_base_url
 
@@ -38,7 +39,7 @@ class VirtualDataSource:
         return self.to_dict() == o.to_dict()
 
 
-class VirtualDataSourceClient(OAuth2Client):
+class VirtualDataSourceClient(OAuth2Client, VersionedClient):
 
     """Metadata HTTP API client."""
 
@@ -69,7 +70,7 @@ class VirtualDataSourceClient(OAuth2Client):
         """Create a virtual data source for a company"""
         logger.debug(f'Upserting virtual data source with payload {payload} under company {company_slug}')
         params = {'company_slug': company_slug}
-        response = self.session.put(self.base_url, json=payload.to_dict(), params=params, timeout=5)
+        response = self.session.put(self.base_url, json=payload.to_dict(), params=params, timeout=30)
         response.raise_for_status()
 
     def get_virtual_data_source(self, company_slug: str, slug: str) -> VirtualDataSource:
@@ -77,7 +78,7 @@ class VirtualDataSourceClient(OAuth2Client):
         logger.debug(f'Retrieving a virtual data source with slug {slug} under company {company_slug}')
         url = urljoin(self._base_url_with_trailing_slash, slug)
         params = {'company_slug': company_slug}
-        response = self.session.get(url, params=params, timeout=5)
+        response = self.session.get(url, params=params, timeout=30)
         response.raise_for_status()
         return VirtualDataSource.from_dict(response.json()['data'])
 
@@ -87,14 +88,14 @@ class VirtualDataSourceClient(OAuth2Client):
         """Retrieve all virtual data sources under a company"""
         logger.debug(f'Retrieving all virtual data sources under company {company_slug}')
         params = {'company_slug': company_slug, 'offset': offset, 'limit': limit}
-        response = self.session.get(self.base_url, params=params, timeout=5)
+        response = self.session.get(self.base_url, params=params, timeout=30)
         response.raise_for_status()
         return [VirtualDataSource.from_dict(d) for d in response.json()['data']]
 
     def delete_virtual_data_source(self, company_slug: str, slug: str):
         """Delete a virtual data source"""
         logger.debug(f'Deleting virtual data source with slug {slug} under company {company_slug}')
-        # params = {'company_slug': company_slug}
-        # url = urljoin(self._base_url_with_trailing_slash, slug)
-        # response = self.session.delete(url, params=params, timeout=5)
-        # response.raise_for_status()
+        params = {'company_slug': company_slug}
+        url = urljoin(self._base_url_with_trailing_slash, slug)
+        response = self.session.delete(url, params=params, timeout=30)
+        response.raise_for_status()

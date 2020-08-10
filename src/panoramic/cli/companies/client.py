@@ -1,11 +1,12 @@
 from typing import Optional, Set
 
 from panoramic.auth import OAuth2Client
+from panoramic.cli.clients import VersionedClient
 from panoramic.cli.config.auth import get_client_id, get_client_secret
 from panoramic.cli.config.companies import get_base_url
 
 
-class CompaniesClient(OAuth2Client):
+class CompaniesClient(OAuth2Client, VersionedClient):
 
     """Companies HTTP API client."""
 
@@ -22,6 +23,6 @@ class CompaniesClient(OAuth2Client):
         self.base_url = base_url
 
     def get_companies(self) -> Set[str]:
-        response = self.session.get(self.base_url)
+        response = self.session.get(self.base_url, timeout=30)
         response.raise_for_status()
         return set(response.json()['data'])

@@ -3,6 +3,7 @@ from typing import Any, Dict, List, Optional
 from urllib.parse import urljoin
 
 from panoramic.auth import OAuth2Client
+from panoramic.cli.clients import VersionedClient
 from panoramic.cli.config.auth import get_client_id, get_client_secret
 from panoramic.cli.config.model import get_base_url
 
@@ -151,7 +152,7 @@ class Model:
         return self.to_dict() == o.to_dict()
 
 
-class ModelClient(OAuth2Client):
+class ModelClient(OAuth2Client, VersionedClient):
 
     """Model HTTP API client."""
 
@@ -172,14 +173,14 @@ class ModelClient(OAuth2Client):
         url = urljoin(self.base_url, name)
         logger.debug(f'Deleting model with name: {name}')
         params = {'virtual_data_source': data_source, 'company_slug': company_slug}
-        response = self.session.delete(url, params=params, timeout=5)
+        response = self.session.delete(url, params=params, timeout=30)
         response.raise_for_status()
 
     def upsert_model(self, data_source: str, company_slug: str, model: Model):
         """Add or update given model."""
         logger.debug(f'Upserting model with name: {model.name}')
         params = {'virtual_data_source': data_source, 'company_slug': company_slug}
-        response = self.session.put(self.base_url, json=model.to_dict(), params=params, timeout=5)
+        response = self.session.put(self.base_url, json=model.to_dict(), params=params, timeout=30)
         response.raise_for_status()
 
     def get_model_names(self, data_source: str, company_slug: str, offset: int = 0, limit: int = 100) -> List[str]:
@@ -187,7 +188,7 @@ class ModelClient(OAuth2Client):
         logger.debug(f'Listing names of models for source: {data_source}')
         url = urljoin(self.base_url, 'model-name')
         params = {'virtual_data_source': data_source, 'company_slug': company_slug, 'offset': offset, 'limit': limit}
-        response = self.session.get(url, params=params, timeout=5)
+        response = self.session.get(url, params=params, timeout=30)
         response.raise_for_status()
         return response.json()['data']
 

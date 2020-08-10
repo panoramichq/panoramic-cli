@@ -5,6 +5,7 @@ from typing import Any, Dict, Iterable, List, Optional
 from urllib.parse import urljoin
 
 from panoramic.auth import OAuth2Client
+from panoramic.cli.clients import VersionedClient
 from panoramic.cli.config.auth import get_client_id, get_client_secret
 from panoramic.cli.config.metadata import get_base_url
 from panoramic.cli.errors import TimeoutException
@@ -34,7 +35,7 @@ class JobState(Enum):
 TERMINAL_STATES = {JobState.COMPLETED, JobState.CANCELED, JobState.FAILED}
 
 
-class MetadataClient(OAuth2Client):
+class MetadataClient(OAuth2Client, VersionedClient):
 
     """Metadata HTTP API client."""
 
@@ -55,7 +56,7 @@ class MetadataClient(OAuth2Client):
         url = urljoin(self.base_url, f'{source_id}/refresh')
         params = {'table_name': table_name, 'company_slug': company_slug}
         logger.debug(f'Refreshing table for source {source_id} and name: {table_name}')
-        response = self.session.post(url, params=params, timeout=5)
+        response = self.session.post(url, params=params, timeout=30)
         response.raise_for_status()
         return response.json()['job_id']
 
@@ -68,7 +69,7 @@ class MetadataClient(OAuth2Client):
             else {'company_slug': company_slug, 'table_filter': table_filter}
         )
         logger.debug(f'Requesting tables for source {source_id} and filter: {table_filter}')
-        response = self.session.post(url, params=params, timeout=5)
+        response = self.session.post(url, params=params, timeout=30)
         response.raise_for_status()
         return response.json()['job_id']
 
@@ -81,7 +82,7 @@ class MetadataClient(OAuth2Client):
             else {'company_slug': company_slug, 'table_filter': table_filter}
         )
         logger.debug(f'Requesting columns for source {source_id} and filter: {table_filter}')
-        response = self.session.post(url, params=params, timeout=5)
+        response = self.session.post(url, params=params, timeout=30)
         response.raise_for_status()
         return response.json()['job_id']
 
@@ -89,7 +90,7 @@ class MetadataClient(OAuth2Client):
         """Get status of an async job."""
         url = urljoin(self.base_url, f'job/{job_id}')
         logger.debug(f'Getting job status for job {job_id}')
-        response = self.session.get(url, timeout=5)
+        response = self.session.get(url, timeout=30)
         response.raise_for_status()
         return JobState(response.json()['job_status'])
 
@@ -98,7 +99,7 @@ class MetadataClient(OAuth2Client):
         url = urljoin(self.base_url, f'job/{job_id}/results')
         params = {'offset': offset, 'limit': limit}
         logger.debug(f'Getting job results for job {job_id}')
-        response = self.session.get(url, params=params, timeout=5)
+        response = self.session.get(url, params=params, timeout=30)
         response.raise_for_status()
         return response.json()['data']
 

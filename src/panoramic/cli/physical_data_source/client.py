@@ -1,11 +1,12 @@
 from typing import Any, Dict, List, Optional
 
-from panoramic.auth import OAuth2Client
+from panoramic.auth.client import OAuth2Client
+from panoramic.cli.clients import VersionedClient
 from panoramic.cli.config.auth import get_client_id, get_client_secret
 from panoramic.cli.config.source import get_base_url
 
 
-class PhysicalDataSourceClient(OAuth2Client):
+class PhysicalDataSourceClient(OAuth2Client, VersionedClient):
 
     """Physical data source HTTP API client."""
 
@@ -22,6 +23,6 @@ class PhysicalDataSourceClient(OAuth2Client):
         super().__init__(client_id, client_secret)
 
     def get_sources(self, company_slug: str) -> List[Dict[str, Any]]:
-        response = self.session.get(self.base_url, params={'company_slug': company_slug})
+        response = self.session.get(self.base_url, params={'company_slug': company_slug}, timeout=30)
         response.raise_for_status()
         return response.json()['data']
