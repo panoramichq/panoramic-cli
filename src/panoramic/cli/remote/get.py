@@ -1,5 +1,4 @@
 import itertools
-import logging
 from typing import Iterable
 
 from requests.exceptions import RequestException
@@ -10,8 +9,6 @@ from panoramic.cli.model import ModelClient
 from panoramic.cli.pano_model import PanoModel, PanoVirtualDataSource
 from panoramic.cli.state import VirtualState
 from panoramic.cli.virtual_data_source import VirtualDataSourceClient
-
-logger = logging.getLogger(__name__)
 
 
 def get_data_sources(company_slug: str, *, limit: int = 100) -> Iterable[PanoVirtualDataSource]:

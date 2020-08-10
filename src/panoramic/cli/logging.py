@@ -28,4 +28,3 @@ def configure_logging():
 def log_error(logger: logging.Logger, message, exc: Exception):
     tqdm.write(f'Error: {message}')
     logger.debug(message, exc_info=exc)
-
