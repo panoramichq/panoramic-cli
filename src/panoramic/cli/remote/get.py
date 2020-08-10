@@ -18,8 +18,8 @@ def get_data_sources(company_slug: str, *, limit: int = 100) -> Iterable[PanoVir
     while True:
         try:
             sources = client.get_all_virtual_data_sources(company_slug, offset=offset, limit=limit)
-        except RequestException:
-            raise VirtualDataSourceException(company_slug)
+        except RequestException as e:
+            raise VirtualDataSourceException(company_slug).extract_request_id(e)
 
         yield from (map_data_source_from_remote(s) for s in sources)
         if len(sources) < limit:
@@ -36,8 +36,8 @@ def get_models(data_source: str, company_slug: str, *, limit: int = 100) -> Iter
     while True:
         try:
             models = client.get_models(data_source, company_slug, offset=offset, limit=limit)
-        except RequestException:
-            raise ModelException(company_slug, data_source)
+        except RequestException as e:
+            raise ModelException(company_slug, data_source).extract_request_id(e)
 
         yield from (map_model_from_remote(m) for m in models)
         if len(models) < limit:

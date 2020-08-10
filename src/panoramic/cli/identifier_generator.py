@@ -38,7 +38,7 @@ class IdentifierGenerator:
         except RequestException as e:
             if e.response is not None and e.response.status_code == requests.codes.not_found:
                 raise SourceNotFoundException(self.source_id)
-            raise IdentifierException(self.source_id, table_name)
+            raise IdentifierException(self.source_id, table_name).extract_request_id(e)
 
         try:
             state = self.client.wait_for_terminal_state(job_id, timeout=timeout)
@@ -47,5 +47,5 @@ class IdentifierGenerator:
 
             logger.debug(f'Identifier generator job with id {job_id} completed for table {table_name}')
             return self.client.get_job_results(job_id)['identifiers']
-        except RequestException:
-            raise IdentifierException(self.source_id, table_name)
+        except RequestException as e:
+            raise IdentifierException(self.source_id, table_name).extract_request_id(e)
