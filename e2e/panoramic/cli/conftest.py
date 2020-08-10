@@ -17,6 +17,7 @@ def setup(monkeypatch):
     monkeypatch.setenv('PANO_VDS_BASE_URL', 'https://diesel.panoramicstg.com/api/v1/federated/virtual-data-source/')
     monkeypatch.setenv('PANO_PDS_BASE_URL', 'https://diesel.panoramicstg.com/api/v1/federated/physical-data-source/')
     monkeypatch.setenv('PANO_COMPANIES_BASE_URL', 'https://diesel.panoramicstg.com/api/v1/federated/companies/')
+    monkeypatch.setenv('PANO_IDENTIFIER_BASE_URL', 'https://diesel.panoramicstg.com/api/v1/federated/identifier/')
 
 
 def scrub_access_token(response):

@@ -24,13 +24,20 @@ def mock_scanner():
 
 
 @pytest.fixture
+def mock_id_generator():
+    with patch('panoramic.cli.command.IdentifierGenerator') as mock_id_generator:
+        yield mock_id_generator()
+
+
+@pytest.fixture
 def mock_writer():
     with patch('panoramic.cli.command.FileWriter') as mock_writer:
         yield mock_writer()
 
 
-def test_scan(mock_writer, mock_scanner, mock_refresher):
+def test_scan(mock_writer, mock_scanner, mock_refresher, mock_id_generator):
     mock_scanner.scan_tables.return_value = [{'table_schema': 'source.schema1', 'table_name': 'table1'}]
+    mock_id_generator.generate.return_value = ['id']
     mock_scanner.scan_columns.return_value = [
         {'table_schema': 'source.schema1', 'table_name': 'table1', 'column_name': 'id', 'data_type': 'str'},
         {'table_schema': 'source.schema1', 'table_name': 'table1', 'column_name': 'value', 'data_type': 'int'},
@@ -42,8 +49,9 @@ def test_scan(mock_writer, mock_scanner, mock_refresher):
     assert mock_writer.write_scanned_model.call_count == 1
 
 
-def test_scan_single_table_error(mock_writer, mock_scanner, mock_refresher):
+def test_scan_single_table_error(mock_writer, mock_scanner, mock_refresher, mock_id_generator):
     mock_scanner.scan_tables.return_value = [{'table_schema': 'source.schema1', 'table_name': 'table1'}]
+    mock_id_generator.generate.return_value = ['id']
     mock_scanner.scan_columns.return_value = [
         {'table_schema': 'source.schema1', 'table_name': 'table1', 'column_name': 'id', 'data_type': 'str'},
         {'table_schema': 'source.schema1', 'table_name': 'table1', 'column_name': 'value', 'data_type': 'int'},
