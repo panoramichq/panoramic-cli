@@ -34,8 +34,8 @@ class Refresher:
             logger.debug(f'Refresh metadata job with id {job_id} started for table {table_name}')
         except RequestException as e:
             if e.response is not None and e.response.status_code == requests.codes.not_found:
-                raise SourceNotFoundException(self.source_id)
-            raise RefreshException(self.source_id, table_name)
+                raise SourceNotFoundException(self.source_id).extract_request_id(e)
+            raise RefreshException(self.source_id, table_name).extract_request_id(e)
 
         try:
             state = self.client.wait_for_terminal_state(job_id, timeout=timeout)
@@ -43,5 +43,5 @@ class Refresher:
                 raise RefreshException(self.source_id, table_name)
 
             logger.debug(f'Refresh metadata job with id {job_id} completed for table {table_name}')
-        except RequestException:
-            raise RefreshException(self.source_id, table_name)
+        except RequestException as e:
+            raise RefreshException(self.source_id, table_name).extract_request_id(e)
