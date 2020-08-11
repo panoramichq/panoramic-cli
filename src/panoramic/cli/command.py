@@ -14,7 +14,6 @@ from panoramic.cli.local.executor import LocalExecutor
 from panoramic.cli.local.file_utils import Paths, write_yaml
 from panoramic.cli.local.writer import FileWriter
 from panoramic.cli.logging import echo_error, echo_info
-from panoramic.cli.parser import load_scanned_tables
 from panoramic.cli.physical_data_source.client import PhysicalDataSourceClient
 from panoramic.cli.refresh import Refresher
 from panoramic.cli.remote import get_state as get_remote_state
@@ -107,8 +106,7 @@ def scan(source_id: str, table_filter: Optional[str], parallel: int = 1, generat
                 identifiers = id_generator.generate(table_name)
             else:
                 identifiers = []
-            raw_columns = scanner.scan_columns(table_filter=table_name)
-            for model in load_scanned_tables(raw_columns):
+            for model in scanner.scan_columns_grouped(table_filter=table_name):
                 model.identifiers = identifiers
                 writer.write_scanned_model(model)
                 echo_info(f'Discovered model {model.model_name}')

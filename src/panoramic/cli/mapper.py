@@ -1,4 +1,5 @@
 import itertools
+import operator
 from collections import defaultdict
 from typing import Dict, Iterable, List, Optional, Set, Tuple
 
@@ -105,3 +106,27 @@ def map_model_from_local(model: PanoModel) -> Model:
         visibility='available',  # default to available visibility
         virtual_data_source=model.virtual_data_source,
     )
+
+
+def map_columns_to_model(raw_columns: Iterable[Dict]) -> Iterable[PanoModel]:
+    """
+    Load result of metadata table columns scan into Model
+    """
+    columns_grouped = itertools.groupby(raw_columns, operator.itemgetter('fully_qualified_object_name', 'model_name'))
+
+    for (fully_qualified_obj_name, model_name), columns in columns_grouped:
+        yield PanoModel(
+            model_name=model_name,
+            data_source=fully_qualified_obj_name,
+            fields=[
+                PanoModelField(
+                    uid=col['uid'],
+                    data_type=col['data_type'],
+                    data_reference=col['data_reference'],
+                    field_map=col['field_map'],
+                )
+                for col in columns
+            ],
+            joins=[],
+            identifiers=[],
+        )
