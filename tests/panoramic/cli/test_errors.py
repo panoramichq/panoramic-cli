@@ -35,6 +35,6 @@ def test_valid_request_id_request_exception():
         match='^Metadata could not be refreshed for table some_table in data connection some_source \(RequestId\: some_request_id\)$',
     ):
         response = Response()
-        response.headers = {'x-diesel-request-id': 'some_request_id'}
+        response.headers['x-diesel-request-id'] = 'some_request_id'
         e = RequestException('Failed to connect', response=response)
         raise RefreshException('some_source', 'some_table').extract_request_id(e)

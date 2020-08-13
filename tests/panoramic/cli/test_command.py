@@ -3,6 +3,7 @@ from unittest.mock import call, patch
 import pytest
 
 from panoramic.cli.command import list_connections, scan
+from panoramic.cli.pano_model import PanoModel
 
 
 @pytest.fixture(autouse=True)
@@ -38,9 +39,8 @@ def mock_writer():
 def test_scan(mock_writer, mock_scanner, mock_refresher, mock_id_generator):
     mock_scanner.scan_tables.return_value = [{'table_schema': 'source.schema1', 'table_name': 'table1'}]
     mock_id_generator.generate.return_value = ['id']
-    mock_scanner.scan_columns.return_value = [
-        {'table_schema': 'source.schema1', 'table_name': 'table1', 'column_name': 'id', 'data_type': 'str'},
-        {'table_schema': 'source.schema1', 'table_name': 'table1', 'column_name': 'value', 'data_type': 'int'},
+    mock_scanner.scan_columns_grouped.return_value = [
+        PanoModel(model_name='model1', data_source='source1', fields=[], joins=[], identifiers=[]),
     ]
 
     scan('test-source', 'test-filter')
@@ -50,13 +50,15 @@ def test_scan(mock_writer, mock_scanner, mock_refresher, mock_id_generator):
 
 
 def test_scan_single_table_error(mock_writer, mock_scanner, mock_refresher, mock_id_generator):
-    mock_scanner.scan_tables.return_value = [{'table_schema': 'source.schema1', 'table_name': 'table1'}]
-    mock_id_generator.generate.return_value = ['id']
-    mock_scanner.scan_columns.return_value = [
-        {'table_schema': 'source.schema1', 'table_name': 'table1', 'column_name': 'id', 'data_type': 'str'},
-        {'table_schema': 'source.schema1', 'table_name': 'table1', 'column_name': 'value', 'data_type': 'int'},
+    mock_scanner.scan_tables.return_value = [
+        {'table_schema': 'source.schema1', 'table_name': 'table1'},
+        {'table_schema': 'source.schema1', 'table_name': 'table2'},
     ]
-    mock_refresher.refresh_table.side_effect == [Exception('test'), None]
+    mock_id_generator.generate.return_value = ['id']
+    mock_scanner.scan_columns_grouped.return_value = [
+        PanoModel(model_name='model2', data_source='source1', fields=[], joins=[], identifiers=[],),
+    ]
+    mock_refresher.refresh_table.side_effect = [Exception('test'), None]
 
     scan('test-source', 'test-filter')
 

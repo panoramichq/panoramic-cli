@@ -1,6 +1,10 @@
 import pytest
 
-from panoramic.cli.mapper import map_model_from_local, map_model_from_remote
+from panoramic.cli.mapper import (
+    map_columns_to_model,
+    map_model_from_local,
+    map_model_from_remote,
+)
 from panoramic.cli.model.client import Model, ModelAttribute
 from panoramic.cli.pano_model import PanoModel, PanoModelField
 
@@ -132,3 +136,49 @@ def test_from_local_to_remote_missing_uid(local_model_missing_uid_fixture, remot
     remote_model = map_model_from_local(local_model_missing_uid_fixture)
 
     assert remote_model.to_dict() == expected_remote_model
+
+
+def test_map_columns_to_model():
+    expected = [
+        {
+            'api_version': 'v1',
+            'model_name': 'source.schema1.table1',
+            'data_source': 'source.schema1.table1',
+            'fields': [
+                {'uid': 'source.schema1.table1.id', 'data_type': 'str', 'field_map': ['id'], 'data_reference': 'id',},
+                {
+                    'uid': 'source.schema1.table1.value',
+                    'data_type': 'int',
+                    'field_map': ['value'],
+                    'data_reference': 'value',
+                },
+            ],
+            'identifiers': [],
+            'joins': [],
+        }
+    ]
+    output = [
+        item.to_dict()
+        for item in map_columns_to_model(
+            [
+                {
+                    'uid': 'source.schema1.table1.id',
+                    'data_type': 'str',
+                    'field_map': ['id'],
+                    'data_reference': 'id',
+                    'model_name': 'source.schema1.table1',
+                    'fully_qualified_object_name': 'source.schema1.table1',
+                },
+                {
+                    'uid': 'source.schema1.table1.value',
+                    'data_type': 'int',
+                    'field_map': ['value'],
+                    'data_reference': 'value',
+                    'model_name': 'source.schema1.table1',
+                    'fully_qualified_object_name': 'source.schema1.table1',
+                },
+            ],
+        )
+    ]
+
+    assert output == expected

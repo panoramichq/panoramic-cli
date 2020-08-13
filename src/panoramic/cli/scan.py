@@ -5,7 +5,9 @@ import requests
 from requests.exceptions import RequestException
 
 from panoramic.cli.errors import ScanException, SourceNotFoundException
+from panoramic.cli.mapper import map_columns_to_model
 from panoramic.cli.metadata import JobState, MetadataClient
+from panoramic.cli.pano_model import PanoModel
 
 logger = logging.getLogger(__name__)
 
@@ -68,3 +70,7 @@ class Scanner:
             yield from self.client.collect_results(job_id)
         except RequestException as e:
             raise ScanException(self.source_id, table_filter).extract_request_id(e)
+
+    def scan_columns_grouped(self, *, table_filter: Optional[str] = None, timeout: int = 60) -> Iterable[PanoModel]:
+        """Scan columns for a given source and group them by model and data source."""
+        yield from map_columns_to_model(self.scan_columns(table_filter=table_filter, timeout=timeout))
