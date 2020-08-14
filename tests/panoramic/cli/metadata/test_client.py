@@ -15,7 +15,7 @@ def test_create_get_columns_job():
     responses.add(
         responses.POST,
         'https://diesel/test-source/columns?company_slug=test-company&table_filter=test-filter',
-        json={'job_id': 'test-job-id'},
+        json={'data': {'job_id': 'test-job-id'}},
     )
 
     client = MetadataClient(base_url='https://diesel/', client_id='client-id', client_secret='client-secret')
@@ -29,7 +29,7 @@ def test_create_get_tables_job():
     responses.add(
         responses.POST,
         'https://diesel/test-source/tables?company_slug=test-company&table_filter=test-filter',
-        json={'job_id': 'test-job-id'},
+        json={'data': {'job_id': 'test-job-id'}},
     )
 
     client = MetadataClient(base_url='https://diesel/', client_id='client-id', client_secret='client-secret')
@@ -43,7 +43,7 @@ def test_create_refresh_job():
     responses.add(
         responses.POST,
         'https://diesel/test-source/refresh?company_slug=test-company&table_name=test-table',
-        json={'job_id': 'test-job-id'},
+        json={'data': {'job_id': 'test-job-id'}},
     )
 
     client = MetadataClient(base_url='https://diesel/', client_id='client-id', client_secret='client-secret')
@@ -54,7 +54,7 @@ def test_create_refresh_job():
 @responses.activate
 def test_get_job_status():
     responses.add(responses.POST, 'https://token/', json={'access_token': '123123'})
-    responses.add(responses.GET, 'https://diesel/job/test-job-id', json={'job_status': 'RUNNING'})
+    responses.add(responses.GET, 'https://diesel/job/test-job-id', json={'data': {'job_status': 'RUNNING'}})
 
     client = MetadataClient(base_url='https://diesel/', client_id='client-id', client_secret='client-secret')
 
@@ -75,8 +75,8 @@ def test_get_job_results():
 @pytest.mark.parametrize('final_state', TERMINAL_STATES)
 def test_wait_for_terminal_state(final_state):
     responses.add(responses.POST, 'https://token/', json={'access_token': '123123'})
-    responses.add(responses.GET, 'https://diesel/job/test-job-id', json={'job_status': 'RUNNING'})
-    responses.add(responses.GET, 'https://diesel/job/test-job-id', json={'job_status': final_state.value})
+    responses.add(responses.GET, 'https://diesel/job/test-job-id', json={'data': {'job_status': 'RUNNING'}})
+    responses.add(responses.GET, 'https://diesel/job/test-job-id', json={'data': {'job_status': final_state.value}})
 
     client = MetadataClient(base_url='https://diesel/', client_id='client-id', client_secret='client-secret')
 
