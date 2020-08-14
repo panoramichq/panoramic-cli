@@ -142,7 +142,7 @@ def test_map_columns_to_model():
     expected = [
         {
             'api_version': 'v1',
-            'model_name': 'source.schema1.table1',
+            'model_name': 'sourceschema1table1',
             'data_source': 'source.schema1.table1',
             'fields': [
                 {'uid': 'source.schema1.table1.id', 'data_type': 'str', 'field_map': ['id'], 'data_reference': 'id',},
@@ -166,16 +166,16 @@ def test_map_columns_to_model():
                     'data_type': 'str',
                     'field_map': ['id'],
                     'data_reference': 'id',
-                    'model_name': 'source.schema1.table1',
-                    'fully_qualified_object_name': 'source.schema1.table1',
+                    'model_name': 'sourceschema1table1',
+                    'data_source': 'source.schema1.table1',
                 },
                 {
                     'uid': 'source.schema1.table1.value',
                     'data_type': 'int',
                     'field_map': ['value'],
                     'data_reference': 'value',
-                    'model_name': 'source.schema1.table1',
-                    'fully_qualified_object_name': 'source.schema1.table1',
+                    'model_name': 'sourceschema1table1',
+                    'data_source': 'source.schema1.table1',
                 },
             ],
         )
