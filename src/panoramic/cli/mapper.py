@@ -1,9 +1,8 @@
 import itertools
 import operator
-from collections import defaultdict
-from typing import Dict, Iterable, List, Optional, Set, Tuple
+from typing import Dict, Iterable
 
-from panoramic.cli.model.client import Model, ModelAttribute, ModelJoin
+from panoramic.cli.model.client import Model, ModelField, ModelJoin
 from panoramic.cli.pano_model import (
     PanoModel,
     PanoModelField,
@@ -26,70 +25,45 @@ def map_data_source_from_local(vds: PanoVirtualDataSource) -> VirtualDataSource:
 def map_model_join_from_remote(join: ModelJoin) -> PanoModelJoin:
     """Convert remote join to local join."""
     return PanoModelJoin(
-        fields=join.taxons, join_type=join.join_type, relationship=join.relationship, to_model=join.to_model
+        fields=join.fields, join_type=join.join_type, relationship=join.relationship, to_model=join.to_model
     )
 
 
 def map_model_join_from_local(join: PanoModelJoin) -> ModelJoin:
     """Convert local join to remote join."""
     return ModelJoin(
-        taxons=join.fields, join_type=join.join_type, relationship=join.relationship, to_model=join.to_model
+        fields=join.fields, join_type=join.join_type, relationship=join.relationship, to_model=join.to_model
     )
 
 
-def map_field_from_remote(uid: Optional[str], transformation: str, attributes: List[ModelAttribute]) -> PanoModelField:
+def map_field_from_remote(field: ModelField) -> PanoModelField:
     """Convert remote attributes to local field."""
-    # type is same across all attributes
-    data_type = attributes[0].column_data_type
-
-    assert data_type is not None
-
     return PanoModelField(
-        uid=uid,
+        uid=field.uid,
         # Do not explode uid model attribute into field_map
-        field_map=[a.taxon for a in attributes if a.taxon != uid],
-        data_reference=transformation,
-        data_type=data_type,
+        field_map=field.field_map,
+        data_reference=field.data_reference,
+        data_type=field.data_type,
     )
 
 
-def map_attributes_from_local(field: PanoModelField, identifiers: Set[str]) -> Iterable[ModelAttribute]:
+def map_attributes_from_local(field: PanoModelField) -> ModelField:
     """Convert local field to remote attributes."""
     # Add uid as extra model attribute
 
-    if field.uid is not None:
-        yield ModelAttribute(
-            uid=field.uid,
-            column_data_type=field.data_type,
-            taxon=field.uid,
-            identifier=field.uid in identifiers,
-            transformation=field.data_reference,
-        )
-
-    for field_name in field.field_map:
-        yield ModelAttribute(
-            uid=field.uid,
-            column_data_type=field.data_type,
-            taxon=field_name,
-            identifier=field_name in identifiers,
-            transformation=field.data_reference,
-        )
+    return ModelField(
+        uid=field.uid, data_type=field.data_type, data_reference=field.data_reference, field_map=field.field_map,
+    )
 
 
 def map_model_from_remote(model: Model) -> PanoModel:
     """Convert remote model to local model."""
-    attrs_by_key: Dict[Tuple[Optional[str], str], List[ModelAttribute]] = defaultdict(list)
-    for attr in model.attributes:
-        attrs_by_key[(attr.uid, attr.transformation)].append(attr)
-
     return PanoModel(
-        model_name=model.name,
-        data_source=model.fully_qualified_object_name,
-        fields=[
-            map_field_from_remote(uid, transformation, attrs) for ((uid, transformation), attrs) in attrs_by_key.items()
-        ],
+        model_name=model.model_name,
+        data_source=model.data_source,
+        fields=[map_field_from_remote(f) for f in model.fields],
         joins=[map_model_join_from_remote(j) for j in model.joins],
-        identifiers=[a.taxon for a in model.attributes if a.identifier],
+        identifiers=model.identifiers,
         virtual_data_source=model.virtual_data_source,
     )
 
@@ -97,12 +71,11 @@ def map_model_from_remote(model: Model) -> PanoModel:
 def map_model_from_local(model: PanoModel) -> Model:
     """Convert local model to remote model."""
     return Model(
-        name=model.model_name,
-        fully_qualified_object_name=model.data_source,
-        attributes=list(
-            itertools.chain.from_iterable(map_attributes_from_local(f, set(model.identifiers)) for f in model.fields)
-        ),
+        model_name=model.model_name,
+        data_source=model.data_source,
+        fields=[map_attributes_from_local(f) for f in model.fields],
         joins=[map_model_join_from_local(j) for j in model.joins],
+        identifiers=model.identifiers,
         visibility='available',  # default to available visibility
         virtual_data_source=model.virtual_data_source,
     )

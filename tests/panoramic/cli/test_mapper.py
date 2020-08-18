@@ -5,7 +5,7 @@ from panoramic.cli.mapper import (
     map_model_from_local,
     map_model_from_remote,
 )
-from panoramic.cli.model.client import Model, ModelAttribute
+from panoramic.cli.model.client import Model, ModelField
 from panoramic.cli.pano_model import PanoModel, PanoModelField
 
 
@@ -28,39 +28,16 @@ def local_model_fixture():
 @pytest.fixture
 def remote_model_fixture():
     yield Model(
-        name="source_schema1_table",
-        fully_qualified_object_name="source.schema1.table",
-        attributes=[
-            ModelAttribute(
-                uid="source.schema1.table1.id",
-                column_data_type="str",
-                taxon="source.schema1.table1.id",
-                identifier=False,
-                transformation="id",
-            ),
-            ModelAttribute(
-                uid="source.schema1.table1.id",
-                column_data_type="str",
-                taxon="id",
-                identifier=False,
-                transformation="id",
-            ),
-            ModelAttribute(
-                uid="source.schema1.table1.value",
-                column_data_type="int",
-                taxon="source.schema1.table1.value",
-                identifier=False,
-                transformation="value",
-            ),
-            ModelAttribute(
-                uid="source.schema1.table1.value",
-                column_data_type="int",
-                taxon="value",
-                identifier=False,
-                transformation="value",
+        model_name="source_schema1_table",
+        data_source="source.schema1.table",
+        fields=[
+            ModelField(uid="source.schema1.table1.id", data_type="str", field_map=["id"], data_reference="id",),
+            ModelField(
+                uid="source.schema1.table1.value", data_type="int", field_map=["value"], data_reference="value",
             ),
         ],
         joins=[],
+        identifiers=[],
         visibility='available',
     )
 
@@ -82,26 +59,14 @@ def local_model_missing_uid_fixture():
 @pytest.fixture
 def remote_model_missing_uid_fixture():
     yield Model(
-        name="source_schema1_table",
-        fully_qualified_object_name="source.schema1.table",
-        attributes=[
-            ModelAttribute(
-                uid="source.schema1.table1.id",
-                column_data_type="str",
-                taxon="source.schema1.table1.id",
-                identifier=False,
-                transformation="id",
-            ),
-            ModelAttribute(
-                uid="source.schema1.table1.id",
-                column_data_type="str",
-                taxon="id",
-                identifier=False,
-                transformation="id",
-            ),
-            ModelAttribute(uid=None, column_data_type="int", taxon="value", identifier=False, transformation="value",),
+        model_name="source_schema1_table",
+        data_source="source.schema1.table",
+        fields=[
+            ModelField(uid="source.schema1.table1.id", data_type="str", field_map=["id"], data_reference="id",),
+            ModelField(uid=None, data_type="int", field_map=["value"], data_reference="value",),
         ],
         joins=[],
+        identifiers=[],
         visibility='available',
     )
 

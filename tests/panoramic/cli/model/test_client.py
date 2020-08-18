@@ -25,7 +25,7 @@ def test_delete_model():
 def test_get_models():
     responses.add(responses.POST, 'https://token/', json={'access_token': '123123'})
     model = Model(
-        name='model', fully_qualified_object_name="db.schema.table", attributes=[], joins=[], visibility='available'
+        model_name='model', data_source="db.schema.table", fields=[], joins=[], identifiers=[], visibility='available'
     )
     responses.add(responses.GET, 'https://diesel/', json={'data': [model.to_dict()]})
 
@@ -55,7 +55,12 @@ def test_upsert_model():
         'test-source',
         'test-company',
         Model(
-            name='model', fully_qualified_object_name="db.schema.table", attributes=[], joins=[], visibility='available'
+            model_name='model',
+            data_source="db.schema.table",
+            fields=[],
+            joins=[],
+            identifiers=[],
+            visibility='available',
         ),
     )
 

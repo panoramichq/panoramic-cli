@@ -10,47 +10,43 @@ from panoramic.cli.config.model import get_base_url
 logger = logging.getLogger(__name__)
 
 
-class ModelAttribute:
+class ModelField:
 
     uid: Optional[str]
-    column_data_type: Optional[str]
-    taxon: str
-    identifier: bool
-    transformation: str
+    data_type: Optional[str]
+    field_map: List[str]
+    data_reference: str
 
     def __init__(
-        self, *, uid: Optional[str], column_data_type: Optional[str], taxon: str, identifier: bool, transformation: str,
+        self, *, uid: Optional[str], data_type: Optional[str], field_map: List[str], data_reference: str,
     ):
         self.uid = uid
-        self.column_data_type = column_data_type
-        self.taxon = taxon
-        self.identifier = identifier
-        self.transformation = transformation
+        self.data_type = data_type
+        self.field_map = field_map
+        self.data_reference = data_reference
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> 'ModelAttribute':
+    def from_dict(cls, data: Dict[str, Any]) -> 'ModelField':
         return cls(
             uid=data.get('uid'),
-            column_data_type=data.get('column_data_type'),
-            taxon=data['taxon'],
-            identifier=data['identifier'],
-            transformation=data['transformation'],
+            data_type=data.get('data_type'),
+            field_map=data['field_map'],
+            data_reference=data['data_reference'],
         )
 
     def to_dict(self) -> Dict[str, Any]:
         return {
             'uid': self.uid,
-            'column_data_type': self.column_data_type,
-            'taxon': self.taxon,
-            'identifier': self.identifier,
-            'transformation': self.transformation,
+            'data_type': self.data_type,
+            'field_map': self.field_map,
+            'data_reference': self.data_reference,
         }
 
     def __hash__(self) -> int:
         return hash(self.to_dict())
 
     def __eq__(self, o: object) -> bool:
-        if not isinstance(o, ModelAttribute):
+        if not isinstance(o, ModelField):
             return False
 
         return self.to_dict() == o.to_dict()
@@ -61,13 +57,13 @@ class ModelJoin:
     to_model: str
     join_type: str
     relationship: str
-    taxons: List[str]
+    fields: List[str]
 
-    def __init__(self, *, to_model: str, join_type: str, relationship: str, taxons: List[str]):
+    def __init__(self, *, to_model: str, join_type: str, relationship: str, fields: List[str]):
         self.to_model = to_model
         self.join_type = join_type
         self.relationship = relationship
-        self.taxons = taxons
+        self.fields = fields
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> 'ModelJoin':
@@ -75,7 +71,7 @@ class ModelJoin:
             to_model=data['to_model'],
             join_type=data['join_type'],
             relationship=data['relationship'],
-            taxons=data['taxons'],
+            fields=data['fields'],
         )
 
     def to_dict(self) -> Dict[str, Any]:
@@ -83,7 +79,7 @@ class ModelJoin:
             'to_model': self.to_model,
             'join_type': self.join_type,
             'relationship': self.relationship,
-            'taxons': self.taxons,
+            'fields': self.fields,
         }
 
     def __hash__(self) -> int:
@@ -98,47 +94,52 @@ class ModelJoin:
 
 class Model:
 
-    name: str
-    fully_qualified_object_name: str
-    attributes: List[ModelAttribute]
+    model_name: str
+    data_source: str
+    fields: List[ModelField]
     joins: List[ModelJoin]
     visibility: str
     virtual_data_source: Optional[str]
+    identifiers: List[str]
 
     def __init__(
         self,
         *,
-        name: str,
-        fully_qualified_object_name: str,
-        attributes: List[ModelAttribute],
+        model_name: str,
+        data_source: str,
+        fields: List[ModelField],
         joins: List[ModelJoin],
+        identifiers: List[str],
         visibility: str,
         virtual_data_source: Optional[str] = None,
     ):
-        self.name = name
-        self.fully_qualified_object_name = fully_qualified_object_name
-        self.attributes = attributes
+        self.model_name = model_name
+        self.data_source = data_source
+        self.fields = fields
         self.joins = joins
+        self.identifiers = identifiers
         self.visibility = visibility
         self.virtual_data_source = virtual_data_source
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any], **kwargs) -> 'Model':
         return cls(
-            name=data['name'],
-            fully_qualified_object_name=data['fully_qualified_object_name'],
-            attributes=[ModelAttribute.from_dict(a) for a in data['attributes']],
+            model_name=data['model_name'],
+            data_source=data['data_source'],
+            fields=[ModelField.from_dict(a) for a in data['fields']],
             joins=[ModelJoin.from_dict(d) for d in data['joins']],
+            identifiers=data['identifiers'],
             visibility=data['visibility'],
             **kwargs,
         )
 
     def to_dict(self) -> Dict[str, Any]:
         return {
-            'name': self.name,
-            'fully_qualified_object_name': self.fully_qualified_object_name,
-            'attributes': [a.to_dict() for a in self.attributes],
+            'model_name': self.model_name,
+            'data_source': self.data_source,
+            'fields': [a.to_dict() for a in self.fields],
             'joins': [j.to_dict() for j in self.joins],
+            'identifiers': self.identifiers,
             'visibility': self.visibility,
         }
 
@@ -178,7 +179,7 @@ class ModelClient(OAuth2Client, VersionedClient):
 
     def upsert_model(self, data_source: str, company_slug: str, model: Model):
         """Add or update given model."""
-        logger.debug(f'Upserting model with name: {model.name}')
+        logger.debug(f'Upserting model with name: {model.model_name}')
         params = {'virtual_data_source': data_source, 'company_slug': company_slug}
         response = self.session.put(self.base_url, json=model.to_dict(), params=params, timeout=30)
         response.raise_for_status()
