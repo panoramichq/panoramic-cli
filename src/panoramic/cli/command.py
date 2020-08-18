@@ -96,9 +96,8 @@ def scan(source_id: str, table_filter: Optional[str], parallel: int = 1, generat
     progress_bar = tqdm(total=len(tables))
 
     def _process_table(table: Dict[str, Any]):
-        # drop source name from schema
-        sourceless_schema = table['table_schema'].split('.', 1)[1]
-        table_name = f'{sourceless_schema}.{table["table_name"]}'
+        # drop source name from table name
+        table_name = table['data_source'].split('.', 1)[1]
 
         try:
             refresher.refresh_table(table_name)
