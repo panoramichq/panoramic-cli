@@ -58,7 +58,7 @@ class MetadataClient(OAuth2Client, VersionedClient):
         logger.debug(f'Refreshing table for source {source_id} and name: {table_name}')
         response = self.session.post(url, params=params, timeout=30)
         response.raise_for_status()
-        return response.json()['job_id']
+        return response.json()['data']['job_id']
 
     def create_get_tables_job(self, company_slug: str, source_id: str, table_filter: Optional[str]) -> str:
         """Starts async "get tables" job and return job id."""
@@ -71,7 +71,7 @@ class MetadataClient(OAuth2Client, VersionedClient):
         logger.debug(f'Requesting tables for source {source_id} and filter: {table_filter}')
         response = self.session.post(url, params=params, timeout=30)
         response.raise_for_status()
-        return response.json()['job_id']
+        return response.json()['data']['job_id']
 
     def create_get_columns_job(self, company_slug: str, source_id: str, table_filter: Optional[str]) -> str:
         """Starts async "get columns" job and return job id."""
@@ -84,7 +84,7 @@ class MetadataClient(OAuth2Client, VersionedClient):
         logger.debug(f'Requesting columns for source {source_id} and filter: {table_filter}')
         response = self.session.post(url, params=params, timeout=30)
         response.raise_for_status()
-        return response.json()['job_id']
+        return response.json()['data']['job_id']
 
     def get_job_status(self, job_id: str) -> JobState:
         """Get status of an async job."""
@@ -92,7 +92,7 @@ class MetadataClient(OAuth2Client, VersionedClient):
         logger.debug(f'Getting job status for job {job_id}')
         response = self.session.get(url, timeout=30)
         response.raise_for_status()
-        return JobState(response.json()['job_status'])
+        return JobState(response.json()['data']['job_status'])
 
     def get_job_results(self, job_id: str, offset: int = 0, limit: int = 500) -> List[Dict[str, Any]]:
         """Get results of an async job."""

@@ -112,12 +112,12 @@ def map_columns_to_model(raw_columns: Iterable[Dict]) -> Iterable[PanoModel]:
     """
     Load result of metadata table columns scan into Model
     """
-    columns_grouped = itertools.groupby(raw_columns, operator.itemgetter('fully_qualified_object_name', 'model_name'))
+    columns_grouped = itertools.groupby(raw_columns, operator.itemgetter('data_source', 'model_name'))
 
-    for (fully_qualified_obj_name, model_name), columns in columns_grouped:
+    for (data_source, model_name), columns in columns_grouped:
         yield PanoModel(
             model_name=model_name,
-            data_source=fully_qualified_obj_name,
+            data_source=data_source,
             fields=[
                 PanoModelField(
                     uid=col['uid'],
