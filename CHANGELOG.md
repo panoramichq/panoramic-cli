@@ -1,5 +1,13 @@
 # Changelog
 
+## Version 0.9.0 Release
+
+- Use new Model API
+- Use new Metadata API
+- Support identifier generation with --generate-identifiers flag
+- Output request ID on error
+- Send version header in API requests
+
 ## Version 0.8.3 Release
 
 Fix status code checks in clients and hide requests.oauthlib logs.
