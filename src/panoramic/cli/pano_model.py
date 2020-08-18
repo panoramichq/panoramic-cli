@@ -19,9 +19,9 @@ class PanoModelField:
     uid: Optional[str]
     field_map: List[str]
     data_reference: str
-    data_type: str
+    data_type: Optional[str]
 
-    def __init__(self, *, uid: Optional[str], field_map: List[str], data_reference: str, data_type: str):
+    def __init__(self, *, uid: Optional[str], field_map: List[str], data_reference: str, data_type: Optional[str]):
         self.uid = uid
         self.field_map = field_map
         self.data_reference = data_reference
