@@ -1,4 +1,4 @@
 [submodule "e2e"]
 	path = e2e
 	url = https://github.com/panoramichq/pano-cli-e2e-tests
-    branch = master
+	branch = master
