@@ -22,6 +22,9 @@ before_install:
 install:
   - pip install -U setuptools
   - pip install tox
+  - rm -fr s3_upload && mkdir s3_upload
+  - python shipping/generate-versions-file.py
+  - mv versions.json s3_upload/versions.json
 script: tox
 deploy:
   - provider: pypi
@@ -37,6 +40,9 @@ deploy:
     api_key:
       secure: "ALG8OMrdtYv+kG/hFRvU6dWn130wiEv/S81lAzCkDHAsr+bqIFbdIpCm3Fdua0gwE+eDjmBOzcEPJAaPhYn+jN96GihLhfE1Yq+/epRj8gN/4OYrW2mOsCaWmfTjV6lhp8j8+dV8jb/5JITB0g8Tj4KHO/OVkOt1MKqLSV/mV9voepcjKOEmLFG0GLGOM1JSVBoeTVASKlSC5QCvhojgfKBr/hhtaPRMf2pPcNjumGunUd1d4P86X6DIbwOKE0ulV8dJKJ17t9vRM9CcI4NxIyhDf5bP29WwCDh8xyjIgzub42ix3dGX9VuLKnJMkHjHQndRHwU3MiMUMSKlOHA8NzleipAamYqANyU5VUtXjQadQ45RDk7vDrswRCUqLDMzQm/ZuAaIbZBBAmUEN8bbO9hN54i62jsJuI3FYMcgCDS3fPYclq/odHO6nbhwg0bAceekwXCzSBHMGJh8bV6mmubQcmqMFyATM33MgHrCJNMZmpCIdV80w2LLU/dlgX205Rm5mDJxnZu4IY2IaPFgqtmL5IdSD1A4lS/fsJyqcqdPbjA4d1c3l9fb6ZnLqf7JiLc9gdNJXJ/ztStBOjPwZdkLHBb8yB6H2fuhPRLuvUQ918YnDQqv6n4QuHGL/eTJbgpw0niRY460lcq06ePam1mp9F1+rEsnMi2ztYFqwiM="
     skip_cleanup: true
+    file_glob: true
+    file:
+      - "dist/**"
     on:
       tags: true
       condition: $TOXENV = py36
@@ -49,10 +55,9 @@ deploy:
     bucket:
       secure: "glbkogThlUZh+4GAiR2m4Q4IP40Zp8byhUV1nah5OuZcTlS9sEfSyshzQnELnTbGowsmPf+cPidqIK2pPW4Y6DOLafEClNI8qzi7pV8GmvJnOvyxEjUdKE4juUQFdO3BRC23o5zBSjJw9Qw9/un5wrEGXD55t0QdM6XSvmrkdQVCWm9rv6pFXfNT9b/YR33PpstBZEw2cQ25kpvFSxPG3Z1OOTKmlCrV/cZQkrSs0KJdR7SlRSNwAQg/R2BjLUjYf/FoF/beGUuaNmj27ipgELrB9TSq8Pm53OJ2YVtvGFRWFFRitFiGZYUfZIju6cB1ifRQQXLJ/kLTfYZ1RWf34vkkPflxedkXT6m0aU2v80abVUH0/8XCoZ3z40R+wWlcs0Usq/toYr+nHax8SnVnzNsbGlX0nY17fGUJp0b+tz2QpF+JbCAytfow7fC8yRwAGTHq+rNSdjU9IF9Jf4WV7hetCOwHice9C0m7GQc74Snm2q/aJySAidJrQ/qPABufJ/rhKIpv2hbY7jIJH9K+PWi+y0VUlQks4WdNmTYxCKGAEDkeWnLDrBrH9L5q3YTGyJjaSH1r9uSxOohuZrbOFR+ALhrHOHh3qsOFpyNlO0Uu+6uuwwFKu6Ok1zk41AvfCg3JNBGwvxVstGdv5piacUY7rQkihxrF+2ufgWPhRr8="
     acl: public_read
-    before_deploy: "python shipping/generate-versions-file.py"
-    upload-dir: "updates/pano-cli"
+    upload_dir: "updates/pano-cli"
+    local_dir: "./s3_upload"
     cache_control: "max-age=60"
-    glob: "versions.json"
     skip_cleanup: true
     on:
       tags: true
