@@ -1,0 +1,20 @@
+[flake8]
+ignore = E265,
+         # block comments formatting
+         E402,
+         # allow comparing value directly to True, which is used a lot with pandas code to filter rows
+         E712,
+         # do not enforce double quoted docstrings
+         Q001,
+         # allow bare except clause
+         E722,
+         # blank line contains whitespace - reports for multi-line strings as well (bug)
+         W293,
+         # https://lintlyci.github.io/Flake8Rules/
+         E, W, # All codestyle errors
+         F811 # redefinition of unused name
+
+statistics = True
+exclude = .git,
+          __pycache__
+max-line-length = 120

@@ -1,0 +1,22 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "http://panoramichq.com/config.schema.json",
+    "title": "Config",
+    "description": "Configuration of pano-cli client",
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+        "client_id": {
+            "description": "OAuth2 Client ID",
+            "type": "string"
+        },
+        "client_secret": {
+            "description": "OAuth2 Client Secret",
+            "type": "string"
+        }
+    },
+    "required": [
+        "client_id",
+        "client_secret"
+    ]
+}

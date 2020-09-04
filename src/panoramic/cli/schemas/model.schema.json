@@ -1,0 +1,156 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "http://panoramichq.com/model.schema.json",
+    "title": "Model",
+    "description": "Model representing a table or a view from a data connection",
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+        "api_version": {
+            "description": "Version of the Model schema",
+            "type": "string",
+            "enum": [
+                "v1"
+            ]
+        },
+        "model_name": {
+            "description": "Name of the model",
+            "type": "string"
+        },
+        "data_source": {
+            "description": "Reference to a table or a view in data connection",
+            "type": "string"
+        },
+        "identifiers": {
+            "description": "Identifiers of the model",
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "uniqueItems": true
+        },
+        "joins": {
+            "description": "Joins of the model",
+            "type": "array",
+            "items": {
+                "type": "object",
+                "$ref": "#/$defs/join"
+            },
+            "uniqueItems": true
+        },
+        "fields": {
+            "description": "Fields of the model",
+            "type": "array",
+            "items": {
+                "type": "object",
+                "$ref": "#/$defs/field"
+            },
+            "uniqueItems": true
+        }
+    },
+    "required": [
+        "model_name",
+        "data_source"
+    ],
+    "$defs": {
+        "field": {
+            "description": "Representation of a column or a transformation on other field(s)",
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "data_reference": {
+                    "type": "string",
+                    "description": "Reference to a column or transformation on other field(s)"
+                },
+                "field_map": {
+                    "type": "array",
+                    "description": "Fields the reference is representing",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "data_type": {
+                    "type": "string",
+                    "enum": [
+                        "BOOLEAN",
+                        "SMALLINT",
+                        "INTEGER",
+                        "BIGINT",
+                        "TINYINT",
+                        "FLOAT",
+                        "DOUBLE",
+                        "DECIMAL",
+                        "CHARACTER VARYING",
+                        "CHARACTER",
+                        "NATIONAL CHARACTER VARYING",
+                        "NATIONAL CHARACTER",
+                        "BINARY VARYING",
+                        "BINARY",
+                        "DATE",
+                        "TIME",
+                        "TIME WITH TIME ZONE",
+                        "TIMESTAMP",
+                        "TIMESTAMP WITH TIME ZONE",
+                        "INTERVAL YEAR TO MONTH",
+                        "INTERVAL DAY TO SECOND",
+                        "INTERVAL",
+                        "MAP",
+                        "ANY",
+                        "NULL",
+                        "UNION"
+                    ]
+                }
+            },
+            "required": [
+                "data_reference",
+                "data_type",
+                "field_map"
+            ]
+        },
+        "join": {
+            "description": "Representation of a joinable relationship to some other model in a dataset",
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "join_type": {
+                    "description": "Type of join to perform on other model",
+                    "type": "string",
+                    "enum": [
+                        "right",
+                        "inner",
+                        "left"
+                    ]
+                },
+                "relationship": {
+                    "description": "Type of relationship between models",
+                    "type": "string",
+                    "enum": [
+                        "one_to_one",
+                        "one_to_many",
+                        "many_to_one",
+                        "many_to_many"
+                    ]
+                },
+                "to_model": {
+                    "description": "Name of other model to join on",
+                    "type": "string"
+                },
+                "fields": {
+                    "description": "Fields to use in the join",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "minItems": 1,
+                    "uniqueItems": true
+                }
+            },
+            "required": [
+                "join_type",
+                "relationship",
+                "to_model",
+                "fields"
+            ]
+        }
+    }
+}

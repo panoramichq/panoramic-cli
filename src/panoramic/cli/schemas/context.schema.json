@@ -1,0 +1,25 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "http://panoramichq.com/context.schema.json",
+    "title": "Context",
+    "description": "Context for pano-cli client",
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+        "api_version": {
+            "description": "Version of the Context schema",
+            "type": "string",
+            "enum": [
+                "v1"
+            ]
+        },
+        "company_slug": {
+            "description": "OAuth2 Client ID",
+            "type": "string"
+        }
+    },
+    "required": [
+        "api_version",
+        "company_slug"
+    ]
+}
