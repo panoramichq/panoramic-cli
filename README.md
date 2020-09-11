@@ -31,7 +31,7 @@ Options:
 Commands:
   configure         Configure pano CLI options
   init              Initialize metadata repository
-  list-companies    List available data connections
+  list-companies    List available companies
   list-connections  List available data connections
   pull              Pull models from remote
   push              Push models to remote

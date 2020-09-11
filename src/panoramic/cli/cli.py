@@ -149,7 +149,7 @@ def list_connections():
     list_connections_command()
 
 
-@cli.command(help='List available data connections', cls=ConfigAwareCommand)
+@cli.command(help='List available companies', cls=ConfigAwareCommand)
 @handle_exception
 def list_companies():
     from panoramic.cli.command import list_companies as list_companies_command
