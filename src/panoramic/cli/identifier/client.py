@@ -42,7 +42,7 @@ class IdentifierClient(OAuth2Client):
         """Starts async "id parsing" job and return job id."""
         url = urljoin(self.base_url, f'{source_id}')
         params = {'company_slug': company_slug, 'table_name': table_name}
-        logger.debug(f'Requesting columns for source {source_id} and filter: {table_name}')
+        logger.debug(f'Triggering a job for source {source_id} and table name: {table_name}')
         response = self.session.post(url, params=params, timeout=5)
         response.raise_for_status()
         return response.json()['data']['job_id']
