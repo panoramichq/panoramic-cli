@@ -46,32 +46,32 @@ class JoinClient(OAuth2Client):
         response.raise_for_status()
         return response.json()['data']['job_id']
 
-    def get_job_status(self, job_id: str) -> JobState:
+    def get_job_status(self, company_slug: str, job_id: str) -> JobState:
         """Get status of an async job."""
         url = urljoin(self.base_url, f'job/{job_id}')
-        logger.debug(f'Getting job status for job {job_id}')
-        response = self.session.get(url, timeout=5)
+        logger.debug(f'Getting job status for job {job_id} under company {company_slug}')
+        response = self.session.get(url, params={'company_slug': company_slug}, timeout=5)
         response.raise_for_status()
         return JobState(response.json()['data']['status'])
 
-    def get_job_results(self, job_id: str) -> Dict[str, Any]:
+    def get_job_results(self, company_slug: str, job_id: str) -> Dict[str, Any]:
         """Get results of an async job."""
         url = urljoin(self.base_url, f'job/{job_id}')
-        logger.debug(f'Getting job results for job {job_id}')
-        response = self.session.get(url, timeout=5)
+        logger.debug(f'Getting job results for job {job_id} under company {company_slug}')
+        response = self.session.get(url, params={'company_slug': company_slug}, timeout=5)
         response.raise_for_status()
         return response.json()['data']
 
-    def wait_for_terminal_state(self, job_id: str, timeout: int = 60) -> JobState:
+    def wait_for_terminal_state(self, company_slug: str, job_id: str, timeout: int = 60) -> JobState:
         """Wait for job to reach terminal state."""
         tick_time = 1
         while True:
-            logger.debug(f'Getting status for job with id {job_id}')
-            status = self.get_job_status(job_id)
-            logger.debug(f'Got status {status} for job with id {job_id}')
+            logger.debug(f'Getting status for job with id {job_id} under company {company_slug}')
+            status = self.get_job_status(company_slug, job_id)
+            logger.debug(f'Got status {status} for job with id {job_id} under company {company_slug}')
             if status in TERMINAL_STATES:
                 return status
             if timeout <= 0:
-                raise TimeoutException(f'Timed out waiting for job {job_id} to complete')
+                raise TimeoutException(f'Timed out waiting for job {job_id} under company {company_slug} to complete')
             time.sleep(tick_time)
             timeout -= tick_time

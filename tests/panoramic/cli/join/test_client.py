@@ -1,7 +1,7 @@
 import pytest
 import responses
 
-from panoramic.cli.join.client import TERMINAL_STATES, JoinClient, JobState
+from panoramic.cli.join.client import TERMINAL_STATES, JobState, JoinClient
 
 
 @pytest.fixture(autouse=True)
@@ -26,11 +26,13 @@ def test_create_identifier_job():
 @responses.activate
 def test_get_job_status():
     responses.add(responses.POST, 'https://token/', json={'access_token': '123123'})
-    responses.add(responses.GET, 'https://joins/job/test-job-id', json={'data': {'status': 'RUNNING'}})
+    responses.add(
+        responses.GET, 'https://joins/job/test-job-id?company_slug=test-company', json={'data': {'status': 'RUNNING'}}
+    )
 
     client = JoinClient(base_url='https://joins/', client_id='client-id', client_secret='client-secret')
 
-    assert client.get_job_status('test-job-id') == JobState.RUNNING
+    assert client.get_job_status(company_slug='test-company', job_id='test-job-id') == JobState.RUNNING
 
 
 #
@@ -39,22 +41,32 @@ def test_get_job_results():
     responses.add(responses.POST, 'https://token/', json={'access_token': '123123'})
     responses.add(
         responses.GET,
-        'https://joins/job/test-job-id',
+        'https://joins/job/test-job-id?company_slug=test-company',
         json={'data': {'job_id': 'test-job-id', 'status': 'COMPLETED', 'joins': {}}},
     )
 
     client = JoinClient(base_url='https://joins/', client_id='client-id', client_secret='client-secret')
 
-    assert client.get_job_results('test-job-id') == {'job_id': 'test-job-id', 'status': 'COMPLETED', 'joins': {}}
+    assert client.get_job_results(company_slug='test-company', job_id='test-job-id') == {
+        'job_id': 'test-job-id',
+        'status': 'COMPLETED',
+        'joins': {},
+    }
 
 
 @responses.activate
 @pytest.mark.parametrize('final_state', TERMINAL_STATES)
 def test_wait_for_terminal_state(final_state):
     responses.add(responses.POST, 'https://token/', json={'access_token': '123123'})
-    responses.add(responses.GET, 'https://joins/job/test-job-id', json={'data': {'status': 'RUNNING'}})
-    responses.add(responses.GET, 'https://joins/job/test-job-id', json={'data': {'status': final_state.value}})
+    responses.add(
+        responses.GET, 'https://joins/job/test-job-id?company_slug=test-company', json={'data': {'status': 'RUNNING'}}
+    )
+    responses.add(
+        responses.GET,
+        'https://joins/job/test-job-id?company_slug=test-company',
+        json={'data': {'status': final_state.value}},
+    )
 
     client = JoinClient(base_url='https://joins/', client_id='client-id', client_secret='client-secret')
 
-    assert client.wait_for_terminal_state('test-job-id') == final_state
+    assert client.wait_for_terminal_state(company_slug='test-company', job_id='test-job-id') == final_state
