@@ -42,6 +42,9 @@ class PanoModelField:
         return cls(
             field_map=inputs['field_map'], data_reference=inputs['data_reference'], data_type=inputs['data_type'],
         )
+    
+    def identifier(self) -> str:
+        return f'{self.data_reference}_{self.data_type}_{",".join(sorted(self.field_map))}'
 
     def __hash__(self) -> int:
         return hash(self.to_dict())
@@ -83,6 +86,9 @@ class PanoModelJoin:
             relationship=inputs['relationship'],
             to_model=inputs['to_model'],
         )
+    
+    def identifier(self) -> str:
+        return f'{self.join_type}_{self.relationship}_{self.to_model}_{",".join(sorted(self.fields))}'
 
     def __hash__(self) -> int:
         return hash(self.to_dict())
@@ -136,9 +142,9 @@ class PanoModel(Actionable):
             'api_version': self.API_VERSION,
             'model_name': self.model_name,
             'data_source': self.data_source,
-            'fields': [x.to_dict() for x in self.fields],
-            'joins': [x.to_dict() for x in self.joins],
-            'identifiers': self.identifiers,
+            'fields': [x.to_dict() for x in sorted(self.fields, key=lambda field: field.identifier())],
+            'joins': [x.to_dict() for x in sorted(self.joins, key=lambda join: join.identifier())],
+            'identifiers': sorted(self.identifiers),
             # The virtual_data_source and package are not exported to yaml
         }
 
