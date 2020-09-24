@@ -7,3 +7,4 @@ prune e2e
 prune shipping
 prune .vscode
 prune .devcontainer
+prune .dockerignore
