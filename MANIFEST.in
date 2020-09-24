@@ -4,7 +4,7 @@ recursive-include tests *.py
 include src/panoramic/cli/schemas/*.json
 exclude .gitmodules
 exclude .dockerignore
-exclude e2e
+prune e2e
 prune shipping
 prune .vscode
 prune .devcontainer
