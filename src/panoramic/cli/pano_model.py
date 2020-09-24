@@ -40,9 +40,11 @@ class PanoModelField:
     @classmethod
     def from_dict(cls, inputs: Dict[str, Any]) -> 'PanoModelField':
         return cls(
-            field_map=inputs['field_map'], data_reference=inputs['data_reference'], data_type=inputs['data_type'],
+            field_map=inputs['field_map'],
+            data_reference=inputs['data_reference'],
+            data_type=inputs['data_type'],
         )
-    
+
     def identifier(self) -> str:
         return f'{self.data_reference}_{self.data_type}_{",".join(sorted(self.field_map))}'
 
@@ -86,7 +88,7 @@ class PanoModelJoin:
             relationship=inputs['relationship'],
             to_model=inputs['to_model'],
         )
-    
+
     def identifier(self) -> str:
         return f'{self.join_type}_{self.relationship}_{self.to_model}_{",".join(sorted(self.fields))}'
 
