@@ -1,5 +1,5 @@
 import logging
-from typing import List
+from typing import Dict, List
 
 import requests
 from requests import RequestException
@@ -23,7 +23,7 @@ class JoinDetector:
     def fetch_token(self):
         self.client.fetch_token()
 
-    def detect(self, dataset_id: str, timeout: int = 60) -> List[PanoModelJoin]:
+    def detect(self, dataset_id: str, timeout: int = 60) -> Dict[str, List[PanoModelJoin]]:
         """Generate identifiers for a given table."""
         logger.debug(f'Starting join detection job for dataset {dataset_id}')
         try:

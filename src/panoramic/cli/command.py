@@ -1,5 +1,7 @@
 import logging
+from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor
+from copy import deepcopy
 from typing import Any, Dict, Optional
 
 import click
@@ -12,13 +14,16 @@ from panoramic.cli.diff import echo_diff
 from panoramic.cli.errors import (
     InvalidDatasetException,
     InvalidModelException,
+    JoinException,
     ValidationError,
 )
 from panoramic.cli.file_utils import write_yaml
 from panoramic.cli.identifier_generator import IdentifierGenerator
+from panoramic.cli.join_detector import JoinDetector
 from panoramic.cli.local import get_state as get_local_state
 from panoramic.cli.local.executor import LocalExecutor
 from panoramic.cli.local.writer import FileWriter
+from panoramic.cli.pano_model import PanoModel
 from panoramic.cli.paths import Paths
 from panoramic.cli.physical_data_source.client import PhysicalDataSourceClient
 from panoramic.cli.print import echo_error, echo_errors, echo_info
@@ -26,6 +31,7 @@ from panoramic.cli.refresh import Refresher
 from panoramic.cli.remote import get_state as get_remote_state
 from panoramic.cli.remote.executor import RemoteExecutor
 from panoramic.cli.scan import Scanner
+from panoramic.cli.state import Action, ActionList
 from panoramic.cli.validate import (
     validate_config,
     validate_context,
@@ -251,3 +257,58 @@ def push(yes: bool = False, target_dataset: Optional[str] = None, diff: bool = F
             except Exception as e:
                 bar.write(f'Error: Failed to execute action {action.description}:\n  {str(e)}')
         bar.write(f'Updated {bar.total} models')
+
+
+def detect_joins(target_dataset: Optional[str] = None, diff: bool = False, overwrite: bool = False):
+    company_slug = get_company_slug()
+    echo_info('Loading local state...')
+    local_state = get_local_state(target_dataset=target_dataset)
+
+    join_detector = JoinDetector(company_slug=company_slug)
+    join_detector.fetch_token()
+
+    models_by_virtual_data_source: Dict[str, Dict[str, PanoModel]] = defaultdict(dict)
+    for model in local_state.models:
+        models_by_virtual_data_source[model.virtual_data_source][model.model_name].append(model)
+
+    actions_list = ActionList(actions=[])
+
+    for dataset in local_state.data_sources:
+        try:
+            echo_info(f'Detecting joins for dataset {dataset}')
+            joins_by_model = join_detector.detect(dataset.dataset_slug)
+
+            with tqdm(list(joins_by_model.items())) as bar:
+                for model_name, joins in bar:
+                    if not joins:
+                        echo_info(f'No joins detected for {model_name} under dataset {dataset}')
+                        continue
+
+                    bar.write(f'Detected {len(joins)} joins for {model_name} under dataset {dataset}')
+                    current_model = models_by_virtual_data_source[dataset][model_name]
+                    desired_model = deepcopy(current_model)
+
+                    if overwrite:
+                        desired_model.joins = joins
+                    else:
+                        desired_model.joins = current_model.joins + joins
+
+                    actions_list.actions.append(Action(current=current_model, desired=desired_model))
+
+        except JoinException as join_exception:
+            echo_error(f'{str(join_exception)}')
+        except Exception:
+            echo_error(f'An unexpected error occured when detecting joins for {dataset}.')
+
+    echo_diff(actions_list)
+    if diff:
+        return
+
+    executor = LocalExecutor()
+    with tqdm(actions_list.actions) as execute_bar:
+        for action in execute_bar:
+            try:
+                executor.execute(action)
+            except Exception:
+                bar.write(f'Error: Failed to execute action {action.description}')
+        execute_bar.write(f'Updated {execute_bar.total} models')
