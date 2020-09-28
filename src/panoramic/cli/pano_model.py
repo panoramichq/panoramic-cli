@@ -47,7 +47,7 @@ class PanoModelField:
         return f'{self.data_reference}_{self.data_type}_{",".join(sorted(self.field_map))}'
 
     def __hash__(self) -> int:
-        return hash(self.to_dict())
+        return hash(self.identifier())
 
     def __eq__(self, o: object) -> bool:
         if not isinstance(o, PanoModelField):
@@ -91,7 +91,7 @@ class PanoModelJoin:
         return f'{self.join_type}_{self.relationship}_{self.to_model}_{",".join(sorted(self.fields))}'
 
     def __hash__(self) -> int:
-        return hash(self.to_dict())
+        return hash(self.identifier())
 
     def __eq__(self, o: object) -> bool:
         if not isinstance(o, PanoModelJoin):
