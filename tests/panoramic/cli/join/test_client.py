@@ -10,7 +10,7 @@ def mock_token_url(monkeypatch):
 
 
 @responses.activate
-def test_create_identifier_job():
+def test_create_join_detection_job():
     responses.add(responses.POST, 'https://token/', json={'access_token': '123123'})
     responses.add(
         responses.POST,

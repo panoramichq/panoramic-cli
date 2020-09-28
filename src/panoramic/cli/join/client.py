@@ -24,7 +24,7 @@ TERMINAL_STATES = {JobState.COMPLETED, JobState.FAILED}
 
 class JoinClient(OAuth2Client):
 
-    """Identifier Parser HTTP API client."""
+    """Join Detection HTTP API client."""
 
     base_url: str
 

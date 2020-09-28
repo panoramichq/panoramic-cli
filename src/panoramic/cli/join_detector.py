@@ -24,7 +24,7 @@ class JoinDetector:
         self.client.fetch_token()
 
     def detect(self, dataset_id: str, timeout: int = 60) -> Dict[str, List[PanoModelJoin]]:
-        """Generate identifiers for a given table."""
+        """Detect possible joins between models under a dataset."""
         logger.debug(f'Starting join detection job for dataset {dataset_id}')
         try:
             job_id = self.client.create_join_detection_job(self.company_slug, dataset_id)
