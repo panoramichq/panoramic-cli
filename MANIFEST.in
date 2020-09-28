@@ -3,6 +3,7 @@ include src/panoramic/cli/py.typed
 recursive-include tests *.py
 include src/panoramic/cli/schemas/*.json
 exclude .gitmodules
+exclude .dockerignore
 prune e2e
 prune shipping
 prune .vscode
