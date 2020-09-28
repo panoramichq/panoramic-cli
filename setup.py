@@ -6,7 +6,7 @@ with open("src/panoramic/cli/__version__.py", encoding="utf8") as f:
     version = re.search(r'__version__ = "(.*?)"', f.read()).group(1)  # type: ignore
 
 TEST_REQUIRES = ["pytest>=5.3.5", "responses>=0.10.14", "freezegun>=0.3.15", "pytest-recording>=0.8.1"]
-DEV_REQUIRES = ["mypy>=0.780", "flake8>=3.8.3", "black>=19.10b0", "pre-commit>=2.1.1"]
+DEV_REQUIRES = ["mypy>=0.780", "flake8>=3.8.3", "black==19.10b0", "pre-commit>=2.1.1"]
 
 setup(
     name="panoramic-cli",
