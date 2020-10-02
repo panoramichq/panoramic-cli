@@ -260,6 +260,7 @@ def push(yes: bool = False, target_dataset: Optional[str] = None, diff: bool = F
 
 
 def detect_joins(target_dataset: Optional[str] = None, diff: bool = False, overwrite: bool = False):
+    """Detect joins in local state."""
     company_slug = get_company_slug()
     echo_info('Loading local state...')
     local_state = get_local_state(target_dataset=target_dataset)

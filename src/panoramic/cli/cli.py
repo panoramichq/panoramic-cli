@@ -165,7 +165,7 @@ def validate():
 
 @cli.command(help='Detect joins under a dataset', cls=LocalStateAwareCommand)
 @click.option('--target-dataset', '-t', type=str, help='Target a specific dataset')
-@click.option('--diff', '-d', is_flag=True, help='Show the difference between local and remote state')
+@click.option('--diff', '-d', is_flag=True, help='Show the difference between local and detected joins')
 @click.option('--overwrite', is_flag=True, default=False)
 @handle_exception
 def detect_joins(target_dataset: str, diff: bool, overwrite: bool):

@@ -40,8 +40,8 @@ class JoinClient(OAuth2Client):
 
     def create_join_detection_job(self, company_slug: str, dataset_id: str) -> str:
         """Starts async "join detection" job and return job id."""
-        url = urljoin(self.base_url, f'{dataset_id}')
-        logger.debug(f'Triggering a job for dataset {dataset_id}')
+        url = urljoin(self.base_url, dataset_id)
+        logger.debug(f'Triggering a join detection job for dataset {dataset_id}')
         response = self.session.post(url, params={'company_slug': company_slug}, timeout=5)
         response.raise_for_status()
         return response.json()['data']['job_id']
@@ -57,7 +57,7 @@ class JoinClient(OAuth2Client):
     def get_job_results(self, company_slug: str, job_id: str) -> Dict[str, Any]:
         """Get results of an async job."""
         url = urljoin(self.base_url, f'job/{job_id}')
-        logger.debug(f'Getting job results for job {job_id} under company {company_slug}')
+        logger.debug(f'Getting join detection job results for job {job_id} under company {company_slug}')
         response = self.session.get(url, params={'company_slug': company_slug}, timeout=5)
         response.raise_for_status()
         return response.json()['data']
