@@ -326,10 +326,11 @@ def detect_joins(target_dataset: Optional[str] = None, diff: bool = False, overw
     echo_info('Updating local state...')
 
     executor = LocalExecutor()
-    with tqdm(actions_list.actions) as execute_bar:
-        for action in execute_bar:
-            try:
-                executor.execute(action)
-            except Exception:
-                bar.write(f'Error: Failed to execute action {action.description}')
-        execute_bar.write(f'Updated {execute_bar.total} models')
+    updated_count = 0
+    for action in actions_list.actions:
+        try:
+            executor.execute(action)
+            updated_count += 1
+        except Exception:
+            echo_error(f'Error: Failed to execute action {action.description}')
+        echo_info(f'Updated {updated_count} models')
