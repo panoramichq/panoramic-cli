@@ -280,7 +280,7 @@ def detect_joins(target_dataset: Optional[str] = None, diff: bool = False, overw
     with tqdm(list(local_state.data_sources)) as bar:
         for dataset in bar:
             try:
-                echo_info(f'Detecting joins for dataset {dataset.dataset_slug}')
+                bar.write(f'Detecting joins for dataset {dataset.dataset_slug}')
                 joins_by_model = join_detector.detect(dataset.dataset_slug)
 
                 for model_name, joins in joins_by_model.items():
@@ -305,13 +305,17 @@ def detect_joins(target_dataset: Optional[str] = None, diff: bool = False, overw
                     actions_list.actions.append(Action(current=current_model, desired=desired_model))
 
             except JoinException as join_exception:
-                bar.write(str(join_exception))
-            except Exception as e:
-                bar.write(f'An unexpected error occured when detecting joins for {dataset.dataset_slug}.')
-                bar.write(str(e))
+                bar.write(f'Error: {str(join_exception)}')
+                logger.debug(str(join_exception), exc_info=True)
+            except Exception:
+                error_msg = f'An unexpected error occured when detecting joins for {dataset.dataset_slug}'
+                bar.write(f'Error: {error_msg}')
+                logger.debug(error_msg, exc_info=True)
+            finally:
+                bar.update()
 
     if actions_list.is_empty:
-        echo_info('No joins detected...')
+        echo_info('No joins detected')
         return
 
     echo_diff(actions_list)
