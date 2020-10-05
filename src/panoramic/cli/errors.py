@@ -51,6 +51,14 @@ class IdentifierException(CliBaseException):
         super().__init__(f'Identifiers could not be generated for table {table_name} in data connection {source_name}')
 
 
+class JoinException(CliBaseException):
+
+    """Error detecting joins in a dataset."""
+
+    def __init__(self, dataset_name: str):
+        super().__init__(f'Joins could not be detected for {dataset_name}')
+
+
 class RefreshException(CliBaseException):
 
     """Error refreshing metadata."""
@@ -73,6 +81,14 @@ class SourceNotFoundException(CliBaseException):
 
     def __init__(self, source_name: str):
         super().__init__(f'Data connection {source_name} not found. Has it been connected?')
+
+
+class DatasetNotFoundException(CliBaseException):
+
+    """Thrown when a dataset cannot be found."""
+
+    def __init__(self, dataset_name: str):
+        super().__init__(f'Dataset {dataset_name} not found. Has it been created?')
 
 
 class ScanException(CliBaseException):

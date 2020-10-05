@@ -19,7 +19,6 @@ from panoramic.cli.print import echo_error, echo_errors
 
 
 class ConfigAwareCommand(Command):
-
     """Perform config file validation before running command."""
 
     def invoke(self, ctx: Context):
@@ -34,7 +33,6 @@ class ConfigAwareCommand(Command):
 
 
 class ContextAwareCommand(ConfigAwareCommand):
-
     """
     Perform config and context file validation before running command.
 
@@ -58,7 +56,6 @@ class ContextAwareCommand(ConfigAwareCommand):
 
 
 class LocalStateAwareCommand(ContextAwareCommand):
-
     """Perform config, context, and local state files validation before running command."""
 
     def invoke(self, ctx: Context):
@@ -104,7 +101,7 @@ def scan(source_id: str, filter: Optional[str], parallel: int, generate_identifi
 
 
 @cli.command(help='Pull models from remote', cls=LocalStateAwareCommand)
-@click.option('--yes', '-y', is_flag=True, default=False)
+@click.option('--yes', '-y', is_flag=True, default=False, help='Automatically confirm all actions')
 @click.option('--target-dataset', '-t', type=str, help='Target a specific dataset')
 @click.option('--diff', '-d', is_flag=True, help='Show the difference between local and remote state')
 @handle_exception
@@ -115,7 +112,7 @@ def pull(yes: bool, target_dataset: str, diff: bool):
 
 
 @cli.command(help='Push models to remote', cls=LocalStateAwareCommand)
-@click.option('--yes', '-y', is_flag=True, default=False)
+@click.option('--yes', '-y', is_flag=True, default=False, help='Automatically confirm all actions')
 @click.option('--target-dataset', '-t', type=str, help='Target a specific dataset')
 @click.option('--diff', '-d', is_flag=True, help='Show the difference between local and remote state')
 @handle_exception
@@ -163,4 +160,19 @@ def validate():
     from panoramic.cli.command import validate as validate_command
 
     if not validate_command():
+        sys.exit(1)
+
+
+@cli.command(help='Detect joins under a dataset', cls=LocalStateAwareCommand)
+@click.option('--target-dataset', '-t', type=str, help='Target a specific dataset')
+@click.option('--yes', '-y', is_flag=True, default=False, help='Automatically confirm all actions')
+@click.option('--diff', '-d', is_flag=True, help='Show the difference between local and detected joins')
+@click.option(
+    '--overwrite', is_flag=True, default=False, help='Overwrite joins on local model files by suggestions from remote'
+)
+@handle_exception
+def detect_joins(target_dataset: str, yes: bool, diff: bool, overwrite: bool):
+    from panoramic.cli.command import detect_joins as detect_joins_command
+
+    if not detect_joins_command(target_dataset=target_dataset, diff=diff, overwrite=overwrite, yes=yes):
         sys.exit(1)

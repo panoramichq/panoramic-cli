@@ -49,6 +49,10 @@ class ActionList(Generic[T]):
     def __init__(self, *, actions: List[Action[T]]):
         self.actions = actions
 
+    @property
+    def is_empty(self) -> bool:
+        return len(self.actions) == 0
+
 
 class VirtualState:
 

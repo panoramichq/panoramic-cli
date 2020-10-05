@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 1.1.0 Release
+
+- This release introduces a new `detect-joins` CLI command.
+
 ## Version 1.0.2 Release
 
 - Disallow `"one_to_many"` and `"many_to_many"` join types, since they are not supported anyway.
