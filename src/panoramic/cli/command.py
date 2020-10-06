@@ -270,7 +270,7 @@ def detect_joins(target_dataset: Optional[str] = None, diff: bool = False, overw
     join_detector = JoinDetector(company_slug=company_slug)
     join_detector.fetch_token()
 
-    models_by_virtual_data_source: Dict[str, Dict[str, PanoModel]] = defaultdict(dict)
+    models_by_virtual_data_source: Dict[Optional[str], Dict[str, PanoModel]] = defaultdict(dict)
     for model in local_state.models:
         # Prepare a mapping for a quick access when reconciling necessary changes later
         models_by_virtual_data_source[model.virtual_data_source][model.model_name] = model
