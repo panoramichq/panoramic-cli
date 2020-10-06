@@ -1,12 +1,11 @@
 import logging
-from typing import Dict, List
+from typing import Any, Dict, List
 
 import requests
 from requests import RequestException
 
 from panoramic.cli.errors import DatasetNotFoundException, JoinException
 from panoramic.cli.join import JobState, JoinClient
-from panoramic.cli.pano_model import PanoModelJoin
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +22,7 @@ class JoinDetector:
     def fetch_token(self):
         self.client.fetch_token()
 
-    def detect(self, dataset_id: str, timeout: int = 60) -> Dict[str, List[PanoModelJoin]]:
+    def detect(self, dataset_id: str, timeout: int = 60) -> Dict[str, List[Dict[str, Any]]]:
         """Detect possible joins between models under a dataset."""
         logger.debug(f'Starting join detection job for dataset {dataset_id}')
         try:
