@@ -1,5 +1,6 @@
 import functools
 import json
+from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Any, Dict, List
@@ -8,9 +9,15 @@ import jsonschema
 from jsonschema.exceptions import ValidationError as JsonSchemaValidationError
 
 from panoramic.cli.config.auth import get_client_id_env_var, get_client_secret_env_var
-from panoramic.cli.errors import InvalidYamlFile, JsonSchemaError, ValidationError
+from panoramic.cli.errors import (
+    DuplicateModelNameError,
+    InvalidYamlFile,
+    JsonSchemaError,
+    ValidationError,
+)
 from panoramic.cli.file_utils import read_yaml
 from panoramic.cli.local.reader import FilePackage, FileReader
+from panoramic.cli.pano_model import PanoModel
 from panoramic.cli.paths import Paths
 
 
@@ -43,28 +50,45 @@ class JsonSchemas:
             return json.load(f)
 
 
+def _validate_data(data: Dict[str, Any], schema: Dict[str, Any]):
+    """Validate file against schema."""
+    jsonschema.validate(data, schema)
+
+
 def _validate_file(fp: Path, schema: Dict[str, Any]):
     """Validate file against schema."""
     try:
         data = read_yaml(fp)
-        jsonschema.validate(data, schema)
+        _validate_data(data, schema)
     except JsonSchemaValidationError as e:
         raise JsonSchemaError(path=fp, error=e)
 
 
 def _validate_package(package: FilePackage) -> List[ValidationError]:
     """Validate all files in a given package."""
-    errors = []
+    errors: List[ValidationError] = []
     try:
-        _validate_file(package.data_source_file, JsonSchemas.dataset())
-    except (ValidationError, InvalidYamlFile) as e:
+        _validate_data(package.read_data_source(), JsonSchemas.dataset())
+    except InvalidYamlFile as e:
         errors.append(e)
+    except JsonSchemaValidationError as e:
+        errors.append(JsonSchemaError(path=package.data_source_file, error=e))
 
-    for model_file in package.model_files:
+    model_paths_by_name: Dict[str, List[Path]] = defaultdict(list)
+
+    for model_data, model_path in package.read_models():
         try:
-            _validate_file(model_file, JsonSchemas.model())
-        except (ValidationError, InvalidYamlFile) as e:
+            _validate_data(model_data, JsonSchemas.model())
+            model = PanoModel.from_dict(model_data)
+            model_paths_by_name[model.model_name].append(model_path)
+        except InvalidYamlFile as e:
             errors.append(e)
+        except JsonSchemaValidationError as e:
+            errors.append(JsonSchemaError(path=model_path, error=e))
+
+    for model_name, paths in model_paths_by_name.items():
+        if len(paths) > 1:
+            errors.append(DuplicateModelNameError(model_name=model_name, paths=paths))
 
     return errors
 

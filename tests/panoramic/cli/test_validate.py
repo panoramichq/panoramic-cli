@@ -276,11 +276,14 @@ def test_validate_local_state_valid(tmp_path, monkeypatch):
     with (dataset_dir / PresetFileName.DATASET_YAML.value).open('w') as f:
         f.write(yaml.dump(VALID_DATASET))
 
+    model1 = {**VALID_MODEL_MINIMAL, 'model_name': 'sf.db.schema.table1'}
+    model2 = {**VALID_MODEL_MINIMAL, 'model_name': 'sf.db.schema.table2'}
+
     with (dataset_dir / 'test_model-1.model.yaml').open('w') as f:
-        f.write(yaml.dump(VALID_MODEL_MINIMAL))
+        f.write(yaml.dump(model1))
 
     with (dataset_dir / 'test_model-2.model.yaml').open('w') as f:
-        f.write(yaml.dump(VALID_MODEL_MINIMAL))
+        f.write(yaml.dump(model2))
 
     errors = validate_local_state()
     assert len(errors) == 0
@@ -316,6 +319,25 @@ def test_validate_local_state_invalid_models(tmp_path, monkeypatch, model):
 
     with (dataset_dir / 'test_model.model.yaml').open('w') as f:
         f.write(yaml.dump(model))
+
+    errors = validate_local_state()
+    assert len(errors) == 1
+
+
+def test_validate_local_state_duplicate_model_names(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+
+    dataset_dir = tmp_path / 'test_dataset'
+    dataset_dir.mkdir()
+
+    with (dataset_dir / PresetFileName.DATASET_YAML.value).open('w') as f:
+        f.write(yaml.dump(VALID_DATASET))
+
+    with (dataset_dir / 'test_model-1.model.yaml').open('w') as f:
+        f.write(yaml.dump(VALID_MODEL_MINIMAL))
+
+    with (dataset_dir / 'test_model-2.model.yaml').open('w') as f:
+        f.write(yaml.dump(VALID_MODEL_MINIMAL))
 
     errors = validate_local_state()
     assert len(errors) == 1
