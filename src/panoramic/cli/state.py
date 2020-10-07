@@ -53,6 +53,10 @@ class ActionList(Generic[T]):
     def is_empty(self) -> bool:
         return len(self.actions) == 0
 
+    @property
+    def count(self) -> int:
+        return len(self.actions)
+
 
 class VirtualState:
 

@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 1.1.2 Release
+
+- Fix message shown when pushing/pulling models and datasets
+
 ## Version 1.1.1 Release
 
 - Add validation check for multiple models having the same model name.

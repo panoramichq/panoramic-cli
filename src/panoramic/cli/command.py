@@ -209,13 +209,15 @@ def pull(yes: bool = False, target_dataset: Optional[str] = None, diff: bool = F
         return
 
     executor = LocalExecutor()
+    successful = 0
     with tqdm(actions.actions) as bar:
         for action in bar:
             try:
                 executor.execute(action)
+                successful += 1
             except Exception:
                 bar.write(f'Error: Failed to execute action {action.description}')
-        bar.write(f'Pulled {bar.total} models')
+        bar.write(f'Pulled {successful}/{bar.total} models and datasets')
 
 
 def push(yes: bool = False, target_dataset: Optional[str] = None, diff: bool = False):
@@ -247,16 +249,18 @@ def push(yes: bool = False, target_dataset: Optional[str] = None, diff: bool = F
         return
 
     executor = RemoteExecutor(company_slug)
+    successful = 0
     with tqdm(actions.actions) as bar:
         for action in bar:
             try:
                 executor.execute(action)
+                successful += 1
             except (InvalidModelException, InvalidDatasetException) as e:
                 messages_concat = '\n  '.join(e.messages)
                 bar.write(f'Error: Failed to execute action {action.description}:\n  {messages_concat}')
             except Exception as e:
                 bar.write(f'Error: Failed to execute action {action.description}:\n  {str(e)}')
-        bar.write(f'Updated {bar.total} models')
+        bar.write(f'Updated {successful}/{bar.total} models and datasets')
 
 
 def detect_joins(target_dataset: Optional[str] = None, diff: bool = False, overwrite: bool = False, yes: bool = False):
@@ -337,4 +341,4 @@ def detect_joins(target_dataset: Optional[str] = None, diff: bool = False, overw
             updated_count += 1
         except Exception:
             echo_error(f'Error: Failed to execute action {action.description}')
-        echo_info(f'Updated {updated_count} models')
+        echo_info(f'Updated {updated_count}/{actions_list.count} models')
