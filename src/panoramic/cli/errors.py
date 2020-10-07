@@ -183,6 +183,20 @@ class FileMissingError(ValidationError):
         super().__init__(msg)
 
 
+class DuplicateModelNameError(ValidationError):
+
+    """Two local models use the same model name."""
+
+    def __init__(self, *, model_name: str, paths: List[Path]) -> None:
+        try:
+            paths = [path.relative_to(Path.cwd()) for path in paths]
+        except ValueError:
+            pass  # Use relative path when possible
+
+        path_lines = ''.join(f'\n  in {path}' for path in paths)
+        super().__init__(f'Multiple model files use model name {model_name}{path_lines}')
+
+
 class InvalidYamlFile(ValidationError):
 
     """YAML syntax error."""

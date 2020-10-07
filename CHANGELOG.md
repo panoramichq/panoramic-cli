@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 1.1.1 Release
+
+- Add validation check for multiple models having the same model name.
+
 ## Version 1.1.0 Release
 
 - This release introduces a new `detect-joins` CLI command.
@@ -14,4 +18,4 @@
 
 ## Version 1.0.0 Release
 
-Initial public release of the Panoramic CLI tool.
+- Initial public release of the Panoramic CLI tool.
