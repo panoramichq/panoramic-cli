@@ -172,7 +172,7 @@ class ModelClient(OAuth2Client, VersionedClient):
     def upsert_model(self, data_source: str, company_slug: str, model: Model):
         """Add or update given model."""
         logger.debug(f'Upserting model with name: {model.model_name}')
-        params = {'virtual_data_source': data_source, 'company_slug': company_slug}
+        params = {'virtual_data_source': data_source, 'company_slug': company_slug, 'create_fields': 'true'}
         response = self.session.put(self.base_url, json=model.to_dict(), params=params, timeout=30)
         response.raise_for_status()
 

@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 1.1.3 Release
+
+- Send `create_fields` query param when upserting models
+
 ## Version 1.1.2 Release
 
 - Fix message shown when pushing/pulling models and datasets

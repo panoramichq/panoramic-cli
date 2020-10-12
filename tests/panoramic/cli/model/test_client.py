@@ -47,7 +47,11 @@ def test_get_model_names():
 @responses.activate
 def test_upsert_model():
     responses.add(responses.POST, 'https://token/', json={'access_token': '123123'})
-    responses.add(responses.PUT, 'https://diesel/?virtual_data_source=test-source&company_slug=test-company', json={})
+    responses.add(
+        responses.PUT,
+        'https://diesel/?virtual_data_source=test-source&company_slug=test-company&create_fields=true',
+        json={},
+    )
 
     client = ModelClient(base_url='https://diesel/', client_id='client-id', client_secret='client-secret')
 
