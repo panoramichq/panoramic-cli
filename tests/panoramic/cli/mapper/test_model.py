@@ -1,6 +1,6 @@
 import pytest
 
-from panoramic.cli.mapper import (
+from panoramic.cli.mapper.model import (
     map_columns_to_model,
     map_model_from_local,
     map_model_from_remote,
