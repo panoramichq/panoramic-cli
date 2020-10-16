@@ -56,6 +56,55 @@ class PanoModelField:
         return self.to_dict() == o.to_dict()
 
 
+class PanoField:
+    """Field definition."""
+
+    slug: str
+    company_slug: str
+    data_source: Optional[str]
+    data_type: Optional[str]
+    aggregation_type: Optional[str]
+
+    def __init__(
+        self, *, slug: str, data_source: Optional[str], data_type: Optional[str], aggregation_type: Optional[str],
+    ):
+        self.slug = slug
+        self.data_source = data_source
+        self.data_type = data_type
+        self.aggregation_type = aggregation_type
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            'slug': self.slug,
+            'data_source': self.data_source,
+            'data_type': self.data_type,
+            'aggregation_type': self.aggregation_type,
+            # FIXME: figure out an internal to_dict or use identifier for __eq__
+            # data_source is not persisted to YAML
+        }
+
+    @classmethod
+    def from_dict(cls, inputs: Dict[str, Any]) -> 'PanoField':
+        return cls(
+            slug=inputs['slug'],
+            data_source=inputs.get('data_source'),
+            data_type=inputs.get('data_type'),
+            aggregation_type=inputs.get('aggregation_type'),
+        )
+
+    def identifier(self) -> str:
+        return f'{self.data_source}_{self.slug}_{self.data_type}'
+
+    def __hash__(self) -> int:
+        return hash(self.identifier())
+
+    def __eq__(self, o: object) -> bool:
+        if not isinstance(o, PanoModelField):
+            return False
+
+        return self.to_dict() == o.to_dict()
+
+
 class PanoModelJoin:
     """Represent joins on other models."""
 
