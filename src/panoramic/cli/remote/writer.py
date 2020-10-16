@@ -8,7 +8,7 @@ from panoramic.cli.errors import (
     InvalidModelException,
     ModelWriteException,
 )
-from panoramic.cli.mapper import map_data_source_from_local, map_model_from_local
+from panoramic.cli.mapper.model import map_data_source_from_local, map_model_from_local
 from panoramic.cli.model import ModelClient
 from panoramic.cli.pano_model import Actionable, PanoModel, PanoVirtualDataSource
 from panoramic.cli.virtual_data_source import VirtualDataSourceClient

@@ -9,7 +9,10 @@ from panoramic.cli.errors import (
     DatasetReadException,
     ModelReadException,
 )
-from panoramic.cli.mapper import map_data_source_from_remote, map_model_from_remote
+from panoramic.cli.mapper.model import (
+    map_data_source_from_remote,
+    map_model_from_remote,
+)
 from panoramic.cli.model import ModelClient
 from panoramic.cli.pano_model import PanoModel, PanoVirtualDataSource
 from panoramic.cli.state import VirtualState
