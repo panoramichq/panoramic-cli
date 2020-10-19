@@ -14,29 +14,52 @@ class Field:
     slug: str
     taxon_type: str
     display_name: str
-    aggregation_type: Optional[str]
+    aggregation: Optional[str]
 
-    def __init__(self, *, slug: str, taxon_type: str, display_name: str, aggregation_type: Optional[str] = None):
+    def __init__(
+        self,
+        *,
+        slug: str,
+        group: str,
+        display_name: str,
+        data_type: str,
+        description: Optional[str],
+        data_source: Optional[str],
+        calculation: Optional[str],
+        aggregation: Optional[str],
+    ):
         self.slug = slug
-        self.taxon_type = taxon_type
+        self.group = group
         self.display_name = display_name
-        self.aggregation_type = aggregation_type
+        self.data_type = data_type
+        self.description = description
+        self.data_source = data_source
+        self.calculation = calculation
+        self.aggregation = aggregation
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> 'Field':
+    def from_dict(cls, inputs: Dict[str, Any]) -> 'Field':
         return cls(
-            slug=data['slug'],
-            taxon_type=data['taxon_type'],
-            display_name=data['display_name'],
-            aggregation_type=data.get('aggregation_type'),
+            slug=inputs['slug'],
+            group=inputs['group'],
+            display_name=inputs['display_name'],
+            data_type=inputs['data_type'],
+            description=inputs.get('description'),
+            data_source=inputs.get('data_source'),
+            aggregation=inputs.get('aggregation'),
+            calculation=inputs.get('calculation'),
         )
 
     def to_dict(self) -> Dict[str, Any]:
         return {
             'slug': self.slug,
-            'taxon_type': self.taxon_type,
+            'group': self.group,
             'display_name': self.display_name,
-            'aggregation_type': self.aggregation_type,
+            'data_type': self.data_type,
+            'description': self.description,
+            'calculation': self.calculation,
+            'aggregation': self.aggregation,
+            'data_source': self.data_source,
         }
 
     def __hash__(self) -> int:
