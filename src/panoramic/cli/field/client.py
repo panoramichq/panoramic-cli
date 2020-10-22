@@ -87,9 +87,11 @@ class FieldClient(OAuth2Client, VersionedClient):
         self.base_url = base_url
         super().__init__(client_id, client_secret)
 
-    def create_field(self, company_slug: str, field: Field, data_source: Optional[str] = None):
+    def create_fields(self, company_slug: str, fields: List[Field], data_source: Optional[str] = None):
         params = {'company_slug': company_slug, 'virtual_data_source': data_source}
-        response = self.session.post(self.base_url, params=params, json=field.to_dict(), timeout=30)
+        response = self.session.post(
+            self.base_url, params=params, json=[field.to_dict() for field in fields], timeout=30
+        )
         response.raise_for_status()
 
     def get_fields(
@@ -106,14 +108,14 @@ class FieldClient(OAuth2Client, VersionedClient):
     def update_fields(self, company_slug: str, fields: List[Field]):
         """Update given field."""
         logger.debug(f'Updating fields with slugs: {", ".join(f.slug for f in fields)}')
-        params = {'company_slug': company_slug}
-        response = self.session.put(self.base_url, json=[f.to_dict() for f in fields], params=params, timeout=30)
+        response = self.session.put(
+            self.base_url, json=[f.to_dict() for f in fields], params={'company_slug': company_slug}, timeout=30
+        )
         response.raise_for_status()
 
-    def delete_field(self, company_slug: str, field_slug: str, data_source: Optional[str] = None):
+    def delete_fields(self, company_slug: str, slugs: List[str]):
         """Delete a field with a given name."""
-        url = urljoin(self.base_url, field_slug)
-        logger.debug(f'Deleting model with name: {field_slug}')
-        params = {'virtual_data_source': data_source, 'company_slug': company_slug}
-        response = self.session.delete(url, params=params, timeout=30)
+        url = urljoin(self.base_url, 'delete')
+        logger.debug(f'Deleting fields : {", ".join(slugs)}')
+        response = self.session.post(url, json=slugs, params={'company_slug': company_slug}, timeout=30)
         response.raise_for_status()
