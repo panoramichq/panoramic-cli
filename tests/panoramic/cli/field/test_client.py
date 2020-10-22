@@ -12,7 +12,7 @@ def mock_token_url(monkeypatch):
 @responses.activate
 def test_create_model():
     responses.add(responses.POST, 'https://token/', json={'access_token': '123123'})
-    field = Field(slug='some_field', taxon_type='Namespaced', display_name='Some field')
+    field = Field(slug='some_field', field_type='Namespaced', display_name='Some field')
     client = FieldClient(base_url='https://diesel/taxon/', client_id='client-id', client_secret='client-secret')
 
     # Create with a data source
@@ -26,7 +26,7 @@ def test_create_model():
 @responses.activate
 def test_get_fields():
     responses.add(responses.POST, 'https://token/', json={'access_token': '123123'})
-    field = Field(slug='some_field', taxon_type='Namespaced', display_name='Some field')
+    field = Field(slug='some_field', field_type='Namespaced', display_name='Some field')
 
     responses.add(
         responses.GET,
@@ -43,8 +43,8 @@ def test_get_fields():
 @responses.activate
 def test_update_fields():
     responses.add(responses.POST, 'https://token/', json={'access_token': '123123'})
-    field = Field(slug='some_field', taxon_type='Namespaced', display_name='Some field')
-    field2 = Field(slug='another_field', taxon_type='Namespaced', display_name='Another field')
+    field = Field(slug='some_field', field_type='Namespaced', display_name='Some field')
+    field2 = Field(slug='another_field', field_type='Namespaced', display_name='Another field')
 
     responses.add(
         responses.PUT,

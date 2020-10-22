@@ -11,11 +11,6 @@ logger = logging.getLogger(__name__)
 
 
 class Field:
-    slug: str
-    taxon_type: str
-    display_name: str
-    aggregation: Optional[str]
-
     def __init__(
         self,
         *,
@@ -23,6 +18,7 @@ class Field:
         group: str,
         display_name: str,
         data_type: str,
+        field_type: str,
         description: Optional[str],
         data_source: Optional[str],
         calculation: Optional[str],
@@ -32,6 +28,7 @@ class Field:
         self.group = group
         self.display_name = display_name
         self.data_type = data_type
+        self.field_type = field_type
         self.description = description
         self.data_source = data_source
         self.calculation = calculation
@@ -44,6 +41,7 @@ class Field:
             group=inputs['group'],
             display_name=inputs['display_name'],
             data_type=inputs['data_type'],
+            field_type=inputs['field_type'],
             description=inputs.get('description'),
             data_source=inputs.get('data_source'),
             aggregation=inputs.get('aggregation'),
@@ -56,6 +54,7 @@ class Field:
             'group': self.group,
             'display_name': self.display_name,
             'data_type': self.data_type,
+            'field_type': self.field_type,
             'description': self.description,
             'calculation': self.calculation,
             'aggregation': self.aggregation,

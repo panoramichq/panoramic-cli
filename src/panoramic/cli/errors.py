@@ -162,6 +162,14 @@ class ModelReadException(CliBaseException):
         super().__init__(f'Error fetching models for company {company_slug} and dataset {dataset_name}')
 
 
+class FieldReadException(CliBaseException):
+
+    """Error reading field(s) from remote state."""
+
+    def __init__(self, company_slug: str, dataset_name: str):
+        super().__init__(f'Error fetching field for company {company_slug} and dataset {dataset_name}')
+
+
 class ValidationError(CliBaseException, ABC):
 
     """Abstract error raised during validation step."""

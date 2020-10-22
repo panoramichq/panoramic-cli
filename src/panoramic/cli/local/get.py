@@ -26,4 +26,7 @@ def get_state(target_dataset: Optional[str] = None) -> VirtualState:
             model['virtual_data_source'] = pvds.dataset_slug
             models.append(PanoModel.from_dict(model))
 
-    return VirtualState(data_sources=data_sources, models=models)
+        for _field, _path in package.read_fields():
+            pass
+
+    return VirtualState(data_sources=data_sources, models=models, fields=[])

@@ -59,6 +59,7 @@ class FileExtension(Enum):
     """
 
     MODEL_YAML = '.model.yaml'
+    FIELD_YAML = '.field.yaml'
 
 
 class PresetFileName(Enum):
