@@ -1,7 +1,7 @@
 from typing import Optional
 
 from panoramic.cli.local.reader import FileReader
-from panoramic.cli.pano_model import PanoModel, PanoVirtualDataSource
+from panoramic.cli.pano_model import PanoField, PanoModel, PanoVirtualDataSource
 from panoramic.cli.state import VirtualState
 
 
@@ -11,6 +11,8 @@ def get_state(target_dataset: Optional[str] = None) -> VirtualState:
     packages = FileReader().get_packages()
     data_sources = []
     models = []
+    fields = []
+
     for package in packages:
         data_source = package.read_data_source()
         data_source['package'] = package.name
@@ -26,7 +28,10 @@ def get_state(target_dataset: Optional[str] = None) -> VirtualState:
             model['virtual_data_source'] = pvds.dataset_slug
             models.append(PanoModel.from_dict(model))
 
-        for _field, _path in package.read_fields():
-            pass
+        for field, path in package.read_fields():
+            model['package'] = package.name
+            field['file_name'] = path.name
+            field['data_source'] = pvds.dataset_slug
+            fields.append(PanoField.from_dict(field))
 
-    return VirtualState(data_sources=data_sources, models=models, fields=[])
+    return VirtualState(data_sources=data_sources, models=models, fields=fields)
