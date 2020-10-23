@@ -21,11 +21,11 @@ class RemoteExecutor(Executor):
     def execute(self, action: Action):
         if action.is_creation:
             assert action.desired is not None
-            self.writer.write(action.desired)
+            self.writer.create(action.desired)
         elif action.is_deletion:
             assert action.current is not None
             self.writer.delete(action.current)
         else:
             # assume update
             assert action.desired is not None
-            self.writer.write(action.desired)
+            self.writer.update(action.desired)

@@ -138,6 +138,21 @@ class InvalidDatasetException(CliBaseException):
             self.messages = ['Invalid dataset submitted']
 
 
+class InvalidFieldException(CliBaseException):
+
+    """Invalid field submitted to remote."""
+
+    messages: List[str]
+
+    def __init__(self, error: RequestException):
+        try:
+            self.messages = [
+                error['msg'] for error in error.response.json()['error']['extra_data']['validation_errors']
+            ]
+        except Exception:
+            self.messages = ['Invalid field submitted']
+
+
 class DatasetWriteException(CliBaseException):
 
     """Error writing dataset to remote state."""
@@ -160,6 +175,18 @@ class ModelReadException(CliBaseException):
 
     def __init__(self, company_slug: str, dataset_name: str):
         super().__init__(f'Error fetching models for company {company_slug} and dataset {dataset_name}')
+
+
+class FieldWriteException(CliBaseException):
+
+    """Error writing field to remote state."""
+
+    def __init__(self, dataset_name: Optional[str], field_name: str):
+        message = f'Error writing field {field_name}'
+        if dataset_name is not None:
+            message += f' in dataset {dataset_name}'
+
+        super().__init__(message)
 
 
 class FieldReadException(CliBaseException):

@@ -4,13 +4,22 @@ import requests
 
 from panoramic.cli.errors import (
     DatasetWriteException,
+    FieldWriteException,
     InvalidDatasetException,
+    InvalidFieldException,
     InvalidModelException,
     ModelWriteException,
 )
+from panoramic.cli.field import FieldClient
+from panoramic.cli.mapper.field import map_field_from_local
 from panoramic.cli.mapper.model import map_data_source_from_local, map_model_from_local
 from panoramic.cli.model import ModelClient
-from panoramic.cli.pano_model import Actionable, PanoModel, PanoVirtualDataSource
+from panoramic.cli.pano_model import (
+    Actionable,
+    PanoField,
+    PanoModel,
+    PanoVirtualDataSource,
+)
 from panoramic.cli.virtual_data_source import VirtualDataSourceClient
 
 logger = logging.getLogger(__name__)
@@ -23,11 +32,13 @@ class RemoteWriter:
     company_name: str
     virtual_data_source_client: VirtualDataSourceClient
     model_client: ModelClient
+    field_client: FieldClient
 
     def __init__(self, company_name: str):
         self.company_name = company_name
         self.virtual_data_source_client = VirtualDataSourceClient()
         self.model_client = ModelClient()
+        self.field_client = FieldClient()
 
     def delete(self, actionable: Actionable):
         """Delete data from remote api."""
@@ -38,8 +49,22 @@ class RemoteWriter:
         else:
             raise NotImplementedError(f'delete not implemented for type {type(actionable)}')
 
-    def write(self, actionable: Actionable):
-        """Write data to remote api."""
+    def create(self, actionable: Actionable):
+        """Create data in the remote api."""
+        if isinstance(actionable, PanoField):
+            return self.create_field(actionable)
+        else:
+            self._upsert(actionable)
+
+    def update(self, actionable: Actionable):
+        """Update data in the remote api."""
+        if isinstance(actionable, PanoField):
+            return self.update_field(actionable)
+        else:
+            self._upsert(actionable)
+
+    def _upsert(self, actionable: Actionable):
+        """Upsert data to remote api."""
         if isinstance(actionable, PanoModel):
             return self.write_model(actionable)
         elif isinstance(actionable, PanoVirtualDataSource):
@@ -96,3 +121,41 @@ class RemoteWriter:
                 f'Failed to delete model {model.model_name} in dataset {model.virtual_data_source}', exc_info=True
             )
             raise ModelWriteException(model.virtual_data_source, model.model_name).extract_request_id(e)
+
+    def create_field(self, field: PanoField):
+        """Create model on remote API."""
+        logger.debug(f'About to create field {field.slug} in dataset {field.data_source}')
+
+        remote_field = map_field_from_local(field)
+        try:
+            self.field_client.create_fields(company_slug=self.company_name, fields=[remote_field])
+        except requests.RequestException as e:
+            logger.debug(f'Failed to create field {field.slug} in dataset {field.data_source}', exc_info=True)
+            if e.response is not None and e.response.status_code == requests.codes.bad_request:
+                raise InvalidFieldException(e).extract_request_id(e)
+            raise FieldWriteException(field.data_source, field.slug).extract_request_id(e)
+        pass
+
+    def update_field(self, field: PanoField):
+        """Create model on remote API."""
+        logger.debug(f'About to update field {field.slug} in dataset {field.data_source}')
+
+        remote_field = map_field_from_local(field)
+        try:
+            self.field_client.update_fields(company_slug=self.company_name, fields=[remote_field])
+        except requests.RequestException as e:
+            logger.debug(f'Failed to update field {field.slug} in dataset {field.data_source}', exc_info=True)
+            if e.response is not None and e.response.status_code == requests.codes.bad_request:
+                raise InvalidFieldException(e).extract_request_id(e)
+            raise FieldWriteException(field.data_source, field.slug).extract_request_id(e)
+
+    def delete_field(self, field: PanoField):
+        """Delete model from remote API."""
+        logger.debug(f'About to delete field {field.slug}')
+
+        try:
+            remote_field = map_field_from_local(field)
+            self.field_client.delete_fields(company_slug=self.company_name, slugs=[remote_field.slug])
+        except requests.RequestException as e:
+            logger.debug(f'Failed to delete field {field.slug} in dataset {field.data_source}', exc_info=True)
+            raise FieldWriteException(field.data_source, field.slug).extract_request_id(e)
