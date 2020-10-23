@@ -32,7 +32,7 @@ class FilePackage:
             yield read_yaml(f), f
 
     def __hash__(self) -> int:
-        return hash((self.name, self.data_source_file, self.model_files))
+        return hash((self.name, self.data_source_file, self.model_files, self.field_files))
 
     def __eq__(self, o: object) -> bool:
         if not isinstance(o, FilePackage):
@@ -42,6 +42,7 @@ class FilePackage:
             self.name,
             self.data_source_file,
             self.model_files,
+            self.field_files,
         )
 
 
