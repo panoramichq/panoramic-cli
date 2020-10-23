@@ -33,6 +33,10 @@ class Paths:
         return Path.cwd() / SystemDirectory.SCANNED.value
 
     @staticmethod
+    def fields_dir(package: Path) -> Path:
+        return package / 'fields'
+
+    @staticmethod
     def dataset_schema_file() -> Path:
         with importlib_resources.path(panoramic.cli.schemas, PresetFileName.DATASET_SCHEMA.value) as path:
             return path
