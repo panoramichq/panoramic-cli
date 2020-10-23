@@ -1,5 +1,5 @@
 from abc import ABC
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 
 class Actionable(ABC):
@@ -71,6 +71,7 @@ class PanoField(Actionable):
         data_source: Optional[str],
         calculation: Optional[str],
         aggregation: Optional[str],
+        package: Optional[str] = None,
         file_name: Optional[str] = None,
     ):
         self.slug = slug
@@ -110,11 +111,15 @@ class PanoField(Actionable):
             aggregation=inputs.get('aggregation'),
             calculation=inputs.get('calculation'),
             file_name=inputs.get('file_name'),
+            package=inputs.get('package'),
         )
 
     @property
-    def id(self) -> Tuple[Optional[str], str]:
-        return self.data_source, self.slug
+    def id(self) -> Union[Tuple[str], Tuple[str, str]]:
+        if self.data_source is not None:
+            return (self.data_source, self.slug)
+        else:
+            return (self.slug,)
 
     def __hash__(self) -> int:
         return hash(self.id)
