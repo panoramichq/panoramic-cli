@@ -21,13 +21,18 @@ def test_reader_get_packages(tmp_path: Path):
     model_file = ds1_dir / f'test_model{FileExtension.MODEL_YAML.value}'
     model_file.touch()
 
+    field_file = ds1_dir / f'test_field{FileExtension.FIELD_YAML.value}'
+    field_file.touch()
+
     # empty dataset
     ds2_dir = tmp_path / 'dataset2'
     ds2_dir.mkdir()
 
     packages = FileReader(cwd=tmp_path).get_packages()
 
-    assert list(packages) == [FilePackage(name='dataset1', data_source_file=ds1_file, model_files=[model_file])]
+    assert list(packages) == [
+        FilePackage(name='dataset1', data_source_file=ds1_file, model_files=[model_file], field_files=[field_file])
+    ]
 
 
 def test_file_package_read_data_source(tmp_path):
@@ -35,7 +40,7 @@ def test_file_package_read_data_source(tmp_path):
     with ds_file.open('w') as f:
         f.write('dataset_slug: test-dataset')
 
-    package = FilePackage(name='dataset1', data_source_file=ds_file, model_files=[])
+    package = FilePackage(name='dataset1', data_source_file=ds_file, model_files=[], field_files=[])
 
     assert package.read_data_source() == {'dataset_slug': 'test-dataset'}
 
@@ -45,6 +50,16 @@ def test_file_package_read_models(tmp_path):
     with model_file.open('w') as f:
         f.write('model_name: test-model')
 
-    package = FilePackage(name='dataset1', data_source_file=Mock(), model_files=[model_file])
+    package = FilePackage(name='dataset1', data_source_file=Mock(), model_files=[model_file], field_files=[])
 
     assert list(package.read_models()) == [({'model_name': 'test-model'}, model_file)]
+
+
+def test_file_package_read_fields(tmp_path):
+    field_file = tmp_path / f'test_field{FileExtension.FIELD_YAML.value}'
+    with field_file.open('w') as f:
+        f.write('slug: field_slug')
+
+    package = FilePackage(name='dataset1', data_source_file=Mock(), model_files=[], field_files=[field_file])
+
+    assert list(package.read_fields()) == [({'slug': 'field_slug'}, field_file)]
