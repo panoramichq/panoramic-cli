@@ -71,6 +71,7 @@ class PanoField(Actionable):
         data_source: Optional[str],
         calculation: Optional[str],
         aggregation: Optional[str],
+        file_name: Optional[str],
     ):
         self.slug = slug
         self.group = group
@@ -81,6 +82,7 @@ class PanoField(Actionable):
         self.data_source = data_source
         self.calculation = calculation
         self.aggregation = aggregation
+        self.file_name = file_name
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -107,6 +109,7 @@ class PanoField(Actionable):
             data_source=inputs.get('data_source'),
             aggregation=inputs.get('aggregation'),
             calculation=inputs.get('calculation'),
+            file_name=inputs.get('file_name'),
         )
 
     @property

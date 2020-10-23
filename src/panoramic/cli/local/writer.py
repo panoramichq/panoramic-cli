@@ -3,7 +3,12 @@ from pathlib import Path
 from typing import Optional
 
 from panoramic.cli.file_utils import delete_file, write_yaml
-from panoramic.cli.pano_model import Actionable, PanoModel, PanoVirtualDataSource
+from panoramic.cli.pano_model import (
+    Actionable,
+    PanoField,
+    PanoModel,
+    PanoVirtualDataSource,
+)
 from panoramic.cli.paths import FileExtension, Paths, PresetFileName
 
 logger = logging.getLogger(__name__)
@@ -82,4 +87,29 @@ class FileWriter:
         assert model.file_name is not None
         path = self.cwd / model.package / model.file_name
         logger.debug(f'About to delete model {model.id}')
+        delete_file(path)
+
+    def write_field(self, field: PanoField, *, file_name: Optional[str] = None):
+        """Write model to local filesystem."""
+        if file_name is None:
+            file_name = f'{field.slug}{FileExtension.FIELD_YAML.value}'
+
+        if field.data_source:
+            path = self.cwd / field.data_source / file_name
+        else:
+            path = self.cwd / file_name
+
+        logger.debug(f'About to write field {field.id}')
+        write_yaml(path, field.to_dict())
+
+    def delete_field(self, field: PanoField):
+        """Delete field from local filesystem."""
+        assert field.file_name is not None
+
+        if field.data_source:
+            path = self.cwd / field.data_source / field.file_name
+        else:
+            path = self.cwd / field.file_name
+
+        logger.debug(f'About to delete field {field.id}')
         delete_file(path)
