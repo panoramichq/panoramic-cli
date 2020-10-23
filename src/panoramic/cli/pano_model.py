@@ -71,7 +71,7 @@ class PanoField(Actionable):
         data_source: Optional[str],
         calculation: Optional[str],
         aggregation: Optional[str],
-        file_name: Optional[str],
+        file_name: Optional[str] = None,
     ):
         self.slug = slug
         self.group = group
