@@ -99,8 +99,10 @@ class FileWriter:
             file_name = f'{field.slug}{FileExtension.FIELD_YAML.value}'
 
         if field.data_source:
+            # dataset-scope field
             path = Paths.fields_dir(self.cwd / field.data_source) / file_name
         else:
+            # company-scope field
             path = Paths.fields_dir(self.cwd) / file_name
 
         logger.debug(f'About to write field {field.id}')
@@ -111,6 +113,7 @@ class FileWriter:
         assert field.file_name is not None
 
         if field.data_source:
+            # dataset-scope field
             path = Paths.fields_dir(self.cwd / field.data_source) / field.file_name
         else:
             # company-scope field
