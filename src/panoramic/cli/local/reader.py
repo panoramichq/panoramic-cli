@@ -38,7 +38,7 @@ class FilePackage:
         if not isinstance(o, FilePackage):
             return False
 
-        return (self.name, self.data_source_file, self.model_files,) == (
+        return (self.name, self.data_source_file, self.model_files, self.field_files) == (
             self.name,
             self.data_source_file,
             self.model_files,
@@ -74,7 +74,7 @@ class FileReader:
                 name=d.name,
                 data_source_file=d / PresetFileName.DATASET_YAML.value,
                 model_files=list(d.glob(f'*{FileExtension.MODEL_YAML.value}')),
-                field_files=list(d.glob(f'*{FileExtension.FIELD_YAML.value}')),
+                field_files=list(d.glob(f'**/*{FileExtension.FIELD_YAML.value}')),
             )
             for d in package_dirs
         )

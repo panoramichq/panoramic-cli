@@ -1,8 +1,9 @@
+import os
 from pathlib import Path
 from unittest.mock import Mock
 
 from panoramic.cli.local.reader import FilePackage, FileReader
-from panoramic.cli.paths import FileExtension, PresetFileName, SystemDirectory
+from panoramic.cli.paths import FileExtension, Paths, PresetFileName, SystemDirectory
 
 
 def test_reader_get_packages(tmp_path: Path):
@@ -21,18 +22,20 @@ def test_reader_get_packages(tmp_path: Path):
     model_file = ds1_dir / f'test_model{FileExtension.MODEL_YAML.value}'
     model_file.touch()
 
-    field_file = ds1_dir / f'test_field{FileExtension.FIELD_YAML.value}'
+    ds1_fields_dir = Paths.fields_dir(ds1_dir)
+    ds1_fields_dir.mkdir()
+    field_file = ds1_fields_dir / f'test_field{FileExtension.FIELD_YAML.value}'
     field_file.touch()
 
     # empty dataset
     ds2_dir = tmp_path / 'dataset2'
     ds2_dir.mkdir()
 
-    packages = FileReader(cwd=tmp_path).get_packages()
-
-    assert list(packages) == [
+    packages = list(FileReader(cwd=tmp_path).get_packages())
+    expected = [
         FilePackage(name='dataset1', data_source_file=ds1_file, model_files=[model_file], field_files=[field_file])
     ]
+    assert packages == expected
 
 
 def test_file_package_read_data_source(tmp_path):
@@ -56,7 +59,9 @@ def test_file_package_read_models(tmp_path):
 
 
 def test_file_package_read_fields(tmp_path):
-    field_file = tmp_path / f'test_field{FileExtension.FIELD_YAML.value}'
+    field_file = Paths.fields_dir(tmp_path) / f'test_field{FileExtension.FIELD_YAML.value}'
+    os.makedirs(os.path.dirname(field_file), exist_ok=True)
+
     with field_file.open('w') as f:
         f.write('slug: field_slug')
 
