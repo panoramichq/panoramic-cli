@@ -52,6 +52,10 @@ class Paths:
         with importlib_resources.path(panoramic.cli.schemas, PresetFileName.CONTEXT_SCHEMA.value) as path:
             return path
 
+    @classmethod
+    def data_connections_file(cls) -> Path:
+        return cls.config_dir() / PresetFileName.DATA_CONNECTIONS.value
+
 
 class FileExtension(Enum):
     """
@@ -62,7 +66,6 @@ class FileExtension(Enum):
 
 
 class PresetFileName(Enum):
-
     """Enumeration with all available preset file names."""
 
     DATASET_YAML = 'dataset.yaml'
@@ -74,8 +77,8 @@ class PresetFileName(Enum):
     DATASET_SCHEMA = 'dataset.schema.json'
     CONFIG_SCHEMA = 'config.schema.json'
     CONTEXT_SCHEMA = 'context.schema.json'
+    DATA_CONNECTIONS = 'data_connections.yaml'
 
 
 class SystemDirectory(Enum):
-
     SCANNED = 'scanned'
