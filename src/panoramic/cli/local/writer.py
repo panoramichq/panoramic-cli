@@ -43,7 +43,7 @@ class FileWriter:
         elif isinstance(actionable, PanoVirtualDataSource):
             return self.write_data_source(actionable, package=package)
         elif isinstance(actionable, PanoField):
-            return self.write_field(actionable, file_name=file_name)
+            return self.write_field(actionable, package=package, file_name=file_name)
         else:
             raise NotImplementedError(f'write not implemented for type {type(actionable)}')
 
@@ -93,12 +93,13 @@ class FileWriter:
         logger.debug(f'About to delete model {model.id}')
         delete_file(path)
 
-    def write_field(self, field: PanoField, *, file_name: Optional[str] = None):
+    def write_field(self, field: PanoField, *, package: Optional[str] = None, file_name: Optional[str] = None):
         """Write model to local filesystem."""
         if file_name is None:
             file_name = f'{field.slug}{FileExtension.FIELD_YAML.value}'
 
-        if field.data_source:
+        package = package if package is not None else field.data_source
+        if package:
             # dataset-scope field
             path = Paths.fields_dir(self.cwd / field.data_source) / file_name
         else:
