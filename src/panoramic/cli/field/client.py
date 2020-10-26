@@ -87,7 +87,7 @@ class FieldClient(OAuth2Client, VersionedClient):
         self.base_url = base_url
         super().__init__(client_id, client_secret)
 
-    def create_fields(self, company_slug: str, fields: List[Field], data_source: Optional[str] = None):
+    def upsert_fields(self, company_slug: str, fields: List[Field], data_source: Optional[str] = None):
         params = {'company_slug': company_slug, 'virtual_data_source': data_source}
         response = self.session.post(
             self.base_url, params=params, json=[field.to_dict() for field in fields], timeout=30
@@ -104,14 +104,6 @@ class FieldClient(OAuth2Client, VersionedClient):
         response.raise_for_status()
         response_json = response.json()['data']
         return [Field.from_dict(d) for d in response_json]
-
-    def update_fields(self, company_slug: str, fields: List[Field]):
-        """Update given field."""
-        logger.debug(f'Updating fields with slugs: {", ".join(f.slug for f in fields)}')
-        response = self.session.put(
-            self.base_url, json=[f.to_dict() for f in fields], params={'company_slug': company_slug}, timeout=30
-        )
-        response.raise_for_status()
 
     def delete_fields(self, company_slug: str, slugs: List[str]):
         """Delete a field with a given name."""

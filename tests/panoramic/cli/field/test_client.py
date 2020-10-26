@@ -19,7 +19,7 @@ def _create_field(**kwargs) -> Field:
 
 
 @responses.activate
-def test_create_field():
+def test_upsert_field():
     responses.add(responses.POST, 'https://token/', json={'access_token': '123123'})
     field = _create_field()
     client = FieldClient(base_url='https://diesel/field/', client_id='client-id', client_secret='client-secret')
@@ -28,7 +28,7 @@ def test_create_field():
     responses.add(
         responses.POST, 'https://diesel/field/?company_slug=test-company', json=[field.to_dict()],
     )
-    client.create_fields(company_slug='test-company', fields=[field])
+    client.upsert_fields(company_slug='test-company', fields=[field])
     assert len(responses.calls) == 2
 
 
@@ -46,23 +46,6 @@ def test_get_fields():
     client = FieldClient(base_url='https://diesel/field/', client_id='client-id', client_secret='client-secret')
 
     assert client.get_fields(data_source='test-source', company_slug='test-company') == [field]
-    assert len(responses.calls) == 2
-
-
-@responses.activate
-def test_update_fields():
-    responses.add(responses.POST, 'https://token/', json={'access_token': '123123'})
-    field = _create_field(slug='some_field')
-    field2 = _create_field(slug='another_field')
-
-    responses.add(
-        responses.PUT,
-        'https://diesel/field/?company_slug=test-company',
-        json={'data': [field.to_dict(), field2.to_dict()]},
-    )
-
-    client = FieldClient(base_url='https://diesel/field/', client_id='client-id', client_secret='client-secret')
-    client.update_fields(company_slug='test-company', fields=[field, field2])
     assert len(responses.calls) == 2
 
 

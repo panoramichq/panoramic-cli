@@ -136,43 +136,27 @@ def test_writer_delete_field(mock_field_client):
 
 
 @patch('panoramic.cli.remote.writer.map_field_from_local')
-def test_writer_create_field(mock__map_field_from_local, mock_field_client):
+def test_writer_write_field(mock__map_field_from_local, mock_field_client):
     mock__map_field_from_local.return_value = sentinel.remote_field
 
-    RemoteWriter('test_company').create_field(Mock())
+    RemoteWriter('test_company').write_field(Mock())
 
-    assert mock_field_client.create_fields.mock_calls == [
+    assert mock_field_client.upsert_fields.mock_calls == [
         call(company_slug='test_company', fields=[sentinel.remote_field])
     ]
 
 
 @patch('panoramic.cli.remote.writer.map_field_from_local')
-def test_writer_create_field_invalid_exception(_, mock_field_client):
-    mock_field_client.create_fields.side_effect = RequestException('test', response=Mock(status_code=400))
+def test_writer_write_field_invalid_exception(_, mock_field_client):
+    mock_field_client.upsert_fields.side_effect = RequestException('test', response=Mock(status_code=400))
 
     with pytest.raises(InvalidFieldException):
-        RemoteWriter('test_company').create_field(Mock())
+        RemoteWriter('test_company').write_field(Mock())
 
 
 @patch('panoramic.cli.remote.writer.map_field_from_local')
-def test_writer_create_field_source_exception(_, mock_field_client):
-    mock_field_client.create_fields.side_effect = RequestException('test')
+def test_writer_write_field_source_exception(_, mock_field_client):
+    mock_field_client.upsert_fields.side_effect = RequestException('test')
 
     with pytest.raises(FieldWriteException):
-        RemoteWriter('test_company').create_field(Mock())
-
-
-@patch('panoramic.cli.remote.writer.map_field_from_local')
-def test_writer_update_field_invalid_exception(_, mock_field_client):
-    mock_field_client.update_fields.side_effect = RequestException('test', response=Mock(status_code=400))
-
-    with pytest.raises(InvalidFieldException):
-        RemoteWriter('test_company').update_field(Mock())
-
-
-@patch('panoramic.cli.remote.writer.map_field_from_local')
-def test_writer_update_field_source_exception(_, mock_field_client):
-    mock_field_client.update_fields.side_effect = RequestException('test')
-
-    with pytest.raises(FieldWriteException):
-        RemoteWriter('test_company').update_field(Mock())
+        RemoteWriter('test_company').write_field(Mock())
