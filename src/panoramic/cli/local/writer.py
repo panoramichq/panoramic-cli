@@ -113,6 +113,7 @@ class FileWriter:
         if field.data_source:
             path = Paths.fields_dir(self.cwd / field.data_source) / field.file_name
         else:
+            # company-scope field
             path = Paths.fields_dir(self.cwd) / field.file_name
 
         logger.debug(f'About to delete field {field.id}')
