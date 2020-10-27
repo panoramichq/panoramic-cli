@@ -33,7 +33,7 @@ def test_upsert_field():
 
 
 @responses.activate
-def test_get_fields():
+def test_get_fields_dataset_scoped():
     responses.add(responses.POST, 'https://token/', json={'access_token': '123123'})
     field = _create_field()
 
@@ -46,6 +46,23 @@ def test_get_fields():
     client = FieldClient(base_url='https://diesel/field/', client_id='client-id', client_secret='client-secret')
 
     assert client.get_fields(data_source='test-source', company_slug='test-company') == [field]
+    assert len(responses.calls) == 2
+
+
+@responses.activate
+def test_get_all_fields():
+    responses.add(responses.POST, 'https://token/', json={'access_token': '123123'})
+    field = _create_field()
+
+    responses.add(
+        responses.GET,
+        'https://diesel/field/?company_slug=test-company&offset=0&limit=100',
+        json={'data': [field.to_dict()]},
+    )
+
+    client = FieldClient(base_url='https://diesel/field/', client_id='client-id', client_secret='client-secret')
+
+    assert client.get_fields(company_slug='test-company') == [field]
     assert len(responses.calls) == 2
 
 
