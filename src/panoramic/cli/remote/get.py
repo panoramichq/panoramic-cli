@@ -12,11 +12,11 @@ from panoramic.cli.errors import (
 )
 from panoramic.cli.field.client import FieldClient
 from panoramic.cli.field_mapper import map_field_from_remote
-from panoramic.cli.mapper.model import (
+from panoramic.cli.model import ModelClient
+from panoramic.cli.model_mapper import (
     map_data_source_from_remote,
     map_model_from_remote,
 )
-from panoramic.cli.model import ModelClient
 from panoramic.cli.pano_model import PanoModel, PanoModelField, PanoVirtualDataSource
 from panoramic.cli.state import VirtualState
 from panoramic.cli.virtual_data_source import VirtualDataSourceClient

@@ -12,8 +12,8 @@ from panoramic.cli.errors import (
 )
 from panoramic.cli.field import FieldClient
 from panoramic.cli.field_mapper import map_field_from_local
-from panoramic.cli.mapper.model import map_data_source_from_local, map_model_from_local
 from panoramic.cli.model import ModelClient
+from panoramic.cli.model_mapper import map_data_source_from_local, map_model_from_local
 from panoramic.cli.pano_model import (
     Actionable,
     PanoField,

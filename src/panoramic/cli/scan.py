@@ -5,8 +5,8 @@ import requests
 from requests.exceptions import RequestException
 
 from panoramic.cli.errors import ScanException, SourceNotFoundException
-from panoramic.cli.mapper.model import map_columns_to_model
 from panoramic.cli.metadata import JobState, MetadataClient
+from panoramic.cli.model_mapper import map_columns_to_model
 from panoramic.cli.pano_model import PanoModel
 
 logger = logging.getLogger(__name__)
