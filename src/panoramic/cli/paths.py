@@ -34,7 +34,7 @@ class Paths:
 
     @staticmethod
     def fields_dir(package: Path) -> Path:
-        return package / 'fields'
+        return package / SystemDirectory.FIELDS.value
 
     @staticmethod
     def dataset_schema_file() -> Path:
@@ -84,3 +84,4 @@ class PresetFileName(Enum):
 class SystemDirectory(Enum):
 
     SCANNED = 'scanned'
+    FIELDS = 'fields'
