@@ -11,7 +11,7 @@ from panoramic.cli.errors import (
     ModelReadException,
 )
 from panoramic.cli.field.client import FieldClient
-from panoramic.cli.mapper.field import map_field_from_remote
+from panoramic.cli.field_mapper import map_field_from_remote
 from panoramic.cli.mapper.model import (
     map_data_source_from_remote,
     map_model_from_remote,

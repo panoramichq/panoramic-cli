@@ -11,7 +11,7 @@ from panoramic.cli.errors import (
     InvalidModelException,
     ModelWriteException,
 )
-from panoramic.cli.mapper.field import map_field_slug_from_local
+from panoramic.cli.field_mapper import map_field_slug_from_local
 from panoramic.cli.remote.writer import RemoteWriter
 
 

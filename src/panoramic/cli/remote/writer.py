@@ -11,7 +11,7 @@ from panoramic.cli.errors import (
     ModelWriteException,
 )
 from panoramic.cli.field import FieldClient
-from panoramic.cli.mapper.field import map_field_from_local
+from panoramic.cli.field_mapper import map_field_from_local
 from panoramic.cli.mapper.model import map_data_source_from_local, map_model_from_local
 from panoramic.cli.model import ModelClient
 from panoramic.cli.pano_model import (
