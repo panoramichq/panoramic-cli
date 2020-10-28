@@ -59,6 +59,8 @@ class PanoModelField:
 class PanoField(Actionable):
     """Field definition."""
 
+    API_VERSION = 'v1'
+
     def __init__(
         self,
         *,
@@ -89,18 +91,26 @@ class PanoField(Actionable):
         self.file_name = file_name
 
     def to_dict(self) -> Dict[str, Any]:
-        return {
+        data: Dict[str, Any] = {
+            'api_version': self.API_VERSION,
             'slug': self.slug,
             'group': self.group,
             'display_name': self.display_name,
             'data_type': self.data_type,
             'field_type': self.field_type,
-            'description': self.description,
-            'calculation': self.calculation,
-            'aggregation': self.aggregation,
-            'display_format': self.display_format,
             # data_source is not persisted to YAML
         }
+
+        if self.description is not None:
+            data['description'] = self.description
+        if self.calculation is not None:
+            data['calculation'] = self.calculation
+        if self.aggregation is not None:
+            data['aggregation'] = self.aggregation
+        if self.display_format is not None:
+            data['display_format'] = self.display_format
+
+        return data
 
     @classmethod
     def from_dict(cls, inputs: Dict[str, Any]) -> 'PanoField':
