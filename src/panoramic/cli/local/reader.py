@@ -78,3 +78,7 @@ class FileReader:
             )
             for d in package_dirs
         )
+
+    def get_global_fields(self) -> Iterable[Tuple[Dict[str, Any], Path]]:
+        for path in self.cwd.glob(f'{SystemDirectory.FIELDS.value}/*{FileExtension.FIELD_YAML.value}'):
+            yield read_yaml(path), path

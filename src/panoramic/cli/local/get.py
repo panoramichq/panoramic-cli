@@ -6,12 +6,18 @@ from panoramic.cli.state import VirtualState
 
 
 def get_state(target_dataset: Optional[str] = None) -> VirtualState:
-    """Build a representation of what VDS and models are on local filesystem.
+    """
+    Build a representation of what VDS and models are on local filesystem.
     """
     packages = FileReader().get_packages()
     data_sources = []
     models = []
     fields = []
+
+    if target_dataset is None:
+        for field, path in FileReader().get_global_fields():
+            field['file_name'] = path.name
+            fields.append(PanoField.from_dict(field))
 
     for package in packages:
         data_source = package.read_data_source()
@@ -29,7 +35,7 @@ def get_state(target_dataset: Optional[str] = None) -> VirtualState:
             models.append(PanoModel.from_dict(model))
 
         for field, path in package.read_fields():
-            model['package'] = package.name
+            field['package'] = package.name
             field['file_name'] = path.name
             field['data_source'] = pvds.dataset_slug
             fields.append(PanoField.from_dict(field))
