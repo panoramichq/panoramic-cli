@@ -20,6 +20,7 @@ def map_field_from_remote(field: Field) -> PanoField:
         data_source=data_source,
         aggregation=field.aggregation,
         calculation=field.calculation,
+        display_format=field.display_format,
     )
 
 
@@ -51,4 +52,5 @@ def map_field_from_local(field: PanoField) -> Field:
         data_source=field.data_source,
         aggregation=field.aggregation,
         calculation=field.calculation,
+        display_format=field.display_format,
     )

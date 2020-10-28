@@ -22,7 +22,8 @@ class Field:
         description: Optional[str],
         data_source: Optional[str],
         calculation: Optional[str],
-        aggregation: Optional[str],
+        aggregation: Optional[Dict[str, Any]],
+        display_format: Optional[str],
     ):
         self.slug = slug
         self.group = group
@@ -33,6 +34,7 @@ class Field:
         self.data_source = data_source
         self.calculation = calculation
         self.aggregation = aggregation
+        self.display_format = display_format
 
     @classmethod
     def from_dict(cls, inputs: Dict[str, Any]) -> 'Field':
@@ -46,6 +48,7 @@ class Field:
             data_source=inputs.get('data_source'),
             aggregation=inputs.get('aggregation'),
             calculation=inputs.get('calculation'),
+            display_format=inputs.get('display_format'),
         )
 
     def to_dict(self) -> Dict[str, Any]:
@@ -59,6 +62,7 @@ class Field:
             'calculation': self.calculation,
             'aggregation': self.aggregation,
             'data_source': self.data_source,
+            'display_format': self.display_format,
         }
 
     def __hash__(self) -> int:

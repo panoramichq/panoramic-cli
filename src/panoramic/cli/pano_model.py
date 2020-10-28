@@ -70,7 +70,8 @@ class PanoField(Actionable):
         description: Optional[str],
         data_source: Optional[str],
         calculation: Optional[str],
-        aggregation: Optional[str],
+        display_format: Optional[str],
+        aggregation: Optional[Dict[str, Any]],
         package: Optional[str] = None,
         file_name: Optional[str] = None,
     ):
@@ -82,6 +83,7 @@ class PanoField(Actionable):
         self.description = description
         self.data_source = data_source
         self.calculation = calculation
+        self.display_format = display_format
         self.aggregation = aggregation
         self.package = package
         self.file_name = file_name
@@ -96,6 +98,7 @@ class PanoField(Actionable):
             'description': self.description,
             'calculation': self.calculation,
             'aggregation': self.aggregation,
+            'display_format': self.display_format,
             # data_source is not persisted to YAML
         }
 
@@ -111,6 +114,7 @@ class PanoField(Actionable):
             data_source=inputs.get('data_source'),
             aggregation=inputs.get('aggregation'),
             calculation=inputs.get('calculation'),
+            display_format=inputs.get('display_format'),
             package=inputs.get('package'),
             file_name=inputs.get('file_name'),
         )
@@ -261,8 +265,8 @@ class PanoVirtualDataSource(Actionable):
         self.package = package
 
     @property
-    def id(self) -> str:
-        return self.dataset_slug
+    def id(self) -> Tuple[str]:
+        return (self.dataset_slug,)
 
     def to_dict(self) -> Dict[str, Any]:
         return {
