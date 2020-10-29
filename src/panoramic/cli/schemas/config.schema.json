@@ -16,6 +16,16 @@
         "client_secret": {
           "description": "OAuth2 Client Secret",
           "type": "string"
+        },
+        "dbt": {
+          "type": "object",
+          "description": "DBT Configuration",
+          "properties": {
+            "profiles": {
+              "type": "object",
+              "description": "DBT user profiles"
+            }
+          }
         }
       },
       "required": [
@@ -65,16 +75,48 @@
           },
           "allOf": [
             {
-              "if": {"properties": {"type": { "const": "postgres" }}},
-              "then": {"required":  ["database", "host"]}
+              "if": {
+                "properties": {
+                  "type": {
+                    "const": "postgres"
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "database",
+                  "host"
+                ]
+              }
             },
             {
-              "if": {"properties": {"type": { "const": "snowflake" }}},
-              "then": {"required":  ["account"]}
+              "if": {
+                "properties": {
+                  "type": {
+                    "const": "snowflake"
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "account"
+                ]
+              }
             },
             {
-              "if": {"properties": {"type": { "const": "bigquery" }}},
-              "then": {"required":  ["project", "key_file"]}
+              "if": {
+                "properties": {
+                  "type": {
+                    "const": "bigquery"
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "project",
+                  "key_file"
+                ]
+              }
             }
           ],
           "required": [

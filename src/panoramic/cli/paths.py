@@ -17,8 +17,28 @@ class Paths:
         return Path.cwd() / PresetFileName.CONTEXT.value
 
     @staticmethod
+    def dbt_project_dir() -> Path:
+        return Path.cwd() / SystemDirectory.DBT.value
+
+    @classmethod
+    def dbt_packages_file(cls) -> Path:
+        return cls.dbt_project_dir() / PresetFileName.DBT_PACKAGES_FILE.value
+
+    @classmethod
+    def dbt_project_file(cls) -> Path:
+        return cls.dbt_project_dir() / PresetFileName.DBT_PROJECT_FILE.value
+
+    @staticmethod
     def dotenv_file() -> Path:
         return Path.cwd() / PresetFileName.DOTENV.value
+
+    @staticmethod
+    def dbt_config_dir() -> Path:
+        return Path.home() / PresetFileName.CONFIG_DIR.value / PresetFileName.DBT_DIR.value
+
+    @classmethod
+    def dbt_profiles_file(cls) -> Path:
+        return cls.dbt_config_dir() / PresetFileName.DBT_PROFILES_FILE.value
 
     @staticmethod
     def config_dir() -> Path:
@@ -86,14 +106,19 @@ class PresetFileName(Enum):
     CONTEXT = 'pano.yaml'
     DOTENV = '.env'
     CONFIG_DIR = '.pano'
+    DBT_DIR = '.dbt'
     CONFIG = 'config'
     MODEL_SCHEMA = 'model.schema.json'
     FIELD_SCHEMA = 'field.schema.json'
     DATASET_SCHEMA = 'dataset.schema.json'
     CONFIG_SCHEMA = 'config.schema.json'
     CONTEXT_SCHEMA = 'context.schema.json'
+    DBT_PROJECT_FILE = 'dbt_project.yml'
+    DBT_PACKAGES_FILE = 'packages.yml'
+    DBT_PROFILES_FILE = 'profiles.yml'
 
 
 class SystemDirectory(Enum):
     SCANNED = 'scanned'
     FIELDS = 'fields'
+    DBT = '.dbt'

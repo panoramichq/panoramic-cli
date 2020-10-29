@@ -30,14 +30,14 @@ def ensure_dir(abs_filepath: Path):
     path_obj.mkdir(parents=True, exist_ok=True)
 
 
-def write_yaml(abs_filepath: Path, yaml_dict: Dict[str, Any]):
+def write_yaml(abs_filepath: Path, yaml_data: Any):
     """
     Writes yaml dict to path
     """
     logger.debug(f'Write yaml {abs_filepath}')
     ensure_dir(abs_filepath)
     with open(abs_filepath, 'w') as f:
-        dump_yaml(yaml_dict, f)
+        dump_yaml(yaml_data, f)
 
 
 def read_yaml(path: Path) -> Dict[str, Any]:

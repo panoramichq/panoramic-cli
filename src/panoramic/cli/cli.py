@@ -1,10 +1,11 @@
 import logging
 import sys
 from collections import defaultdict
-from typing import Optional
+from typing import Optional, Tuple
 
 import click
 from click.core import Command, Context
+from dbt.main import main as dbt_main
 from dotenv import load_dotenv
 
 from panoramic.cli.__version__ import __version__
@@ -62,6 +63,21 @@ class ContextAwareCommand(ConfigAwareCommand):
             validate_context()
             return super().invoke(ctx)
         except (ValidationError, SourceNotFoundException, CompanyNotFoundException) as e:
+            echo_error(str(e))
+            sys.exit(1)
+
+
+class DbtCommand(ContextAwareCommand):
+    """Command proxied to DBT CLI tool."""
+
+    def invoke(self, ctx: Context):
+        from panoramic.cli.dbt import prepare_dbt_project
+
+        try:
+            prepare_dbt_project()
+            return super().invoke(ctx)
+        except Exception as e:
+            # TODO: Catch DBT exception here?
             echo_error(str(e))
             sys.exit(1)
 
@@ -405,3 +421,15 @@ def test(name: str):
     from panoramic.cli.connections import test_connections_command
 
     test_connections_command(name)
+
+
+@cli.command(context_settings=dict(ignore_unknown_options=True), help='Run dbt command', cls=DbtCommand)
+@click.argument('dbt_args', nargs=-1, type=click.UNPROCESSED)
+def dbt(dbt_args: Tuple[str]):
+    args = list(dbt_args) + [
+        '--profiles-dir',
+        str(Paths.dbt_config_dir()),
+        '--project-dir',
+        str(Paths.dbt_project_dir()),
+    ]
+    return dbt_main(args=args)
