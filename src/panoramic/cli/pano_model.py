@@ -129,7 +129,7 @@ class PanoField(Actionable):
             field_type=inputs['field_type'],
             description=inputs.get('description'),
             data_source=inputs.get('data_source'),
-            aggregation=Aggregation.from_dict(aggregation) if aggregation else None,
+            aggregation=Aggregation.from_dict(aggregation) if aggregation is not None else None,
             calculation=inputs.get('calculation'),
             display_format=inputs.get('display_format'),
             package=inputs.get('package'),

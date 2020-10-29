@@ -27,7 +27,7 @@ class Aggregation:
         return hash(json.dumps(self.to_dict()))
 
     def __eq__(self, o: object) -> bool:
-        if not isinstance(o, Field):
+        if not isinstance(o, Aggregation):
             return False
 
         return self.to_dict() == o.to_dict()
@@ -70,7 +70,7 @@ class Field:
             field_type=inputs['field_type'],
             description=inputs.get('description'),
             data_source=inputs.get('data_source'),
-            aggregation=Aggregation.from_dict(aggregation) if aggregation else None,
+            aggregation=Aggregation.from_dict(aggregation) if aggregation is not None else None,
             calculation=inputs.get('calculation'),
             display_format=inputs.get('display_format'),
         )
@@ -84,7 +84,7 @@ class Field:
             'field_type': self.field_type,
             'description': self.description,
             'calculation': self.calculation,
-            'aggregation': self.aggregation.to_dict() if self.aggregation else None,
+            'aggregation': self.aggregation.to_dict() if self.aggregation is not None else None,
             'data_source': self.data_source,
             'display_format': self.display_format,
         }
