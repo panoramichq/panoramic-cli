@@ -1,3 +1,4 @@
+import json
 import logging
 from typing import Any, Dict, List, Optional
 from urllib.parse import urljoin
@@ -8,6 +9,28 @@ from panoramic.cli.config.auth import get_client_id, get_client_secret
 from panoramic.cli.config.field import get_base_url
 
 logger = logging.getLogger(__name__)
+
+
+class Aggregation:
+    def __init__(self, *, type: str, params: Optional[Dict[str, Any]]):
+        self.type = type
+        self.params = params
+
+    @classmethod
+    def from_dict(cls, inputs: Dict[str, Any]) -> 'Aggregation':
+        return cls(type=inputs['type'], params=inputs.get('params'))
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {'type': self.type, 'params': self.params}
+
+    def __hash__(self) -> int:
+        return hash(json.dumps(self.to_dict()))
+
+    def __eq__(self, o: object) -> bool:
+        if not isinstance(o, Field):
+            return False
+
+        return self.to_dict() == o.to_dict()
 
 
 class Field:
@@ -22,7 +45,7 @@ class Field:
         description: Optional[str],
         data_source: Optional[str],
         calculation: Optional[str],
-        aggregation: Optional[Dict[str, Any]],
+        aggregation: Optional[Aggregation],
         display_format: Optional[str],
     ):
         self.slug = slug
@@ -38,6 +61,7 @@ class Field:
 
     @classmethod
     def from_dict(cls, inputs: Dict[str, Any]) -> 'Field':
+        aggregation = inputs.get('aggregation')
         return cls(
             slug=inputs['slug'],
             group=inputs['group'],
@@ -46,7 +70,7 @@ class Field:
             field_type=inputs['field_type'],
             description=inputs.get('description'),
             data_source=inputs.get('data_source'),
-            aggregation=inputs.get('aggregation'),
+            aggregation=Aggregation.from_dict(aggregation) if aggregation else None,
             calculation=inputs.get('calculation'),
             display_format=inputs.get('display_format'),
         )
@@ -60,7 +84,7 @@ class Field:
             'field_type': self.field_type,
             'description': self.description,
             'calculation': self.calculation,
-            'aggregation': self.aggregation,
+            'aggregation': self.aggregation.to_dict() if self.aggregation else None,
             'data_source': self.data_source,
             'display_format': self.display_format,
         }

@@ -7,13 +7,27 @@ from panoramic.cli.pano_model import PanoField
 
 @pytest.fixture()
 def dummy_local_field() -> PanoField:
-    data = dict(slug='slug', field_type='field_type', group='group', display_name='Display name', data_type='data_type')
+    data = dict(
+        slug='slug',
+        field_type='field_type',
+        group='group',
+        display_name='Display name',
+        data_type='data_type',
+        aggregation={'type': 'aggregation_type', 'params': {'a': 'b'}},
+    )
     return PanoField.from_dict(data)
 
 
 @pytest.fixture()
 def dummy_remote_field() -> Field:
-    data = dict(slug='slug', field_type='field_type', group='group', display_name='Display name', data_type='data_type')
+    data = dict(
+        slug='slug',
+        field_type='field_type',
+        group='group',
+        display_name='Display name',
+        data_type='data_type',
+        aggregation={'type': 'aggregation_type', 'params': {'a': 'b'}},
+    )
     return Field.from_dict(data)
 
 

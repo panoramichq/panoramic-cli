@@ -1,6 +1,8 @@
 from abc import ABC
 from typing import Any, Dict, List, Optional, Tuple, Union
 
+from panoramic.cli.field.client import Aggregation
+
 
 class Actionable(ABC):
 
@@ -73,7 +75,7 @@ class PanoField(Actionable):
         data_source: Optional[str],
         calculation: Optional[str],
         display_format: Optional[str],
-        aggregation: Optional[Dict[str, Any]],
+        aggregation: Optional[Aggregation],
         package: Optional[str] = None,
         file_name: Optional[str] = None,
     ):
@@ -110,7 +112,7 @@ class PanoField(Actionable):
         if self.calculation is not None:
             data['calculation'] = self.calculation
         if self.aggregation is not None:
-            data['aggregation'] = self.aggregation
+            data['aggregation'] = self.aggregation.to_dict()
         if self.display_format is not None:
             data['display_format'] = self.display_format
 
@@ -118,6 +120,7 @@ class PanoField(Actionable):
 
     @classmethod
     def from_dict(cls, inputs: Dict[str, Any]) -> 'PanoField':
+        aggregation = inputs.get('aggregation')
         return cls(
             slug=inputs['slug'],
             group=inputs['group'],
@@ -126,7 +129,7 @@ class PanoField(Actionable):
             field_type=inputs['field_type'],
             description=inputs.get('description'),
             data_source=inputs.get('data_source'),
-            aggregation=inputs.get('aggregation'),
+            aggregation=Aggregation.from_dict(aggregation) if aggregation else None,
             calculation=inputs.get('calculation'),
             display_format=inputs.get('display_format'),
             package=inputs.get('package'),
