@@ -308,6 +308,12 @@ INVALID_FIELDS = [
     # wrong type in aggregation
     {**VALID_FIELD_MINIMAL, 'aggregation': 1},
     {**VALID_FIELD_MINIMAL, 'aggregation': ''},
+    # Invalid aggregation object
+    {**VALID_FIELD_MINIMAL, 'aggregation': {'nope': 1}},
+    {**VALID_FIELD_MINIMAL, 'aggregation': {'type': 1}},
+    {**VALID_FIELD_MINIMAL, 'aggregation': {'type': {}}},
+    {**VALID_FIELD_MINIMAL, 'aggregation': {'type': 'sum', 'params': '1232'}},
+    {**VALID_FIELD_MINIMAL, 'aggregation': {'type': 'sum', 'params': {}, 'nope': 1}},
     # wrong type in display_format
     {**VALID_FIELD_MINIMAL, 'display_format': 1},
 ]
