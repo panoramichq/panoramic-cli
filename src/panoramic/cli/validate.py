@@ -79,21 +79,14 @@ def _validate_fields(fields: Iterable[Tuple[Dict[str, Any], Path]]) -> List[Vali
         try:
             _validate_data(field_data, JsonSchemas.field())
             field = PanoField.from_dict(field_data)
-            field_paths_by_id[field.id].append(field_path)
+            field_paths_by_id[(field.data_source, field.slug)].append(field_path)
         except InvalidYamlFile as e:
             errors.append(e)
         except JsonSchemaValidationError as e:
             errors.append(JsonSchemaError(path=field_path, error=e))
 
-    for field_id, paths in field_paths_by_id.items():
+    for (dataset_slug, field_slug), paths in field_paths_by_id.items():
         if len(paths) > 1:
-            if len(field_id) == 1:
-                dataset_slug = None
-                field_slug = field_id[0]
-            else:
-                dataset_slug = field_id[0]
-                field_slug = field_id[1]
-
             errors.append(DuplicateFieldSlugError(field_slug=field_slug, dataset_slug=dataset_slug, paths=paths))
 
     return errors
