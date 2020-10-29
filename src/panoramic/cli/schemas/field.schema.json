@@ -48,12 +48,20 @@
     "aggregation": {
       "description": "Type of aggregation to be used on the field",
       "type": "object",
+      "additionalProperties": false,
       "properties": {
         "type": {
           "description": "Type of the aggregation",
           "type": "string"
+        },
+        "params": {
+          "description": "Parameters of the aggregation",
+          "type": "object"
         }
-      }
+      },
+      "required": [
+        "type"
+      ]
     }
   },
   "required": [
