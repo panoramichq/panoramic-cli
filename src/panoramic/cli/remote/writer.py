@@ -121,7 +121,6 @@ class RemoteWriter:
             if e.response is not None and e.response.status_code == requests.codes.bad_request:
                 raise InvalidFieldException(e).extract_request_id(e)
             raise FieldWriteException(field.data_source, field.slug).extract_request_id(e)
-        pass
 
     def delete_field(self, field: PanoField):
         """Delete model from remote API."""
