@@ -3,13 +3,14 @@ import json
 from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict, Iterable, List, Tuple
 
 import jsonschema
 from jsonschema.exceptions import ValidationError as JsonSchemaValidationError
 
 from panoramic.cli.config.auth import get_client_id_env_var, get_client_secret_env_var
 from panoramic.cli.errors import (
+    DuplicateFieldSlugError,
     DuplicateModelNameError,
     InvalidYamlFile,
     JsonSchemaError,
@@ -17,7 +18,7 @@ from panoramic.cli.errors import (
 )
 from panoramic.cli.file_utils import read_yaml
 from panoramic.cli.local.reader import FilePackage, FileReader
-from panoramic.cli.pano_model import PanoModel
+from panoramic.cli.pano_model import PanoField, PanoModel
 from panoramic.cli.paths import Paths
 
 
@@ -34,6 +35,13 @@ class JsonSchemas:
     def model() -> Dict[str, Any]:
         """Return schema of model files."""
         with Paths.model_schema_file().open('r') as f:
+            return json.load(f)
+
+    @staticmethod
+    @functools.lru_cache()
+    def field() -> Dict[str, Any]:
+        """Return schema of model files."""
+        with Paths.field_schema_file().open('r') as f:
             return json.load(f)
 
     @staticmethod
@@ -64,6 +72,33 @@ def _validate_file(fp: Path, schema: Dict[str, Any]):
         raise JsonSchemaError(path=fp, error=e)
 
 
+def _validate_fields(fields: Iterable[Tuple[Dict[str, Any], Path]]):
+    field_paths_by_id: Dict[Tuple, List[Path]] = defaultdict(list)
+    errors = []
+    for field_data, field_path in fields:
+        try:
+            _validate_data(field_data, JsonSchemas.field())
+            field = PanoField.from_dict(field_data)
+            field_paths_by_id[field.id].append(field_path)
+        except InvalidYamlFile as e:
+            errors.append(e)
+        except JsonSchemaValidationError as e:
+            errors.append(JsonSchemaError(path=field_path, error=e))
+
+    for field_id, paths in field_paths_by_id.items():
+        if len(paths) > 1:
+            if len(field_id) == 1:
+                dataset_slug = None
+                field_slug = field_id[0]
+            else:
+                dataset_slug = field_id[0]
+                field_slug = field_id[1]
+
+            errors.append(DuplicateFieldSlugError(field_slug=field_slug, dataset_slug=dataset_slug, paths=paths))
+
+    return errors
+
+
 def _validate_package(package: FilePackage) -> List[ValidationError]:
     """Validate all files in a given package."""
     errors: List[ValidationError] = []
@@ -89,6 +124,8 @@ def _validate_package(package: FilePackage) -> List[ValidationError]:
     for model_name, paths in model_paths_by_name.items():
         if len(paths) > 1:
             errors.append(DuplicateModelNameError(model_name=model_name, paths=paths))
+
+    errors += _validate_fields(package.read_fields())
 
     return errors
 
