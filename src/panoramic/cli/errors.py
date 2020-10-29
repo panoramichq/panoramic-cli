@@ -232,6 +232,21 @@ class DuplicateModelNameError(ValidationError):
         super().__init__(f'Multiple model files use model name {model_name}{path_lines}')
 
 
+class DuplicateFieldSlugError(ValidationError):
+
+    """Two local models use the same model name."""
+
+    def __init__(self, *, field_slug: str, dataset_slug: Optional[str], paths: List[Path]) -> None:
+        try:
+            paths = [path.relative_to(Path.cwd()) for path in paths]
+        except ValueError:
+            pass  # Use relative path when possible
+
+        path_lines = ''.join(f'\n  in {path}' for path in paths)
+        dataset_message = f' under dataset {dataset_slug} ' if dataset_slug else ''
+        super().__init__(f'Multiple field files{dataset_message}use slug {field_slug}{path_lines}')
+
+
 class InvalidYamlFile(ValidationError):
 
     """YAML syntax error."""
