@@ -2,7 +2,7 @@ from unittest.mock import Mock, call, patch
 
 from panoramic.cli.local.writer import FileWriter
 from panoramic.cli.pano_model import PanoField
-from panoramic.cli.paths import FileExtension, PresetFileName
+from panoramic.cli.paths import FileExtension, PresetFileName, SystemDirectory
 
 
 @patch('panoramic.cli.local.writer.write_yaml')
@@ -46,11 +46,16 @@ def test_writer_write_field(mock_write_yaml, tmp_path):
 
     assert mock_write_yaml.mock_calls == [
         call(
-            tmp_path / 'fields' / f'{mock_field_company_scoped.slug}{FileExtension.FIELD_YAML.value}',
+            tmp_path
+            / SystemDirectory.FIELDS.value
+            / f'{mock_field_company_scoped.slug}{FileExtension.FIELD_YAML.value}',
             mock_field_company_scoped.to_dict.return_value,
         ),
         call(
-            tmp_path / 'test_dataset' / 'fields' / f'{mock_field_vds_scoped.slug}{FileExtension.FIELD_YAML.value}',
+            tmp_path
+            / 'test_dataset'
+            / SystemDirectory.FIELDS.value
+            / f'{mock_field_vds_scoped.slug}{FileExtension.FIELD_YAML.value}',
             mock_field_vds_scoped.to_dict.return_value,
         ),
     ]
@@ -66,6 +71,6 @@ def test_writer_delete_field(mock_delete_file, tmp_path):
     FileWriter(cwd=tmp_path).delete_field(mock_field_vds_scoped)
 
     assert mock_delete_file.mock_calls == [
-        call(tmp_path / 'fields' / file_name),
-        call(tmp_path / 'test_dataset' / 'fields' / file_name),
+        call(tmp_path / SystemDirectory.FIELDS.value / file_name),
+        call(tmp_path / 'test_dataset' / SystemDirectory.FIELDS.value / file_name),
     ]
