@@ -9,13 +9,14 @@ def get_state(target_dataset: Optional[str] = None) -> VirtualState:
     """
     Build a representation of what VDS and models are on local filesystem.
     """
-    packages = FileReader().get_packages()
+    file_reader = FileReader()
+    packages = file_reader.get_packages()
     data_sources = []
     models = []
     fields = []
 
     if target_dataset is None:
-        for field, path in FileReader().get_global_fields():
+        for field, path in file_reader.get_global_fields():
             field['file_name'] = path.name
             fields.append(PanoField.from_dict(field))
 
