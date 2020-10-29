@@ -74,7 +74,7 @@ class FileReader:
                 name=d.name,
                 data_source_file=d / PresetFileName.DATASET_YAML.value,
                 model_files=list(d.glob(f'*{FileExtension.MODEL_YAML.value}')),
-                field_files=list(d.glob(f'**/*{FileExtension.FIELD_YAML.value}')),
+                field_files=list(d.glob(f'{SystemDirectory.FIELDS.value}/*{FileExtension.FIELD_YAML.value}')),
             )
             for d in package_dirs
         )
