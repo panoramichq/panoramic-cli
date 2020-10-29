@@ -72,7 +72,7 @@ def _validate_file(fp: Path, schema: Dict[str, Any]):
         raise JsonSchemaError(path=fp, error=e)
 
 
-def _validate_fields(fields: Iterable[Tuple[Dict[str, Any], Path]]):
+def _validate_fields(fields: Iterable[Tuple[Dict[str, Any], Path]]) -> List[ValidationError]:
     field_paths_by_id: Dict[Tuple, List[Path]] = defaultdict(list)
     errors = []
     for field_data, field_path in fields:
@@ -125,15 +125,16 @@ def _validate_package(package: FilePackage) -> List[ValidationError]:
         if len(paths) > 1:
             errors.append(DuplicateModelNameError(model_name=model_name, paths=paths))
 
-    errors += _validate_fields(package.read_fields())
+    errors.extend(_validate_fields(package.read_fields()))
 
     return errors
 
 
 def validate_local_state() -> List[ValidationError]:
     """Check local state against defined schemas."""
-    packages = FileReader().get_packages()
-    errors = []
+    file_reader = FileReader()
+    packages = file_reader.get_packages()
+    errors = _validate_fields(file_reader.get_global_fields())
 
     executor = ThreadPoolExecutor(max_workers=4)
     for package_errors in executor.map(_validate_package, packages):
