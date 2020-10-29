@@ -91,6 +91,10 @@ class PanoField(Actionable):
         self.file_name = file_name
 
     def to_dict(self) -> Dict[str, Any]:
+        # data_source is not persisted to YAML
+        return {k: v for k, v in self._to_internal_dict().items() if k != 'data_source'}
+
+    def _to_internal_dict(self) -> Dict[str, Any]:
         data: Dict[str, Any] = {
             'api_version': self.API_VERSION,
             'slug': self.slug,
@@ -98,7 +102,7 @@ class PanoField(Actionable):
             'display_name': self.display_name,
             'data_type': self.data_type,
             'field_type': self.field_type,
-            # data_source is not persisted to YAML
+            'data_source': self.data_source,
         }
 
         if self.description is not None:
@@ -143,7 +147,7 @@ class PanoField(Actionable):
         if not isinstance(o, PanoField):
             return False
 
-        return self.id == o.id
+        return self._to_internal_dict() == o._to_internal_dict()
 
 
 class PanoModelJoin:
