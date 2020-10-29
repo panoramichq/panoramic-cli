@@ -167,7 +167,7 @@ VALID_MODEL_FULL = {
         {'data_reference': '"ad_id"', 'field_map': ['ad_id'], 'data_type': 'CHARACTER VARYING',},
     ],
 }
-VALID_FIELD_MINIMAL: Dict[str, str] = {
+VALID_FIELD_MINIMAL: Dict[str, Any] = {
     'api_version': 'v1',
     'slug': 'field_slug',
     'group': 'group',
@@ -287,8 +287,29 @@ INVALID_MODELS = [
 ]
 
 INVALID_FIELDS = [
-    # typo slug
+    # typo in slug
     {**VALID_FIELD_MINIMAL, 'sulg': 'should_be_slug'},
+    # slug not set
+    {k: v for k, v in VALID_FIELD_MINIMAL.items() if k != 'slug'},
+    # wrong type in slug
+    {**VALID_FIELD_MINIMAL, 'slug': 123},
+    # group not set
+    {k: v for k, v in VALID_FIELD_MINIMAL.items() if k != 'group'},
+    # field_type not set
+    {k: v for k, v in VALID_FIELD_MINIMAL.items() if k != 'field_type'},
+    # data_type not set
+    {k: v for k, v in VALID_FIELD_MINIMAL.items() if k != 'data_type'},
+    # typo in api_version
+    {**VALID_FIELD_MINIMAL, 'api_versio': 'v1'},
+    # wrong type in api_version
+    {**VALID_FIELD_MINIMAL, 'api_version': 1},
+    # wrong type in calculation
+    {**VALID_FIELD_MINIMAL, 'calculation': 1},
+    # wrong type in aggregation
+    {**VALID_FIELD_MINIMAL, 'aggregation': 1},
+    {**VALID_FIELD_MINIMAL, 'aggregation': ''},
+    # wrong type in display_format
+    {**VALID_FIELD_MINIMAL, 'display_format': 1},
 ]
 
 
