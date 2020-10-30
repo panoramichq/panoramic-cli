@@ -15,12 +15,13 @@ update_homebrew_formula() {
   rm -fr .homebrew_repo/Formula/panoramic-cli.rb
   cp brewout/panoramic-cli.rb .homebrew_repo/Formula/panoramic-cli.rb
   cd .homebrew_repo
-  git Formula/panoramic-cli.rb
+  git add Formula/panoramic-cli.rb
   git commit --message "Travis build: $TRAVIS_BUILD_NUMBER"
 }
 
 upload_files() {
-  git push master
+  cd .homebrew_repo || true
+  git push origin master
 }
 
 setup_git
