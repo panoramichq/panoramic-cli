@@ -138,6 +138,21 @@ class InvalidDatasetException(CliBaseException):
             self.messages = ['Invalid dataset submitted']
 
 
+class InvalidFieldException(CliBaseException):
+
+    """Invalid field submitted to remote."""
+
+    messages: List[str]
+
+    def __init__(self, error: RequestException):
+        try:
+            self.messages = [
+                error['msg'] for error in error.response.json()['error']['extra_data']['validation_errors']
+            ]
+        except Exception:
+            self.messages = ['Invalid field submitted']
+
+
 class DatasetWriteException(CliBaseException):
 
     """Error writing dataset to remote state."""
@@ -160,6 +175,26 @@ class ModelReadException(CliBaseException):
 
     def __init__(self, company_slug: str, dataset_name: str):
         super().__init__(f'Error fetching models for company {company_slug} and dataset {dataset_name}')
+
+
+class FieldWriteException(CliBaseException):
+
+    """Error writing field to remote state."""
+
+    def __init__(self, dataset_name: Optional[str], field_name: str):
+        message = f'Error writing field {field_name}'
+        if dataset_name is not None:
+            message += f' in dataset {dataset_name}'
+
+        super().__init__(message)
+
+
+class FieldReadException(CliBaseException):
+
+    """Error reading field(s) from remote state."""
+
+    def __init__(self, company_slug: str, dataset_name: str):
+        super().__init__(f'Error fetching field for company {company_slug} and dataset {dataset_name}')
 
 
 class ValidationError(CliBaseException, ABC):
@@ -195,6 +230,21 @@ class DuplicateModelNameError(ValidationError):
 
         path_lines = ''.join(f'\n  in {path}' for path in paths)
         super().__init__(f'Multiple model files use model name {model_name}{path_lines}')
+
+
+class DuplicateFieldSlugError(ValidationError):
+
+    """Two local models use the same model name."""
+
+    def __init__(self, *, field_slug: str, dataset_slug: Optional[str], paths: List[Path]) -> None:
+        try:
+            paths = [path.relative_to(Path.cwd()) for path in paths]
+        except ValueError:
+            pass  # Use relative path when possible
+
+        path_lines = ''.join(f'\n  in {path}' for path in paths)
+        dataset_message = f' under dataset {dataset_slug} ' if dataset_slug else ''
+        super().__init__(f'Multiple field files{dataset_message}use slug {field_slug}{path_lines}')
 
 
 class InvalidYamlFile(ValidationError):

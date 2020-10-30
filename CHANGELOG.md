@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 1.2.0 Release
+
+- Introduces field file management via the CLI
+
 ## Version 1.1.3 Release
 
 - Send `create_fields` query param when upserting models

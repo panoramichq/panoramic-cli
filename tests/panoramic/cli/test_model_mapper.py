@@ -1,11 +1,11 @@
 import pytest
 
-from panoramic.cli.mapper import (
+from panoramic.cli.model.client import Model, ModelField
+from panoramic.cli.model_mapper import (
     map_columns_to_model,
     map_model_from_local,
     map_model_from_remote,
 )
-from panoramic.cli.model.client import Model, ModelField
 from panoramic.cli.pano_model import PanoModel, PanoModelField
 
 

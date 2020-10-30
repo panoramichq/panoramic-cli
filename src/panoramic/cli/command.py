@@ -217,7 +217,7 @@ def pull(yes: bool = False, target_dataset: Optional[str] = None, diff: bool = F
                 successful += 1
             except Exception:
                 bar.write(f'Error: Failed to execute action {action.description}')
-        bar.write(f'Pulled {successful}/{bar.total} models and datasets')
+        bar.write(f'Pulled {successful}/{bar.total} models, fields and datasets')
 
 
 def push(yes: bool = False, target_dataset: Optional[str] = None, diff: bool = False):
@@ -260,7 +260,7 @@ def push(yes: bool = False, target_dataset: Optional[str] = None, diff: bool = F
                 bar.write(f'Error: Failed to execute action {action.description}:\n  {messages_concat}')
             except Exception as e:
                 bar.write(f'Error: Failed to execute action {action.description}:\n  {str(e)}')
-        bar.write(f'Updated {successful}/{bar.total} models and datasets')
+        bar.write(f'Updated {successful}/{bar.total} models, fields and datasets')
 
 
 def detect_joins(target_dataset: Optional[str] = None, diff: bool = False, overwrite: bool = False, yes: bool = False):

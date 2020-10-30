@@ -11,10 +11,11 @@ class FilePackage:
     data_source_file: Path
     model_files: List[Path]
 
-    def __init__(self, *, name: str, data_source_file: Path, model_files: List[Path]):
+    def __init__(self, *, name: str, data_source_file: Path, model_files: List[Path], field_files: List[Path]):
         self.name = name
         self.data_source_file = data_source_file
         self.model_files = model_files
+        self.field_files = field_files
 
     def read_data_source(self) -> Dict[str, Any]:
         """Parse data source file."""
@@ -25,17 +26,23 @@ class FilePackage:
         for f in self.model_files:
             yield read_yaml(f), f
 
+    def read_fields(self) -> Iterable[Tuple[Dict[str, Any], Path]]:
+        """Parse field files."""
+        for f in self.field_files:
+            yield read_yaml(f), f
+
     def __hash__(self) -> int:
-        return hash((self.name, self.data_source_file, self.model_files))
+        return hash((self.name, self.data_source_file, self.model_files, self.field_files))
 
     def __eq__(self, o: object) -> bool:
         if not isinstance(o, FilePackage):
             return False
 
-        return (self.name, self.data_source_file, self.model_files,) == (
+        return (self.name, self.data_source_file, self.model_files, self.field_files) == (
             self.name,
             self.data_source_file,
             self.model_files,
+            self.field_files,
         )
 
 
@@ -67,6 +74,11 @@ class FileReader:
                 name=d.name,
                 data_source_file=d / PresetFileName.DATASET_YAML.value,
                 model_files=list(d.glob(f'*{FileExtension.MODEL_YAML.value}')),
+                field_files=list(d.glob(f'{SystemDirectory.FIELDS.value}/*{FileExtension.FIELD_YAML.value}')),
             )
             for d in package_dirs
         )
+
+    def get_global_fields(self) -> Iterable[Tuple[Dict[str, Any], Path]]:
+        for path in self.cwd.glob(f'{SystemDirectory.FIELDS.value}/*{FileExtension.FIELD_YAML.value}'):
+            yield read_yaml(path), path

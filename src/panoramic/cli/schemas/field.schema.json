@@ -1,0 +1,74 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://panoramichq.com/config.schema.json",
+  "title": "Field",
+  "description": "Defines an abstract field queryable on models",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "api_version": {
+      "description": "Version of the Field schema",
+      "type": "string",
+      "enum": [
+        "v1"
+      ]
+    },
+    "slug": {
+      "description": "Slug for field",
+      "type": "string"
+    },
+    "group": {
+      "description": "A field group the field belongs to",
+      "type": "string"
+    },
+    "display_name": {
+      "description": "Display name used for field",
+      "type": "string"
+    },
+    "data_type": {
+      "description": "Data type of the field",
+      "type": "string"
+    },
+    "field_type": {
+      "description": "Type of field",
+      "type": "string"
+    },
+    "description": {
+      "description": "Free text describing the field",
+      "type": "string"
+    },
+    "calculation": {
+      "description": "Formula describing how's the field calculated",
+      "type": "string"
+    },
+    "display_format": {
+      "description": "Display format to be used for the field in Pano UI",
+      "type": "string"
+    },
+    "aggregation": {
+      "description": "Type of aggregation to be used on the field",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "description": "Type of the aggregation",
+          "type": "string"
+        },
+        "params": {
+          "description": "Parameters of the aggregation",
+          "type": "object"
+        }
+      },
+      "required": [
+        "type"
+      ]
+    }
+  },
+  "required": [
+    "slug",
+    "group",
+    "display_name",
+    "data_type",
+    "field_type"
+  ]
+}

@@ -36,7 +36,7 @@ def map_model_join_from_local(join: PanoModelJoin) -> ModelJoin:
     )
 
 
-def map_field_from_remote(field: ModelField) -> PanoModelField:
+def map_model_field_from_remote(field: ModelField) -> PanoModelField:
     """Convert remote attributes to local field."""
     return PanoModelField(field_map=field.field_map, data_reference=field.data_reference, data_type=field.data_type,)
 
@@ -51,7 +51,7 @@ def map_model_from_remote(model: Model) -> PanoModel:
     return PanoModel(
         model_name=model.model_name,
         data_source=model.data_source,
-        fields=[map_field_from_remote(f) for f in model.fields],
+        fields=[map_model_field_from_remote(f) for f in model.fields],
         joins=[map_model_join_from_remote(j) for j in model.joins],
         identifiers=model.identifiers,
         virtual_data_source=model.virtual_data_source,

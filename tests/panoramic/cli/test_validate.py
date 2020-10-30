@@ -167,6 +167,26 @@ VALID_MODEL_FULL = {
         {'data_reference': '"ad_id"', 'field_map': ['ad_id'], 'data_type': 'CHARACTER VARYING',},
     ],
 }
+VALID_FIELD_MINIMAL: Dict[str, Any] = {
+    'api_version': 'v1',
+    'slug': 'field_slug',
+    'group': 'group',
+    'display_name': 'Display name',
+    'data_type': 'data_type',
+    'field_type': 'field_type',
+}
+
+VALID_FIELD_FULL: Dict[str, Any] = {
+    'slug': 'full_field_slug',
+    'group': 'group',
+    'display_name': 'Full display name',
+    'data_type': 'data_type',
+    'field_type': 'field_type',
+    'calculation': 'calculation',
+    'aggregation': {'type': 'sum'},
+    'display_format': 'display_format',
+    'description': 'description',
+}
 
 
 INVALID_DATASETS = [
@@ -266,12 +286,49 @@ INVALID_MODELS = [
     {**VALID_MODEL_MINIMAL, 'fields': [{'data_type': 'CHARACTER VARYING',},],},
 ]
 
+INVALID_FIELDS = [
+    # typo in slug
+    {**VALID_FIELD_MINIMAL, 'sulg': 'should_be_slug'},
+    # slug not set
+    {k: v for k, v in VALID_FIELD_MINIMAL.items() if k != 'slug'},
+    # wrong type in slug
+    {**VALID_FIELD_MINIMAL, 'slug': 123},
+    # group not set
+    {k: v for k, v in VALID_FIELD_MINIMAL.items() if k != 'group'},
+    # field_type not set
+    {k: v for k, v in VALID_FIELD_MINIMAL.items() if k != 'field_type'},
+    # data_type not set
+    {k: v for k, v in VALID_FIELD_MINIMAL.items() if k != 'data_type'},
+    # typo in api_version
+    {**VALID_FIELD_MINIMAL, 'api_versio': 'v1'},
+    # wrong type in api_version
+    {**VALID_FIELD_MINIMAL, 'api_version': 1},
+    # wrong type in calculation
+    {**VALID_FIELD_MINIMAL, 'calculation': 1},
+    # wrong type in aggregation
+    {**VALID_FIELD_MINIMAL, 'aggregation': 1},
+    {**VALID_FIELD_MINIMAL, 'aggregation': ''},
+    # Invalid aggregation object
+    {**VALID_FIELD_MINIMAL, 'aggregation': {'nope': 1}},
+    {**VALID_FIELD_MINIMAL, 'aggregation': {'type': 1}},
+    {**VALID_FIELD_MINIMAL, 'aggregation': {'type': {}}},
+    {**VALID_FIELD_MINIMAL, 'aggregation': {'type': 'sum', 'params': '1232'}},
+    {**VALID_FIELD_MINIMAL, 'aggregation': {'type': 'sum', 'params': {}, 'nope': 1}},
+    # wrong type in display_format
+    {**VALID_FIELD_MINIMAL, 'display_format': 1},
+]
+
 
 def test_validate_local_state_valid(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
 
+    global_fields_dir = Paths.fields_dir(tmp_path)
+    global_fields_dir.mkdir()
+
     dataset_dir = tmp_path / 'test_dataset'
     dataset_dir.mkdir()
+    dataset_fields_dir = Paths.fields_dir(dataset_dir)
+    dataset_fields_dir.mkdir()
 
     with (dataset_dir / PresetFileName.DATASET_YAML.value).open('w') as f:
         f.write(yaml.dump(VALID_DATASET))
@@ -285,12 +342,19 @@ def test_validate_local_state_valid(tmp_path, monkeypatch):
     with (dataset_dir / 'test_model-2.model.yaml').open('w') as f:
         f.write(yaml.dump(model2))
 
+    with (global_fields_dir / 'company_field.field.yaml').open('w') as f:
+        f.write(yaml.dump(VALID_FIELD_FULL))
+
+    with (dataset_fields_dir / 'first_field.field.yaml').open('w') as f:
+        f.write(yaml.dump(VALID_FIELD_MINIMAL))
+
     errors = validate_local_state()
     assert len(errors) == 0
 
     state = get_state()
     assert len(state.models) == 2
     assert len(state.data_sources) == 1
+    assert len(state.fields) == 2
 
 
 @pytest.mark.parametrize('dataset', INVALID_DATASETS)
@@ -302,6 +366,80 @@ def test_validate_local_state_invalid_dataset(tmp_path, monkeypatch, dataset):
 
     with (dataset_dir / PresetFileName.DATASET_YAML.value).open('w') as f:
         f.write(yaml.dump(dataset))
+
+    errors = validate_local_state()
+    assert len(errors) == 1
+
+
+@pytest.mark.parametrize('invalid_field', INVALID_FIELDS)
+def test_validate_local_state_invalid_dataset_scoped_field(tmp_path, monkeypatch, invalid_field):
+    monkeypatch.chdir(tmp_path)
+
+    dataset_dir = tmp_path / 'test_dataset'
+    dataset_dir.mkdir()
+
+    with (dataset_dir / PresetFileName.DATASET_YAML.value).open('w') as f:
+        f.write(yaml.dump(VALID_DATASET))
+
+    field_dir = Paths.fields_dir(dataset_dir)
+    field_dir.mkdir()
+
+    with (field_dir / 'first_field.field.yaml').open('w') as f:
+        f.write(yaml.dump(invalid_field))
+
+    errors = validate_local_state()
+    assert len(errors) == 1
+
+
+@pytest.mark.parametrize('invalid_field', INVALID_FIELDS)
+def test_validate_local_state_duplicate_dataset_scoped_field(tmp_path, monkeypatch, invalid_field):
+    monkeypatch.chdir(tmp_path)
+
+    dataset_dir = tmp_path / 'test_dataset'
+    dataset_dir.mkdir()
+
+    with (dataset_dir / PresetFileName.DATASET_YAML.value).open('w') as f:
+        f.write(yaml.dump(VALID_DATASET))
+
+    field_dir = Paths.fields_dir(dataset_dir)
+    field_dir.mkdir()
+
+    with (field_dir / 'first_field.field.yaml').open('w') as f:
+        f.write(yaml.dump(VALID_FIELD_MINIMAL))
+
+    with (field_dir / 'duplicate.field.yaml').open('w') as f:
+        f.write(yaml.dump(VALID_FIELD_MINIMAL))
+
+    errors = validate_local_state()
+    assert len(errors) == 1
+
+
+@pytest.mark.parametrize('invalid_field', INVALID_FIELDS)
+def test_validate_local_state_invalid_company_scoped_field(tmp_path, monkeypatch, invalid_field):
+    monkeypatch.chdir(tmp_path)
+
+    global_field_dir = tmp_path / 'fields'
+    global_field_dir.mkdir()
+
+    with (global_field_dir / 'a_field.field.yaml').open('w') as f:
+        f.write(yaml.dump(invalid_field))
+
+    errors = validate_local_state()
+    assert len(errors) == 1
+
+
+@pytest.mark.parametrize('invalid_field', INVALID_FIELDS)
+def test_validate_local_state_duplicate_company_scoped_field(tmp_path, monkeypatch, invalid_field):
+    monkeypatch.chdir(tmp_path)
+
+    global_field_dir = tmp_path / 'fields'
+    global_field_dir.mkdir()
+
+    with (global_field_dir / 'a_field.field.yaml').open('w') as f:
+        f.write(yaml.dump(VALID_FIELD_FULL))
+
+    with (global_field_dir / 'duplicate_field.field.yaml').open('w') as f:
+        f.write(yaml.dump(VALID_FIELD_FULL))
 
     errors = validate_local_state()
     assert len(errors) == 1
