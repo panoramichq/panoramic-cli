@@ -21,7 +21,10 @@ class Aggregation:
         return cls(type=inputs['type'], params=inputs.get('params'))
 
     def to_dict(self) -> Dict[str, Any]:
-        return {'type': self.type, 'params': self.params}
+        data: Dict[str, Any] = {'type': self.type}
+        if self.params is not None:
+            data['params'] = self.params
+        return data
 
     def __hash__(self) -> int:
         return hash(json.dumps(self.to_dict()))
