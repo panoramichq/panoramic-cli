@@ -115,8 +115,8 @@ fi
 
 python_version_major=$(eval $py "-c 'import sys; print(sys.version_info.major)'")
 python_version_minor=$(eval $py "-c 'import sys; print(sys.version_info.minor)'")
-if [ "$python_version_major" -ne 3 ] || [ "$python_version_minor" -ne 8 ]; then
-  echo "Error: Python 3.8 is required: $(eval $py -V)" 1>&2
+if [ "$python_version_major" -ne 3 ]; then
+  echo "Error: Python 3 is required: $(eval $py -V)" 1>&2
   exit 1
 fi
 
