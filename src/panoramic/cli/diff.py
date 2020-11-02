@@ -24,6 +24,8 @@ def echo_diff(actions: ActionList):
             current_yaml = dump_yaml(action.current.to_dict()) if action.current is not None else ''
             desired_yaml = dump_yaml(action.desired.to_dict()) if action.desired is not None else ''
 
+            assert current_yaml is not None and desired_yaml is not None
+
             current_yaml_lines = current_yaml.splitlines(keepends=True)
             desired_yaml_lines = desired_yaml.splitlines(keepends=True)
 

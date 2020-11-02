@@ -279,7 +279,7 @@ def detect_joins(target_dataset: Optional[str] = None, diff: bool = False, overw
         # Prepare a mapping for a quick access when reconciling necessary changes later
         models_by_virtual_data_source[model.virtual_data_source][model.model_name] = model
 
-    actions_list = ActionList(actions=[])
+    actions_list: ActionList[PanoModel] = ActionList(actions=[])
 
     with tqdm(list(local_state.data_sources)) as bar:
         for dataset in bar:

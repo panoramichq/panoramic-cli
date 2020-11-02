@@ -17,7 +17,7 @@ from panoramic.cli.model_mapper import (
     map_data_source_from_remote,
     map_model_from_remote,
 )
-from panoramic.cli.pano_model import PanoModel, PanoModelField, PanoVirtualDataSource
+from panoramic.cli.pano_model import PanoField, PanoModel, PanoVirtualDataSource
 from panoramic.cli.state import VirtualState
 from panoramic.cli.virtual_data_source import VirtualDataSourceClient
 
@@ -62,7 +62,7 @@ def get_models(data_source: str, company_slug: str, *, limit: int = 100) -> Iter
         offset += limit
 
 
-def get_fields(company_slug: str, data_source: Optional[str] = None, *, limit: int = 100) -> Iterable[PanoModelField]:
+def get_fields(company_slug: str, data_source: Optional[str] = None, *, limit: int = 100) -> Iterable[PanoField]:
     """Get all models from remote."""
     client = FieldClient()
     offset = 0

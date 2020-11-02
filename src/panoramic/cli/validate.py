@@ -74,7 +74,7 @@ def _validate_file(fp: Path, schema: Dict[str, Any]):
 
 def _validate_fields(fields: Iterable[Tuple[Dict[str, Any], Path]]) -> List[ValidationError]:
     field_paths_by_id: Dict[Tuple, List[Path]] = defaultdict(list)
-    errors = []
+    errors: List[ValidationError] = []
     for field_data, field_path in fields:
         try:
             _validate_data(field_data, JsonSchemas.field())

@@ -193,8 +193,9 @@ class FieldReadException(CliBaseException):
 
     """Error reading field(s) from remote state."""
 
-    def __init__(self, company_slug: str, dataset_name: str):
-        super().__init__(f'Error fetching field for company {company_slug} and dataset {dataset_name}')
+    def __init__(self, company_slug: str, dataset_name: Optional[str]):
+        dataset_message = f' under dataset {dataset_name} ' if dataset_name else ''
+        super().__init__(f'Error fetching field for company {company_slug}{dataset_message}')
 
 
 class ValidationError(CliBaseException, ABC):
