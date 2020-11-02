@@ -1,9 +1,10 @@
-from typing import Optional, Tuple
+from typing import Dict, Optional, Tuple
 
 from panoramic.cli.field.client import Field
 from panoramic.cli.pano_model import PanoField
 
 NAMESPACE_DELIMITER = '|'
+_METRIC_DATA_TYPES = ['FLOAT', 'DOUBLE', 'DECIMAL']
 
 
 def map_field_from_remote(field: Field) -> PanoField:
@@ -53,4 +54,20 @@ def map_field_from_local(field: PanoField) -> Field:
         aggregation=field.aggregation,
         calculation=field.calculation,
         display_format=field.display_format,
+    )
+
+
+def map_column_to_field(column: Dict[str, str], is_identifier: bool = False) -> PanoField:
+    aggregation = {'type': column['aggregation_type']} if column['aggregation_type'] else None
+    field_type = 'dimension' if is_identifier else column['taxon_type']
+
+    return PanoField.from_dict(
+        dict(
+            slug=column['column_name'],
+            field_type=field_type,
+            display_name=column['column_name'],
+            group='CLI',
+            data_type=column['data_type'],
+            aggregation=aggregation,
+        )
     )

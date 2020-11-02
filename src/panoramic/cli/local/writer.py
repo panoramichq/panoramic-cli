@@ -68,11 +68,23 @@ class FileWriter:
         logger.debug(f'About to create an empty model {model_name}')
         path.touch()
 
+    def write_empty_field(self, field_slug: str):
+        """Create an empty field file."""
+        path = Paths.fields_dir(Paths.scanned_dir()) / f'{field_slug}{FileExtension.FIELD_YAML.value}'
+        logger.debug(f'About to create an empty field {field_slug}')
+        path.touch()
+
     def write_scanned_model(self, model: PanoModel):
         """Write scanned model to local filesystem."""
         path = Paths.scanned_dir() / f'{model.model_name}{FileExtension.MODEL_YAML.value}'
         logger.debug(f'About to write model {model.id}')
         write_yaml(path, model.to_dict())
+
+    def write_scanned_field(self, field: PanoField):
+        """"Write scanned field to local filesystem."""
+        path = Paths.fields_dir(Paths.scanned_dir()) / f'{field.slug}{FileExtension.MODEL_YAML.value}'
+        logger.debug(f'About to write field {field.slug}')
+        write_yaml(path, field.to_dict())
 
     def write_model(self, model: PanoModel, *, package: Optional[str] = None, file_name: Optional[str] = None):
         """Write model to local filesystem."""

@@ -17,12 +17,14 @@ from panoramic.cli.errors import (
     JoinException,
     ValidationError,
 )
+from panoramic.cli.field_mapper import map_column_to_field
 from panoramic.cli.file_utils import write_yaml
 from panoramic.cli.identifier_generator import IdentifierGenerator
 from panoramic.cli.join_detector import JoinDetector
 from panoramic.cli.local import get_state as get_local_state
 from panoramic.cli.local.executor import LocalExecutor
 from panoramic.cli.local.writer import FileWriter
+from panoramic.cli.model_mapper import map_columns_to_model
 from panoramic.cli.pano_model import PanoModel, PanoModelJoin
 from panoramic.cli.paths import Paths
 from panoramic.cli.physical_data_source.client import PhysicalDataSourceClient
@@ -160,7 +162,20 @@ def scan(source_id: str, table_filter: Optional[str], parallel: int = 1, generat
                 identifiers = id_generator.generate(table_name)
             else:
                 identifiers = []
-            for model in scanner.scan_columns_grouped(table_filter=table_name):
+
+            columns = scanner.scan_columns(table_filter=table_name,)
+            for column in columns:
+                try:
+                    field = map_column_to_field(column, is_identifier=column['column_name'] in identifiers)
+                    writer.write_scanned_field(field)
+                except Exception:
+                    error_msg = f'Metadata could not be scanned for table {table_name}'
+                    progress_bar.write(f'Error: {error_msg}')
+                    logger.debug(error_msg, exc_info=True)
+                    # Create an empty field file in case the mapping fails
+                    writer.write_empty_field(column['column_name'])
+
+            for model in map_columns_to_model(columns):
                 model.identifiers = identifiers
                 writer.write_scanned_model(model)
                 progress_bar.write(f'Discovered model {model.model_name}')
