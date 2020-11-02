@@ -25,30 +25,23 @@ class PanoModelField:
 
     field_map: List[str]
     data_reference: str
-    data_type: Optional[str]
 
-    def __init__(self, *, field_map: List[str], data_reference: str, data_type: Optional[str]):
+    def __init__(self, *, field_map: List[str], data_reference: str):
         self.field_map = field_map
         self.data_reference = data_reference
-        self.data_type = data_type
 
     def to_dict(self) -> Dict[str, Any]:
         return {
             'field_map': self.field_map,
             'data_reference': self.data_reference,
-            'data_type': self.data_type,
         }
 
     @classmethod
     def from_dict(cls, inputs: Dict[str, Any]) -> 'PanoModelField':
-        return cls(
-            field_map=inputs['field_map'],
-            data_reference=inputs['data_reference'],
-            data_type=inputs['data_type'],
-        )
+        return cls(field_map=inputs['field_map'], data_reference=inputs['data_reference'],)
 
     def identifier(self) -> str:
-        return f'{self.data_reference}_{self.data_type}_{",".join(sorted(self.field_map))}'
+        return f'{self.data_reference}_{",".join(sorted(self.field_map))}'
 
     def __hash__(self) -> int:
         return hash(self.identifier())

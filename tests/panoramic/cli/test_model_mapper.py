@@ -15,16 +15,8 @@ def local_model_fixture():
         model_name='source_schema1_table',
         data_source='source.schema1.table',
         fields=[
-            PanoModelField(
-                data_type='str',
-                data_reference='id',
-                field_map=['id'],
-            ),
-            PanoModelField(
-                data_type='int',
-                data_reference='value',
-                field_map=['value'],
-            ),
+            PanoModelField(data_reference='id', field_map=['id'],),
+            PanoModelField(data_reference='value', field_map=['value'],),
         ],
         joins=[],
         identifiers=[],
@@ -37,16 +29,8 @@ def remote_model_fixture():
         model_name="source_schema1_table",
         data_source="source.schema1.table",
         fields=[
-            ModelField(
-                data_type="str",
-                field_map=["id"],
-                data_reference="id",
-            ),
-            ModelField(
-                data_type="int",
-                field_map=["value"],
-                data_reference="value",
-            ),
+            ModelField(field_map=["id"], data_reference="id",),
+            ModelField(field_map=["value"], data_reference="value",),
         ],
         joins=[],
         identifiers=[],
@@ -77,16 +61,8 @@ def test_map_columns_to_model():
             'model_name': 'sourceschema1table1',
             'data_source': 'source.schema1.table1',
             'fields': [
-                {
-                    'data_type': 'str',
-                    'field_map': ['id'],
-                    'data_reference': 'id',
-                },
-                {
-                    'data_type': 'int',
-                    'field_map': ['value'],
-                    'data_reference': 'value',
-                },
+                {'field_map': ['id'], 'data_reference': 'id',},
+                {'field_map': ['value'], 'data_reference': 'value',},
             ],
             'identifiers': [],
             'joins': [],
@@ -97,14 +73,12 @@ def test_map_columns_to_model():
         for item in map_columns_to_model(
             [
                 {
-                    'data_type': 'str',
                     'field_map': ['id'],
                     'data_reference': 'id',
                     'model_name': 'sourceschema1table1',
                     'data_source': 'source.schema1.table1',
                 },
                 {
-                    'data_type': 'int',
                     'field_map': ['value'],
                     'data_reference': 'value',
                     'model_name': 'sourceschema1table1',

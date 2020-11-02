@@ -68,42 +68,10 @@
                     "items": {
                         "type": "string"
                     }
-                },
-                "data_type": {
-                    "type": "string",
-                    "enum": [
-                        "BOOLEAN",
-                        "SMALLINT",
-                        "INTEGER",
-                        "BIGINT",
-                        "TINYINT",
-                        "FLOAT",
-                        "DOUBLE",
-                        "DECIMAL",
-                        "CHARACTER VARYING",
-                        "CHARACTER",
-                        "NATIONAL CHARACTER VARYING",
-                        "NATIONAL CHARACTER",
-                        "BINARY VARYING",
-                        "BINARY",
-                        "DATE",
-                        "TIME",
-                        "TIME WITH TIME ZONE",
-                        "TIMESTAMP",
-                        "TIMESTAMP WITH TIME ZONE",
-                        "INTERVAL YEAR TO MONTH",
-                        "INTERVAL DAY TO SECOND",
-                        "INTERVAL",
-                        "MAP",
-                        "ANY",
-                        "NULL",
-                        "UNION"
-                    ]
                 }
             },
             "required": [
                 "data_reference",
-                "data_type",
                 "field_map"
             ]
         },
