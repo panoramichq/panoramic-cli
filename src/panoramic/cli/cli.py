@@ -20,6 +20,9 @@ from panoramic.cli.errors import (
 from panoramic.cli.paths import Paths
 from panoramic.cli.print import echo_error, echo_errors, echo_info, echo_warnings
 
+_PROFILES_DIR_ARG = '--profiles-dir'
+_PROJECT_DIR_ARG = '--project-dir'
+
 
 class ConfigAwareCommand(Command):
     """Perform config file validation before running command."""
@@ -426,10 +429,11 @@ def test(name: str):
 @cli.command(context_settings=dict(ignore_unknown_options=True), help='Run dbt command', cls=DbtCommand)
 @click.argument('dbt_args', nargs=-1, type=click.UNPROCESSED)
 def dbt(dbt_args: Tuple[str]):
-    args = list(dbt_args) + [
-        '--profiles-dir',
-        str(Paths.dbt_config_dir()),
-        '--project-dir',
-        str(Paths.dbt_project_dir()),
-    ]
+    args = list(dbt_args)
+
+    if _PROFILES_DIR_ARG not in args:
+        args.extend([_PROFILES_DIR_ARG, str(Paths.dbt_config_dir())])
+    if _PROJECT_DIR_ARG not in args:
+        args.extend([_PROJECT_DIR_ARG, str(Paths.dbt_project_dir())])
+
     return dbt_main(args=args)

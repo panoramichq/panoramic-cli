@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from panoramic.cli.config.auth import get_dbt_profiles
 from panoramic.cli.context import get_dbt_packages, get_dbt_vars
 from panoramic.cli.file_utils import write_yaml
@@ -14,6 +16,12 @@ def prepare_dbt_project():
 
     # Create the package file
     packages = get_dbt_packages()
+
+    # convert local package paths to be absolute
+    for package in packages:
+        if 'local' in package:
+            package['local'] = str(Path(package['local']).absolute())
+
     if packages is not None:
         write_yaml(Paths.dbt_packages_file(), {'packages': packages})
 
