@@ -6,16 +6,16 @@ git:
   submodules: false
 matrix:
   include:
-  - python: 3.6
-    env: TOXENV=py36
-  - python: 3.7
-    env: TOXENV=py37
-  - python: 3.8
-    env: TOXENV=py38
-  - python: 3.7
-    env: TOXENV=lint
-  - python: 3.7
-    env: TOXENV=manifest
+    - python: 3.6
+      env: TOXENV=py36
+    - python: 3.7
+      env: TOXENV=py37
+    - python: 3.8
+      env: TOXENV=py38
+    - python: 3.7
+      env: TOXENV=lint
+    - python: 3.7
+      env: TOXENV=manifest
 before_install:
   - echo -e "\n\nmachine github.com\n  login $CI_USER_TOKEN" > ~/.netrc
   - git submodule update --init --recursive
@@ -25,7 +25,7 @@ install:
   - rm -fr s3_upload && mkdir s3_upload
   - python shipping/generate-versions-file.py
   - mv versions.json s3_upload/versions.json
-script: tox -r
+script: tox
 deploy:
   - provider: pypi
     user: __token__
@@ -63,11 +63,10 @@ deploy:
       tags: true
       condition: $TOXENV = py36
       repo: panoramichq/panoramic-cli
-after_deploy:
-  if ! [[ $TRAVIS_DEPLOY ]]; then
-    export TRAVIS_DEPLOY="1" &&
-    rm -fr brewout && mkdir -p brewout &&
-    shipping/ppfg.sh -f -c shipping/ppfg -o brewout $(python shipping/generate-versions-file.py) &&
-    cat brewout/panoramic-cli.rb &&
-    shipping/update_homebrew.sh;
+after_deploy: if ! [[ $TRAVIS_DEPLOY ]]; then
+  export TRAVIS_DEPLOY="1" &&
+  rm -fr brewout && mkdir -p brewout &&
+  shipping/ppfg.sh -f -c shipping/ppfg -o brewout $(python shipping/generate-versions-file.py) &&
+  cat brewout/panoramic-cli.rb &&
+  shipping/update_homebrew.sh;
   fi
