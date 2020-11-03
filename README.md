@@ -1,9 +1,9 @@
 # Panoramic CLI
 
-[![Build Status](https://travis-ci.org/panoramichq/panoramic-cli.svg?branch=master)](https://travis-ci.org/panoramichq/panoramic-cli)
-![Last Commit](https://img.shields.io/github/last-commit/panoramichq/panoramic-cli)
-![Latest Release](https://img.shields.io/github/v/release/panoramichq/panoramic-cli)
-![License](https://img.shields.io/pypi/l/panoramic-cli.svg)
+[![Build Status](https://travis-ci.com/panoramichq/panoramic-cli.svg?branch=master)](https://travis-ci.com/panoramichq/panoramic-cli)
+[![Last Commit](https://img.shields.io/github/last-commit/panoramichq/panoramic-cli)](https://github.com/panoramichq/panoramic-cli/commits)
+[![Latest Release](https://img.shields.io/github/v/release/panoramichq/panoramic-cli)](https://github.com/panoramichq/panoramic-cli/releases)
+[![License](https://img.shields.io/pypi/l/panoramic-cli.svg)](https://github.com/panoramichq/panoramic-cli/blob/master/LICENSE)
 [![PyPI Download](https://img.shields.io/pypi/pyversions/panoramic-cli.svg)](https://pypi.org/project/panoramic-cli/)
 
 This repository contains the Panoramic Command Line tool. This tool allows you to create & maintain your Panoramic data models. It is built with Python 3.6+ and can be installed via PyPI or other similar tools.
