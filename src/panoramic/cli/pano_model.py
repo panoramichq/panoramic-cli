@@ -42,7 +42,9 @@ class PanoModelField:
     @classmethod
     def from_dict(cls, inputs: Dict[str, Any]) -> 'PanoModelField':
         return cls(
-            field_map=inputs['field_map'], data_reference=inputs['data_reference'], data_type=inputs['data_type'],
+            field_map=inputs['field_map'],
+            data_reference=inputs['data_reference'],
+            data_type=inputs['data_type'],
         )
 
     def identifier(self) -> str:

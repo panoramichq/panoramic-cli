@@ -31,6 +31,6 @@ repos:
     - id: mypy
       stages: [commit]
       name: mypy
-      entry: "mypy src/panoramic"
+      entry: "python -m mypy src/panoramic"
       language: system
       pass_filenames: false
