@@ -302,8 +302,8 @@ class JsonSchemaError(ValidationError):
 
 
 class MissingFieldFileError(ValidationError):
-    def __init__(self, *, slug: str) -> None:
-        super().__init__(f'Missing field file for slug {slug}')
+    def __init__(self, *, field_slug: str, dataset_slug: Optional[str],) -> None:
+        super().__init__(f'Missing field file for slug {field_slug} under dataset {dataset_slug}')
 
     def __eq__(self, o: object) -> bool:
         if not isinstance(o, MissingFieldFileError):

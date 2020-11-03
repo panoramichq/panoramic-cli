@@ -136,7 +136,9 @@ def _validate_package_fields(
     return fields, errors
 
 
-def _validate_missing_files(fields: List[PanoField], models: List[PanoModel]) -> List[ValidationError]:
+def _validate_missing_files(
+    fields: List[PanoField], models: List[PanoModel], package_name: str
+) -> List[ValidationError]:
     """Check for missing field files based on field map in model files."""
     errors: List[ValidationError] = []
     fields_slugs_from_models = set(
@@ -149,7 +151,9 @@ def _validate_missing_files(fields: List[PanoField], models: List[PanoModel]) ->
     field_slugs_with_no_files = fields_slugs_from_models.difference(fields_slugs_from_fields)
 
     if len(field_slugs_with_no_files) > 0:
-        errors.extend(MissingFieldFileError(slug=slug) for slug in field_slugs_with_no_files)
+        errors.extend(
+            MissingFieldFileError(field_slug=slug, dataset_slug=package_name) for slug in field_slugs_with_no_files
+        )
 
     return errors
 
@@ -165,7 +169,7 @@ def _validate_package(package: FilePackage) -> List[ValidationError]:
     fields, field_errors = _validate_package_fields(package)
     errors.extend(field_errors)
 
-    missing_file_errors = _validate_missing_files(fields, models)
+    missing_file_errors = _validate_missing_files(fields, models, package_name=package.name)
     errors.extend(missing_file_errors)
 
     return errors

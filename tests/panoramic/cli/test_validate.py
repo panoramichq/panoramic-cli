@@ -608,4 +608,4 @@ def test_validate_local_state_missing_field_file(tmp_path, monkeypatch):
         f.write(yaml.dump(VALID_FIELD_MINIMAL))
 
     errors = validate_local_state()
-    assert errors == [MissingFieldFileError(slug='field_slug_2')]
+    assert errors == [MissingFieldFileError(field_slug='field_slug_2', dataset_slug='test_dataset')]
