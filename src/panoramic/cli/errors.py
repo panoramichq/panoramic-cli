@@ -218,6 +218,12 @@ class FileMissingError(ValidationError):
 
         super().__init__(msg)
 
+    def __eq__(self, o: object) -> bool:
+        if not isinstance(o, FileMissingError):
+            return False
+
+        return str(self) == str(o)
+
 
 class DuplicateModelNameError(ValidationError):
 
@@ -231,6 +237,12 @@ class DuplicateModelNameError(ValidationError):
 
         path_lines = ''.join(f'\n  in {path}' for path in paths)
         super().__init__(f'Multiple model files use model name {model_name}{path_lines}')
+
+    def __eq__(self, o: object) -> bool:
+        if not isinstance(o, DuplicateModelNameError):
+            return False
+
+        return str(self) == str(o)
 
 
 class DuplicateFieldSlugError(ValidationError):
@@ -247,6 +259,12 @@ class DuplicateFieldSlugError(ValidationError):
         dataset_message = f' under dataset {dataset_slug} ' if dataset_slug else ''
         super().__init__(f'Multiple field files{dataset_message}use slug {field_slug}{path_lines}')
 
+    def __eq__(self, o: object) -> bool:
+        if not isinstance(o, DuplicateFieldSlugError):
+            return False
+
+        return str(self) == str(o)
+
 
 class InvalidYamlFile(ValidationError):
 
@@ -260,6 +278,12 @@ class InvalidYamlFile(ValidationError):
 
         super().__init__(f'Invalid YAML file - {error.problem}\n  on line {error.problem_mark.line}\n  in {path}')
 
+    def __eq__(self, o: object) -> bool:
+        if not isinstance(o, InvalidYamlFile):
+            return False
+
+        return str(self) == str(o)
+
 
 class JsonSchemaError(ValidationError):
     def __init__(self, *, path: Path, error: JsonSchemaValidationError):
@@ -269,6 +293,23 @@ class JsonSchemaError(ValidationError):
             pass  # Use relative path when possible
 
         super().__init__(f'{error.message}\n  in {path}')
+
+    def __eq__(self, o: object) -> bool:
+        if not isinstance(o, JsonSchemaError):
+            return False
+
+        return str(self) == str(o)
+
+
+class MissingFieldFileError(ValidationError):
+    def __init__(self, *, slug: str) -> None:
+        super().__init__(f'Missing field file for slug {slug}')
+
+    def __eq__(self, o: object) -> bool:
+        if not isinstance(o, MissingFieldFileError):
+            return False
+
+        return str(self) == str(o)
 
 
 def handle_exception(f: Callable):

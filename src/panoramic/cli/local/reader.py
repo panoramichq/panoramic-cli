@@ -5,6 +5,19 @@ from panoramic.cli.file_utils import read_yaml
 from panoramic.cli.paths import FileExtension, PresetFileName, SystemDirectory
 
 
+class GlobalPackage:
+
+    field_files: List[Path]
+
+    def __init__(self, *, field_files: List[Path]) -> None:
+        self.field_files = field_files
+
+    def read_fields(self) -> Iterable[Tuple[Dict[str, Any], Path]]:
+        """Parse field files."""
+        for f in self.field_files:
+            yield read_yaml(f), f
+
+
 class FilePackage:
 
     name: str
@@ -87,6 +100,7 @@ class FileReader:
             for d in package_dirs
         )
 
-    def get_global_fields(self) -> Iterable[Tuple[Dict[str, Any], Path]]:
-        for path in self.cwd.glob(f'{SystemDirectory.FIELDS.value}/*{FileExtension.FIELD_YAML.value}'):
-            yield read_yaml(path), path
+    def get_global_package(self) -> GlobalPackage:
+        return GlobalPackage(
+            field_files=list(self.cwd.glob(f'{SystemDirectory.FIELDS.value}/*{FileExtension.FIELD_YAML.value}'))
+        )
