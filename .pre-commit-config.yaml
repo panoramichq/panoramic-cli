@@ -1,9 +1,13 @@
 repos:
-  - repo: https://github.com/psf/black
-    rev: 20.8b0
+  - repo: local
     hooks:
-      - id: black
-        language_version: python3.7
+    - id: black
+      stages: [commit]
+      name: black
+      entry: "python -m black ."
+      language: system
+      language_version: python3.7
+      pass_filenames: false
 
   - repo: https://gitlab.com/pycqa/flake8
     rev: 3.8.4
