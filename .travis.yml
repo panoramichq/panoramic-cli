@@ -25,7 +25,7 @@ install:
   - rm -fr s3_upload && mkdir s3_upload
   - python shipping/generate-versions-file.py
   - mv versions.json s3_upload/versions.json
-script: tox
+script: tox -r
 deploy:
   - provider: pypi
     user: __token__
