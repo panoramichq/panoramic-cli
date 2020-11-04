@@ -58,16 +58,19 @@ def map_field_from_local(field: PanoField) -> Field:
 
 
 def map_column_to_field(column: Dict[str, str], is_identifier: bool = False) -> PanoField:
-    aggregation = {'type': column['aggregation_type']} if column['aggregation_type'] else None
+    aggregation = {'type': column['aggregation_type']} if column.get('aggregation_type') is not None else None
     field_type = 'dimension' if is_identifier else column['taxon_type']
+
+    assert len(column['field_map']) == 1
+    slug = column['field_map'][0]
 
     return PanoField.from_dict(
         dict(
-            slug=column['column_name'],
+            slug=slug,
             field_type=field_type,
-            display_name=column['column_name'],
+            display_name=slug,
             group='CLI',
-            data_type=column['data_type'],
+            data_type=column['validation_type'],
             aggregation=aggregation,
         )
     )

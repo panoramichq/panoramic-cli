@@ -163,22 +163,26 @@ def scan(source_id: str, table_filter: Optional[str], parallel: int = 1, generat
             else:
                 identifiers = []
 
-            columns = scanner.scan_columns(table_filter=table_name,)
-            for column in columns:
-                try:
-                    field = map_column_to_field(column, is_identifier=column['column_name'] in identifiers)
-                    writer.write_scanned_field(field)
-                except Exception:
-                    error_msg = f'Metadata could not be scanned for table {table_name}'
-                    progress_bar.write(f'Error: {error_msg}')
-                    logger.debug(error_msg, exc_info=True)
-                    # Create an empty field file in case the mapping fails
-                    writer.write_empty_field(column['column_name'])
-
+            columns = list(scanner.scan_columns(table_filter=table_name,))
             for model in map_columns_to_model(columns):
                 model.identifiers = identifiers
                 writer.write_scanned_model(model)
                 progress_bar.write(f'Discovered model {model.model_name}')
+
+            for column in columns:
+                column_slug = column['field_map'][0]
+                try:
+                    field = map_column_to_field(
+                        column, is_identifier=generate_identifiers and column_slug in identifiers
+                    )
+                    progress_bar.write(f'Discovered field {field.slug}')
+                    writer.write_scanned_field(field)
+                except Exception:
+                    error_msg = f'Metadata could not be parsed for column {column_slug} under {table_name}'
+                    progress_bar.write(f'Error: {error_msg}')
+                    logger.debug(error_msg, exc_info=True)
+                    # Create an empty field file in case the mapping fails
+                    writer.write_empty_field(column_slug)
         except Exception:
             error_msg = f'Metadata could not be scanned for table {table_name}'
             progress_bar.write(f'Error: {error_msg}')
