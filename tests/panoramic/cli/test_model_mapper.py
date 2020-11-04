@@ -16,12 +16,10 @@ def local_model_fixture():
         data_source='source.schema1.table',
         fields=[
             PanoModelField(
-                data_type='str',
                 data_reference='id',
                 field_map=['id'],
             ),
             PanoModelField(
-                data_type='int',
                 data_reference='value',
                 field_map=['value'],
             ),
@@ -38,12 +36,10 @@ def remote_model_fixture():
         data_source="source.schema1.table",
         fields=[
             ModelField(
-                data_type="str",
                 field_map=["id"],
                 data_reference="id",
             ),
             ModelField(
-                data_type="int",
                 field_map=["value"],
                 data_reference="value",
             ),
@@ -78,12 +74,10 @@ def test_map_columns_to_model():
             'data_source': 'source.schema1.table1',
             'fields': [
                 {
-                    'data_type': 'str',
                     'field_map': ['id'],
                     'data_reference': 'id',
                 },
                 {
-                    'data_type': 'int',
                     'field_map': ['value'],
                     'data_reference': 'value',
                 },
@@ -97,14 +91,12 @@ def test_map_columns_to_model():
         for item in map_columns_to_model(
             [
                 {
-                    'data_type': 'str',
                     'field_map': ['id'],
                     'data_reference': 'id',
                     'model_name': 'sourceschema1table1',
                     'data_source': 'source.schema1.table1',
                 },
                 {
-                    'data_type': 'int',
                     'field_map': ['value'],
                     'data_reference': 'value',
                     'model_name': 'sourceschema1table1',

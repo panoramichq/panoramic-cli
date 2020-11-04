@@ -12,32 +12,27 @@ logger = logging.getLogger(__name__)
 
 class ModelField:
 
-    data_type: Optional[str]
     field_map: List[str]
     data_reference: str
 
     def __init__(
         self,
         *,
-        data_type: Optional[str],
         field_map: List[str],
         data_reference: str,
     ):
-        self.data_type = data_type
         self.field_map = field_map
         self.data_reference = data_reference
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> 'ModelField':
         return cls(
-            data_type=data.get('data_type'),
             field_map=data['field_map'],
             data_reference=data['data_reference'],
         )
 
     def to_dict(self) -> Dict[str, Any]:
         return {
-            'data_type': self.data_type,
             'field_map': self.field_map,
             'data_reference': self.data_reference,
         }
