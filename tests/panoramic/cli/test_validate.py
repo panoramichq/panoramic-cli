@@ -20,9 +20,15 @@ VALID_CONTEXT = {
 
 INVALID_CONTEXTS = [
     # typo in version
-    {'api_versio': 'v1', 'company_slug': 'test_company',},
+    {
+        'api_versio': 'v1',
+        'company_slug': 'test_company',
+    },
     # wrong type in version
-    {'api_version': 1, 'company_slug': 'test_company',},
+    {
+        'api_version': 1,
+        'company_slug': 'test_company',
+    },
     # typo in slug
     {'api_version': 'v1', 'company_slu': 'test_company'},
     # wrong type in slug
@@ -164,7 +170,11 @@ VALID_MODEL_FULL = {
     ],
     'fields': [
         # has field_map
-        {'data_reference': '"ad_id"', 'field_map': ['ad_id'], 'data_type': 'CHARACTER VARYING',},
+        {
+            'data_reference': '"ad_id"',
+            'field_map': ['ad_id'],
+            'data_type': 'CHARACTER VARYING',
+        },
     ],
 }
 VALID_FIELD_MINIMAL: Dict[str, Any] = {
@@ -191,17 +201,41 @@ VALID_FIELD_FULL: Dict[str, Any] = {
 
 INVALID_DATASETS = [
     # typo in dataset_slug
-    {'dataset_slu': 'test-slug', 'display_name': 'Test Name', 'api_version': 'v1',},
+    {
+        'dataset_slu': 'test-slug',
+        'display_name': 'Test Name',
+        'api_version': 'v1',
+    },
     # wrong type in dataset_slug
-    {'dataset_slug': 100, 'display_name': 'Test Name', 'api_version': 'v1',},
+    {
+        'dataset_slug': 100,
+        'display_name': 'Test Name',
+        'api_version': 'v1',
+    },
     # typo in display_name
-    {'dataset_slug': 'test-slug', 'display_nam': 'Test Name', 'api_version': 'v1',},
+    {
+        'dataset_slug': 'test-slug',
+        'display_nam': 'Test Name',
+        'api_version': 'v1',
+    },
     # wrong type in display_name
-    {'dataset_slug': 'test-slug', 'display_name': 200, 'api_version': 'v1',},
+    {
+        'dataset_slug': 'test-slug',
+        'display_name': 200,
+        'api_version': 'v1',
+    },
     # typo in api_version
-    {'dataset_slug': 'test-slug', 'display_name': 'Test Name', 'api_versio': 'v1',},
+    {
+        'dataset_slug': 'test-slug',
+        'display_name': 'Test Name',
+        'api_versio': 'v1',
+    },
     # wrong type in api_version
-    {'dataset_slug': 'test-slug', 'display_name': 'Test Name', 'api_version': 1,},
+    {
+        'dataset_slug': 'test-slug',
+        'display_name': 'Test Name',
+        'api_version': 1,
+    },
 ]
 
 
@@ -215,13 +249,25 @@ INVALID_MODELS = [
     # wrong type in data_source
     {**VALID_MODEL_MINIMAL, 'data_source': 200},
     # typo in api_version
-    {**VALID_MODEL_MINIMAL, 'api_versio': 'v1',},
+    {
+        **VALID_MODEL_MINIMAL,
+        'api_versio': 'v1',
+    },
     # wrong type in api_version
-    {**VALID_MODEL_MINIMAL, 'api_version': 1,},
+    {
+        **VALID_MODEL_MINIMAL,
+        'api_version': 1,
+    },
     # typo in identifiers
-    {**VALID_MODEL_MINIMAL, 'identifirs': ['ad_id'],},
+    {
+        **VALID_MODEL_MINIMAL,
+        'identifirs': ['ad_id'],
+    },
     # wrong type in identifiers
-    {**VALID_MODEL_MINIMAL, 'identifiers': [100],},
+    {
+        **VALID_MODEL_MINIMAL,
+        'identifiers': [100],
+    },
     # typo in joins
     {
         **VALID_MODEL_MINIMAL,
@@ -259,31 +305,77 @@ INVALID_MODELS = [
         ],
     },
     # no "to model" set
-    {**VALID_MODEL_MINIMAL, 'joins': [{'join_type': 'left', 'relationship': 'many_to_one', 'fields': ['ad_id'],},],},
+    {
+        **VALID_MODEL_MINIMAL,
+        'joins': [
+            {
+                'join_type': 'left',
+                'relationship': 'many_to_one',
+                'fields': ['ad_id'],
+            },
+        ],
+    },
     # no join fields set
     {
         **VALID_MODEL_MINIMAL,
         'joins': [
-            {'to_model': 'sf.db.schema.table2', 'join_type': 'left', 'relationship': 'many_to_one', 'fields': [],},
+            {
+                'to_model': 'sf.db.schema.table2',
+                'join_type': 'left',
+                'relationship': 'many_to_one',
+                'fields': [],
+            },
         ],
     },
     # wrong type in joins
-    {**VALID_MODEL_MINIMAL, 'joins': [100],},
+    {
+        **VALID_MODEL_MINIMAL,
+        'joins': [100],
+    },
     # typo in fields
     {
         **VALID_MODEL_MINIMAL,
         'felds': [
-            {'data_reference': '"campaign_id"', 'field_map': ['campaign_id'], 'data_type': 'CHARACTER VARYING',},
+            {
+                'data_reference': '"campaign_id"',
+                'field_map': ['campaign_id'],
+                'data_type': 'CHARACTER VARYING',
+            },
         ],
     },
     # wrong type in fields
-    {**VALID_MODEL_MINIMAL, 'fields': [100],},
+    {
+        **VALID_MODEL_MINIMAL,
+        'fields': [100],
+    },
     # field_map not set
-    {**VALID_MODEL_MINIMAL, 'fields': [{'data_reference': '"campaign_id"', 'data_type': 'CHARACTER VARYING',},],},
+    {
+        **VALID_MODEL_MINIMAL,
+        'fields': [
+            {
+                'data_reference': '"campaign_id"',
+                'data_type': 'CHARACTER VARYING',
+            },
+        ],
+    },
     # data_type not set
-    {**VALID_MODEL_MINIMAL, 'fields': [{'data_reference': '"campaign_id"',},],},
+    {
+        **VALID_MODEL_MINIMAL,
+        'fields': [
+            {
+                'data_reference': '"campaign_id"',
+            },
+        ],
+    },
     # data_reference not set
-    {**VALID_MODEL_MINIMAL, 'fields': [{'data_type': 'CHARACTER VARYING',},],},
+    {
+        **VALID_MODEL_MINIMAL,
+        'fields': [
+            {
+                'data_type': 'CHARACTER VARYING',
+            },
+        ],
+    },
 ]
 
 INVALID_FIELDS = [

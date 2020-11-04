@@ -59,7 +59,13 @@ def test_scan_single_table_error(mock_writer, mock_scanner, mock_refresher, mock
     ]
     mock_id_generator.generate.return_value = ['id']
     mock_scanner.scan_columns_grouped.return_value = [
-        PanoModel(model_name='model2', data_source='source1', fields=[], joins=[], identifiers=[],),
+        PanoModel(
+            model_name='model2',
+            data_source='source1',
+            fields=[],
+            joins=[],
+            identifiers=[],
+        ),
     ]
     mock_refresher.refresh_table.side_effect = [Exception('test'), None]
 

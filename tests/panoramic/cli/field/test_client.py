@@ -26,7 +26,9 @@ def test_upsert_field():
 
     # Create with a data source
     responses.add(
-        responses.POST, 'https://diesel/field/?company_slug=test-company', json=[field.to_dict()],
+        responses.POST,
+        'https://diesel/field/?company_slug=test-company',
+        json=[field.to_dict()],
     )
     client.upsert_fields(company_slug='test-company', fields=[field])
     assert len(responses.calls) == 2
@@ -70,10 +72,16 @@ def test_get_all_fields():
 def test_delete_field():
     responses.add(responses.POST, 'https://token/', json={'access_token': '123123'})
     responses.add(
-        responses.POST, 'https://diesel/field/delete?company_slug=test-company', json=['field', 'vds|another_field'],
+        responses.POST,
+        'https://diesel/field/delete?company_slug=test-company',
+        json=['field', 'vds|another_field'],
     )
 
-    client = FieldClient(base_url='https://diesel/field/', client_id='client-id', client_secret='client-secret',)
+    client = FieldClient(
+        base_url='https://diesel/field/',
+        client_id='client-id',
+        client_secret='client-secret',
+    )
 
     client.delete_fields(company_slug='test-company', slugs=['field', 'vds|another_field'])
     assert len(responses.calls) == 2

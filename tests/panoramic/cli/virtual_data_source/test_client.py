@@ -16,7 +16,9 @@ def mock_token_url(monkeypatch):
 def test_upsert_virtual_data_source():
     responses.add(responses.POST, 'https://token/', json={'access_token': '123123'})
     responses.add(
-        responses.PUT, 'https://diesel/virtual?company_slug=test-company', json={'display_name': 'test', 'slug': 'bug'},
+        responses.PUT,
+        'https://diesel/virtual?company_slug=test-company',
+        json={'display_name': 'test', 'slug': 'bug'},
     )
 
     client = VirtualDataSourceClient(

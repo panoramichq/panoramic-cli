@@ -47,7 +47,10 @@ class VirtualDataSourceClient(OAuth2Client, VersionedClient):
     _base_url_with_trailing_slash: str
 
     def __init__(
-        self, base_url: Optional[str] = None, client_id: Optional[str] = None, client_secret: Optional[str] = None,
+        self,
+        base_url: Optional[str] = None,
+        client_id: Optional[str] = None,
+        client_secret: Optional[str] = None,
     ):
         client_id = client_id if client_id is not None else get_client_id()
         client_secret = client_secret if client_secret is not None else get_client_secret()

@@ -1,11 +1,13 @@
 import itertools
-from typing import Iterable, List
+from typing import Iterable, Sequence
 
 from panoramic.cli.pano_model import Actionable
 from panoramic.cli.state import Action, ActionList, VirtualState
 
 
-def _reconcile_actions(current_entities: List[Actionable], desired_entities: List[Actionable]) -> Iterable[Action]:
+def _reconcile_actions(
+    current_entities: Sequence[Actionable], desired_entities: Sequence[Actionable]
+) -> Iterable[Action]:
     """Create actions that get us from current to desired state."""
     current_by_id = {s.id: s for s in current_entities}
     desired_by_id = {s.id: s for s in desired_entities}

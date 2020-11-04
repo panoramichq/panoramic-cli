@@ -109,7 +109,10 @@ class FieldClient(OAuth2Client, VersionedClient):
     base_url: str
 
     def __init__(
-        self, base_url: Optional[str] = None, client_id: Optional[str] = None, client_secret: Optional[str] = None,
+        self,
+        base_url: Optional[str] = None,
+        client_id: Optional[str] = None,
+        client_secret: Optional[str] = None,
     ):
         base_url = base_url if base_url is not None else get_base_url()
         client_id = client_id if client_id is not None else get_client_id()

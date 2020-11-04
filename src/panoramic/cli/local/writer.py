@@ -99,9 +99,9 @@ class FileWriter:
             file_name = f'{field.slug}{FileExtension.FIELD_YAML.value}'
 
         package = package if package is not None else field.data_source
-        if package:
+        if package is not None:
             # dataset-scope field
-            path = Paths.fields_dir(self.cwd / field.data_source) / file_name
+            path = Paths.fields_dir(self.cwd / package) / file_name
         else:
             # company-scope field
             path = Paths.fields_dir(self.cwd) / file_name
@@ -113,7 +113,7 @@ class FileWriter:
         """Delete field from local filesystem."""
         assert field.file_name is not None
 
-        if field.data_source:
+        if field.data_source is not None:
             # dataset-scope field
             path = Paths.fields_dir(self.cwd / field.data_source) / field.file_name
         else:
