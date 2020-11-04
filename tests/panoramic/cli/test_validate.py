@@ -592,7 +592,6 @@ def test_validate_local_state_missing_field_file(tmp_path, monkeypatch):
         'fields': [
             {
                 'data_reference': '"COLUMN1"',
-                'data_type': 'CHARACTER VARYING',
                 'field_map': ['field_slug', 'field_slug_2'],
             }
         ],
