@@ -16,14 +16,20 @@ class ModelField:
     data_reference: str
 
     def __init__(
-        self, *, field_map: List[str], data_reference: str,
+        self,
+        *,
+        field_map: List[str],
+        data_reference: str,
     ):
         self.field_map = field_map
         self.data_reference = data_reference
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> 'ModelField':
-        return cls(field_map=data['field_map'], data_reference=data['data_reference'],)
+        return cls(
+            field_map=data['field_map'],
+            data_reference=data['data_reference'],
+        )
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -149,7 +155,10 @@ class ModelClient(OAuth2Client, VersionedClient):
     base_url: str
 
     def __init__(
-        self, base_url: Optional[str] = None, client_id: Optional[str] = None, client_secret: Optional[str] = None,
+        self,
+        base_url: Optional[str] = None,
+        client_id: Optional[str] = None,
+        client_secret: Optional[str] = None,
     ):
         base_url = base_url if base_url is not None else get_base_url()
         client_id = client_id if client_id is not None else get_client_id()
@@ -186,6 +195,9 @@ class ModelClient(OAuth2Client, VersionedClient):
         """Retrieve all models in a given source."""
         logger.debug(f'Listing models for source: {data_source}')
         params = {'virtual_data_source': data_source, 'company_slug': company_slug, 'offset': offset, 'limit': limit}
-        response = self.session.get(self.base_url, params=params,)
+        response = self.session.get(
+            self.base_url,
+            params=params,
+        )
         response.raise_for_status()
         return [Model.from_dict(d, virtual_data_source=data_source) for d in response.json()['data']]

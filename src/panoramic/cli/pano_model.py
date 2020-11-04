@@ -38,7 +38,10 @@ class PanoModelField:
 
     @classmethod
     def from_dict(cls, inputs: Dict[str, Any]) -> 'PanoModelField':
-        return cls(field_map=inputs['field_map'], data_reference=inputs['data_reference'],)
+        return cls(
+            field_map=inputs['field_map'],
+            data_reference=inputs['data_reference'],
+        )
 
     def identifier(self) -> str:
         return f'{self.data_reference}_{",".join(sorted(self.field_map))}'
