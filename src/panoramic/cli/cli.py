@@ -1,6 +1,8 @@
 import logging
+import os
 import sys
 from collections import defaultdict
+from pathlib import Path
 from typing import Optional, Tuple
 
 import click
@@ -30,12 +32,16 @@ class ConfigAwareCommand(Command):
     def invoke(self, ctx: Context):
         from panoramic.cli.validate import validate_config
 
+        cwd = Path.cwd()
+
         try:
             validate_config()
             return super().invoke(ctx)
         except ValidationError as e:
             echo_error(str(e))
             sys.exit(1)
+        finally:
+            os.chdir(cwd)  # DBT sets cwd so we need to reset it
 
 
 class ConnectionAwareCommand(ConfigAwareCommand):

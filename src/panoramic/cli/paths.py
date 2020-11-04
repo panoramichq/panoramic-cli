@@ -21,6 +21,10 @@ class Paths:
         return Path.cwd() / SystemDirectory.DBT.value
 
     @classmethod
+    def dbt_modules_dir(cls) -> Path:
+        return cls.dbt_project_dir() / PresetFileName.DBT_MODULES_DIR.value
+
+    @classmethod
     def dbt_packages_file(cls) -> Path:
         return cls.dbt_project_dir() / PresetFileName.DBT_PACKAGES_FILE.value
 
@@ -108,6 +112,7 @@ class PresetFileName(Enum):
     CONFIG_DIR = '.pano'
     DBT_DIR = '.dbt'
     CONFIG = 'config'
+    DBT_MODULES_DIR = 'dbt_modules'
     MODEL_SCHEMA = 'model.schema.json'
     FIELD_SCHEMA = 'field.schema.json'
     DATASET_SCHEMA = 'dataset.schema.json'

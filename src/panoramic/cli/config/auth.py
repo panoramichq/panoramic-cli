@@ -3,7 +3,6 @@ import os
 from typing import Any, Dict, Optional
 
 from panoramic.cli.config.storage import read_config
-from panoramic.cli.file_utils import read_yaml
 
 
 def get_client_id_env_var() -> str:
