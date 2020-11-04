@@ -60,16 +60,34 @@ def test_field_remote_to_local_data_source_bound(dummy_remote_field, dummy_local
 
 
 def test_map_column_to_field_basic():
-    assert map_column_to_field(
-        {'column_name': 'slug', 'data_type': 'TEXT', 'taxon_type': 'dimension', 'aggregation_type': None}
-    ) == PanoField.from_dict(
-        dict(slug='slug', field_type='dimension', group='CLI', display_name='slug', data_type='TEXT')
+    actual = map_column_to_field(
+        {
+            'column_name': 'slug',
+            'data_type': 'TEXT',
+            'taxon_type': 'dimension',
+            'field_map': ['slug'],
+            'data_reference': '"slug"',
+            'aggregation_type': None,
+            'validation_type': 'text',
+        }
     )
+    expected = PanoField.from_dict(
+        dict(slug='slug', field_type='dimension', group='CLI', display_name='slug', data_type='text')
+    )
+    assert actual == expected
 
 
 def test_map_column_to_field_aggregation():
     actual = map_column_to_field(
-        {'column_name': 'slug', 'data_type': 'FLOAT', 'taxon_type': 'metric', 'aggregation_type': 'sum'}
+        {
+            'column_name': 'slug',
+            'data_type': 'FLOAT',
+            'taxon_type': 'metric',
+            'field_map': ['slug'],
+            'data_reference': '"slug"',
+            'aggregation_type': 'sum',
+            'validation_type': 'numeric',
+        }
     )
     expected = PanoField.from_dict(
         dict(
@@ -77,7 +95,7 @@ def test_map_column_to_field_aggregation():
             field_type='metric',
             group='CLI',
             display_name='slug',
-            data_type='FLOAT',
+            data_type='numeric',
             aggregation=dict(type='sum'),
         )
     )
@@ -86,10 +104,18 @@ def test_map_column_to_field_aggregation():
 
 def test_map_column_to_field_identifier():
     actual = map_column_to_field(
-        {'column_name': 'slug', 'data_type': 'TEXT', 'taxon_type': 'metric', 'aggregation_type': None},
+        {
+            'column_name': 'slug',
+            'data_type': 'TEXT',
+            'taxon_type': 'metric',
+            'field_map': ['slug'],
+            'data_reference': '"slug"',
+            'aggregation_type': None,
+            'validation_type': 'text',
+        },
         is_identifier=True,
     )
     expected = PanoField.from_dict(
-        dict(slug='slug', field_type='dimension', group='CLI', display_name='slug', data_type='TEXT')
+        dict(slug='slug', field_type='dimension', group='CLI', display_name='slug', data_type='text')
     )
     assert actual == expected

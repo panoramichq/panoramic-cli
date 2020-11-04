@@ -163,7 +163,11 @@ def scan(source_id: str, table_filter: Optional[str], parallel: int = 1, generat
             else:
                 identifiers = []
 
-            columns = list(scanner.scan_columns(table_filter=table_name,))
+            columns = list(
+                scanner.scan_columns(
+                    table_filter=table_name,
+                )
+            )
             for model in map_columns_to_model(columns):
                 model.identifiers = identifiers
                 writer.write_scanned_model(model)
