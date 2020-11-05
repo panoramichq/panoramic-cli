@@ -172,9 +172,7 @@ def scan(source_id: str, table_filter: Optional[str], parallel: int = 1, generat
             for column in columns:
                 column_slug = column['field_map'][0]
                 try:
-                    field = map_column_to_field(
-                        column, is_identifier=column_slug in identifiers
-                    )
+                    field = map_column_to_field(column, is_identifier=column_slug in identifiers)
                     progress_bar.write(f'Discovered field {field.slug}')
                     writer.write_scanned_field(field)
                 except Exception:
