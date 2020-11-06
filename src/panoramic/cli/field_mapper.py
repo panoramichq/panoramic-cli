@@ -1,6 +1,6 @@
-from typing import Optional, Tuple
+from typing import Dict, Optional, Tuple
 
-from panoramic.cli.field.client import Field
+from panoramic.cli.field.client import Aggregation, Field
 from panoramic.cli.pano_model import PanoField
 
 NAMESPACE_DELIMITER = '|'
@@ -53,4 +53,25 @@ def map_field_from_local(field: PanoField) -> Field:
         aggregation=field.aggregation,
         calculation=field.calculation,
         display_format=field.display_format,
+    )
+
+
+def map_column_to_field(column: Dict[str, str], is_identifier: bool = False) -> PanoField:
+    aggregation = (
+        Aggregation(type=column['aggregation_type'], params=None)
+        if column.get('aggregation_type') is not None
+        else None
+    )
+    field_type = 'dimension' if is_identifier else column['taxon_type']
+
+    assert len(column['field_map']) == 1
+    slug = column['field_map'][0]
+
+    return PanoField(
+        slug=slug,
+        field_type=field_type,
+        display_name=slug,
+        group='CLI',
+        data_type=column['validation_type'],
+        aggregation=aggregation,
     )
