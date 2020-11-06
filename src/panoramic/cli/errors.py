@@ -3,8 +3,9 @@ import os
 import signal
 import sys
 from abc import ABC
+from enum import Enum
 from pathlib import Path
-from typing import Callable, List, Optional
+from typing import Callable, ClassVar, List, Optional
 
 from jsonschema.exceptions import ValidationError as JsonSchemaValidationError
 from requests.exceptions import RequestException
@@ -198,9 +199,17 @@ class FieldReadException(CliBaseException):
         super().__init__(f'Error fetching field for company {company_slug}{dataset_message}')
 
 
+class ValidationErrorSeverity(Enum):
+
+    WARNING = 'WARNING'
+    ERROR = 'ERROR'
+
+
 class ValidationError(CliBaseException, ABC):
 
     """Abstract error raised during validation step."""
+
+    severity: ClassVar[ValidationErrorSeverity] = ValidationErrorSeverity.ERROR
 
 
 class FileMissingError(ValidationError):
@@ -280,6 +289,25 @@ class InvalidYamlFile(ValidationError):
 
     def __eq__(self, o: object) -> bool:
         if not isinstance(o, InvalidYamlFile):
+            return False
+
+        return str(self) == str(o)
+
+
+class DeprecatedAttributeWarning(ValidationError):
+
+    severity = ValidationErrorSeverity.WARNING
+
+    def __init__(self, *, attribute: str, path: Path):
+        try:
+            path = path.relative_to(Path.cwd())
+        except ValueError:
+            pass  # Use relative path when possible
+
+        super().__init__(f'Deprecated attribute "{attribute}" \n  in {path}')
+
+    def __eq__(self, o: object) -> bool:
+        if not isinstance(o, DeprecatedAttributeWarning):
             return False
 
         return str(self) == str(o)

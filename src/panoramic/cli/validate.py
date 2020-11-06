@@ -11,6 +11,7 @@ from jsonschema.exceptions import ValidationError as JsonSchemaValidationError
 
 from panoramic.cli.config.auth import get_client_id_env_var, get_client_secret_env_var
 from panoramic.cli.errors import (
+    DeprecatedAttributeWarning,
     DuplicateFieldSlugError,
     DuplicateModelNameError,
     InvalidYamlFile,
@@ -60,6 +61,18 @@ class JsonSchemas:
             return json.load(f)
 
 
+def _check_model_deprecations(data: Dict[str, Any], path: Path) -> List[DeprecatedAttributeWarning]:
+    """Check for deprecated attributes in a model."""
+    errors = []
+
+    fields: List[Dict[str, Any]] = data.get('fields', [])
+    contains_data_type = any('data_type' in f for f in fields)
+    if contains_data_type:
+        errors.append(DeprecatedAttributeWarning(attribute='data_type', path=path))
+
+    return errors
+
+
 def _validate_data(data: Dict[str, Any], schema: Dict[str, Any]):
     """Validate file against schema."""
     jsonschema.validate(data, schema)
@@ -98,6 +111,7 @@ def _validate_package_models(package: FilePackage) -> Tuple[List[PanoModel], Lis
             model = PanoModel.from_dict(model_data)
             models.append(model)
             model_paths_by_name[model.model_name].append(model_path)
+            errors.extend(_check_model_deprecations(model_data, model_path))
         except InvalidYamlFile as e:
             errors.append(e)
         except JsonSchemaValidationError as e:

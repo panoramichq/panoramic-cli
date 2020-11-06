@@ -4,6 +4,7 @@ import pytest
 import yaml
 
 from panoramic.cli.errors import (
+    DeprecatedAttributeWarning,
     FileMissingError,
     InvalidYamlFile,
     JsonSchemaError,
@@ -169,16 +170,15 @@ VALID_MODEL_FULL = {
     'identifiers': ['ad_id'],
     'joins': [
         {'to_model': 'sf.db.schema.table2', 'join_type': 'left', 'relationship': 'many_to_one', 'fields': ['ad_id']},
-        {'to_model': 'sf.db.schema.table3', 'join_type': 'right', 'relationship': 'one_to_many', 'fields': ['ad_id']},
+        {'to_model': 'sf.db.schema.table3', 'join_type': 'right', 'relationship': 'one_to_one', 'fields': ['ad_id']},
         {'to_model': 'sf.db.schema.table4', 'join_type': 'inner', 'relationship': 'one_to_one', 'fields': ['ad_id']},
-        {'to_model': 'sf.db.schema.table5', 'join_type': 'inner', 'relationship': 'many_to_many', 'fields': ['ad_id']},
+        {'to_model': 'sf.db.schema.table5', 'join_type': 'inner', 'relationship': 'many_to_one', 'fields': ['ad_id']},
     ],
     'fields': [
         # has field_map
         {
             'data_reference': '"ad_id"',
             'field_map': ['ad_id'],
-            'data_type': 'CHARACTER VARYING',
         },
     ],
 }
@@ -608,3 +608,32 @@ def test_validate_local_state_missing_field_file(tmp_path, monkeypatch):
 
     errors = validate_local_state()
     assert errors == [MissingFieldFileError(field_slug='field_slug_2', dataset_slug='test_dataset')]
+
+
+def test_validate_local_state_deprecated_attribute(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+
+    dataset_dir = tmp_path / 'test_dataset'
+    dataset_dir.mkdir()
+
+    with (dataset_dir / PresetFileName.DATASET_YAML.value).open('w') as f:
+        f.write(yaml.dump(VALID_DATASET))
+
+    model = VALID_MODEL_MINIMAL
+    model['fields'] = [
+        {
+            'data_type': 'CHARACTER VARYING',
+            'field_map': ['field_slug'],
+            'data_reference': '"FIELD_SLUG"',
+        }
+    ]
+
+    with (dataset_dir / 'test_model.model.yaml').open('w') as f:
+        f.write(yaml.dump(model))
+
+    Paths.fields_dir(dataset_dir).mkdir()
+    with (Paths.fields_dir(dataset_dir) / 'test_field.field.yaml').open('w') as f:
+        f.write(yaml.dump(VALID_FIELD_MINIMAL))
+
+    errors = validate_local_state()
+    assert errors == [DeprecatedAttributeWarning(attribute='data_type', path=dataset_dir / 'test_model.model.yaml')]
