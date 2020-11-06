@@ -13,6 +13,10 @@ class Color(Enum):
     BLUE = 'blue'
 
 
+def echo_warning(msg: str):
+    click.echo(f'Warning: {msg}')
+
+
 def echo_error(msg: str, exc_info=False):
     click.echo(f'Error: {msg}')
 
@@ -32,6 +36,12 @@ def echo_style(msg: str, fg: Optional[Color] = None, nl: bool = True):
     """
     fg_value = fg.value if fg is not None else None
     click.secho(msg, fg=fg_value, nl=nl)
+
+
+def echo_warnings(errors: List[Any]):
+    for error in errors:
+        echo_info('')
+        echo_warning(str(error))
 
 
 def echo_errors(errors: List[Any]):
