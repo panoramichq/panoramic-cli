@@ -4,7 +4,6 @@ from panoramic.cli.field.client import Field
 from panoramic.cli.pano_model import PanoField
 
 NAMESPACE_DELIMITER = '|'
-_METRIC_DATA_TYPES = ['FLOAT', 'DOUBLE', 'DECIMAL']
 
 
 def map_field_from_remote(field: Field) -> PanoField:
