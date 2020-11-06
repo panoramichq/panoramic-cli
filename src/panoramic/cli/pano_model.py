@@ -47,7 +47,12 @@ class PanoModelField:
         return f'{self.data_reference}_{",".join(sorted(self.field_map))}'
 
     def __hash__(self) -> int:
-        return hash(self.identifier())
+        return hash(
+            (
+                tuple(self.field_map),
+                self.data_reference,
+            )
+        )
 
     def __eq__(self, o: object) -> bool:
         if not isinstance(o, PanoModelField):
@@ -61,6 +66,17 @@ class PanoField(Actionable):
 
     API_VERSION = 'v1'
 
+    slug: str
+    group: str
+    display_name: str
+    data_type: str
+    field_type: str
+    description: Optional[str]
+    data_source: Optional[str]
+    calculation: Optional[str]
+    display_format: Optional[str]
+    aggregation: Optional[Aggregation]
+
     def __init__(
         self,
         *,
@@ -73,6 +89,7 @@ class PanoField(Actionable):
         data_source: Optional[str] = None,
         calculation: Optional[str] = None,
         display_format: Optional[str] = None,
+        # TODO: create Pano class for aggregation
         aggregation: Optional[Aggregation] = None,
         package: Optional[str] = None,
         file_name: Optional[str] = None,
@@ -142,7 +159,22 @@ class PanoField(Actionable):
             return (self.slug,)
 
     def __hash__(self) -> int:
-        return hash(self.id)
+        return hash(
+            (
+                self.slug,
+                self.group,
+                self.display_name,
+                self.data_type,
+                self.field_type,
+                self.description,
+                self.data_source,
+                self.calculation,
+                self.display_format,
+                self.aggregation,
+                self.package,
+                self.file_name,
+            )
+        )
 
     def __eq__(self, o: object) -> bool:
         if not isinstance(o, PanoField):
@@ -186,7 +218,14 @@ class PanoModelJoin:
         return f'{self.join_type}_{self.relationship}_{self.to_model}_{",".join(sorted(self.fields))}'
 
     def __hash__(self) -> int:
-        return hash(self.identifier())
+        return hash(
+            (
+                tuple(self.fields),
+                self.join_type,
+                self.relationship,
+                self.to_model,
+            )
+        )
 
     def __eq__(self, o: object) -> bool:
         if not isinstance(o, PanoModelJoin):
@@ -257,7 +296,16 @@ class PanoModel(Actionable):
         )
 
     def __hash__(self) -> int:
-        return hash(self.to_dict())
+        return hash(
+            (
+                self.model_name,
+                self.data_source,
+                tuple(self.fields),
+                tuple(self.joins),
+                tuple(self.identifiers),
+                self.virtual_data_source,
+            )
+        )
 
     def __eq__(self, o: object) -> bool:
         if not isinstance(o, PanoModel):
@@ -298,7 +346,12 @@ class PanoVirtualDataSource(Actionable):
         )
 
     def __hash__(self) -> int:
-        return hash(self.to_dict())
+        return hash(
+            (
+                self.dataset_slug,
+                self.display_name,
+            )
+        )
 
     def __eq__(self, o: object) -> bool:
         if not isinstance(o, PanoVirtualDataSource):

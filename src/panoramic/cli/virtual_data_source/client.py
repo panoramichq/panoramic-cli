@@ -30,7 +30,12 @@ class VirtualDataSource:
         }
 
     def __hash__(self) -> int:
-        return hash(self.to_dict())
+        return hash(
+            (
+                self.slug,
+                self.display_name,
+            )
+        )
 
     def __eq__(self, o: object) -> bool:
         if not isinstance(o, VirtualDataSource):

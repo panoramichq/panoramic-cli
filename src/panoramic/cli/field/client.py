@@ -12,7 +12,16 @@ logger = logging.getLogger(__name__)
 
 
 class Aggregation:
-    def __init__(self, *, type: str, params: Optional[Dict[str, Any]]):
+
+    type: str
+    params: Optional[Dict[str, Any]]
+
+    def __init__(
+        self,
+        *,
+        type: str,
+        params: Optional[Dict[str, Any]],
+    ):
         self.type = type
         self.params = params
 
@@ -37,6 +46,18 @@ class Aggregation:
 
 
 class Field:
+
+    slug: str
+    group: str
+    display_name: str
+    data_type: str
+    field_type: str
+    description: Optional[str]
+    data_source: Optional[str]
+    calculation: Optional[str]
+    aggregation: Optional[Aggregation]
+    display_format: Optional[str]
+
     def __init__(
         self,
         *,
@@ -93,7 +114,20 @@ class Field:
         }
 
     def __hash__(self) -> int:
-        return hash(self.to_dict())
+        return hash(
+            (
+                self.slug,
+                self.group,
+                self.display_name,
+                self.data_type,
+                self.field_type,
+                self.description,
+                self.data_source,
+                self.calculation,
+                self.aggregation,
+                self.display_format,
+            )
+        )
 
     def __eq__(self, o: object) -> bool:
         if not isinstance(o, Field):
