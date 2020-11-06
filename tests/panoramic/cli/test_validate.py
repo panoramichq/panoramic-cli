@@ -3,7 +3,12 @@ from typing import Any, Dict
 import pytest
 import yaml
 
-from panoramic.cli.errors import FileMissingError, InvalidYamlFile, JsonSchemaError
+from panoramic.cli.errors import (
+    FileMissingError,
+    InvalidYamlFile,
+    JsonSchemaError,
+    MissingFieldFileError,
+)
 from panoramic.cli.local.get import get_state
 from panoramic.cli.paths import Paths, PresetFileName
 from panoramic.cli.validate import (
@@ -571,3 +576,35 @@ def test_validate_local_state_duplicate_model_names(tmp_path, monkeypatch):
 
     errors = validate_local_state()
     assert len(errors) == 1
+
+
+def test_validate_local_state_missing_field_file(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+
+    dataset_dir = tmp_path / 'test_dataset'
+    dataset_dir.mkdir()
+
+    with (dataset_dir / PresetFileName.DATASET_YAML.value).open('w') as f:
+        f.write(yaml.dump(VALID_DATASET))
+
+    invalid_model = {
+        **VALID_MODEL_MINIMAL,
+        'fields': [
+            {
+                'data_reference': '"COLUMN1"',
+                'field_map': ['field_slug', 'field_slug_2'],
+            }
+        ],
+    }
+
+    with (dataset_dir / 'model1.model.yaml').open('w') as f:
+        f.write(yaml.dump(invalid_model))
+
+    field_dir = Paths.fields_dir(dataset_dir)
+    field_dir.mkdir()
+
+    with (field_dir / 'field_slug.field.yaml').open('w') as f:
+        f.write(yaml.dump(VALID_FIELD_MINIMAL))
+
+    errors = validate_local_state()
+    assert errors == [MissingFieldFileError(field_slug='field_slug_2', dataset_slug='test_dataset')]

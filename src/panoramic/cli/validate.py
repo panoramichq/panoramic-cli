@@ -1,9 +1,10 @@
 import functools
+import itertools
 import json
 from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
-from typing import Any, Dict, Iterable, List, Tuple
+from typing import Any, Dict, List, Tuple, Union
 
 import jsonschema
 from jsonschema.exceptions import ValidationError as JsonSchemaValidationError
@@ -14,10 +15,11 @@ from panoramic.cli.errors import (
     DuplicateModelNameError,
     InvalidYamlFile,
     JsonSchemaError,
+    MissingFieldFileError,
     ValidationError,
 )
 from panoramic.cli.file_utils import read_yaml
-from panoramic.cli.local.reader import FilePackage, FileReader
+from panoramic.cli.local.reader import FilePackage, FileReader, GlobalPackage
 from panoramic.cli.pano_model import PanoField, PanoModel
 from panoramic.cli.paths import Paths
 
@@ -72,27 +74,7 @@ def _validate_file(fp: Path, schema: Dict[str, Any]):
         raise JsonSchemaError(path=fp, error=e)
 
 
-def _validate_fields(fields: Iterable[Tuple[Dict[str, Any], Path]]) -> List[ValidationError]:
-    field_paths_by_id: Dict[Tuple, List[Path]] = defaultdict(list)
-    errors: List[ValidationError] = []
-    for field_data, field_path in fields:
-        try:
-            _validate_data(field_data, JsonSchemas.field())
-            field = PanoField.from_dict(field_data)
-            field_paths_by_id[(field.data_source, field.slug)].append(field_path)
-        except InvalidYamlFile as e:
-            errors.append(e)
-        except JsonSchemaValidationError as e:
-            errors.append(JsonSchemaError(path=field_path, error=e))
-
-    for (dataset_slug, field_slug), paths in field_paths_by_id.items():
-        if len(paths) > 1:
-            errors.append(DuplicateFieldSlugError(field_slug=field_slug, dataset_slug=dataset_slug, paths=paths))
-
-    return errors
-
-
-def _validate_package(package: FilePackage) -> List[ValidationError]:
+def _validate_package_dataset(package: FilePackage) -> List[ValidationError]:
     """Validate all files in a given package."""
     errors: List[ValidationError] = []
     try:
@@ -102,23 +84,93 @@ def _validate_package(package: FilePackage) -> List[ValidationError]:
     except JsonSchemaValidationError as e:
         errors.append(JsonSchemaError(path=package.data_source_file, error=e))
 
-    model_paths_by_name: Dict[str, List[Path]] = defaultdict(list)
+    return errors
 
+
+def _validate_package_models(package: FilePackage) -> Tuple[List[PanoModel], List[ValidationError]]:
+    """Validate models in a given package."""
+    errors: List[ValidationError] = []
+    models = []
+    model_paths_by_name: Dict[str, List[Path]] = defaultdict(list)
     for model_data, model_path in package.read_models():
         try:
             _validate_data(model_data, JsonSchemas.model())
             model = PanoModel.from_dict(model_data)
+            models.append(model)
             model_paths_by_name[model.model_name].append(model_path)
         except InvalidYamlFile as e:
             errors.append(e)
         except JsonSchemaValidationError as e:
             errors.append(JsonSchemaError(path=model_path, error=e))
 
+    # check for duplicate model names
     for model_name, paths in model_paths_by_name.items():
         if len(paths) > 1:
             errors.append(DuplicateModelNameError(model_name=model_name, paths=paths))
 
-    errors.extend(_validate_fields(package.read_fields()))
+    return models, errors
+
+
+def _validate_package_fields(
+    package: Union[FilePackage, GlobalPackage]
+) -> Tuple[List[PanoField], List[ValidationError]]:
+    errors: List[ValidationError] = []
+    fields = []
+    field_paths_by_id: Dict[Tuple, List[Path]] = defaultdict(list)
+    for field_data, field_path in package.read_fields():
+        try:
+            _validate_data(field_data, JsonSchemas.field())
+            field = PanoField.from_dict(field_data)
+            fields.append(field)
+            field_paths_by_id[(field.data_source, field.slug)].append(field_path)
+        except InvalidYamlFile as e:
+            errors.append(e)
+        except JsonSchemaValidationError as e:
+            errors.append(JsonSchemaError(path=field_path, error=e))
+
+    # check for duplicate field slugs
+    for (dataset_slug, field_slug), paths in field_paths_by_id.items():
+        if len(paths) > 1:
+            errors.append(DuplicateFieldSlugError(field_slug=field_slug, dataset_slug=dataset_slug, paths=paths))
+
+    return fields, errors
+
+
+def _validate_missing_files(
+    fields: List[PanoField], models: List[PanoModel], package_name: str
+) -> List[ValidationError]:
+    """Check for missing field files based on field map in model files."""
+    errors: List[ValidationError] = []
+    fields_slugs_from_models = set(
+        itertools.chain.from_iterable(
+            itertools.chain.from_iterable(f.field_map for f in model.fields) for model in models
+        )
+    )
+    fields_slugs_from_fields = set(f.slug for f in fields)
+
+    field_slugs_with_no_files = fields_slugs_from_models.difference(fields_slugs_from_fields)
+
+    if len(field_slugs_with_no_files) > 0:
+        errors.extend(
+            MissingFieldFileError(field_slug=slug, dataset_slug=package_name) for slug in field_slugs_with_no_files
+        )
+
+    return errors
+
+
+def _validate_package(package: FilePackage) -> List[ValidationError]:
+    """Validate all files in a given package."""
+    errors: List[ValidationError] = []
+    errors.extend(_validate_package_dataset(package))
+
+    models, model_errors = _validate_package_models(package)
+    errors.extend(model_errors)
+
+    fields, field_errors = _validate_package_fields(package)
+    errors.extend(field_errors)
+
+    missing_file_errors = _validate_missing_files(fields, models, package_name=package.name)
+    errors.extend(missing_file_errors)
 
     return errors
 
@@ -127,7 +179,7 @@ def validate_local_state() -> List[ValidationError]:
     """Check local state against defined schemas."""
     file_reader = FileReader()
     packages = file_reader.get_packages()
-    errors = _validate_fields(file_reader.get_global_fields())
+    _, errors = _validate_package_fields(file_reader.get_global_package())
 
     executor = ThreadPoolExecutor(max_workers=4)
     for package_errors in executor.map(_validate_package, packages):
