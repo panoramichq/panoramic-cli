@@ -38,7 +38,12 @@ class ModelField:
         }
 
     def __hash__(self) -> int:
-        return hash(self.to_dict())
+        return hash(
+            (
+                tuple(self.field_map),
+                self.data_reference,
+            )
+        )
 
     def __eq__(self, o: object) -> bool:
         if not isinstance(o, ModelField):
@@ -78,7 +83,14 @@ class ModelJoin:
         }
 
     def __hash__(self) -> int:
-        return hash(self.to_dict())
+        return hash(
+            (
+                self.to_model,
+                self.join_type,
+                self.relationship,
+                tuple(self.fields),
+            )
+        )
 
     def __eq__(self, o: object) -> bool:
         if not isinstance(o, ModelJoin):
@@ -139,7 +151,17 @@ class Model:
         }
 
     def __hash__(self) -> int:
-        return hash(self.to_dict())
+        return hash(
+            (
+                self.model_name,
+                self.data_source,
+                tuple(self.fields),
+                tuple(self.joins),
+                self.visibility,
+                self.virtual_data_source,
+                tuple(self.identifiers),
+            )
+        )
 
     def __eq__(self, o: object) -> bool:
         if not isinstance(o, Model):

@@ -10,6 +10,7 @@ class FilePackage:
     name: str
     data_source_file: Path
     model_files: List[Path]
+    field_files: List[Path]
 
     def __init__(self, *, name: str, data_source_file: Path, model_files: List[Path], field_files: List[Path]):
         self.name = name
@@ -32,7 +33,14 @@ class FilePackage:
             yield read_yaml(f), f
 
     def __hash__(self) -> int:
-        return hash((self.name, self.data_source_file, self.model_files, self.field_files))
+        return hash(
+            (
+                self.name,
+                self.data_source_file,
+                tuple(self.model_files),
+                tuple(self.field_files),
+            )
+        )
 
     def __eq__(self, o: object) -> bool:
         if not isinstance(o, FilePackage):
