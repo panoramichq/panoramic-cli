@@ -7,7 +7,7 @@ setup_git() {
 
 pull_homebrew_files() {
   rm -fr .homebrew_repo
-  git clone git@github.com:panoramichq/homebrew-brew.git .homebrew-git
+  git clone https://github.com/panoramichq/homebrew-brew.git .homebrew-git
 }
 
 update_homebrew_formula() {
