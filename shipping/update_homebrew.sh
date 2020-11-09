@@ -4,7 +4,6 @@ generate_homebrew_formula() {
   rm -fr brewout
   mkdir -p brewout
   shipping/ppfg.sh -f -c shipping/ppfg -o brewout $(python shipping/generate-versions-file.py)
-  cat brewout/panoramic-cli.rb
 }
 
 setup_git() {
@@ -26,6 +25,7 @@ update_homebrew_formula() {
   cd .homebrew_repo
   git add Formula/panoramic-cli.rb
   git commit --message "Travis build: $TRAVIS_BUILD_NUMBER"
+  cd ..
 }
 
 upload_files() {
