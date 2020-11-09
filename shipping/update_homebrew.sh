@@ -15,12 +15,12 @@ setup_git() {
 pull_homebrew_files() {
   rm -fr .homebrew_repo
   git clone https://github.com/panoramichq/homebrew-brew.git .homebrew_repo
-  ls -alh
 }
 
 update_homebrew_formula() {
   cd .homebrew_repo || true
-  git checkout -b master
+  git checkout master || true
+  cd ..
   rm -fr .homebrew_repo/Formula/panoramic-cli.rb
   cp brewout/panoramic-cli.rb .homebrew_repo/Formula/panoramic-cli.rb
   cd .homebrew_repo
