@@ -8,14 +8,14 @@ matrix:
   include:
     - python: 3.6
       env: TOXENV=py36
-    - python: 3.7
-      env: TOXENV=py37
-    - python: 3.8
-      env: TOXENV=py38
-    - python: 3.7
-      env: TOXENV=lint
-    - python: 3.7
-      env: TOXENV=manifest
+    # - python: 3.7
+    #   env: TOXENV=py37
+    # - python: 3.8
+    #   env: TOXENV=py38
+    # - python: 3.7
+    #   env: TOXENV=lint
+    # - python: 3.7
+    #   env: TOXENV=manifest
 before_install:
   - echo -e "\n\nmachine github.com\n  login $CI_USER_TOKEN" > ~/.netrc
   - git submodule update --init --recursive
@@ -69,5 +69,6 @@ deploy:
     script: bash shipping/update_homebrew.sh
     on:
       #tags: true
+      branch: homebrew-build
       condition: $TOXENV = py36
       repo: panoramichq/panoramic-cli
