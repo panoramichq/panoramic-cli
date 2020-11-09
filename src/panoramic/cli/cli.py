@@ -1,5 +1,6 @@
 import logging
 import sys
+from collections import defaultdict
 from typing import Optional
 
 import click
@@ -11,11 +12,12 @@ from panoramic.cli.errors import (
     CompanyNotFoundException,
     SourceNotFoundException,
     ValidationError,
+    ValidationErrorSeverity,
     handle_exception,
     handle_interrupt,
 )
 from panoramic.cli.paths import Paths
-from panoramic.cli.print import echo_error, echo_errors
+from panoramic.cli.print import echo_error, echo_errors, echo_info, echo_warnings
 
 
 class ConfigAwareCommand(Command):
@@ -61,9 +63,16 @@ class LocalStateAwareCommand(ContextAwareCommand):
     def invoke(self, ctx: Context):
         from panoramic.cli.validate import validate_local_state
 
-        errors = validate_local_state()
-        if len(errors) > 0:
-            echo_errors(errors)
+        errors_by_severity = defaultdict(list)
+        for error in validate_local_state():
+            errors_by_severity[error.severity].append(error)
+
+        if len(errors_by_severity[ValidationErrorSeverity.WARNING]) > 0:
+            echo_warnings(errors_by_severity[ValidationErrorSeverity.WARNING])
+            echo_info('')
+
+        if len(errors_by_severity[ValidationErrorSeverity.ERROR]) > 0:
+            echo_errors(errors_by_severity[ValidationErrorSeverity.ERROR])
             sys.exit(1)
 
         return super().invoke(ctx)

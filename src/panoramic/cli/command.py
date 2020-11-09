@@ -16,6 +16,7 @@ from panoramic.cli.errors import (
     InvalidModelException,
     JoinException,
     ValidationError,
+    ValidationErrorSeverity,
 )
 from panoramic.cli.field_mapper import map_column_to_field
 from panoramic.cli.file_utils import write_yaml
@@ -28,7 +29,7 @@ from panoramic.cli.model_mapper import map_columns_to_model
 from panoramic.cli.pano_model import PanoModel, PanoModelJoin
 from panoramic.cli.paths import Paths
 from panoramic.cli.physical_data_source.client import PhysicalDataSourceClient
-from panoramic.cli.print import echo_error, echo_errors, echo_info
+from panoramic.cli.print import echo_error, echo_errors, echo_info, echo_warnings
 from panoramic.cli.refresh import Refresher
 from panoramic.cli.remote import get_state as get_remote_state
 from panoramic.cli.remote.executor import RemoteExecutor
@@ -116,17 +117,20 @@ def validate() -> bool:
 
     errors.extend(validate_local_state())
 
-    if len(errors) == 0:
-        echo_info("Success: All files are valid.")
-        return True
+    errors_by_severity = defaultdict(list)
+    for error in errors:
+        errors_by_severity[error.severity].append(error)
 
-    try:
-        echo_errors(errors)
-    except Exception:
-        # Ignore any errors in error reporting
-        logger.debug('Error when logging errros', exc_info=True)
+    if len(errors_by_severity[ValidationErrorSeverity.WARNING]) > 0:
+        echo_warnings(errors_by_severity[ValidationErrorSeverity.WARNING])
+        echo_info('')
 
-    return False
+    if len(errors_by_severity[ValidationErrorSeverity.ERROR]) > 0:
+        echo_errors(errors_by_severity[ValidationErrorSeverity.ERROR])
+        return False
+
+    echo_info("Success: All files are valid.")
+    return True
 
 
 def scan(source_id: str, table_filter: Optional[str], parallel: int = 1, generate_identifiers: bool = False):

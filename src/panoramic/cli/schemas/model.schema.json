@@ -68,6 +68,11 @@
                     "items": {
                         "type": "string"
                     }
+                },
+                "data_type": {
+                    "type": "string",
+                    "description": "SQL type of the attribute (deprecated)",
+                    "deprecated": true
                 }
             },
             "required": [
