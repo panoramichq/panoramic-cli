@@ -26,14 +26,14 @@ install:
   - python shipping/generate-versions-file.py
   - mv versions.json s3_upload/versions.json
 script: tox
+before_deploy:
+  - pip install importlib-metadata==2.0.0
 deploy:
   - provider: pypi
     user: __token__
     password:
       secure: "JpjV9uwfnWOLTlU8W8JfJOdP0C12WGH44QPhLgvjYlFa+Qwxv5N8WRnFrKKmUn3hICc9tRyXo+z4ycOHwRzxsG0tPgpqgUNxNkAh1+t9fmpTRt5UGu4+d/hx5xgcEQjjk+w6IJFzOKIrOZXfPr3Cc7e8YQNKXt999K9jSlTOST4Dv7IlHBrW0PaUQe6pNQAgn6SB/58+bDlfP00G+zlSdkEX75W2gIzIjFrnf74+URtSU5scEF6ZYp/fZ2vUzeaXtbGKRleQJXvjNbJfqEcs0M/oXUUQxUxJkvfLi/48DesJTBTicSvvnWu0EC7r5tIRJE5QLVaF4Ltg2Kh+JY+3cRKdVSgVJsCGsRgxPH+IrWo4GI3rpSzV0RKBf3rCGlCMPMLFXkn3igR+mFOb+iX6LL2/oiJ4198WUhHsUt3ir5PodAWMry+NLWnAUCKSUOAopABd7lPYilOgkIORJApDI9zVquE/iwdwWEJr+26Xo3hSpwHp8m0OZb8NWlmYv8Ho1KKjOZ8Uvt/Ap+88W06wq3jPVnsSakEKDDapr+acCsChFGaIvcrh3A/l1+CeYErqP3g01oezjBzFNjgl3NhT1nAi2+n7UyuMtlW+v4LKMCmnBR956ZKrRgU7up5Jf1DJUVF0QPsHTh383JA4MR29PdoIWcLfBiBTjcfY9wqOeRM="
     distributions: sdist bdist_wheel
-    before_deploy:
-      - pip install importlib-metadata==2.0.0
     on:
       tags: true
       condition: $TOXENV = py36
