@@ -66,7 +66,7 @@ deploy:
       condition: $TOXENV = py36
       repo: panoramichq/panoramic-cli
   - provider: script
-    script: rm -fr brewout && mkdir -p brewout && shipping/ppfg.sh -f -c shipping/ppfg -o brewout $(python shipping/generate-versions-file.py) && cat brewout/panoramic-cli.rb && shipping/update_homebrew.sh
+    script: bash shipping/update_homebrew.sh
     on:
       #tags: true
       condition: $TOXENV = py36
