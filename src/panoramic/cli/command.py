@@ -382,7 +382,7 @@ def delete_orphaned_fields(target_dataset: Optional[str] = None, yes: bool = Fal
         echo_info('No issues found')
         return
 
-    if not yes and not click.confirm('Do you want to remove the unused fields?'):
+    if not yes and not click.confirm('You will not be able to query these fields. Do you want to remove them?'):
         # User decided not to fix issues
         return
 
@@ -416,7 +416,9 @@ def scaffold_missing_fields(target_dataset: Optional[str] = None, yes: bool = Fa
         echo_info('No issues found')
         return
 
-    if not yes and not click.confirm('Do you want to create files for the undeclared fields?'):
+    if not yes and not click.confirm(
+        'You need to define these fields before they can be queried. Do you want to create them?'
+    ):
         # User decided not to fix issues
         return
 
