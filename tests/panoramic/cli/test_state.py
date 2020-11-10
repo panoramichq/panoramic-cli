@@ -18,3 +18,21 @@ def test_state_not_empty():
 def test_empty_action_is_invalid():
     with pytest.raises(ValueError, match='cannot be None'):
         Action()
+
+
+def test_get_objects_by_package():
+    package1_model = Mock(package='package1')
+    package2_model = Mock(package='package2')
+    package1_field = Mock(package='package1')
+    package3_field = Mock(package='package3')
+    state = VirtualState(
+        data_sources=[],
+        models=[package1_model, package2_model],
+        fields=[package1_field, package3_field],
+    )
+
+    assert state.get_objects_by_package() == {
+        'package1': ([package1_field], [package1_model]),
+        'package2': ([], [package2_model]),
+        'package3': ([package3_field], []),
+    }

@@ -288,6 +288,7 @@ def detect_joins(target_dataset: Optional[str] = None, diff: bool = False, overw
 
     if local_state.is_empty:
         echo_info('No datasets to detect joins on')
+        # TODO: should we return here?
 
     join_detector = JoinDetector(company_slug=company_slug)
     join_detector.fetch_token()
@@ -362,6 +363,7 @@ def detect_joins(target_dataset: Optional[str] = None, diff: bool = False, overw
 
 def delete_orphaned_fields(target_dataset: Optional[str] = None, yes: bool = False):
     """Delete orphaned field files."""
+    echo_info('Loading local state...')
     state = get_local_state(target_dataset=target_dataset)
 
     action_list: ActionList[PanoField] = ActionList()
@@ -373,7 +375,7 @@ def delete_orphaned_fields(target_dataset: Optional[str] = None, yes: bool = Fal
             # Add deletion action
             action_list.add_action(Action(current=fields_by_slug[error.field_slug], desired=None))
 
-    if action_list.is_empty == 0:
+    if action_list.is_empty:
         echo_info('No issues found')
         return
 
