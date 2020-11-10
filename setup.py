@@ -53,7 +53,7 @@ setup(
     ],
     install_requires=[
         'panoramic-auth>=0.2.0',
-        'requests>=2.23.0',
+        'requests<2.24.0',
         'click>=7.1.2',
         'colorama>=0.4.3',
         'PyYAML==5.3.1',

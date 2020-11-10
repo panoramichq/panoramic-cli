@@ -287,9 +287,9 @@ def remove(name):
     remove_data_connection_command(name)
 
 
-@data_connections.command()
+@data_connections.command(name='list')
 @click.option('--show-password', is_flag=True, help='Show passwords.')
-def list(show_password):
+def list_(show_password):  # we cannot have method 'list' due to conflicts
     """List all available data connections.
 
     pano data-connections list --show-password
