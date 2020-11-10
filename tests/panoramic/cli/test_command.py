@@ -2,8 +2,14 @@ from unittest.mock import Mock, call, patch
 
 import pytest
 
-from panoramic.cli.command import list_connections, push, scan
-from panoramic.cli.errors import InvalidDatasetException, InvalidModelException
+from panoramic.cli.command import delete_orphaned_fields, list_connections, push, scan
+from panoramic.cli.errors import (
+    InvalidDatasetException,
+    InvalidModelException,
+    OrphanFieldFileError,
+)
+from panoramic.cli.local.executor import LocalExecutor
+from panoramic.cli.remote.executor import RemoteExecutor
 
 
 @pytest.fixture(autouse=True)
@@ -102,12 +108,12 @@ def test_list_connections(mock_physical_data_source_client):
 @patch('panoramic.cli.command.get_local_state')
 @patch('panoramic.cli.command.click')
 @patch('panoramic.cli.command.reconcile')
-@patch('panoramic.cli.command.RemoteExecutor')
-def test_push_single_error(mock_executor, mock_reconcile, mock_click, _, __, ___, ____, capsys):
+@patch.object(RemoteExecutor, '_execute')
+def test_push_single_error(mock_execute, mock_reconcile, mock_click, _, __, ___, ____, capsys):
     mock_reconcile.return_value = Mock(
         actions=[Mock(description='test-description-1'), Mock(description='test-description-2'), Mock()]
     )
-    mock_executor.return_value.execute.side_effect = [
+    mock_execute.side_effect = [
         InvalidDatasetException(Mock()),
         InvalidModelException(Mock()),
         None,
@@ -117,7 +123,7 @@ def test_push_single_error(mock_executor, mock_reconcile, mock_click, _, __, ___
 
     push()
 
-    assert mock_executor.return_value.execute.call_count == 3
+    assert mock_execute.call_count == 3
     assert capsys.readouterr().out == (
         "Loading local state...\n"
         "Fetching remote state...\n"
@@ -128,4 +134,25 @@ def test_push_single_error(mock_executor, mock_reconcile, mock_click, _, __, ___
         "Error: Failed to execute action test-description-2:\n"
         "  Invalid model submitted\n"
         "Updated 1/3 models, fields and datasets\n"
+    )
+
+
+@patch('panoramic.cli.command.get_local_state')
+@patch('panoramic.cli.command.validate_orphaned_files')
+@patch.object(LocalExecutor, '_execute')
+def test_delete_orphaned_fields(mock_execute, mock_validate, mock_state, capsys):
+    mock_state.return_value.get_objects_by_package.return_value.items.return_value = [
+        ('test_dataset', ([Mock(slug='test_slug', data_source='test_dataset')], [Mock()])),
+    ]
+
+    mock_validate.return_value = [OrphanFieldFileError(field_slug='test_slug', dataset_slug='test_dataset')]
+
+    delete_orphaned_fields(yes=True)
+
+    assert mock_execute.call_count == 1
+    assert capsys.readouterr().out == (
+        "Loading local state...\n"
+        "Field test_slug under dataset test_dataset not used by any model\n"
+        "Updating local state...\n"
+        "Updated 1/1 fields\n"
     )

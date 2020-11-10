@@ -18,7 +18,7 @@ class RemoteExecutor(Executor):
         self.company_name = company_name
         self.writer = RemoteWriter(company_name)
 
-    def execute(self, action: Action):
+    def _execute(self, action: Action):
         if action.is_creation:
             assert action.desired is not None
             self.writer.write(action.desired)

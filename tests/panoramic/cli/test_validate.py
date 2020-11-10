@@ -9,6 +9,7 @@ from panoramic.cli.errors import (
     InvalidYamlFile,
     JsonSchemaError,
     MissingFieldFileError,
+    OrphanFieldFileError,
 )
 from panoramic.cli.local.get import get_state
 from panoramic.cli.paths import Paths, PresetFileName
@@ -431,7 +432,11 @@ def test_validate_local_state_valid(tmp_path, monkeypatch):
         f.write(yaml.dump(VALID_DATASET))
 
     model1 = {**VALID_MODEL_MINIMAL, 'model_name': 'sf.db.schema.table1'}
-    model2 = {**VALID_MODEL_MINIMAL, 'model_name': 'sf.db.schema.table2'}
+    model2 = {
+        **VALID_MODEL_MINIMAL,
+        'model_name': 'sf.db.schema.table2',
+        'fields': [{'field_map': ['field_slug'], 'data_reference': '"FIELD_SLUG"'}],
+    }
 
     with (dataset_dir / 'test_model-1.model.yaml').open('w') as f:
         f.write(yaml.dump(model1))
@@ -497,6 +502,13 @@ def test_validate_local_state_duplicate_dataset_scoped_field(tmp_path, monkeypat
 
     with (dataset_dir / PresetFileName.DATASET_YAML.value).open('w') as f:
         f.write(yaml.dump(VALID_DATASET))
+
+    with (dataset_dir / 'test_model.model.yaml').open('w') as f:
+        f.write(
+            yaml.dump(
+                {**VALID_MODEL_MINIMAL, 'fields': [{'field_map': ['field_slug'], 'data_reference': '"FIELD_SLUG"'}]}
+            )
+        )
 
     field_dir = Paths.fields_dir(dataset_dir)
     field_dir.mkdir()
@@ -587,18 +599,15 @@ def test_validate_local_state_missing_field_file(tmp_path, monkeypatch):
     with (dataset_dir / PresetFileName.DATASET_YAML.value).open('w') as f:
         f.write(yaml.dump(VALID_DATASET))
 
-    invalid_model = {
-        **VALID_MODEL_MINIMAL,
-        'fields': [
-            {
-                'data_reference': '"COLUMN1"',
-                'field_map': ['field_slug', 'field_slug_2'],
-            }
-        ],
-    }
-
     with (dataset_dir / 'model1.model.yaml').open('w') as f:
-        f.write(yaml.dump(invalid_model))
+        f.write(
+            yaml.dump(
+                {
+                    **VALID_MODEL_MINIMAL,
+                    'fields': [{'data_reference': '"COLUMN1"', 'field_map': ['field_slug', 'field_slug_2']}],
+                }
+            )
+        )
 
     field_dir = Paths.fields_dir(dataset_dir)
     field_dir.mkdir()
@@ -619,17 +628,21 @@ def test_validate_local_state_deprecated_attribute(tmp_path, monkeypatch):
     with (dataset_dir / PresetFileName.DATASET_YAML.value).open('w') as f:
         f.write(yaml.dump(VALID_DATASET))
 
-    model = VALID_MODEL_MINIMAL
-    model['fields'] = [
-        {
-            'data_type': 'CHARACTER VARYING',
-            'field_map': ['field_slug'],
-            'data_reference': '"FIELD_SLUG"',
-        }
-    ]
-
     with (dataset_dir / 'test_model.model.yaml').open('w') as f:
-        f.write(yaml.dump(model))
+        f.write(
+            yaml.dump(
+                {
+                    **VALID_MODEL_MINIMAL,
+                    'fields': [
+                        {
+                            'data_type': 'CHARACTER VARYING',
+                            'field_map': ['field_slug'],
+                            'data_reference': '"FIELD_SLUG"',
+                        }
+                    ],
+                }
+            )
+        )
 
     Paths.fields_dir(dataset_dir).mkdir()
     with (Paths.fields_dir(dataset_dir) / 'test_field.field.yaml').open('w') as f:
@@ -637,3 +650,37 @@ def test_validate_local_state_deprecated_attribute(tmp_path, monkeypatch):
 
     errors = validate_local_state()
     assert errors == [DeprecatedAttributeWarning(attribute='data_type', path=dataset_dir / 'test_model.model.yaml')]
+
+
+def test_validate_local_state_orphan_field_files(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+
+    dataset_dir = tmp_path / 'test_dataset'
+    dataset_dir.mkdir()
+
+    with (dataset_dir / PresetFileName.DATASET_YAML.value).open('w') as f:
+        f.write(yaml.dump(VALID_DATASET))
+
+    with (dataset_dir / 'test_model.model.yaml').open('w') as f:
+        f.write(
+            yaml.dump(
+                {
+                    **VALID_MODEL_FULL,
+                    'fields': [{'field_map': ['field_slug'], 'data_reference': '"FIELD_SLUG"'}],
+                }
+            )
+        )
+
+    Paths.fields_dir(dataset_dir).mkdir()
+    with (Paths.fields_dir(dataset_dir) / 'test_field.field.yaml').open('w') as f:
+        f.write(yaml.dump(VALID_FIELD_MINIMAL))
+
+    with (Paths.fields_dir(dataset_dir) / 'calculated_field.field.yaml').open('w') as f:
+        f.write(yaml.dump({**VALID_FIELD_MINIMAL, 'slug': 'calculated_slug', 'calculation': '2+2'}))
+
+    with (Paths.fields_dir(dataset_dir) / 'orphan_field.field.yaml').open('w') as f:
+        f.write(yaml.dump({**VALID_FIELD_MINIMAL, 'slug': 'orphan_slug'}))
+
+    errors = validate_local_state()
+
+    assert errors == [OrphanFieldFileError(field_slug='orphan_slug', dataset_slug='test_dataset')]

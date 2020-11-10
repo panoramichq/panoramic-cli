@@ -17,6 +17,7 @@ from panoramic.cli.errors import (
     InvalidYamlFile,
     JsonSchemaError,
     MissingFieldFileError,
+    OrphanFieldFileError,
     ValidationError,
 )
 from panoramic.cli.file_utils import read_yaml
@@ -154,22 +155,25 @@ def _validate_missing_files(
     fields: List[PanoField], models: List[PanoModel], package_name: str
 ) -> List[ValidationError]:
     """Check for missing field files based on field map in model files."""
-    errors: List[ValidationError] = []
-    fields_slugs_from_models = set(
-        itertools.chain.from_iterable(
-            itertools.chain.from_iterable(f.field_map for f in model.fields) for model in models
-        )
-    )
-    fields_slugs_from_fields = set(f.slug for f in fields)
+    fields_slugs_from_fields = {f.slug for f in fields}
+    fields_slugs_from_models = set(itertools.chain.from_iterable(f.field_map for model in models for f in model.fields))
 
     field_slugs_with_no_files = fields_slugs_from_models.difference(fields_slugs_from_fields)
 
-    if len(field_slugs_with_no_files) > 0:
-        errors.extend(
-            MissingFieldFileError(field_slug=slug, dataset_slug=package_name) for slug in field_slugs_with_no_files
-        )
+    return [MissingFieldFileError(field_slug=slug, dataset_slug=package_name) for slug in field_slugs_with_no_files]
 
-    return errors
+
+def validate_orphaned_files(
+    fields: List[PanoField], models: List[PanoModel], package_name: str
+) -> List[OrphanFieldFileError]:
+    """Check for field files not linked to any models."""
+    # Fields with calculation without model link are normal
+    fields_slugs_from_fields = {f.slug for f in fields if f.calculation is None}
+    fields_slugs_from_models = set(itertools.chain.from_iterable(f.field_map for model in models for f in model.fields))
+
+    extraneous_field_slugs = fields_slugs_from_fields.difference(fields_slugs_from_models)
+
+    return [OrphanFieldFileError(field_slug=slug, dataset_slug=package_name) for slug in extraneous_field_slugs]
 
 
 def _validate_package(package: FilePackage) -> List[ValidationError]:
@@ -185,6 +189,9 @@ def _validate_package(package: FilePackage) -> List[ValidationError]:
 
     missing_file_errors = _validate_missing_files(fields, models, package_name=package.name)
     errors.extend(missing_file_errors)
+
+    orphan_file_errors = validate_orphaned_files(fields, models, package_name=package.name)
+    errors.extend(orphan_file_errors)
 
     return errors
 
