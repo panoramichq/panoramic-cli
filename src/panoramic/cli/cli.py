@@ -63,7 +63,7 @@ class LocalStateAwareCommand(ContextAwareCommand):
     def invoke(self, ctx: Context):
         from panoramic.cli.validate import validate_local_state
 
-        errors_by_severity = defaultdict(list)
+        errors_by_severity: defaultdict = defaultdict(list)
         for error in validate_local_state():
             errors_by_severity[error.severity].append(error)
 
@@ -229,7 +229,8 @@ def data_connections():
 @click.option('--host', '-H', type=str, help='Connection hostname.')
 @click.option('--port', '-p', type=str, help='Connection port.')
 @click.option('--database-name', '-d', type=str, help='Connection database name.')
-def create(name, type, user, host, port, password, password_stdin, database_name):
+@click.option('--no-test', '-n', is_flag=True, help='Do NOT try test the connection.')
+def create(name, type, user, host, port, password, password_stdin, database_name, no_test):
     """Add new data connection.
 
     pano data-connections create postgres-prod --type postgres --user my_user \\
@@ -237,7 +238,7 @@ def create(name, type, user, host, port, password, password_stdin, database_name
     """
     from panoramic.cli.data_connections import create_data_connection_command
 
-    create_data_connection_command(name, type, user, host, port, password, password_stdin, database_name)
+    create_data_connection_command(name, type, user, host, port, password, password_stdin, database_name, no_test)
 
 
 @data_connections.command()
@@ -249,14 +250,15 @@ def create(name, type, user, host, port, password, password_stdin, database_name
 @click.option('--host', '-h', type=str, help='Connection hostname.')
 @click.option('--port', '-p', type=str, help='Connection port.')
 @click.option('--database-name', '-d', type=str, help='Connection database name.')
-def update(name, type, user, host, port, password, password_stdin, database_name):
+@click.option('--no-test', '-n', is_flag=True, help='Do NOT try test the connection.')
+def update(name, type, user, host, port, password, password_stdin, database_name, no_test):
     """Update existing data connection.
 
     pano data-connections update postgres-prod --database-name my_new_prod_db
     """
     from panoramic.cli.data_connections import update_data_connection_command
 
-    update_data_connection_command(name, type, user, host, port, password, password_stdin, database_name)
+    update_data_connection_command(name, type, user, host, port, password, password_stdin, database_name, no_test)
 
 
 @data_connections.command()

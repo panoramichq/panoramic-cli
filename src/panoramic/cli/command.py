@@ -8,6 +8,7 @@ import click
 from tqdm import tqdm
 
 from panoramic.cli.companies.client import CompaniesClient
+from panoramic.cli.config.storage import update_config
 from panoramic.cli.context import get_company_slug
 from panoramic.cli.controller import reconcile
 from panoramic.cli.diff import echo_diff
@@ -49,11 +50,7 @@ def configure():
     client_id = click.prompt('Enter your client id', type=str)
     client_secret = click.prompt('Enter your client secret', hide_input=True, type=str)
 
-    config_file = Paths.config_file()
-    if not config_file.parent.exists():
-        config_file.parent.mkdir()
-
-    write_yaml(config_file, {'client_id': client_id, 'client_secret': client_secret})
+    update_config('auth', {'client_id': client_id, 'client_secret': client_secret})
 
 
 def initialize():

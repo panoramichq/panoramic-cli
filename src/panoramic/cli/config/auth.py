@@ -1,8 +1,7 @@
 import functools
 import os
 
-from panoramic.cli.file_utils import read_yaml
-from panoramic.cli.paths import Paths
+from panoramic.cli.config.storage import read_config
 
 
 def get_client_id_env_var() -> str:
@@ -18,7 +17,11 @@ def get_client_id() -> str:
     try:
         return get_client_id_env_var()
     except KeyError:
-        return read_yaml(Paths.config_file())['client_id']
+        config = read_config()
+        if 'auth' in config:
+            return config['auth']['client_id']
+        # Backwards compatibility for auth credentials
+        return config['client_id']
 
 
 @functools.lru_cache()
@@ -26,4 +29,8 @@ def get_client_secret() -> str:
     try:
         return get_client_secret_env_var()
     except KeyError:
-        return read_yaml(Paths.config_file())['client_secret']
+        config = read_config()
+        if 'auth' in config:
+            return config['auth']['client_secret']
+        # Backwards compatibility for auth credentials
+        return config['client_secret']

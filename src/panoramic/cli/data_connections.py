@@ -1,47 +1,48 @@
 import getpass
-import os
 from typing import Any, Dict, Tuple
 
 import click
-import sqlalchemy
-import yaml
+import sqlalchemy  # type: ignore
 
+from panoramic.cli.config.storage import read_config, update_config
 from panoramic.cli.paths import Paths
 
 
-def create_data_connection_command(name, type, user, host, port, password, password_stdin, database_name):
+def create_data_connection_command(name, type, user, host, port, password, password_stdin, database_name, no_test):
     """CLI command. Create new data connection."""
     data_connections = DataConnections.load()
     if name in data_connections:
         raise click.ClickException(f'Data connection with name "{name}" already exists.')
 
     if password_stdin:
-        password = getpass.getpass("Enter password: ")
+        password = getpass.getpass('Enter password: ')
 
     data_connections[name] = {
-        "type": type,
-        "user": user,
-        "password": password,
-        "host": host,
-        "port": port,
-        "database_name": database_name,
+        'type': type,
+        'user': user,
+        'password': password,
+        'host': host,
+        'port': port,
+        'database_name': database_name,
     }
 
-    ok, error = DataConnections.test(data_connections[name])
-    if ok:
-        DataConnections.save(data_connections)
-        print("Data connection was successfully created!")
-    else:
-        print(f"Failed to create data connection: {error}")
+    if not no_test:
+        ok, error = DataConnections.test(data_connections[name])
+        if not ok:
+            print(f'Failed to create data connection: {error}')
+            return
+
+    DataConnections.save(data_connections)
+    print('Data connection was successfully created!')
 
 
-def update_data_connection_command(name, type, user, host, port, password, password_stdin, database_name):
+def update_data_connection_command(name, type, user, host, port, password, password_stdin, database_name, no_test):
     """CLI command. Update specific data connection."""
     data_connections = DataConnections.load()
     if name not in data_connections:
         raise click.ClickException(f'Data connection with name "{name}" not found.')
     if password_stdin:
-        password = getpass.getpass("Enter password: ")
+        password = getpass.getpass('Enter password: ')
 
     if type:
         data_connections[name]['type'] = type
@@ -56,22 +57,24 @@ def update_data_connection_command(name, type, user, host, port, password, passw
     if database_name:
         data_connections[name]['database_name'] = database_name
 
-    ok, error = DataConnections.test(data_connections[name])
-    if ok:
-        DataConnections.save(data_connections)
-        print("Data connection was successfully updated!")
-    else:
-        print(f"Failed to update data connection: {error}")
+    if not no_test:
+        ok, error = DataConnections.test(data_connections[name])
+        if not ok:
+            print(f'Failed to create data connection: {error}')
+            return
+
+    DataConnections.save(data_connections)
+    print('Data connection was successfully created!')
 
 
 def list_data_connections_command(show_password):
     """CLI command. List all data connections."""
     data_connections = DataConnections.load()
-    if data_connections is None:
-        data_connections_file = Paths.data_connections_file()
+    if not data_connections:
+        config_file = Paths.config_file()
         print(
             f'No data connections found.\n'
-            f'Use "pano data-connections create" to create data connection or edit "{data_connections_file}" file.'
+            f'Use "pano data-connections create" to create data connection or edit "{config_file}" file.'
         )
         exit(0)
 
@@ -109,7 +112,7 @@ class DataConnections:
     def get_by_name_cached(self, name: str) -> Dict[str, str]:
         """Get data connection by name. Use when checking data connections very often, like in for loop.
         The cached data connections will be used instead of loading data connections file every time."""
-        # TODO: what to do when data connection with given name doesn't exist? raise Exception or return None...?
+        # TODO: what we want to do when data connection with given name doesnt exist? raise Exception or return None...?
         return self._connections[name]
 
     @classmethod
@@ -133,21 +136,12 @@ class DataConnections:
     @staticmethod
     def save(data: Dict[str, Any]) -> None:
         """Save data connections YAML."""
-        data_connections_file = Paths.data_connections_file()
-        with open(data_connections_file, 'w') as f:
-            f.write(yaml.dump(data))
+        update_config('data_connections', data)
 
     @staticmethod
     def load() -> Dict[str, Any]:
         """Load data connections YAML."""
-        data_connections_file = Paths.data_connections_file()
-        if not os.path.isfile(data_connections_file):
-            raise click.ClickException(f'Data connection file "{data_connections_file}" is missing!')
-
-        with open(data_connections_file) as f:
-            data = f.read()
-        connections = yaml.full_load(data)
-        return connections
+        return read_config('data_connections')
 
     @classmethod
     def test(cls, connection: Dict[str, Any]) -> Tuple[bool, str]:
