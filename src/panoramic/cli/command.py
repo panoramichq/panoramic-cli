@@ -18,7 +18,7 @@ from panoramic.cli.errors import (
     ValidationError,
     ValidationErrorSeverity,
 )
-from panoramic.cli.field_mapper import map_column_to_field
+from panoramic.cli.field_mapper import map_column_to_field, map_error_to_field
 from panoramic.cli.file_utils import write_yaml
 from panoramic.cli.identifier_generator import IdentifierGenerator
 from panoramic.cli.join_detector import JoinDetector
@@ -39,6 +39,7 @@ from panoramic.cli.validate import (
     validate_config,
     validate_context,
     validate_local_state,
+    validate_missing_files,
     validate_orphaned_files,
 )
 
@@ -369,9 +370,8 @@ def delete_orphaned_fields(target_dataset: Optional[str] = None, yes: bool = Fal
     action_list: ActionList[PanoField] = ActionList()
 
     for dataset, (fields, models) in state.get_objects_by_package().items():
-        errors = validate_orphaned_files(fields, models, package_name=dataset)
         fields_by_slug = {f.slug: f for f in fields}
-        for error in errors:
+        for error in validate_orphaned_files(fields, models, package_name=dataset):
             echo_info(str(error))
             # Add deletion action
             action_list.add_action(Action(current=fields_by_slug[error.field_slug], desired=None))
@@ -381,6 +381,43 @@ def delete_orphaned_fields(target_dataset: Optional[str] = None, yes: bool = Fal
         return
 
     if not yes and not click.confirm('Do you want to remove offending fields?'):
+        # User decided not to fix issues
+        return
+
+    echo_info('Updating local state...')
+
+    executor = LocalExecutor()
+    for action in action_list.actions:
+        try:
+            executor.execute(action)
+        except Exception:
+            echo_error(f'Error: Failed to execute action {action.description}')
+        echo_info(f'Updated {executor.success_count}/{executor.total_count} fields')
+
+
+def scaffold_missing_fields(target_dataset: Optional[str] = None, yes: bool = False):
+    """Scaffold missing field files."""
+    echo_info('Loading local state...')
+    state = get_local_state(target_dataset=target_dataset)
+
+    action_list: ActionList[PanoField] = ActionList()
+
+    for dataset, (fields, models) in state.get_objects_by_package().items():
+        for error in validate_missing_files(fields, models, package_name=dataset):
+            echo_info(str(error))
+            # Add creation action
+            action_list.add_action(
+                Action(
+                    current=None,
+                    desired=map_error_to_field(error),
+                )
+            )
+
+    if action_list.is_empty:
+        echo_info('No missing files')
+        return
+
+    if not yes and not click.confirm('Do you want to create files for offending fields?'):
         # User decided not to fix issues
         return
 
