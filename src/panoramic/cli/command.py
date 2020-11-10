@@ -373,7 +373,7 @@ def delete_orphaned_fields(target_dataset: Optional[str] = None, yes: bool = Fal
         fields_by_slug = {f.slug: f for f in fields}
         for idx, error in enumerate(validate_orphaned_files(fields, models, package_name=dataset)):
             if idx == 0:
-                echo_info(f'Fields without calculation or reference in a model in dataset {dataset}:')
+                echo_info(f'\nFields without calculation or reference in a model in dataset {dataset}:')
             echo_info(f'  {error.field_slug}')
             # Add deletion action
             action_list.add_action(Action(current=fields_by_slug[error.field_slug], desired=None))
@@ -382,6 +382,7 @@ def delete_orphaned_fields(target_dataset: Optional[str] = None, yes: bool = Fal
         echo_info('No issues found')
         return
 
+    echo_info('')
     if not yes and not click.confirm('You will not be able to query these fields. Do you want to remove them?'):
         # User decided not to fix issues
         return
@@ -407,7 +408,7 @@ def scaffold_missing_fields(target_dataset: Optional[str] = None, yes: bool = Fa
     for dataset, (fields, models) in state.get_objects_by_package().items():
         for idx, error in enumerate(validate_missing_files(fields, models, package_name=dataset)):
             if idx == 0:
-                echo_info(f'Fields referenced in models without definition in dataset {dataset}:')
+                echo_info(f'\nFields referenced in models without definition in dataset {dataset}:')
             echo_info(f'  {error.field_slug}')
             # Add creation action
             action_list.add_action(Action(current=None, desired=map_error_to_field(error)))
@@ -416,8 +417,9 @@ def scaffold_missing_fields(target_dataset: Optional[str] = None, yes: bool = Fa
         echo_info('No issues found')
         return
 
+    echo_info('')
     if not yes and not click.confirm(
-        'You need to define these fields before they can be queried. Do you want to create them?'
+        'You will not be able to query these fields until you define them. Do you want to do that now?'
     ):
         # User decided not to fix issues
         return
