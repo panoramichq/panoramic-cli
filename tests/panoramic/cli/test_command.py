@@ -152,7 +152,7 @@ def test_delete_orphaned_fields(mock_execute, mock_validate, mock_state, capsys)
     assert mock_execute.call_count == 1
     assert capsys.readouterr().out == (
         "Loading local state...\n"
-        "Field test_slug in dataset test_dataset not used by any model\n"
+        "Field test_slug under dataset test_dataset not used by any model\n"
         "Updating local state...\n"
         "Updated 1/1 fields\n"
     )

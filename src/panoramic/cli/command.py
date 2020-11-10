@@ -372,16 +372,13 @@ def delete_orphaned_fields(target_dataset: Optional[str] = None, yes: bool = Fal
         errors = validate_orphaned_files(fields, models, package_name=dataset)
         fields_by_slug = {f.slug: f for f in fields}
         for error in errors:
+            echo_info(str(error))
             # Add deletion action
             action_list.add_action(Action(current=fields_by_slug[error.field_slug], desired=None))
 
     if action_list.is_empty:
         echo_info('No issues found')
         return
-
-    for action in action_list.actions:
-        assert action.current is not None
-        echo_info(f'Field {action.current.slug} in dataset {action.current.data_source} not used by any model')
 
     if not yes and not click.confirm('Do you want to remove offending fields?'):
         # User decided not to fix issues
