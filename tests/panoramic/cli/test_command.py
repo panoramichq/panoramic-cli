@@ -158,8 +158,9 @@ def test_delete_orphaned_fields(mock_execute, mock_validate, mock_state, capsys)
 
     assert mock_execute.call_count == 1
     assert capsys.readouterr().out == (
-        "Loading local state...\n"
-        "Field test_slug under dataset test_dataset not used by any model\n"
+        "Loading local state...\n\n"
+        "Fields without calculation or reference in a model in dataset test_dataset:\n"
+        "  test_slug\n\n"
         "Updating local state...\n"
         "Updated 1/1 fields\n"
     )
@@ -179,8 +180,9 @@ def test_scaffold_missing_files(mock_execute, mock_validate, mock_state, capsys)
 
     assert mock_execute.call_count == 1
     assert capsys.readouterr().out == (
-        "Loading local state...\n"
-        "Missing field file for slug test_slug under dataset test_dataset\n"
+        "Loading local state...\n\n"
+        "Fields referenced in models without definition in dataset test_dataset:\n"
+        "  test_slug\n\n"
         "Updating local state...\n"
         "Updated 1/1 fields\n"
     )
