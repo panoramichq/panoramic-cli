@@ -1,5 +1,7 @@
 from abc import ABC
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple, Union
+
+from panoramic.cli.field.client import Aggregation
 
 
 class Actionable(ABC):
@@ -23,37 +25,162 @@ class PanoModelField:
 
     field_map: List[str]
     data_reference: str
-    data_type: Optional[str]
 
-    def __init__(self, *, field_map: List[str], data_reference: str, data_type: Optional[str]):
+    def __init__(self, *, field_map: List[str], data_reference: str):
         self.field_map = field_map
         self.data_reference = data_reference
-        self.data_type = data_type
 
     def to_dict(self) -> Dict[str, Any]:
         return {
             'field_map': self.field_map,
             'data_reference': self.data_reference,
-            'data_type': self.data_type,
         }
 
     @classmethod
     def from_dict(cls, inputs: Dict[str, Any]) -> 'PanoModelField':
         return cls(
-            field_map=inputs['field_map'], data_reference=inputs['data_reference'], data_type=inputs['data_type'],
+            field_map=inputs['field_map'],
+            data_reference=inputs['data_reference'],
         )
 
     def identifier(self) -> str:
-        return f'{self.data_reference}_{self.data_type}_{",".join(sorted(self.field_map))}'
+        return f'{self.data_reference}_{",".join(sorted(self.field_map))}'
 
     def __hash__(self) -> int:
-        return hash(self.identifier())
+        return hash(
+            (
+                tuple(self.field_map),
+                self.data_reference,
+            )
+        )
 
     def __eq__(self, o: object) -> bool:
         if not isinstance(o, PanoModelField):
             return False
 
         return self.to_dict() == o.to_dict()
+
+
+class PanoField(Actionable):
+    """Field definition."""
+
+    API_VERSION = 'v1'
+
+    slug: str
+    group: str
+    display_name: str
+    data_type: str
+    field_type: str
+    description: Optional[str]
+    data_source: Optional[str]
+    calculation: Optional[str]
+    display_format: Optional[str]
+    aggregation: Optional[Aggregation]
+
+    def __init__(
+        self,
+        *,
+        slug: str,
+        group: str,
+        display_name: str,
+        data_type: str,
+        field_type: str,
+        description: Optional[str] = None,
+        data_source: Optional[str] = None,
+        calculation: Optional[str] = None,
+        display_format: Optional[str] = None,
+        # TODO: create Pano class for aggregation
+        aggregation: Optional[Aggregation] = None,
+        package: Optional[str] = None,
+        file_name: Optional[str] = None,
+    ):
+        self.slug = slug
+        self.group = group
+        self.display_name = display_name
+        self.data_type = data_type
+        self.field_type = field_type
+        self.description = description
+        self.data_source = data_source
+        self.calculation = calculation
+        self.display_format = display_format
+        self.aggregation = aggregation
+        self.package = package
+        self.file_name = file_name
+
+    def to_dict(self) -> Dict[str, Any]:
+        # data_source is not persisted to YAML
+        return {k: v for k, v in self._to_internal_dict().items() if k != 'data_source'}
+
+    def _to_internal_dict(self) -> Dict[str, Any]:
+        data: Dict[str, Any] = {
+            'api_version': self.API_VERSION,
+            'slug': self.slug,
+            'group': self.group,
+            'display_name': self.display_name,
+            'data_type': self.data_type,
+            'field_type': self.field_type,
+            'data_source': self.data_source,
+        }
+
+        if self.description is not None:
+            data['description'] = self.description
+        if self.calculation is not None:
+            data['calculation'] = self.calculation
+        if self.aggregation is not None:
+            data['aggregation'] = self.aggregation.to_dict()
+        if self.display_format is not None:
+            data['display_format'] = self.display_format
+
+        return data
+
+    @classmethod
+    def from_dict(cls, inputs: Dict[str, Any]) -> 'PanoField':
+        aggregation = inputs.get('aggregation')
+        return cls(
+            slug=inputs['slug'],
+            group=inputs['group'],
+            display_name=inputs['display_name'],
+            data_type=inputs['data_type'],
+            field_type=inputs['field_type'],
+            description=inputs.get('description'),
+            data_source=inputs.get('data_source'),
+            aggregation=Aggregation.from_dict(aggregation) if aggregation is not None else None,
+            calculation=inputs.get('calculation'),
+            display_format=inputs.get('display_format'),
+            package=inputs.get('package'),
+            file_name=inputs.get('file_name'),
+        )
+
+    @property
+    def id(self) -> Union[Tuple[str], Tuple[str, str]]:
+        if self.data_source is not None:
+            return (self.data_source, self.slug)
+        else:
+            return (self.slug,)
+
+    def __hash__(self) -> int:
+        return hash(
+            (
+                self.slug,
+                self.group,
+                self.display_name,
+                self.data_type,
+                self.field_type,
+                self.description,
+                self.data_source,
+                self.calculation,
+                self.display_format,
+                self.aggregation,
+                self.package,
+                self.file_name,
+            )
+        )
+
+    def __eq__(self, o: object) -> bool:
+        if not isinstance(o, PanoField):
+            return False
+
+        return self._to_internal_dict() == o._to_internal_dict()
 
 
 class PanoModelJoin:
@@ -91,7 +218,14 @@ class PanoModelJoin:
         return f'{self.join_type}_{self.relationship}_{self.to_model}_{",".join(sorted(self.fields))}'
 
     def __hash__(self) -> int:
-        return hash(self.identifier())
+        return hash(
+            (
+                tuple(self.fields),
+                self.join_type,
+                self.relationship,
+                self.to_model,
+            )
+        )
 
     def __eq__(self, o: object) -> bool:
         if not isinstance(o, PanoModelJoin):
@@ -162,7 +296,16 @@ class PanoModel(Actionable):
         )
 
     def __hash__(self) -> int:
-        return hash(self.to_dict())
+        return hash(
+            (
+                self.model_name,
+                self.data_source,
+                tuple(self.fields),
+                tuple(self.joins),
+                tuple(self.identifiers),
+                self.virtual_data_source,
+            )
+        )
 
     def __eq__(self, o: object) -> bool:
         if not isinstance(o, PanoModel):
@@ -185,8 +328,8 @@ class PanoVirtualDataSource(Actionable):
         self.package = package
 
     @property
-    def id(self) -> str:
-        return self.dataset_slug
+    def id(self) -> Tuple[str]:
+        return (self.dataset_slug,)
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -203,7 +346,12 @@ class PanoVirtualDataSource(Actionable):
         )
 
     def __hash__(self) -> int:
-        return hash(self.to_dict())
+        return hash(
+            (
+                self.dataset_slug,
+                self.display_name,
+            )
+        )
 
     def __eq__(self, o: object) -> bool:
         if not isinstance(o, PanoVirtualDataSource):

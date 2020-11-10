@@ -1,12 +1,16 @@
 from typing import Generic, List, Optional, TypeVar
 
-from panoramic.cli.pano_model import Actionable, PanoModel, PanoVirtualDataSource
+from panoramic.cli.pano_model import (
+    Actionable,
+    PanoField,
+    PanoModel,
+    PanoVirtualDataSource,
+)
 
 T = TypeVar('T', covariant=True, bound=Actionable)
 
 
 class Action(Generic[T]):
-
     """Action that transitions state from current to desired."""
 
     current: Optional[T]
@@ -41,7 +45,6 @@ class Action(Generic[T]):
 
 
 class ActionList(Generic[T]):
-
     """Container for actions."""
 
     actions: List[Action[T]]
@@ -59,16 +62,17 @@ class ActionList(Generic[T]):
 
 
 class VirtualState:
-
     """Represent collection of virtual data sources."""
 
     data_sources: List[PanoVirtualDataSource]
     models: List[PanoModel]
+    fields: List[PanoField]
 
-    def __init__(self, *, data_sources: List[PanoVirtualDataSource], models: List[PanoModel]):
+    def __init__(self, *, data_sources: List[PanoVirtualDataSource], models: List[PanoModel], fields: List[PanoField]):
         self.data_sources = data_sources
         self.models = models
+        self.fields = fields
 
     @property
     def is_empty(self) -> bool:
-        return len(self.data_sources) == 0 and len(self.models) == 0
+        return len(self.data_sources) == 0 and len(self.models) == 0 and len(self.fields) == 0

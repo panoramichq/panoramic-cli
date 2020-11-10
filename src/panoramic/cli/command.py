@@ -16,17 +16,20 @@ from panoramic.cli.errors import (
     InvalidModelException,
     JoinException,
     ValidationError,
+    ValidationErrorSeverity,
 )
+from panoramic.cli.field_mapper import map_column_to_field
 from panoramic.cli.file_utils import write_yaml
 from panoramic.cli.identifier_generator import IdentifierGenerator
 from panoramic.cli.join_detector import JoinDetector
 from panoramic.cli.local import get_state as get_local_state
 from panoramic.cli.local.executor import LocalExecutor
 from panoramic.cli.local.writer import FileWriter
+from panoramic.cli.model_mapper import map_columns_to_model
 from panoramic.cli.pano_model import PanoModel, PanoModelJoin
 from panoramic.cli.paths import Paths
 from panoramic.cli.physical_data_source.client import PhysicalDataSourceClient
-from panoramic.cli.print import echo_error, echo_errors, echo_info
+from panoramic.cli.print import echo_error, echo_errors, echo_info, echo_warnings
 from panoramic.cli.refresh import Refresher
 from panoramic.cli.remote import get_state as get_remote_state
 from panoramic.cli.remote.executor import RemoteExecutor
@@ -114,17 +117,20 @@ def validate() -> bool:
 
     errors.extend(validate_local_state())
 
-    if len(errors) == 0:
-        echo_info("Success: All files are valid.")
-        return True
+    errors_by_severity = defaultdict(list)
+    for error in errors:
+        errors_by_severity[error.severity].append(error)
 
-    try:
-        echo_errors(errors)
-    except Exception:
-        # Ignore any errors in error reporting
-        logger.debug('Error when logging errros', exc_info=True)
+    if len(errors_by_severity[ValidationErrorSeverity.WARNING]) > 0:
+        echo_warnings(errors_by_severity[ValidationErrorSeverity.WARNING])
+        echo_info('')
 
-    return False
+    if len(errors_by_severity[ValidationErrorSeverity.ERROR]) > 0:
+        echo_errors(errors_by_severity[ValidationErrorSeverity.ERROR])
+        return False
+
+    echo_info("Success: All files are valid.")
+    return True
 
 
 def scan(source_id: str, table_filter: Optional[str], parallel: int = 1, generate_identifiers: bool = False):
@@ -160,10 +166,25 @@ def scan(source_id: str, table_filter: Optional[str], parallel: int = 1, generat
                 identifiers = id_generator.generate(table_name)
             else:
                 identifiers = []
-            for model in scanner.scan_columns_grouped(table_filter=table_name):
+
+            columns = list(scanner.scan_columns(table_filter=table_name))
+            for model in map_columns_to_model(columns):
                 model.identifiers = identifiers
                 writer.write_scanned_model(model)
                 progress_bar.write(f'Discovered model {model.model_name}')
+
+            for column in columns:
+                column_slug = column['field_map'][0]
+                try:
+                    field = map_column_to_field(column, is_identifier=column_slug in identifiers)
+                    progress_bar.write(f'Discovered field {field.slug}')
+                    writer.write_scanned_field(field)
+                except Exception:
+                    error_msg = f'Metadata could not be parsed for column {column_slug} under {table_name}'
+                    progress_bar.write(f'Error: {error_msg}')
+                    logger.debug(error_msg, exc_info=True)
+                    # Create an empty field file in case the mapping fails
+                    writer.write_empty_field(column_slug)
         except Exception:
             error_msg = f'Metadata could not be scanned for table {table_name}'
             progress_bar.write(f'Error: {error_msg}')
@@ -217,7 +238,7 @@ def pull(yes: bool = False, target_dataset: Optional[str] = None, diff: bool = F
                 successful += 1
             except Exception:
                 bar.write(f'Error: Failed to execute action {action.description}')
-        bar.write(f'Pulled {successful}/{bar.total} models and datasets')
+        bar.write(f'Pulled {successful}/{bar.total} models, fields and datasets')
 
 
 def push(yes: bool = False, target_dataset: Optional[str] = None, diff: bool = False):
@@ -260,7 +281,7 @@ def push(yes: bool = False, target_dataset: Optional[str] = None, diff: bool = F
                 bar.write(f'Error: Failed to execute action {action.description}:\n  {messages_concat}')
             except Exception as e:
                 bar.write(f'Error: Failed to execute action {action.description}:\n  {str(e)}')
-        bar.write(f'Updated {successful}/{bar.total} models and datasets')
+        bar.write(f'Updated {successful}/{bar.total} models, fields and datasets')
 
 
 def detect_joins(target_dataset: Optional[str] = None, diff: bool = False, overwrite: bool = False, yes: bool = False):
@@ -279,7 +300,7 @@ def detect_joins(target_dataset: Optional[str] = None, diff: bool = False, overw
         # Prepare a mapping for a quick access when reconciling necessary changes later
         models_by_virtual_data_source[model.virtual_data_source][model.model_name] = model
 
-    actions_list = ActionList(actions=[])
+    actions_list: ActionList[PanoModel] = ActionList(actions=[])
 
     with tqdm(list(local_state.data_sources)) as bar:
         for dataset in bar:

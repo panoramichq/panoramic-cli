@@ -4,7 +4,6 @@ import pytest
 
 from panoramic.cli.command import list_connections, push, scan
 from panoramic.cli.errors import InvalidDatasetException, InvalidModelException
-from panoramic.cli.pano_model import PanoModel
 
 
 @pytest.fixture(autouse=True)
@@ -15,8 +14,8 @@ def mock_get_company_slug():
 
 @pytest.fixture
 def mock_refresher():
-    with patch('panoramic.cli.command.Refresher') as mock_scanner:
-        yield mock_scanner()
+    with patch('panoramic.cli.command.Refresher') as mock_refresher:
+        yield mock_refresher()
 
 
 @pytest.fixture
@@ -33,7 +32,7 @@ def mock_id_generator():
 
 @pytest.fixture
 def mock_writer():
-    with patch('panoramic.cli.command.FileWriter') as mock_writer:
+    with patch('panoramic.cli.command.FileWriter', autospec=True) as mock_writer:
         yield mock_writer()
 
 
@@ -42,14 +41,23 @@ def test_scan(mock_writer, mock_scanner, mock_refresher, mock_id_generator):
         {'data_source': 'source.schema1.table1', 'model_name': 'source.schema1.table1'}
     ]
     mock_id_generator.generate.return_value = ['id']
-    mock_scanner.scan_columns_grouped.return_value = [
-        PanoModel(model_name='model1', data_source='source1', fields=[], joins=[], identifiers=[]),
+    mock_scanner.scan_columns.return_value = [
+        {
+            'data_source': 'source.schema1.table1',
+            'model_name': 'source.schema1.table1',
+            'taxon_type': 'dimension',
+            'data_reference': '"ID"',
+            'field_map': ['id'],
+            'validation_type': 'text',
+            'data_type': 'CHARACTER VARYING',
+        }
     ]
 
     scan('test-source', 'test-filter')
 
     assert mock_refresher.refresh_table.mock_calls == [call('schema1.table1')]
     assert mock_writer.write_scanned_model.call_count == 1
+    assert mock_writer.write_scanned_field.call_count == 1
 
 
 def test_scan_single_table_error(mock_writer, mock_scanner, mock_refresher, mock_id_generator):
@@ -58,14 +66,23 @@ def test_scan_single_table_error(mock_writer, mock_scanner, mock_refresher, mock
         {'data_source': 'source.schema1.table2', 'model_name': 'source.schema1.table2'},
     ]
     mock_id_generator.generate.return_value = ['id']
-    mock_scanner.scan_columns_grouped.return_value = [
-        PanoModel(model_name='model2', data_source='source1', fields=[], joins=[], identifiers=[],),
+    mock_scanner.scan_columns.return_value = [
+        {
+            'data_source': 'source.schema1.table2',
+            'model_name': 'source.schema1.table2',
+            'taxon_type': 'dimension',
+            'data_reference': '"ID"',
+            'field_map': ['id'],
+            'validation_type': 'text',
+            'data_type': 'CHARACTER VARYING',
+        }
     ]
     mock_refresher.refresh_table.side_effect = [Exception('test'), None]
 
     scan('test-source', 'test-filter')
 
     assert mock_writer.write_scanned_model.call_count == 1
+    assert mock_writer.write_scanned_field.call_count == 1
 
 
 @pytest.fixture()
@@ -110,5 +127,5 @@ def test_push_single_error(mock_executor, mock_reconcile, mock_click, _, __, ___
         "  Invalid dataset submitted\n"
         "Error: Failed to execute action test-description-2:\n"
         "  Invalid model submitted\n"
-        "Updated 1/3 models and datasets\n"
+        "Updated 1/3 models, fields and datasets\n"
     )

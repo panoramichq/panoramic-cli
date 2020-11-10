@@ -7,11 +7,17 @@ from requests.exceptions import RequestException
 from panoramic.cli.errors import (
     CompanyNotFoundException,
     DatasetReadException,
+    FieldReadException,
     ModelReadException,
 )
-from panoramic.cli.mapper import map_data_source_from_remote, map_model_from_remote
+from panoramic.cli.field.client import FieldClient
+from panoramic.cli.field_mapper import map_field_from_remote
 from panoramic.cli.model import ModelClient
-from panoramic.cli.pano_model import PanoModel, PanoVirtualDataSource
+from panoramic.cli.model_mapper import (
+    map_data_source_from_remote,
+    map_model_from_remote,
+)
+from panoramic.cli.pano_model import PanoField, PanoModel, PanoVirtualDataSource
 from panoramic.cli.state import VirtualState
 from panoramic.cli.virtual_data_source import VirtualDataSourceClient
 
@@ -56,6 +62,26 @@ def get_models(data_source: str, company_slug: str, *, limit: int = 100) -> Iter
         offset += limit
 
 
+def get_fields(company_slug: str, data_source: Optional[str] = None, *, limit: int = 100) -> Iterable[PanoField]:
+    """Get all models from remote."""
+    client = FieldClient()
+    offset = 0
+    while True:
+        try:
+            fields = client.get_fields(company_slug=company_slug, data_source=data_source, offset=offset, limit=limit)
+        except RequestException as e:
+            if e.response is not None and e.response.status_code == requests.codes.not_found:
+                raise CompanyNotFoundException(company_slug).extract_request_id(e)
+            raise FieldReadException(company_slug, data_source).extract_request_id(e)
+
+        yield from (map_field_from_remote(field) for field in fields)
+        if len(fields) < limit:
+            # last page
+            break
+
+        offset += limit
+
+
 def get_state(company_slug: str, target_dataset: Optional[str] = None) -> VirtualState:
     """Build a representation of what VDS and models are on remote."""
     data_source_iterator = get_data_sources(company_slug)
@@ -68,4 +94,5 @@ def get_state(company_slug: str, target_dataset: Optional[str] = None) -> Virtua
     models = list(
         itertools.chain.from_iterable(get_models(source.dataset_slug, company_slug) for source in data_sources)
     )
-    return VirtualState(data_sources=data_sources, models=models)
+    fields = list(get_fields(company_slug=company_slug, data_source=target_dataset))
+    return VirtualState(data_sources=data_sources, models=models, fields=fields)

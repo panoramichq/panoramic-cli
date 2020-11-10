@@ -9,3 +9,5 @@ with open("src/panoramic/cli/__version__.py") as f:
 with open("versions.json", "w") as f:
     data = json.dumps({"minimum_supported_version": minimum_supported_version, "latest_version": version})
     f.write(data)
+
+print(version)

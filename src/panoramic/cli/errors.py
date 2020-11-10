@@ -3,8 +3,9 @@ import os
 import signal
 import sys
 from abc import ABC
+from enum import Enum
 from pathlib import Path
-from typing import Callable, List, Optional
+from typing import Callable, ClassVar, List, Optional
 
 from jsonschema.exceptions import ValidationError as JsonSchemaValidationError
 from requests.exceptions import RequestException
@@ -138,6 +139,21 @@ class InvalidDatasetException(CliBaseException):
             self.messages = ['Invalid dataset submitted']
 
 
+class InvalidFieldException(CliBaseException):
+
+    """Invalid field submitted to remote."""
+
+    messages: List[str]
+
+    def __init__(self, error: RequestException):
+        try:
+            self.messages = [
+                error['msg'] for error in error.response.json()['error']['extra_data']['validation_errors']
+            ]
+        except Exception:
+            self.messages = ['Invalid field submitted']
+
+
 class DatasetWriteException(CliBaseException):
 
     """Error writing dataset to remote state."""
@@ -162,9 +178,38 @@ class ModelReadException(CliBaseException):
         super().__init__(f'Error fetching models for company {company_slug} and dataset {dataset_name}')
 
 
+class FieldWriteException(CliBaseException):
+
+    """Error writing field to remote state."""
+
+    def __init__(self, dataset_name: Optional[str], field_name: str):
+        message = f'Error writing field {field_name}'
+        if dataset_name is not None:
+            message += f' in dataset {dataset_name}'
+
+        super().__init__(message)
+
+
+class FieldReadException(CliBaseException):
+
+    """Error reading field(s) from remote state."""
+
+    def __init__(self, company_slug: str, dataset_name: Optional[str]):
+        dataset_message = f' under dataset {dataset_name} ' if dataset_name else ''
+        super().__init__(f'Error fetching field for company {company_slug}{dataset_message}')
+
+
+class ValidationErrorSeverity(Enum):
+
+    WARNING = 'WARNING'
+    ERROR = 'ERROR'
+
+
 class ValidationError(CliBaseException, ABC):
 
     """Abstract error raised during validation step."""
+
+    severity: ClassVar[ValidationErrorSeverity] = ValidationErrorSeverity.ERROR
 
 
 class FileMissingError(ValidationError):
@@ -182,6 +227,12 @@ class FileMissingError(ValidationError):
 
         super().__init__(msg)
 
+    def __eq__(self, o: object) -> bool:
+        if not isinstance(o, FileMissingError):
+            return False
+
+        return str(self) == str(o)
+
 
 class DuplicateModelNameError(ValidationError):
 
@@ -196,6 +247,33 @@ class DuplicateModelNameError(ValidationError):
         path_lines = ''.join(f'\n  in {path}' for path in paths)
         super().__init__(f'Multiple model files use model name {model_name}{path_lines}')
 
+    def __eq__(self, o: object) -> bool:
+        if not isinstance(o, DuplicateModelNameError):
+            return False
+
+        return str(self) == str(o)
+
+
+class DuplicateFieldSlugError(ValidationError):
+
+    """Two local models use the same model name."""
+
+    def __init__(self, *, field_slug: str, dataset_slug: Optional[str], paths: List[Path]) -> None:
+        try:
+            paths = [path.relative_to(Path.cwd()) for path in paths]
+        except ValueError:
+            pass  # Use relative path when possible
+
+        path_lines = ''.join(f'\n  in {path}' for path in paths)
+        dataset_message = f' under dataset {dataset_slug} ' if dataset_slug else ''
+        super().__init__(f'Multiple field files{dataset_message}use slug {field_slug}{path_lines}')
+
+    def __eq__(self, o: object) -> bool:
+        if not isinstance(o, DuplicateFieldSlugError):
+            return False
+
+        return str(self) == str(o)
+
 
 class InvalidYamlFile(ValidationError):
 
@@ -209,6 +287,31 @@ class InvalidYamlFile(ValidationError):
 
         super().__init__(f'Invalid YAML file - {error.problem}\n  on line {error.problem_mark.line}\n  in {path}')
 
+    def __eq__(self, o: object) -> bool:
+        if not isinstance(o, InvalidYamlFile):
+            return False
+
+        return str(self) == str(o)
+
+
+class DeprecatedAttributeWarning(ValidationError):
+
+    severity = ValidationErrorSeverity.WARNING
+
+    def __init__(self, *, attribute: str, path: Path):
+        try:
+            path = path.relative_to(Path.cwd())
+        except ValueError:
+            pass  # Use relative path when possible
+
+        super().__init__(f'Deprecated attribute "{attribute}" \n  in {path}')
+
+    def __eq__(self, o: object) -> bool:
+        if not isinstance(o, DeprecatedAttributeWarning):
+            return False
+
+        return str(self) == str(o)
+
 
 class JsonSchemaError(ValidationError):
     def __init__(self, *, path: Path, error: JsonSchemaValidationError):
@@ -218,6 +321,28 @@ class JsonSchemaError(ValidationError):
             pass  # Use relative path when possible
 
         super().__init__(f'{error.message}\n  in {path}')
+
+    def __eq__(self, o: object) -> bool:
+        if not isinstance(o, JsonSchemaError):
+            return False
+
+        return str(self) == str(o)
+
+
+class MissingFieldFileError(ValidationError):
+    def __init__(
+        self,
+        *,
+        field_slug: str,
+        dataset_slug: Optional[str],
+    ) -> None:
+        super().__init__(f'Missing field file for slug {field_slug} under dataset {dataset_slug}')
+
+    def __eq__(self, o: object) -> bool:
+        if not isinstance(o, MissingFieldFileError):
+            return False
+
+        return str(self) == str(o)
 
 
 def handle_exception(f: Callable):

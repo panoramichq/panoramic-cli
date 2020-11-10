@@ -6,16 +6,16 @@ git:
   submodules: false
 matrix:
   include:
-  - python: 3.6
-    env: TOXENV=py36
-  - python: 3.7
-    env: TOXENV=py37
-  - python: 3.8
-    env: TOXENV=py38
-  - python: 3.7
-    env: TOXENV=lint
-  - python: 3.7
-    env: TOXENV=manifest
+    - python: 3.6
+      env: TOXENV=py36
+    - python: 3.7
+      env: TOXENV=py37
+    - python: 3.8
+      env: TOXENV=py38
+    - python: 3.7
+      env: TOXENV=lint
+    - python: 3.7
+      env: TOXENV=manifest
 before_install:
   - echo -e "\n\nmachine github.com\n  login $CI_USER_TOKEN" > ~/.netrc
   - git submodule update --init --recursive
@@ -26,6 +26,8 @@ install:
   - python shipping/generate-versions-file.py
   - mv versions.json s3_upload/versions.json
 script: tox
+before_deploy:
+  - pip install importlib-metadata==2.0.0
 deploy:
   - provider: pypi
     user: __token__
@@ -59,6 +61,12 @@ deploy:
     local_dir: "./s3_upload"
     cache_control: "max-age=60"
     skip_cleanup: true
+    on:
+      tags: true
+      condition: $TOXENV = py36
+      repo: panoramichq/panoramic-cli
+  - provider: script
+    script: bash shipping/update_homebrew.sh
     on:
       tags: true
       condition: $TOXENV = py36

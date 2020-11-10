@@ -33,6 +33,14 @@ class Paths:
         return Path.cwd() / SystemDirectory.SCANNED.value
 
     @staticmethod
+    def scanned_fields_dir() -> Path:
+        return Paths.fields_dir(Paths.scanned_dir())
+
+    @staticmethod
+    def fields_dir(package: Path) -> Path:
+        return package / SystemDirectory.FIELDS.value
+
+    @staticmethod
     def dataset_schema_file() -> Path:
         with importlib_resources.path(panoramic.cli.schemas, PresetFileName.DATASET_SCHEMA.value) as path:
             return path
@@ -40,6 +48,11 @@ class Paths:
     @staticmethod
     def model_schema_file() -> Path:
         with importlib_resources.path(panoramic.cli.schemas, PresetFileName.MODEL_SCHEMA.value) as path:
+            return path
+
+    @staticmethod
+    def field_schema_file() -> Path:
+        with importlib_resources.path(panoramic.cli.schemas, PresetFileName.FIELD_SCHEMA.value) as path:
             return path
 
     @staticmethod
@@ -63,6 +76,7 @@ class FileExtension(Enum):
     """
 
     MODEL_YAML = '.model.yaml'
+    FIELD_YAML = '.field.yaml'
 
 
 class PresetFileName(Enum):
@@ -74,6 +88,7 @@ class PresetFileName(Enum):
     CONFIG_DIR = '.pano'
     CONFIG = 'config'
     MODEL_SCHEMA = 'model.schema.json'
+    FIELD_SCHEMA = 'field.schema.json'
     DATASET_SCHEMA = 'dataset.schema.json'
     CONFIG_SCHEMA = 'config.schema.json'
     CONTEXT_SCHEMA = 'context.schema.json'
@@ -82,3 +97,4 @@ class PresetFileName(Enum):
 
 class SystemDirectory(Enum):
     SCANNED = 'scanned'
+    FIELDS = 'fields'

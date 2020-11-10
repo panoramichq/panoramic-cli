@@ -12,30 +12,38 @@ logger = logging.getLogger(__name__)
 
 class ModelField:
 
-    data_type: Optional[str]
     field_map: List[str]
     data_reference: str
 
     def __init__(
-        self, *, data_type: Optional[str], field_map: List[str], data_reference: str,
+        self,
+        *,
+        field_map: List[str],
+        data_reference: str,
     ):
-        self.data_type = data_type
         self.field_map = field_map
         self.data_reference = data_reference
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> 'ModelField':
-        return cls(data_type=data.get('data_type'), field_map=data['field_map'], data_reference=data['data_reference'],)
+        return cls(
+            field_map=data['field_map'],
+            data_reference=data['data_reference'],
+        )
 
     def to_dict(self) -> Dict[str, Any]:
         return {
-            'data_type': self.data_type,
             'field_map': self.field_map,
             'data_reference': self.data_reference,
         }
 
     def __hash__(self) -> int:
-        return hash(self.to_dict())
+        return hash(
+            (
+                tuple(self.field_map),
+                self.data_reference,
+            )
+        )
 
     def __eq__(self, o: object) -> bool:
         if not isinstance(o, ModelField):
@@ -75,7 +83,14 @@ class ModelJoin:
         }
 
     def __hash__(self) -> int:
-        return hash(self.to_dict())
+        return hash(
+            (
+                self.to_model,
+                self.join_type,
+                self.relationship,
+                tuple(self.fields),
+            )
+        )
 
     def __eq__(self, o: object) -> bool:
         if not isinstance(o, ModelJoin):
@@ -136,7 +151,17 @@ class Model:
         }
 
     def __hash__(self) -> int:
-        return hash(self.to_dict())
+        return hash(
+            (
+                self.model_name,
+                self.data_source,
+                tuple(self.fields),
+                tuple(self.joins),
+                self.visibility,
+                self.virtual_data_source,
+                tuple(self.identifiers),
+            )
+        )
 
     def __eq__(self, o: object) -> bool:
         if not isinstance(o, Model):
@@ -152,7 +177,10 @@ class ModelClient(OAuth2Client, VersionedClient):
     base_url: str
 
     def __init__(
-        self, base_url: Optional[str] = None, client_id: Optional[str] = None, client_secret: Optional[str] = None,
+        self,
+        base_url: Optional[str] = None,
+        client_id: Optional[str] = None,
+        client_secret: Optional[str] = None,
     ):
         base_url = base_url if base_url is not None else get_base_url()
         client_id = client_id if client_id is not None else get_client_id()
@@ -172,7 +200,7 @@ class ModelClient(OAuth2Client, VersionedClient):
     def upsert_model(self, data_source: str, company_slug: str, model: Model):
         """Add or update given model."""
         logger.debug(f'Upserting model with name: {model.model_name}')
-        params = {'virtual_data_source': data_source, 'company_slug': company_slug, 'create_fields': 'true'}
+        params = {'virtual_data_source': data_source, 'company_slug': company_slug}
         response = self.session.put(self.base_url, json=model.to_dict(), params=params, timeout=30)
         response.raise_for_status()
 
@@ -189,6 +217,9 @@ class ModelClient(OAuth2Client, VersionedClient):
         """Retrieve all models in a given source."""
         logger.debug(f'Listing models for source: {data_source}')
         params = {'virtual_data_source': data_source, 'company_slug': company_slug, 'offset': offset, 'limit': limit}
-        response = self.session.get(self.base_url, params=params,)
+        response = self.session.get(
+            self.base_url,
+            params=params,
+        )
         response.raise_for_status()
         return [Model.from_dict(d, virtual_data_source=data_source) for d in response.json()['data']]

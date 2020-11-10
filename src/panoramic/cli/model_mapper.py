@@ -36,14 +36,17 @@ def map_model_join_from_local(join: PanoModelJoin) -> ModelJoin:
     )
 
 
-def map_field_from_remote(field: ModelField) -> PanoModelField:
+def map_model_field_from_remote(field: ModelField) -> PanoModelField:
     """Convert remote attributes to local field."""
-    return PanoModelField(field_map=field.field_map, data_reference=field.data_reference, data_type=field.data_type,)
+    return PanoModelField(field_map=field.field_map, data_reference=field.data_reference)
 
 
 def map_attributes_from_local(field: PanoModelField) -> ModelField:
     """Convert local field to remote attributes."""
-    return ModelField(data_type=field.data_type, data_reference=field.data_reference, field_map=field.field_map,)
+    return ModelField(
+        data_reference=field.data_reference,
+        field_map=field.field_map,
+    )
 
 
 def map_model_from_remote(model: Model) -> PanoModel:
@@ -51,7 +54,7 @@ def map_model_from_remote(model: Model) -> PanoModel:
     return PanoModel(
         model_name=model.model_name,
         data_source=model.data_source,
-        fields=[map_field_from_remote(f) for f in model.fields],
+        fields=[map_model_field_from_remote(f) for f in model.fields],
         joins=[map_model_join_from_remote(j) for j in model.joins],
         identifiers=model.identifiers,
         virtual_data_source=model.virtual_data_source,
@@ -83,7 +86,8 @@ def map_columns_to_model(raw_columns: Iterable[Dict]) -> Iterable[PanoModel]:
             data_source=data_source,
             fields=[
                 PanoModelField(
-                    data_type=col['data_type'], data_reference=col['data_reference'], field_map=col['field_map'],
+                    data_reference=col['data_reference'],
+                    field_map=col['field_map'],
                 )
                 for col in columns
             ],

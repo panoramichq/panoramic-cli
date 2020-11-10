@@ -3,7 +3,13 @@ from typing import Any, Dict
 import pytest
 import yaml
 
-from panoramic.cli.errors import FileMissingError, InvalidYamlFile, JsonSchemaError
+from panoramic.cli.errors import (
+    DeprecatedAttributeWarning,
+    FileMissingError,
+    InvalidYamlFile,
+    JsonSchemaError,
+    MissingFieldFileError,
+)
 from panoramic.cli.local.get import get_state
 from panoramic.cli.paths import Paths, PresetFileName
 from panoramic.cli.validate import (
@@ -20,9 +26,15 @@ VALID_CONTEXT = {
 
 INVALID_CONTEXTS = [
     # typo in version
-    {'api_versio': 'v1', 'company_slug': 'test_company',},
+    {
+        'api_versio': 'v1',
+        'company_slug': 'test_company',
+    },
     # wrong type in version
-    {'api_version': 1, 'company_slug': 'test_company',},
+    {
+        'api_version': 1,
+        'company_slug': 'test_company',
+    },
     # typo in slug
     {'api_version': 'v1', 'company_slu': 'test_company'},
     # wrong type in slug
@@ -158,30 +170,77 @@ VALID_MODEL_FULL = {
     'identifiers': ['ad_id'],
     'joins': [
         {'to_model': 'sf.db.schema.table2', 'join_type': 'left', 'relationship': 'many_to_one', 'fields': ['ad_id']},
-        {'to_model': 'sf.db.schema.table3', 'join_type': 'right', 'relationship': 'one_to_many', 'fields': ['ad_id']},
+        {'to_model': 'sf.db.schema.table3', 'join_type': 'right', 'relationship': 'one_to_one', 'fields': ['ad_id']},
         {'to_model': 'sf.db.schema.table4', 'join_type': 'inner', 'relationship': 'one_to_one', 'fields': ['ad_id']},
-        {'to_model': 'sf.db.schema.table5', 'join_type': 'inner', 'relationship': 'many_to_many', 'fields': ['ad_id']},
+        {'to_model': 'sf.db.schema.table5', 'join_type': 'inner', 'relationship': 'many_to_one', 'fields': ['ad_id']},
     ],
     'fields': [
         # has field_map
-        {'data_reference': '"ad_id"', 'field_map': ['ad_id'], 'data_type': 'CHARACTER VARYING',},
+        {
+            'data_reference': '"ad_id"',
+            'field_map': ['ad_id'],
+        },
     ],
+}
+VALID_FIELD_MINIMAL: Dict[str, Any] = {
+    'api_version': 'v1',
+    'slug': 'field_slug',
+    'group': 'group',
+    'display_name': 'Display name',
+    'data_type': 'data_type',
+    'field_type': 'field_type',
+}
+
+VALID_FIELD_FULL: Dict[str, Any] = {
+    'slug': 'full_field_slug',
+    'group': 'group',
+    'display_name': 'Full display name',
+    'data_type': 'data_type',
+    'field_type': 'field_type',
+    'calculation': 'calculation',
+    'aggregation': {'type': 'sum'},
+    'display_format': 'display_format',
+    'description': 'description',
 }
 
 
 INVALID_DATASETS = [
     # typo in dataset_slug
-    {'dataset_slu': 'test-slug', 'display_name': 'Test Name', 'api_version': 'v1',},
+    {
+        'dataset_slu': 'test-slug',
+        'display_name': 'Test Name',
+        'api_version': 'v1',
+    },
     # wrong type in dataset_slug
-    {'dataset_slug': 100, 'display_name': 'Test Name', 'api_version': 'v1',},
+    {
+        'dataset_slug': 100,
+        'display_name': 'Test Name',
+        'api_version': 'v1',
+    },
     # typo in display_name
-    {'dataset_slug': 'test-slug', 'display_nam': 'Test Name', 'api_version': 'v1',},
+    {
+        'dataset_slug': 'test-slug',
+        'display_nam': 'Test Name',
+        'api_version': 'v1',
+    },
     # wrong type in display_name
-    {'dataset_slug': 'test-slug', 'display_name': 200, 'api_version': 'v1',},
+    {
+        'dataset_slug': 'test-slug',
+        'display_name': 200,
+        'api_version': 'v1',
+    },
     # typo in api_version
-    {'dataset_slug': 'test-slug', 'display_name': 'Test Name', 'api_versio': 'v1',},
+    {
+        'dataset_slug': 'test-slug',
+        'display_name': 'Test Name',
+        'api_versio': 'v1',
+    },
     # wrong type in api_version
-    {'dataset_slug': 'test-slug', 'display_name': 'Test Name', 'api_version': 1,},
+    {
+        'dataset_slug': 'test-slug',
+        'display_name': 'Test Name',
+        'api_version': 1,
+    },
 ]
 
 
@@ -195,13 +254,25 @@ INVALID_MODELS = [
     # wrong type in data_source
     {**VALID_MODEL_MINIMAL, 'data_source': 200},
     # typo in api_version
-    {**VALID_MODEL_MINIMAL, 'api_versio': 'v1',},
+    {
+        **VALID_MODEL_MINIMAL,
+        'api_versio': 'v1',
+    },
     # wrong type in api_version
-    {**VALID_MODEL_MINIMAL, 'api_version': 1,},
+    {
+        **VALID_MODEL_MINIMAL,
+        'api_version': 1,
+    },
     # typo in identifiers
-    {**VALID_MODEL_MINIMAL, 'identifirs': ['ad_id'],},
+    {
+        **VALID_MODEL_MINIMAL,
+        'identifirs': ['ad_id'],
+    },
     # wrong type in identifiers
-    {**VALID_MODEL_MINIMAL, 'identifiers': [100],},
+    {
+        **VALID_MODEL_MINIMAL,
+        'identifiers': [100],
+    },
     # typo in joins
     {
         **VALID_MODEL_MINIMAL,
@@ -239,39 +310,122 @@ INVALID_MODELS = [
         ],
     },
     # no "to model" set
-    {**VALID_MODEL_MINIMAL, 'joins': [{'join_type': 'left', 'relationship': 'many_to_one', 'fields': ['ad_id'],},],},
+    {
+        **VALID_MODEL_MINIMAL,
+        'joins': [
+            {
+                'join_type': 'left',
+                'relationship': 'many_to_one',
+                'fields': ['ad_id'],
+            },
+        ],
+    },
     # no join fields set
     {
         **VALID_MODEL_MINIMAL,
         'joins': [
-            {'to_model': 'sf.db.schema.table2', 'join_type': 'left', 'relationship': 'many_to_one', 'fields': [],},
+            {
+                'to_model': 'sf.db.schema.table2',
+                'join_type': 'left',
+                'relationship': 'many_to_one',
+                'fields': [],
+            },
         ],
     },
     # wrong type in joins
-    {**VALID_MODEL_MINIMAL, 'joins': [100],},
+    {
+        **VALID_MODEL_MINIMAL,
+        'joins': [100],
+    },
     # typo in fields
     {
         **VALID_MODEL_MINIMAL,
         'felds': [
-            {'data_reference': '"campaign_id"', 'field_map': ['campaign_id'], 'data_type': 'CHARACTER VARYING',},
+            {
+                'data_reference': '"campaign_id"',
+                'field_map': ['campaign_id'],
+                'data_type': 'CHARACTER VARYING',
+            },
         ],
     },
     # wrong type in fields
-    {**VALID_MODEL_MINIMAL, 'fields': [100],},
+    {
+        **VALID_MODEL_MINIMAL,
+        'fields': [100],
+    },
     # field_map not set
-    {**VALID_MODEL_MINIMAL, 'fields': [{'data_reference': '"campaign_id"', 'data_type': 'CHARACTER VARYING',},],},
+    {
+        **VALID_MODEL_MINIMAL,
+        'fields': [
+            {
+                'data_reference': '"campaign_id"',
+                'data_type': 'CHARACTER VARYING',
+            },
+        ],
+    },
     # data_type not set
-    {**VALID_MODEL_MINIMAL, 'fields': [{'data_reference': '"campaign_id"',},],},
+    {
+        **VALID_MODEL_MINIMAL,
+        'fields': [
+            {
+                'data_reference': '"campaign_id"',
+            },
+        ],
+    },
     # data_reference not set
-    {**VALID_MODEL_MINIMAL, 'fields': [{'data_type': 'CHARACTER VARYING',},],},
+    {
+        **VALID_MODEL_MINIMAL,
+        'fields': [
+            {
+                'data_type': 'CHARACTER VARYING',
+            },
+        ],
+    },
+]
+
+INVALID_FIELDS = [
+    # typo in slug
+    {**VALID_FIELD_MINIMAL, 'sulg': 'should_be_slug'},
+    # slug not set
+    {k: v for k, v in VALID_FIELD_MINIMAL.items() if k != 'slug'},
+    # wrong type in slug
+    {**VALID_FIELD_MINIMAL, 'slug': 123},
+    # group not set
+    {k: v for k, v in VALID_FIELD_MINIMAL.items() if k != 'group'},
+    # field_type not set
+    {k: v for k, v in VALID_FIELD_MINIMAL.items() if k != 'field_type'},
+    # data_type not set
+    {k: v for k, v in VALID_FIELD_MINIMAL.items() if k != 'data_type'},
+    # typo in api_version
+    {**VALID_FIELD_MINIMAL, 'api_versio': 'v1'},
+    # wrong type in api_version
+    {**VALID_FIELD_MINIMAL, 'api_version': 1},
+    # wrong type in calculation
+    {**VALID_FIELD_MINIMAL, 'calculation': 1},
+    # wrong type in aggregation
+    {**VALID_FIELD_MINIMAL, 'aggregation': 1},
+    {**VALID_FIELD_MINIMAL, 'aggregation': ''},
+    # Invalid aggregation object
+    {**VALID_FIELD_MINIMAL, 'aggregation': {'nope': 1}},
+    {**VALID_FIELD_MINIMAL, 'aggregation': {'type': 1}},
+    {**VALID_FIELD_MINIMAL, 'aggregation': {'type': {}}},
+    {**VALID_FIELD_MINIMAL, 'aggregation': {'type': 'sum', 'params': '1232'}},
+    {**VALID_FIELD_MINIMAL, 'aggregation': {'type': 'sum', 'params': {}, 'nope': 1}},
+    # wrong type in display_format
+    {**VALID_FIELD_MINIMAL, 'display_format': 1},
 ]
 
 
 def test_validate_local_state_valid(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
 
+    global_fields_dir = Paths.fields_dir(tmp_path)
+    global_fields_dir.mkdir()
+
     dataset_dir = tmp_path / 'test_dataset'
     dataset_dir.mkdir()
+    dataset_fields_dir = Paths.fields_dir(dataset_dir)
+    dataset_fields_dir.mkdir()
 
     with (dataset_dir / PresetFileName.DATASET_YAML.value).open('w') as f:
         f.write(yaml.dump(VALID_DATASET))
@@ -285,12 +439,19 @@ def test_validate_local_state_valid(tmp_path, monkeypatch):
     with (dataset_dir / 'test_model-2.model.yaml').open('w') as f:
         f.write(yaml.dump(model2))
 
+    with (global_fields_dir / 'company_field.field.yaml').open('w') as f:
+        f.write(yaml.dump(VALID_FIELD_FULL))
+
+    with (dataset_fields_dir / 'first_field.field.yaml').open('w') as f:
+        f.write(yaml.dump(VALID_FIELD_MINIMAL))
+
     errors = validate_local_state()
     assert len(errors) == 0
 
     state = get_state()
     assert len(state.models) == 2
     assert len(state.data_sources) == 1
+    assert len(state.fields) == 2
 
 
 @pytest.mark.parametrize('dataset', INVALID_DATASETS)
@@ -302,6 +463,80 @@ def test_validate_local_state_invalid_dataset(tmp_path, monkeypatch, dataset):
 
     with (dataset_dir / PresetFileName.DATASET_YAML.value).open('w') as f:
         f.write(yaml.dump(dataset))
+
+    errors = validate_local_state()
+    assert len(errors) == 1
+
+
+@pytest.mark.parametrize('invalid_field', INVALID_FIELDS)
+def test_validate_local_state_invalid_dataset_scoped_field(tmp_path, monkeypatch, invalid_field):
+    monkeypatch.chdir(tmp_path)
+
+    dataset_dir = tmp_path / 'test_dataset'
+    dataset_dir.mkdir()
+
+    with (dataset_dir / PresetFileName.DATASET_YAML.value).open('w') as f:
+        f.write(yaml.dump(VALID_DATASET))
+
+    field_dir = Paths.fields_dir(dataset_dir)
+    field_dir.mkdir()
+
+    with (field_dir / 'first_field.field.yaml').open('w') as f:
+        f.write(yaml.dump(invalid_field))
+
+    errors = validate_local_state()
+    assert len(errors) == 1
+
+
+@pytest.mark.parametrize('invalid_field', INVALID_FIELDS)
+def test_validate_local_state_duplicate_dataset_scoped_field(tmp_path, monkeypatch, invalid_field):
+    monkeypatch.chdir(tmp_path)
+
+    dataset_dir = tmp_path / 'test_dataset'
+    dataset_dir.mkdir()
+
+    with (dataset_dir / PresetFileName.DATASET_YAML.value).open('w') as f:
+        f.write(yaml.dump(VALID_DATASET))
+
+    field_dir = Paths.fields_dir(dataset_dir)
+    field_dir.mkdir()
+
+    with (field_dir / 'first_field.field.yaml').open('w') as f:
+        f.write(yaml.dump(VALID_FIELD_MINIMAL))
+
+    with (field_dir / 'duplicate.field.yaml').open('w') as f:
+        f.write(yaml.dump(VALID_FIELD_MINIMAL))
+
+    errors = validate_local_state()
+    assert len(errors) == 1
+
+
+@pytest.mark.parametrize('invalid_field', INVALID_FIELDS)
+def test_validate_local_state_invalid_company_scoped_field(tmp_path, monkeypatch, invalid_field):
+    monkeypatch.chdir(tmp_path)
+
+    global_field_dir = tmp_path / 'fields'
+    global_field_dir.mkdir()
+
+    with (global_field_dir / 'a_field.field.yaml').open('w') as f:
+        f.write(yaml.dump(invalid_field))
+
+    errors = validate_local_state()
+    assert len(errors) == 1
+
+
+@pytest.mark.parametrize('invalid_field', INVALID_FIELDS)
+def test_validate_local_state_duplicate_company_scoped_field(tmp_path, monkeypatch, invalid_field):
+    monkeypatch.chdir(tmp_path)
+
+    global_field_dir = tmp_path / 'fields'
+    global_field_dir.mkdir()
+
+    with (global_field_dir / 'a_field.field.yaml').open('w') as f:
+        f.write(yaml.dump(VALID_FIELD_FULL))
+
+    with (global_field_dir / 'duplicate_field.field.yaml').open('w') as f:
+        f.write(yaml.dump(VALID_FIELD_FULL))
 
     errors = validate_local_state()
     assert len(errors) == 1
@@ -341,3 +576,64 @@ def test_validate_local_state_duplicate_model_names(tmp_path, monkeypatch):
 
     errors = validate_local_state()
     assert len(errors) == 1
+
+
+def test_validate_local_state_missing_field_file(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+
+    dataset_dir = tmp_path / 'test_dataset'
+    dataset_dir.mkdir()
+
+    with (dataset_dir / PresetFileName.DATASET_YAML.value).open('w') as f:
+        f.write(yaml.dump(VALID_DATASET))
+
+    invalid_model = {
+        **VALID_MODEL_MINIMAL,
+        'fields': [
+            {
+                'data_reference': '"COLUMN1"',
+                'field_map': ['field_slug', 'field_slug_2'],
+            }
+        ],
+    }
+
+    with (dataset_dir / 'model1.model.yaml').open('w') as f:
+        f.write(yaml.dump(invalid_model))
+
+    field_dir = Paths.fields_dir(dataset_dir)
+    field_dir.mkdir()
+
+    with (field_dir / 'field_slug.field.yaml').open('w') as f:
+        f.write(yaml.dump(VALID_FIELD_MINIMAL))
+
+    errors = validate_local_state()
+    assert errors == [MissingFieldFileError(field_slug='field_slug_2', dataset_slug='test_dataset')]
+
+
+def test_validate_local_state_deprecated_attribute(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+
+    dataset_dir = tmp_path / 'test_dataset'
+    dataset_dir.mkdir()
+
+    with (dataset_dir / PresetFileName.DATASET_YAML.value).open('w') as f:
+        f.write(yaml.dump(VALID_DATASET))
+
+    model = VALID_MODEL_MINIMAL
+    model['fields'] = [
+        {
+            'data_type': 'CHARACTER VARYING',
+            'field_map': ['field_slug'],
+            'data_reference': '"FIELD_SLUG"',
+        }
+    ]
+
+    with (dataset_dir / 'test_model.model.yaml').open('w') as f:
+        f.write(yaml.dump(model))
+
+    Paths.fields_dir(dataset_dir).mkdir()
+    with (Paths.fields_dir(dataset_dir) / 'test_field.field.yaml').open('w') as f:
+        f.write(yaml.dump(VALID_FIELD_MINIMAL))
+
+    errors = validate_local_state()
+    assert errors == [DeprecatedAttributeWarning(attribute='data_type', path=dataset_dir / 'test_model.model.yaml')]

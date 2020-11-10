@@ -136,3 +136,5 @@ dmypy.json
 
 versions.json
 .DS_Store
+brewout
+.homebrew_repo

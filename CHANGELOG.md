@@ -1,5 +1,15 @@
 # Changelog
 
+## Version 1.3.0 Release
+
+- Deprecates `data_type` attribute in model files
+- Validation of fields in model and field files
+- Stop sending `create_fields=true` to Model API
+
+## Version 1.2.0 Release
+
+- Introduces field file management via the CLI
+
 ## Version 1.1.3 Release
 
 - Send `create_fields` query param when upserting models
