@@ -1,4 +1,5 @@
-from typing import Generic, List, Optional, TypeVar
+from collections import defaultdict
+from typing import Dict, Generic, List, Optional, Tuple, TypeVar
 
 from panoramic.cli.pano_model import (
     Actionable,
@@ -43,14 +44,28 @@ class Action(Generic[T]):
             assert self.desired is not None
             return f'UPDATE: {".".join(self.desired.id)}'
 
+    def __hash__(self) -> int:
+        return hash(
+            (
+                self.current,
+                self.desired,
+            )
+        )
+
+    def __eq__(self, o: object) -> bool:
+        if not isinstance(o, Action):
+            return False
+
+        return (self.current, self.desired) == (o.current, o.desired)
+
 
 class ActionList(Generic[T]):
     """Container for actions."""
 
     actions: List[Action[T]]
 
-    def __init__(self, *, actions: List[Action[T]]):
-        self.actions = actions
+    def __init__(self, *, actions: Optional[List[Action[T]]] = None):
+        self.actions = actions if actions is not None else []
 
     @property
     def is_empty(self) -> bool:
@@ -59,6 +74,18 @@ class ActionList(Generic[T]):
     @property
     def count(self) -> int:
         return len(self.actions)
+
+    def add_action(self, action: Action):
+        self.actions.append(action)
+
+    def __hash__(self) -> int:
+        return hash(tuple(self.actions))
+
+    def __eq__(self, o: object) -> bool:
+        if not isinstance(o, ActionList):
+            return False
+
+        return self.actions == o.actions
 
 
 class VirtualState:
@@ -76,3 +103,16 @@ class VirtualState:
     @property
     def is_empty(self) -> bool:
         return len(self.data_sources) == 0 and len(self.models) == 0 and len(self.fields) == 0
+
+    def get_objects_by_package(self) -> Dict[str, Tuple[List[PanoField], List[PanoModel]]]:
+        objects_by_dataset: Dict[str, Tuple[List[PanoField], List[PanoModel]]] = defaultdict(lambda: ([], []))
+
+        for field in self.fields:
+            assert field.package is not None
+            objects_by_dataset[field.package][0].append(field)
+
+        for model in self.models:
+            assert model.package is not None
+            objects_by_dataset[model.package][1].append(model)
+
+        return dict(objects_by_dataset)

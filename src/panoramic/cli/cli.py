@@ -183,8 +183,22 @@ def validate():
 def detect_joins(target_dataset: str, yes: bool, diff: bool, overwrite: bool):
     from panoramic.cli.command import detect_joins as detect_joins_command
 
-    if not detect_joins_command(target_dataset=target_dataset, diff=diff, overwrite=overwrite, yes=yes):
-        sys.exit(1)
+    detect_joins_command(target_dataset=target_dataset, diff=diff, overwrite=overwrite, yes=yes)
+
+
+@cli.group(name='field')
+def field_cli():
+    """Commands on local field files."""
+
+
+@field_cli.command(help='Clean up fields not linked to any model', cls=ContextAwareCommand)
+@click.option('--target-dataset', '-t', type=str, help='Target a specific dataset')
+@click.option('--yes', '-y', is_flag=True, default=False, help='Automatically confirm all actions')
+@handle_exception
+def cleanup(target_dataset: str, yes: bool):
+    from panoramic.cli.command import delete_orphaned_fields as delete_orphans_command
+
+    delete_orphans_command(target_dataset=target_dataset, yes=yes)
 
 
 @cli.group()

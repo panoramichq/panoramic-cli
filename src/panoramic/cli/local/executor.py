@@ -9,12 +9,14 @@ class LocalExecutor(Executor):
 
     """Executes actions against local filesystem."""
 
+    writer: FileWriter
+
     def __init__(self, writer: Optional[FileWriter] = None):
         if writer is None:
             writer = FileWriter()
         self.writer = writer
 
-    def execute(self, action: Action):
+    def _execute(self, action: Action):
         if action.is_creation:
             assert action.desired is not None
             self.writer.write(action.desired)
