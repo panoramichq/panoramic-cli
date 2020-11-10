@@ -371,8 +371,10 @@ def delete_orphaned_fields(target_dataset: Optional[str] = None, yes: bool = Fal
 
     for dataset, (fields, models) in state.get_objects_by_package().items():
         fields_by_slug = {f.slug: f for f in fields}
-        for error in validate_orphaned_files(fields, models, package_name=dataset):
-            echo_info(str(error))
+        for idx, error in enumerate(validate_orphaned_files(fields, models, package_name=dataset)):
+            if idx == 0:
+                echo_info(f'Fields without calculation or reference in a model in dataset {dataset}:')
+            echo_info(f'  {error.field_slug}')
             # Add deletion action
             action_list.add_action(Action(current=fields_by_slug[error.field_slug], desired=None))
 
@@ -380,7 +382,7 @@ def delete_orphaned_fields(target_dataset: Optional[str] = None, yes: bool = Fal
         echo_info('No issues found')
         return
 
-    if not yes and not click.confirm('Do you want to remove offending fields?'):
+    if not yes and not click.confirm('Do you want to remove the unused fields?'):
         # User decided not to fix issues
         return
 
@@ -403,21 +405,18 @@ def scaffold_missing_fields(target_dataset: Optional[str] = None, yes: bool = Fa
     action_list: ActionList[PanoField] = ActionList()
 
     for dataset, (fields, models) in state.get_objects_by_package().items():
-        for error in validate_missing_files(fields, models, package_name=dataset):
-            echo_info(str(error))
+        for idx, error in enumerate(validate_missing_files(fields, models, package_name=dataset)):
+            if idx == 0:
+                echo_info(f'Fields referenced in models without definition in dataset {dataset}:')
+            echo_info(f'  {error.field_slug}')
             # Add creation action
-            action_list.add_action(
-                Action(
-                    current=None,
-                    desired=map_error_to_field(error),
-                )
-            )
+            action_list.add_action(Action(current=None, desired=map_error_to_field(error)))
 
     if action_list.is_empty:
-        echo_info('No missing files')
+        echo_info('No issues found')
         return
 
-    if not yes and not click.confirm('Do you want to create files for offending fields?'):
+    if not yes and not click.confirm('Do you want to create files for the undeclared fields?'):
         # User decided not to fix issues
         return
 
