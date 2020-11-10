@@ -19,6 +19,12 @@ class Actionable(ABC):
     def to_dict(self) -> Dict[str, Any]:
         raise NotImplementedError('to_dict not implemented for base class')
 
+    def __hash__(self) -> int:
+        raise NotImplementedError('__hash__ not implemented for base class')
+
+    def __eq__(self, o: object) -> bool:
+        raise NotImplementedError('__eq__ not implemented for base class')
+
 
 class PanoModelField:
     """Field stored on a model."""

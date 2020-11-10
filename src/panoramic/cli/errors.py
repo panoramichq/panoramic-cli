@@ -195,7 +195,7 @@ class FieldReadException(CliBaseException):
     """Error reading field(s) from remote state."""
 
     def __init__(self, company_slug: str, dataset_name: Optional[str]):
-        dataset_message = f' under dataset {dataset_name} ' if dataset_name else ''
+        dataset_message = f' under dataset {dataset_name}' if dataset_name else ''
         super().__init__(f'Error fetching field for company {company_slug}{dataset_message}')
 
 
@@ -265,8 +265,8 @@ class DuplicateFieldSlugError(ValidationError):
             pass  # Use relative path when possible
 
         path_lines = ''.join(f'\n  in {path}' for path in paths)
-        dataset_message = f' under dataset {dataset_slug} ' if dataset_slug else ''
-        super().__init__(f'Multiple field files{dataset_message}use slug {field_slug}{path_lines}')
+        dataset_message = f'under dataset {dataset_slug} ' if dataset_slug else ''
+        super().__init__(f'Multiple field files {dataset_message}use slug {field_slug}{path_lines}')
 
     def __eq__(self, o: object) -> bool:
         if not isinstance(o, DuplicateFieldSlugError):
@@ -329,12 +329,35 @@ class JsonSchemaError(ValidationError):
         return str(self) == str(o)
 
 
+class OrphanFieldFileError(ValidationError):
+
+    severity = ValidationErrorSeverity.WARNING
+    field_slug: str
+    dataset_slug: str
+
+    def __init__(
+        self,
+        *,
+        field_slug: str,
+        dataset_slug: str,
+    ) -> None:
+        self.field_slug = field_slug
+        self.dataset_slug = dataset_slug
+        super().__init__(f'Field {field_slug} under dataset {dataset_slug} not used by any model')
+
+    def __eq__(self, o: object) -> bool:
+        if not isinstance(o, OrphanFieldFileError):
+            return False
+
+        return str(self) == str(o)
+
+
 class MissingFieldFileError(ValidationError):
     def __init__(
         self,
         *,
         field_slug: str,
-        dataset_slug: Optional[str],
+        dataset_slug: str,
     ) -> None:
         super().__init__(f'Missing field file for slug {field_slug} under dataset {dataset_slug}')
 

@@ -4,6 +4,7 @@ import pytest
 
 from panoramic.cli.command import list_connections, push, scan
 from panoramic.cli.errors import InvalidDatasetException, InvalidModelException
+from panoramic.cli.remote.executor import RemoteExecutor
 
 
 @pytest.fixture(autouse=True)
@@ -102,12 +103,12 @@ def test_list_connections(mock_physical_data_source_client):
 @patch('panoramic.cli.command.get_local_state')
 @patch('panoramic.cli.command.click')
 @patch('panoramic.cli.command.reconcile')
-@patch('panoramic.cli.command.RemoteExecutor')
-def test_push_single_error(mock_executor, mock_reconcile, mock_click, _, __, ___, ____, capsys):
+@patch.object(RemoteExecutor, '_execute')
+def test_push_single_error(mock_execute, mock_reconcile, mock_click, _, __, ___, ____, capsys):
     mock_reconcile.return_value = Mock(
         actions=[Mock(description='test-description-1'), Mock(description='test-description-2'), Mock()]
     )
-    mock_executor.return_value.execute.side_effect = [
+    mock_execute.side_effect = [
         InvalidDatasetException(Mock()),
         InvalidModelException(Mock()),
         None,
@@ -117,7 +118,7 @@ def test_push_single_error(mock_executor, mock_reconcile, mock_click, _, __, ___
 
     push()
 
-    assert mock_executor.return_value.execute.call_count == 3
+    assert mock_execute.call_count == 3
     assert capsys.readouterr().out == (
         "Loading local state...\n"
         "Fetching remote state...\n"

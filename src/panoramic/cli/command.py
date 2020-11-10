@@ -26,7 +26,7 @@ from panoramic.cli.local import get_state as get_local_state
 from panoramic.cli.local.executor import LocalExecutor
 from panoramic.cli.local.writer import FileWriter
 from panoramic.cli.model_mapper import map_columns_to_model
-from panoramic.cli.pano_model import PanoModel, PanoModelJoin
+from panoramic.cli.pano_model import PanoField, PanoModel, PanoModelJoin
 from panoramic.cli.paths import Paths
 from panoramic.cli.physical_data_source.client import PhysicalDataSourceClient
 from panoramic.cli.print import echo_error, echo_errors, echo_info, echo_warnings
@@ -39,6 +39,7 @@ from panoramic.cli.validate import (
     validate_config,
     validate_context,
     validate_local_state,
+    validate_orphaned_files,
 )
 
 logger = logging.getLogger(__name__)
@@ -230,15 +231,13 @@ def pull(yes: bool = False, target_dataset: Optional[str] = None, diff: bool = F
         return
 
     executor = LocalExecutor()
-    successful = 0
     with tqdm(actions.actions) as bar:
         for action in bar:
             try:
                 executor.execute(action)
-                successful += 1
             except Exception:
                 bar.write(f'Error: Failed to execute action {action.description}')
-        bar.write(f'Pulled {successful}/{bar.total} models, fields and datasets')
+        bar.write(f'Pulled {executor.success_count}/{executor.total_count} models, fields and datasets')
 
 
 def push(yes: bool = False, target_dataset: Optional[str] = None, diff: bool = False):
@@ -270,18 +269,16 @@ def push(yes: bool = False, target_dataset: Optional[str] = None, diff: bool = F
         return
 
     executor = RemoteExecutor(company_slug)
-    successful = 0
     with tqdm(actions.actions) as bar:
         for action in bar:
             try:
                 executor.execute(action)
-                successful += 1
             except (InvalidModelException, InvalidDatasetException) as e:
                 messages_concat = '\n  '.join(e.messages)
                 bar.write(f'Error: Failed to execute action {action.description}:\n  {messages_concat}')
             except Exception as e:
                 bar.write(f'Error: Failed to execute action {action.description}:\n  {str(e)}')
-        bar.write(f'Updated {successful}/{bar.total} models, fields and datasets')
+        bar.write(f'Updated {executor.success_count}/{executor.total_count} models, fields and datasets')
 
 
 def detect_joins(target_dataset: Optional[str] = None, diff: bool = False, overwrite: bool = False, yes: bool = False):
@@ -300,7 +297,7 @@ def detect_joins(target_dataset: Optional[str] = None, diff: bool = False, overw
         # Prepare a mapping for a quick access when reconciling necessary changes later
         models_by_virtual_data_source[model.virtual_data_source][model.model_name] = model
 
-    actions_list: ActionList[PanoModel] = ActionList(actions=[])
+    action_list: ActionList[PanoModel] = ActionList()
 
     with tqdm(list(local_state.data_sources)) as bar:
         for dataset in bar:
@@ -327,7 +324,7 @@ def detect_joins(target_dataset: Optional[str] = None, diff: bool = False, overw
                             if detected_join not in current_model.joins:
                                 desired_model.joins.append(detected_join)
 
-                    actions_list.actions.append(Action(current=current_model, desired=desired_model))
+                    action_list.actions.append(Action(current=current_model, desired=desired_model))
 
             except JoinException as join_exception:
                 bar.write(f'Error: {str(join_exception)}')
@@ -339,11 +336,11 @@ def detect_joins(target_dataset: Optional[str] = None, diff: bool = False, overw
             finally:
                 bar.update()
 
-    if actions_list.is_empty:
+    if action_list.is_empty:
         echo_info('No joins detected')
         return
 
-    echo_diff(actions_list)
+    echo_diff(action_list)
     if diff:
         # User decided to see the diff only
         return
@@ -355,11 +352,45 @@ def detect_joins(target_dataset: Optional[str] = None, diff: bool = False, overw
     echo_info('Updating local state...')
 
     executor = LocalExecutor()
-    updated_count = 0
-    for action in actions_list.actions:
+    for action in action_list.actions:
         try:
             executor.execute(action)
-            updated_count += 1
         except Exception:
             echo_error(f'Error: Failed to execute action {action.description}')
-        echo_info(f'Updated {updated_count}/{actions_list.count} models')
+        echo_info(f'Updated {executor.success_count}/{executor.total_count} models')
+
+
+def delete_orphaned_fields(target_dataset: Optional[str] = None, yes: bool = False):
+    """Delete orphaned field files."""
+    state = get_local_state(target_dataset=target_dataset)
+
+    action_list: ActionList[PanoField] = ActionList()
+
+    for dataset, (fields, models) in state.get_objects_by_package().items():
+        errors = validate_orphaned_files(fields, models, package_name=dataset)
+        fields_by_slug = {f.slug: f for f in fields}
+        for error in errors:
+            # Add deletion action
+            action_list.add_action(Action(current=fields_by_slug[error.field_slug], desired=None))
+
+    if action_list.is_empty == 0:
+        echo_info('No issues found')
+        return
+
+    for action in action_list.actions:
+        assert action.current is not None
+        echo_info(f'Field {action.current.slug} in dataset {action.current.data_source} not used by any model')
+
+    if not yes and not click.confirm('Do you want to remove offending fields?'):
+        # User decided not to fix issues
+        return
+
+    echo_info('Updating local state...')
+
+    executor = LocalExecutor()
+    for action in action_list.actions:
+        try:
+            executor.execute(action)
+        except Exception:
+            echo_error(f'Error: Failed to execute action {action.description}')
+        echo_info(f'Updated {executor.success_count}/{executor.total_count} fields')
