@@ -155,34 +155,25 @@ def _validate_missing_files(
     fields: List[PanoField], models: List[PanoModel], package_name: str
 ) -> List[ValidationError]:
     """Check for missing field files based on field map in model files."""
-    errors: List[ValidationError] = []
     fields_slugs_from_fields = {f.slug for f in fields}
     fields_slugs_from_models = set(itertools.chain.from_iterable(f.field_map for model in models for f in model.fields))
 
     field_slugs_with_no_files = fields_slugs_from_models.difference(fields_slugs_from_fields)
 
-    errors.extend(
-        MissingFieldFileError(field_slug=slug, dataset_slug=package_name) for slug in field_slugs_with_no_files
-    )
-
-    return errors
+    return [MissingFieldFileError(field_slug=slug, dataset_slug=package_name) for slug in field_slugs_with_no_files]
 
 
 def validate_orphaned_files(
     fields: List[PanoField], models: List[PanoModel], package_name: str
 ) -> List[OrphanFieldFileError]:
     """Check for field files not linked to any models."""
-    errors = []
     # Fields with calculation without model link are normal
     fields_slugs_from_fields = {f.slug for f in fields if f.calculation is None}
     fields_slugs_from_models = set(itertools.chain.from_iterable(f.field_map for model in models for f in model.fields))
 
     extraneous_field_slugs = fields_slugs_from_fields.difference(fields_slugs_from_models)
 
-    for slug in extraneous_field_slugs:
-        errors.append(OrphanFieldFileError(field_slug=slug, dataset_slug=package_name))
-
-    return errors
+    return [OrphanFieldFileError(field_slug=slug, dataset_slug=package_name) for slug in extraneous_field_slugs]
 
 
 def _validate_package(package: FilePackage) -> List[ValidationError]:
