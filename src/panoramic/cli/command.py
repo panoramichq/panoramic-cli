@@ -288,7 +288,7 @@ def detect_joins(target_dataset: Optional[str] = None, diff: bool = False, overw
 
     if local_state.is_empty:
         echo_info('No datasets to detect joins on')
-        # TODO: should we return here?
+        return
 
     join_detector = JoinDetector(company_slug=company_slug)
     join_detector.fetch_token()
