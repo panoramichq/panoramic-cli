@@ -1,6 +1,6 @@
 # Panoramic CLI
 
-[![Build Status](https://github.com/panoramichq/panoramic-cli/workflows/CI/badge.svg)]
+[![Build Status](https://github.com/panoramichq/panoramic-cli/workflows/CI/badge.svg)](https://github.com/panoramichq/panoramic-cli/actions)
 [![Last Commit](https://img.shields.io/github/last-commit/panoramichq/panoramic-cli)](https://github.com/panoramichq/panoramic-cli/commits)
 [![Latest Release](https://img.shields.io/github/v/release/panoramichq/panoramic-cli)](https://github.com/panoramichq/panoramic-cli/releases)
 [![License](https://img.shields.io/pypi/l/panoramic-cli.svg)](https://github.com/panoramichq/panoramic-cli/blob/master/LICENSE)
