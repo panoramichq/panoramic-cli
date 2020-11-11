@@ -20,7 +20,7 @@ jobs:
     steps:
       - uses: "actions/checkout@v2"
         with:
-          ssh_key: ${{ secrets.e2e_tests_ssh_key }}
+          ssh-key: ${{ secrets.e2e_tests_ssh_key }}
           submodules: true
       - uses: "actions/setup-python@v2"
         with:
