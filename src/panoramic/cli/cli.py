@@ -78,7 +78,7 @@ class LocalStateAwareCommand(ContextAwareCommand):
         return super().invoke(ctx)
 
 
-@click.group(context_settings={'help_option_names': ["-h", "--help"]})
+@click.group(context_settings={'help_option_names': ["-h", "--help"]}, help='')
 @click.option('--debug', is_flag=True, help='Enables debug mode')
 @click.version_option(__version__)
 @handle_exception
