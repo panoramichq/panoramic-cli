@@ -6,6 +6,11 @@ generate_homebrew_formula() {
   shipping/ppfg.sh -f -c shipping/ppfg -o brewout $(python shipping/generate-versions-file.py)
 }
 
+setup_git() {
+  git config --global user.email "27856297+dependabot-preview[bot]@users.noreply.github.com"
+  git config --global user.name "GitHub Actions"
+}
+
 update_homebrew_formula() {
   cd .homebrew_repo || true
   git checkout master || true
@@ -14,9 +19,7 @@ update_homebrew_formula() {
   cp brewout/panoramic-cli.rb .homebrew_repo/Formula/panoramic-cli.rb
   cd .homebrew_repo
   git add Formula/panoramic-cli.rb
-  git commit \
-    --author="GitHub Actions <27856297+dependabot-preview[bot]@users.noreply.github.com>" \
-    --message "GitHub Actions build: $GITHUB_RUN_NUMBER"
+  git commit --message "GitHub Actions build: $GITHUB_RUN_NUMBER"
   cd ..
 }
 
@@ -26,5 +29,6 @@ upload_files() {
 }
 
 generate_homebrew_formula
+setup_git
 update_homebrew_formula
 upload_files
