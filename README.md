@@ -45,9 +45,9 @@ Commands:
 
 To release a new version of the library, follow these steps:
 
-- In your PR, update version in [**version**.py](src/panoramic/cli/__version__.py) and add entry to [CHANGELOG.md](CHANGELOG.md)
+- In your PR, update version in [\_\_version\_\_.py](src/panoramic/cli/__version__.py) and add entry to [CHANGELOG.md](CHANGELOG.md)
 - After merge, tag the commit with version number from setup.py. For example `git tag v0.1.1`.
-- Once the tag is pushed, it will trigger a build with Travis, which will publish the new version on PyPI.
+- Once the tag is pushed, it will trigger a build with GitHub Actions, which will publish the new version on PyPI and create a release on GitHub.
 
 ## Development
 
