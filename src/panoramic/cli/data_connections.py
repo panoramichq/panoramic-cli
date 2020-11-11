@@ -6,6 +6,7 @@ import sqlalchemy  # type: ignore
 from panoramic.cli.config.storage import read_config, update_config
 from panoramic.cli.errors import DataConnectionNotFound
 from panoramic.cli.paths import Paths
+from panoramic.cli.print import echo_info
 
 
 def create_data_connection_command(name, type, user, host, port, password, password_stdin, database_name, no_test):
@@ -32,7 +33,7 @@ def create_data_connection_command(name, type, user, host, port, password, passw
             raise click.ClickException(f'Failed to create data connection: {error}')
 
     DataConnections.save(data_connections)
-    click.echo('Data connection was successfully created!')
+    echo_info('Data connection was successfully created!')
 
 
 def update_data_connection_command(name, type, user, host, port, password, password_stdin, database_name, no_test):
@@ -63,7 +64,7 @@ def update_data_connection_command(name, type, user, host, port, password, passw
             raise click.ClickException(f'Failed to create data connection: {error}')
 
     DataConnections.save(data_connections)
-    click.echo('Data connection was successfully created!')
+    echo_info('Data connection was successfully created!')
 
 
 def list_data_connections_command(show_password):
@@ -71,7 +72,7 @@ def list_data_connections_command(show_password):
     data_connections = DataConnections.load()
     if not data_connections:
         config_file = Paths.config_file()
-        click.echo(
+        echo_info(
             f'No data connections found.\n'
             f'Use "pano data-connections create" to create data connection or edit "{config_file}" file.'
         )
@@ -81,7 +82,7 @@ def list_data_connections_command(show_password):
         connection_string = DataConnections.create_connection_string(connection)
         if not show_password:
             connection_string = connection_string.replace(connection['password'], '*****')
-        click.echo(f'{name}: {connection_string}')
+        echo_info(f'{name}: {connection_string}')
 
 
 def remove_data_connection_command(name):
@@ -107,9 +108,9 @@ def test_data_connections_command(name: Optional[str] = ''):
     for name, connection in data_connections.items():
         ok, error = DataConnections.test(connection)
         if ok:
-            click.echo(f'{name}... OK')
+            echo_info(f'{name}... OK')
         else:
-            click.echo(f'{name}... FAIL: {error}')
+            echo_info(f'{name}... FAIL: {error}')
 
 
 class DataConnections:
