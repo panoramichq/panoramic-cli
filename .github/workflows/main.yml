@@ -71,6 +71,13 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.aws_secret_access_key }}
         run: aws s3 cp --recursive s3_upload ${{ secrets.aws_s3_bucket }}/updates/pano-cli
 
+      - uses: "actions/checkout@v2"
+        # if: startsWith(github.ref, 'refs/tags')
+        with:
+          repository: panoramichq/homebrew-brew
+          ssh-key: ${{ secrets.homebrew_ssh_key }}
+          path: .homebrew_repo
+
       - name: Update Homebrew
         # if: startsWith(github.ref, 'refs/tags')
         run: bash shipping/update_homebrew.sh
