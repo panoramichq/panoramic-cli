@@ -1,8 +1,10 @@
 import pytest
 
+from panoramic.cli.errors import MissingFieldFileError
 from panoramic.cli.field.client import Field
 from panoramic.cli.field_mapper import (
     map_column_to_field,
+    map_error_to_field,
     map_field_from_local,
     map_field_from_remote,
 )
@@ -119,3 +121,13 @@ def test_map_column_to_field_identifier():
         dict(slug='slug', field_type='dimension', group='CLI', display_name='slug', data_type='text')
     )
     assert actual == expected
+
+
+def test_map_error_to_field():
+    assert map_error_to_field(MissingFieldFileError(field_slug='test_field', dataset_slug='test_dataset')) == PanoField(
+        slug='test_field',
+        display_name='test_field',
+        group='CLI',
+        data_type='TODO: add data_type',
+        field_type='TODO: add field_type',
+    )

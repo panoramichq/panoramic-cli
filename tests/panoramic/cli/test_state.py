@@ -23,12 +23,13 @@ def test_empty_action_is_invalid():
 def test_get_objects_by_package():
     package1_model = Mock(package='package1')
     package2_model = Mock(package='package2')
+    global_field = Mock(package=None)
     package1_field = Mock(package='package1')
     package3_field = Mock(package='package3')
     state = VirtualState(
         data_sources=[],
         models=[package1_model, package2_model],
-        fields=[package1_field, package3_field],
+        fields=[global_field, package1_field, package3_field],
     )
 
     assert state.get_objects_by_package() == {

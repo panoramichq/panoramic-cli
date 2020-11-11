@@ -353,12 +353,18 @@ class OrphanFieldFileError(ValidationError):
 
 
 class MissingFieldFileError(ValidationError):
+
+    field_slug: str
+    dataset_slug: str
+
     def __init__(
         self,
         *,
         field_slug: str,
         dataset_slug: str,
     ) -> None:
+        self.field_slug = field_slug
+        self.dataset_slug = dataset_slug
         super().__init__(f'Missing field file for slug {field_slug} under dataset {dataset_slug}')
 
     def __eq__(self, o: object) -> bool:
