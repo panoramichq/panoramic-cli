@@ -300,7 +300,7 @@ def remove(name):
 
 
 @data_connections.command(name='list')
-@click.option('--show-password', is_flag=True, help='Show passwords.')
+@click.option('--show-password', default=False, is_flag=True, help='Show passwords.')
 def list_(show_password):  # we cannot have method 'list' due to conflicts
     """List all available data connections.
 
@@ -312,11 +312,12 @@ def list_(show_password):  # we cannot have method 'list' due to conflicts
 
 
 @data_connections.command()
-def test():
-    """Test all data connections.
+@click.argument('name', default='', type=str, required=False)
+def test(name):
+    """Test data connections.
 
     pano data-connections test
     """
-    from panoramic.cli.data_connections import test_all_data_connections_command
+    from panoramic.cli.data_connections import test_data_connections_command
 
-    test_all_data_connections_command()
+    test_data_connections_command(name)

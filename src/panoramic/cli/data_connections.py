@@ -1,9 +1,10 @@
-from typing import Any, Dict, Tuple
+from typing import Any, Dict, Optional, Tuple
 
 import click
 import sqlalchemy  # type: ignore
 
 from panoramic.cli.config.storage import read_config, update_config
+from panoramic.cli.errors import DataConnectionNotFound
 from panoramic.cli.paths import Paths
 
 
@@ -28,11 +29,10 @@ def create_data_connection_command(name, type, user, host, port, password, passw
     if not no_test:
         ok, error = DataConnections.test(data_connections[name])
         if not ok:
-            print(f'Failed to create data connection: {error}')
-            return
+            raise click.ClickException(f'Failed to create data connection: {error}')
 
     DataConnections.save(data_connections)
-    print('Data connection was successfully created!')
+    click.echo('Data connection was successfully created!')
 
 
 def update_data_connection_command(name, type, user, host, port, password, password_stdin, database_name, no_test):
@@ -60,11 +60,10 @@ def update_data_connection_command(name, type, user, host, port, password, passw
     if not no_test:
         ok, error = DataConnections.test(data_connections[name])
         if not ok:
-            print(f'Failed to create data connection: {error}')
-            return
+            raise click.ClickException(f'Failed to create data connection: {error}')
 
     DataConnections.save(data_connections)
-    print('Data connection was successfully created!')
+    click.echo('Data connection was successfully created!')
 
 
 def list_data_connections_command(show_password):
@@ -72,7 +71,7 @@ def list_data_connections_command(show_password):
     data_connections = DataConnections.load()
     if not data_connections:
         config_file = Paths.config_file()
-        print(
+        click.echo(
             f'No data connections found.\n'
             f'Use "pano data-connections create" to create data connection or edit "{config_file}" file.'
         )
@@ -82,7 +81,7 @@ def list_data_connections_command(show_password):
         connection_string = DataConnections.create_connection_string(connection)
         if not show_password:
             connection_string = connection_string.replace(connection['password'], '*****')
-        print(f'{name}: {connection_string}')
+        click.echo(f'{name}: {connection_string}')
 
 
 def remove_data_connection_command(name):
@@ -95,14 +94,22 @@ def remove_data_connection_command(name):
     DataConnections.save(data_connections)
 
 
-def test_all_data_connections_command():
-    """CLI command. Test all data connections by trying to connect to the database."""
-    for name, connection in DataConnections.load().items():
+def test_data_connections_command(name: Optional[str] = ''):
+    """CLI command. Test data connections by trying to connect to the database.
+    Optionally you can specify name for specific connection to that only that."""
+    data_connections = DataConnections.load()
+    if name != '':
+        if name not in data_connections:
+            raise click.ClickException(f'Data connection with name "{name}" not found.')
+        # Filter specified data connection by name
+        data_connections = {name: data_connections[name]}
+
+    for name, connection in data_connections.items():
         ok, error = DataConnections.test(connection)
         if ok:
-            print(f'{name}... OK')
+            click.echo(f'{name}... OK')
         else:
-            print(f'{name}... FAIL: {error}')
+            click.echo(f'{name}... FAIL: {error}')
 
 
 class DataConnections:
@@ -112,7 +119,8 @@ class DataConnections:
     def get_by_name_cached(self, name: str) -> Dict[str, str]:
         """Get data connection by name. Use when checking data connections very often, like in for loop.
         The cached data connections will be used instead of loading data connections file every time."""
-        # TODO: what we want to do when data connection with given name doesnt exist? raise Exception or return None...?
+        if name not in self._connections:
+            raise DataConnectionNotFound(name)
         return self._connections[name]
 
     @classmethod

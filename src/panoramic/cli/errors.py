@@ -399,3 +399,11 @@ def handle_interrupt(f: Callable):
             os._exit(128 + signal.SIGINT)
 
     return wrapped
+
+
+class DataConnectionNotFound(Exception):
+
+    """Data connection not found in config."""
+
+    def __init__(self, data_connection_name: str):
+        super().__init__(f"Data connection with name '{data_connection_name}' was not found")
