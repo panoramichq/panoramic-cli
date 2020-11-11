@@ -1,4 +1,3 @@
-import getpass
 from typing import Any, Dict, Tuple
 
 import click
@@ -15,7 +14,7 @@ def create_data_connection_command(name, type, user, host, port, password, passw
         raise click.ClickException(f'Data connection with name "{name}" already exists.')
 
     if password_stdin:
-        password = getpass.getpass('Enter password: ')
+        password = click.prompt('Enter password: ', hide_input=True, type=str)
 
     data_connections[name] = {
         'type': type,
@@ -41,8 +40,9 @@ def update_data_connection_command(name, type, user, host, port, password, passw
     data_connections = DataConnections.load()
     if name not in data_connections:
         raise click.ClickException(f'Data connection with name "{name}" not found.')
+
     if password_stdin:
-        password = getpass.getpass('Enter password: ')
+        password = click.prompt('Enter password: ', hide_input=True, type=str)
 
     if type:
         data_connections[name]['type'] = type

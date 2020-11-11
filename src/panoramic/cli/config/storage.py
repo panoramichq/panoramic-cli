@@ -19,7 +19,11 @@ def update_config(section: str, data: Dict[str, Any]) -> None:
 
 
 def read_config(section: str = '') -> Dict[str, Any]:
-    config = read_yaml(Paths.config_file())
+    config_file = Paths.config_file()
+    if not os.path.isfile(config_file):
+        return {}
+
+    config = read_yaml(config_file)
     if section != '':
         return config.get(section, {})
     return config
