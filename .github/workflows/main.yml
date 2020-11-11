@@ -34,6 +34,9 @@ jobs:
 
       - name: "Run tox target for ${{ matrix.python-version }}"
         run: "tox"
+        env:
+          PANO_CLIENT_ID: ${{ secrets.pano_cli_client_id }}
+          PANO_CLIENT_SECRET: ${{ secrets.pano_cli_client_secret }}
 
   package:
     name: "Build & verify package"
