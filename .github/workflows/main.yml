@@ -41,7 +41,7 @@ jobs:
       - uses: "actions/checkout@v2"
       - uses: "actions/setup-python@v2"
         with:
-          python-version: "3.9"
+          python-version: "3.6"
 
       - name: "Install pep517 and twine"
         run: "pip install pep517 twine"
@@ -72,12 +72,12 @@ jobs:
         run: aws s3 cp --recursive s3_upload ${{ secrets.aws_s3_bucket }}/updates/pano-cli
 
       - uses: "actions/checkout@v2"
-        if: startsWith(github.ref, 'refs/tags')
+        #if: startsWith(github.ref, 'refs/tags')
         with:
           repository: panoramichq/homebrew-brew
           ssh-key: ${{ secrets.homebrew_ssh_key }}
           path: .homebrew_repo
 
       - name: Update Homebrew
-        if: startsWith(github.ref, 'refs/tags')
+        #if: startsWith(github.ref, 'refs/tags')
         run: bash shipping/update_homebrew.sh

@@ -19,7 +19,7 @@ update_homebrew_formula() {
   cp brewout/panoramic-cli.rb .homebrew_repo/Formula/panoramic-cli.rb
   cd .homebrew_repo
   git add Formula/panoramic-cli.rb
-  git commit --message "GitHub Actions build: $GITHUB_RUN_NUMBER"
+  git commit --message "Panoramic CLI build: $GITHUB_RUN_NUMBER"
   cd ..
 }
 
