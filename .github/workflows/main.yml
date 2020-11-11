@@ -65,7 +65,7 @@ jobs:
           mv versions.json s3_upload/versions.json
 
       - name: Deploy versions file
-        # if: startsWith(github.ref, 'refs/tags')
+        if: startsWith(github.ref, 'refs/tags')
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.aws_access_key_id }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.aws_secret_access_key }}
