@@ -19,11 +19,11 @@ jobs:
 
     steps:
       - uses: "actions/checkout@v2"
+        with:
+          submodules: true
       - uses: "actions/setup-python@v2"
         with:
           python-version: "${{ matrix.python-version }}"
-      - name: "Fetch submodule"
-        run: "git submodule update --init --recursive"
       - name: "Install dependencies"
         run: |
           pip install --upgrade pip setuptools wheel tox tox-gh-actions
