@@ -75,7 +75,7 @@ def list_data_connections_command(show_password):
         config_file = Paths.config_file()
         echo_info(
             f'No data connections found.\n'
-            f'Use "pano data-connections create" to create data connection or edit "{config_file}" file.'
+            f'Use "pano connections create" to create data connection or edit "{config_file}" file.'
         )
         exit(0)
 

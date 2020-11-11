@@ -214,11 +214,11 @@ def scaffold(target_dataset: str, yes: bool):
 
 
 @cli.group()
-def data_connections():
-    """Data Connections subcommand for managing data connections.
+def connections():
+    """Connections subcommand for managing connections.
 
     \b
-    All data connections are stored in ~/.pano/data_connections.yaml file.
+    All connections are stored in ~/.pano/config file.
     You can edit this file either manually or using provided commands.
 
     Expected YAML structure:
@@ -235,7 +235,7 @@ def data_connections():
     Which effectively results in a connection string similar to: "postgres://my_user@<password>@localhost:5432/my_db".
 
     \b
-    name: The name of the connection that will be used as reference to specify which data connection to use.
+    name: The name of the connection that will be used as reference to specify which connection to use.
     type: The type of data warehouse you are connecting to.
     user: The username used for database connection.
     password: The password used for database connection.
@@ -246,7 +246,7 @@ def data_connections():
     pass
 
 
-@data_connections.command()
+@connections.command()
 @click.argument('name', type=str)
 @click.option('--type', '-t', type=str, help='Type of the database. E.g. "postgres", "snowflake".')
 @click.option('--user', '-u', type=str, help='Connection username.')
@@ -257,9 +257,9 @@ def data_connections():
 @click.option('--database-name', '-d', type=str, help='Connection database name.')
 @click.option('--no-test', '-n', is_flag=True, help='Do NOT try test the connection.')
 def create(name, type, user, host, port, password, password_stdin, database_name, no_test):
-    """Add new data connection.
+    """Add new connection.
 
-    pano data-connections create postgres-prod --type postgres --user my_user \\
+    pano connections create postgres-prod --type postgres --user my_user \\
      --password-stdin --host localhost --port 5432 --database-name my_db
     """
     from panoramic.cli.data_connections import create_data_connection_command
@@ -267,7 +267,7 @@ def create(name, type, user, host, port, password, password_stdin, database_name
     create_data_connection_command(name, type, user, host, port, password, password_stdin, database_name, no_test)
 
 
-@data_connections.command()
+@connections.command()
 @click.argument('name', type=str)
 @click.option('--type', '-t', type=str, help='Type of the database. E.g. "postgres", "snowflake".')
 @click.option('--user', '-u', type=str, help='Connection username.')
@@ -278,45 +278,45 @@ def create(name, type, user, host, port, password, password_stdin, database_name
 @click.option('--database-name', '-d', type=str, help='Connection database name.')
 @click.option('--no-test', '-n', is_flag=True, help='Do NOT try test the connection.')
 def update(name, type, user, host, port, password, password_stdin, database_name, no_test):
-    """Update existing data connection.
+    """Update existing connection.
 
-    pano data-connections update postgres-prod --database-name my_new_prod_db
+    pano connections update postgres-prod --database-name my_new_prod_db
     """
     from panoramic.cli.data_connections import update_data_connection_command
 
     update_data_connection_command(name, type, user, host, port, password, password_stdin, database_name, no_test)
 
 
-@data_connections.command()
+@connections.command()
 @click.argument('name', type=str)
 def remove(name):
-    """Remove existing data connection.
+    """Remove existing connection.
 
-    pano data-connections remove postgres-prod
+    pano connections remove postgres-prod
     """
     from panoramic.cli.data_connections import remove_data_connection_command
 
     remove_data_connection_command(name)
 
 
-@data_connections.command(name='list')
+@connections.command(name='list')
 @click.option('--show-password', default=False, is_flag=True, help='Show passwords.')
 def list_(show_password):  # we cannot have method 'list' due to conflicts
-    """List all available data connections.
+    """List all available connections.
 
-    pano data-connections list --show-password
+    pano connections list --show-password
     """
     from panoramic.cli.data_connections import list_data_connections_command
 
     list_data_connections_command(show_password)
 
 
-@data_connections.command()
+@connections.command()
 @click.argument('name', default='', type=str, required=False)
 def test(name):
-    """Test data connections.
+    """Test connections.
 
-    pano data-connections test
+    pano connections test
     """
     from panoramic.cli.data_connections import test_data_connections_command
 
