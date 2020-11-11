@@ -401,9 +401,9 @@ def handle_interrupt(f: Callable):
     return wrapped
 
 
-class DataConnectionNotFound(Exception):
+class ConnectionNotFound(Exception):
 
-    """Data connection not found in config."""
+    """Connection not found in config."""
 
-    def __init__(self, data_connection_name: str):
-        super().__init__(f"Data connection with name '{data_connection_name}' was not found")
+    def __init__(self, connection_name: str):
+        super().__init__(f"Connection with name '{connection_name}' was not found")
