@@ -7,8 +7,8 @@ generate_homebrew_formula() {
 }
 
 setup_git() {
-  git config --global user.email "27856297+dependabot-preview[bot]@users.noreply.github.com"
-  git config --global user.name "GitHub Actions"
+  git config --global user.email "panoramic-ci@users.noreply.github.com"
+  git config --global user.name "Panoramic CI"
 }
 
 update_homebrew_formula() {
