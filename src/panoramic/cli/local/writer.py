@@ -23,6 +23,7 @@ class FileWriter:
         if cwd is None:
             cwd = Path.cwd()
 
+        # TODO: bunch of methods below ignore self.cwd
         self.cwd = cwd
 
     def delete(self, actionable: Actionable):
@@ -82,7 +83,7 @@ class FileWriter:
 
     def write_scanned_field(self, field: PanoField):
         """"Write scanned field to local filesystem."""
-        path = Paths.scanned_fields_dir() / f'{field.slug}{FileExtension.MODEL_YAML.value}'
+        path = Paths.scanned_fields_dir() / f'{field.slug}{FileExtension.FIELD_YAML.value}'
         logger.debug(f'About to write field {field.slug}')
         write_yaml(path, field.to_dict())
 
@@ -125,9 +126,9 @@ class FileWriter:
         """Delete field from local filesystem."""
         assert field.file_name is not None
 
-        if field.data_source is not None:
+        if field.package is not None:
             # dataset-scope field
-            path = Paths.fields_dir(self.cwd / field.data_source) / field.file_name
+            path = Paths.fields_dir(self.cwd / field.package) / field.file_name
         else:
             # company-scope field
             path = Paths.fields_dir(self.cwd) / field.file_name

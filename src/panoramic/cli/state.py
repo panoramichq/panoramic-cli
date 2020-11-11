@@ -108,10 +108,12 @@ class VirtualState:
         objects_by_dataset: Dict[str, Tuple[List[PanoField], List[PanoModel]]] = defaultdict(lambda: ([], []))
 
         for field in self.fields:
-            assert field.package is not None
-            objects_by_dataset[field.package][0].append(field)
+            # exclude global fields
+            if field.package is not None:
+                objects_by_dataset[field.package][0].append(field)
 
         for model in self.models:
+            # models always have a package
             assert model.package is not None
             objects_by_dataset[model.package][1].append(model)
 

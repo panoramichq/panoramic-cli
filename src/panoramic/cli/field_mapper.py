@@ -1,5 +1,6 @@
-from typing import Dict, Optional, Tuple
+from typing import Any, Dict, Optional, Tuple
 
+from panoramic.cli.errors import MissingFieldFileError
 from panoramic.cli.field.client import Aggregation, Field
 from panoramic.cli.pano_model import PanoField
 
@@ -56,7 +57,7 @@ def map_field_from_local(field: PanoField) -> Field:
     )
 
 
-def map_column_to_field(column: Dict[str, str], is_identifier: bool = False) -> PanoField:
+def map_column_to_field(column: Dict[str, Any], is_identifier: bool = False) -> PanoField:
     aggregation = (
         Aggregation(type=column['aggregation_type'], params=None)
         if column.get('aggregation_type') is not None
@@ -74,4 +75,14 @@ def map_column_to_field(column: Dict[str, str], is_identifier: bool = False) -> 
         group='CLI',
         data_type=column['validation_type'],
         aggregation=aggregation,
+    )
+
+
+def map_error_to_field(error: MissingFieldFileError) -> PanoField:
+    return PanoField(
+        slug=error.field_slug,
+        field_type='TODO: add field_type',
+        display_name=error.field_slug,
+        group='CLI',
+        data_type='TODO: add data_type',
     )

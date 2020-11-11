@@ -2,10 +2,17 @@ from unittest.mock import Mock, call, patch
 
 import pytest
 
-from panoramic.cli.command import delete_orphaned_fields, list_connections, push, scan
+from panoramic.cli.command import (
+    delete_orphaned_fields,
+    list_connections,
+    push,
+    scaffold_missing_fields,
+    scan,
+)
 from panoramic.cli.errors import (
     InvalidDatasetException,
     InvalidModelException,
+    MissingFieldFileError,
     OrphanFieldFileError,
 )
 from panoramic.cli.local.executor import LocalExecutor
@@ -151,8 +158,31 @@ def test_delete_orphaned_fields(mock_execute, mock_validate, mock_state, capsys)
 
     assert mock_execute.call_count == 1
     assert capsys.readouterr().out == (
-        "Loading local state...\n"
-        "Field test_slug under dataset test_dataset not used by any model\n"
+        "Loading local state...\n\n"
+        "Fields without calculation or reference in a model in dataset test_dataset:\n"
+        "  test_slug\n\n"
+        "Updating local state...\n"
+        "Updated 1/1 fields\n"
+    )
+
+
+@patch('panoramic.cli.command.get_local_state')
+@patch('panoramic.cli.command.validate_missing_files')
+@patch.object(LocalExecutor, '_execute')
+def test_scaffold_missing_files(mock_execute, mock_validate, mock_state, capsys):
+    mock_state.return_value.get_objects_by_package.return_value.items.return_value = [
+        ('test_dataset', ([], [Mock(fields=[Mock(field_map=['test_slug'])])])),
+    ]
+
+    mock_validate.return_value = [MissingFieldFileError(field_slug='test_slug', dataset_slug='test_dataset')]
+
+    scaffold_missing_fields(yes=True)
+
+    assert mock_execute.call_count == 1
+    assert capsys.readouterr().out == (
+        "Loading local state...\n\n"
+        "Fields referenced in models without definition in dataset test_dataset:\n"
+        "  test_slug\n\n"
         "Updating local state...\n"
         "Updated 1/1 fields\n"
     )

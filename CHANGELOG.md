@@ -1,5 +1,11 @@
 # Changelog
 
+## Version 1.3.1 Release
+
+- Fix scanned field files having model suffix
+- Add `pano field cleanup` command
+- Add `pano field scaffold` command
+
 ## Version 1.3.0 Release
 
 - Deprecates `data_type` attribute in model files
