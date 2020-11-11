@@ -2,6 +2,7 @@ from typing import Any, Dict, Optional, Tuple
 
 import click
 import sqlalchemy  # type: ignore
+from tqdm import tqdm
 
 from panoramic.cli.config.storage import read_config, update_config
 from panoramic.cli.errors import DataConnectionNotFound
@@ -105,12 +106,14 @@ def test_data_connections_command(name: Optional[str] = ''):
         # Filter specified data connection by name
         data_connections = {name: data_connections[name]}
 
+    progress_bar = tqdm(total=len(data_connections))
     for name, connection in data_connections.items():
         ok, error = DataConnections.test(connection)
         if ok:
-            echo_info(f'{name}... OK')
+            progress_bar.write(f'{name}... OK')
         else:
-            echo_info(f'{name}... FAIL: {error}')
+            progress_bar.write(f'{name}... FAIL: {error}')
+        progress_bar.update()
 
 
 class DataConnections:
@@ -131,16 +134,16 @@ class DataConnections:
 
     @staticmethod
     def create_connection_string(connection):
-        connection_string = (
-            f"{connection['type']}://" f"{connection['user']}:" f"{connection['password']}@{connection['host']}"
+        return str(
+            sqlalchemy.engine.url.URL(
+                connection['type'],
+                host=connection['host'],
+                port=connection.get('port'),
+                username=connection['user'],
+                password=connection['password'],
+                database=connection.get('database_name'),
+            )
         )
-
-        if connection.get('port'):
-            connection_string += f":{connection['port']}"
-        if connection.get('database_name'):
-            connection_string += f"/{connection['database_name']}"
-
-        return connection_string
 
     @staticmethod
     def save(data: Dict[str, Any]) -> None:
