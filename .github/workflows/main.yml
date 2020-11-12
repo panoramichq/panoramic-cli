@@ -1,0 +1,97 @@
+---
+name: CI
+
+on:
+  push:
+    branches: ["master"]
+  pull_request:
+    branches: ["master"]
+  workflow_dispatch:
+
+jobs:
+  tests:
+    name: "Python ${{ matrix.python-version }}"
+    runs-on: "ubuntu-latest"
+
+    strategy:
+      matrix:
+        python-version: ["3.6", "3.7", "3.8", "3.9"]
+
+    steps:
+      - uses: "actions/checkout@v2"
+        with:
+          ssh-key: ${{ secrets.e2e_tests_ssh_key }}
+          submodules: true
+      - uses: "actions/setup-python@v2"
+        with:
+          python-version: "${{ matrix.python-version }}"
+      - name: "Install dependencies"
+        run: pip install --upgrade pip setuptools wheel tox tox-gh-actions
+      - name: "Run tox target for ${{ matrix.python-version }}"
+        run: "tox"
+        env:
+          PANO_CLIENT_ID: ${{ secrets.pano_cli_client_id }}
+          PANO_CLIENT_SECRET: ${{ secrets.pano_cli_client_secret }}
+
+  package:
+    name: "Build & verify package"
+    runs-on: "ubuntu-latest"
+    needs: tests
+
+    steps:
+      - uses: "actions/checkout@v2"
+      - uses: "actions/setup-python@v2"
+        with:
+          python-version: "3.6"
+
+      - name: "Install pep517 and twine"
+        run: "pip install pep517 twine"
+
+      - name: "Build package"
+        run: "python -m pep517.build --source --binary ."
+
+      - name: "Check long_description"
+        run: "twine check dist/*"
+
+      - name: Publish distribution to PyPI
+        if: startsWith(github.ref, 'refs/tags')
+        uses: pypa/gh-action-pypi-publish@master
+        with:
+          password: ${{ secrets.pypi_secret }}
+
+      - name: Generate version file
+        run: |
+          rm -rf s3_upload && mkdir s3_upload
+          python shipping/generate-versions-file.py
+          mv versions.json s3_upload/versions.json
+
+      - name: Deploy versions file to S3
+        if: startsWith(github.ref, 'refs/tags')
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.aws_access_key_id }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.aws_secret_access_key }}
+        run: aws s3 cp --recursive s3_upload ${{ secrets.aws_s3_bucket }}/updates/pano-cli
+
+      - name: Checkout Homebrew repo
+        uses: "actions/checkout@v2"
+        if: startsWith(github.ref, 'refs/tags')
+        with:
+          repository: panoramichq/homebrew-brew
+          ssh-key: ${{ secrets.homebrew_ssh_key }}
+          path: .homebrew_repo
+
+      - name: Update Homebrew with new release version
+        if: startsWith(github.ref, 'refs/tags')
+        run: bash shipping/update_homebrew.sh
+
+      - name: Create Release
+        if: startsWith(github.ref, 'refs/tags')
+        id: create_release
+        uses: panoramichq/github-release@v2.0.3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ github.ref }}
+          name: Release ${{ github.ref }}
+          files: dist/
+          draft: false
+          prerelease: false
