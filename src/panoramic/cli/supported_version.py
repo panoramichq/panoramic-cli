@@ -1,4 +1,5 @@
 import logging
+import os
 
 import requests
 from packaging import version
@@ -25,6 +26,17 @@ def __fetch_minimum_supported_version(current_version) -> str:
     return data['minimum_supported_version']
 
 
+def __get_upgrade_command() -> str:
+    """
+    Read environment variables to understand how the CLI was installed.
+    Return the appropriate command for the user to upgrade to the newest version.
+    """
+    if os.environ.get('RUNNING_UNDER_HOMEBREW') is not None:
+        return "`brew update && brew upgrade panoramic-cli`"
+    # Always fall back to assuming PIP
+    return "`pip install --upgrade panoramic-cli`"
+
+
 def is_version_supported(current_version: str) -> bool:
     """Check if current version of the CLI is still supported.
     If version has been deprecated print warning message notifying user to update the CLI.
@@ -44,10 +56,11 @@ def is_version_supported(current_version: str) -> bool:
         return False
 
     if version.parse(current_version) < version.parse(minimum_supported_version):
+        upgrade_command = __get_upgrade_command()
         message = (
             f"WARNING: This version '{current_version}' has been deprecated.\n"
             f"Please update to version '{minimum_supported_version}' or higher.\n"
-            "To update run: `pip install --upgrade pano-cli`.\n"
+            f"To update run: {upgrade_command}.\n"
         )
         tqdm.write(message)
         return False
