@@ -34,7 +34,7 @@ def __get_upgrade_command() -> str:
     if os.environ.get('RUNNING_UNDER_HOMEBREW') is not None:
         return "`brew update && brew upgrade panoramic-cli`"
     # Always fall back to assuming PIP
-    return "`pip install --upgrade pano-cli`"
+    return "`pip install --upgrade panoramic-cli`"
 
 
 def is_version_supported(current_version: str) -> bool:
