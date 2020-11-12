@@ -56,7 +56,7 @@ def is_version_supported(current_version: str) -> bool:
         return False
 
     if version.parse(current_version) < version.parse(minimum_supported_version):
-        upgrade_command = __get_upgrade_command();
+        upgrade_command = __get_upgrade_command()
         message = (
             f"WARNING: This version '{current_version}' has been deprecated.\n"
             f"Please update to version '{minimum_supported_version}' or higher.\n"
