@@ -12,6 +12,9 @@ from panoramic.cli.print import echo_info
 
 def create_connection_command(name, type, user, host, port, password, password_stdin, database_name, no_test):
     """CLI command. Create new connection."""
+    if not is_dialect_supported(type):
+        raise click.ClickException(f'Connection type "{type}" is not supported.')
+
     connections = Connections.load()
     if name in connections:
         raise click.ClickException(f'Connection with name "{name}" already exists.')
@@ -39,6 +42,9 @@ def create_connection_command(name, type, user, host, port, password, password_s
 
 def update_connection_command(name, type, user, host, port, password, password_stdin, database_name, no_test):
     """CLI command. Update specific connection."""
+    if not is_dialect_supported(type):
+        raise click.ClickException(f'Connection type "{type}" is not supported.')
+
     connections = Connections.load()
     if name not in connections:
         raise click.ClickException(f'Connection with name "{name}" not found.')
@@ -165,3 +171,11 @@ class Connections:
             return True, ''
         except sqlalchemy.exc.DatabaseError as e:
             return False, e.orig
+
+
+def is_dialect_supported(name) -> bool:
+    try:
+        sqlalchemy.dialects.registry.load(name)
+    except sqlalchemy.exc.NoSuchModuleError:
+        return False
+    return True
