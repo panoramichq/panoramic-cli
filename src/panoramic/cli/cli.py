@@ -230,7 +230,7 @@ def connection():
       password: <password>
       host: localhost
       port: 5432
-      database_name: my_db
+      database: my_db
 
     Which effectively results in a connection string similar to: "postgres://my_user@<password>@localhost:5432/my_db".
 
@@ -241,50 +241,120 @@ def connection():
     password: The password used for database connection.
     host: The hostname (server) used for database connection.
     port: The port used for database connection.
-    database_name: The database used for database connection.
+    database: The database used for database connection.
     """
     pass
 
 
 @connection.command()
 @click.argument('name', type=str)
-@click.option('--type', '-t', type=str, help='Type of the database. E.g. "postgres", "snowflake".')
-@click.option('--user', '-u', type=str, help='Connection username.')
-@click.option('--password', '-p', type=str, help='Connection password.')
-@click.option('--password-stdin', is_flag=True, help='Read connection password from standard input.')
-@click.option('--host', '-H', type=str, help='Connection hostname.')
-@click.option('--port', '-p', type=str, help='Connection port.')
-@click.option('--database-name', '-d', type=str, help='Connection database name.')
-@click.option('--no-test', '-n', is_flag=True, help='Do NOT try test the connection.')
-def create(name, type, user, host, port, password, password_stdin, database_name, no_test):
+@click.option('--type', type=str, help='Type of the database. E.g. "postgres", "snowflake".')
+@click.option('--user', default='', type=str, help='Connection username.')
+@click.option('--password', default='', type=str, help='Connection password.')
+@click.option('--password-stdin', default=False, is_flag=True, help='Read connection password from standard input.')
+@click.option('--host', default='', type=str, help='Connection hostname.')
+@click.option('--port', default=0, type=int, help='Connection port.')
+@click.option('--database', default='', type=str, help='Connection database name.')
+@click.option('--schema', default='', type=str, help='Connection schema name.')
+@click.option('--warehouse', default='', type=str, help='Connection warehouse name. (Used by Snowflake)')
+@click.option('--account', default='', type=str, help='Connection account name. (Used by Snowflake)')
+@click.option('--project', default='', type=str, help='Connection project name. (Used by BigQuery)')
+@click.option('--key-file', default='', type=str, help='Keyfile path to Service Account Json. (Used by BigQuery)')
+@click.option('--no-test', default=False, is_flag=True, help='Do NOT try test the connection.')
+def create(
+    name,
+    type,
+    user,
+    host,
+    port,
+    password,
+    password_stdin,
+    database,
+    schema,
+    warehouse,
+    account,
+    project,
+    key_file,
+    no_test,
+):
     """Add new connection.
 
     pano connection create postgres-prod --type postgres --user my_user \\
-     --password-stdin --host localhost --port 5432 --database-name my_db
+     --password-stdin --host localhost --port 5432 --database my_db
     """
     from panoramic.cli.connections import create_connection_command
 
-    create_connection_command(name, type, user, host, port, password, password_stdin, database_name, no_test)
+    create_connection_command(
+        name=name,
+        type=type,
+        user=user,
+        host=host,
+        port=port,
+        password=password,
+        password_stdin=password_stdin,
+        database=database,
+        schema=schema,
+        warehouse=warehouse,
+        account=account,
+        project=project,
+        key_file=key_file,
+        no_test=no_test,
+    )
 
 
 @connection.command()
 @click.argument('name', type=str)
-@click.option('--type', '-t', type=str, help='Type of the database. E.g. "postgres", "snowflake".')
-@click.option('--user', '-u', type=str, help='Connection username.')
-@click.option('--password', '-p', type=str, help='Connection password.')
-@click.option('--password-stdin', is_flag=True, help='Read connection password from standard input.')
-@click.option('--host', '-h', type=str, help='Connection hostname.')
-@click.option('--port', '-p', type=str, help='Connection port.')
-@click.option('--database-name', '-d', type=str, help='Connection database name.')
-@click.option('--no-test', '-n', is_flag=True, help='Do NOT try test the connection.')
-def update(name, type, user, host, port, password, password_stdin, database_name, no_test):
+@click.option('--type', type=str, help='Type of the database. E.g. "postgres", "snowflake".')
+@click.option('--user', default='', type=str, help='Connection username.')
+@click.option('--password', default='', type=str, help='Connection password.')
+@click.option('--password-stdin', default=False, is_flag=True, help='Read connection password from standard input.')
+@click.option('--host', default='', type=str, help='Connection hostname.')
+@click.option('--port', default=0, type=int, help='Connection port.')
+@click.option('--database', default='', type=str, help='Connection database name.')
+@click.option('--schema', default='', type=str, help='Connection schema name.')
+@click.option('--warehouse', default='', type=str, help='Connection warehouse name. (Used by Snowflake)')
+@click.option('--account', default='', type=str, help='Connection account name. (Used by Snowflake)')
+@click.option('--project', default='', type=str, help='Connection project name. (Used by BigQuery)')
+@click.option('--key-file', default='', type=str, help='Keyfile path to Service Account Json. (Used by BigQuery)')
+@click.option('--no-test', default=False, is_flag=True, help='Do NOT try test the connection.')
+def update(
+    name,
+    type,
+    user,
+    host,
+    port,
+    password,
+    password_stdin,
+    database,
+    schema,
+    warehouse,
+    account,
+    project,
+    key_file,
+    no_test,
+):
     """Update existing connection.
 
-    pano connection update postgres-prod --database-name my_new_prod_db
+    pano connection update postgres-prod --database my_new_prod_db
     """
     from panoramic.cli.connections import update_connection_command
 
-    update_connection_command(name, type, user, host, port, password, password_stdin, database_name, no_test)
+    update_connection_command(
+        name=name,
+        type=type,
+        user=user,
+        host=host,
+        port=port,
+        password=password,
+        password_stdin=password_stdin,
+        database=database,
+        schema=schema,
+        warehouse=warehouse,
+        account=account,
+        project=project,
+        key_file=key_file,
+        no_test=no_test,
+    )
 
 
 @connection.command()

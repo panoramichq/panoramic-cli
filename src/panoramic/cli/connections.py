@@ -1,8 +1,8 @@
 from typing import Any, Dict, Optional, Tuple
 
 import click
-import sqlalchemy  # type: ignore
-from tqdm import tqdm
+import hologram
+import yaml
 
 from panoramic.cli.config.storage import read_config, update_config
 from panoramic.cli.errors import ConnectionNotFound
@@ -10,11 +10,23 @@ from panoramic.cli.paths import Paths
 from panoramic.cli.print import echo_info
 
 
-def create_connection_command(name, type, user, host, port, password, password_stdin, database_name, no_test):
+def create_connection_command(
+    name,
+    type,
+    user,
+    host,
+    port,
+    password,
+    password_stdin,
+    database,
+    schema,
+    warehouse,
+    account,
+    project,
+    key_file,
+    no_test,
+):
     """CLI command. Create new connection."""
-    if not is_dialect_supported(type):
-        raise click.ClickException(f'Connection type "{type}" is not supported.')
-
     connections = Connections.load()
     if name in connections:
         raise click.ClickException(f'Connection with name "{name}" already exists.')
@@ -22,29 +34,56 @@ def create_connection_command(name, type, user, host, port, password, password_s
     if password_stdin:
         password = click.prompt('Enter password: ', hide_input=True, type=str)
 
-    connections[name] = {
+    new_connection = {
         'type': type,
         'user': user,
-        'password': password,
         'host': host,
         'port': port,
-        'database_name': database_name,
+        'password': password,
+        'database': database,
+        'schema': schema,
+        'warehouse': warehouse,
+        'account': account,
+        'project': project,
+        'key_file': key_file,
     }
 
+    credentials, error = get_dialect_credentials(new_connection)
+    if error != '':
+        raise click.ClickException(f'Failed to create connection: {error}')
+
     if not no_test:
-        ok, error = Connections.test(connections[name])
+        ok, error = Connections.test(credentials)
         if not ok:
             raise click.ClickException(f'Failed to create connection: {error}')
+
+    # TODO: explain
+    connections[name] = {}
+    for key, value in new_connection.items():
+        if value:
+            connections[name][key] = value
 
     Connections.save(connections)
     echo_info('Connection was successfully created!')
 
 
-def update_connection_command(name, type, user, host, port, password, password_stdin, database_name, no_test):
+def update_connection_command(
+    name,
+    type,
+    user,
+    host,
+    port,
+    password,
+    password_stdin,
+    database,
+    schema,
+    warehouse,
+    account,
+    project,
+    key_file,
+    no_test,
+):
     """CLI command. Update specific connection."""
-    if not is_dialect_supported(type):
-        raise click.ClickException(f'Connection type "{type}" is not supported.')
-
     connections = Connections.load()
     if name not in connections:
         raise click.ClickException(f'Connection with name "{name}" not found.')
@@ -52,23 +91,44 @@ def update_connection_command(name, type, user, host, port, password, password_s
     if password_stdin:
         password = click.prompt('Enter password: ', hide_input=True, type=str)
 
-    if type:
-        connections[name]['type'] = type
-    if user:
-        connections[name]['user'] = user
-    if password:
-        connections[name]['password'] = password
-    if host:
-        connections[name]['host'] = host
-    if port:
-        connections[name]['port'] = port
-    if database_name:
-        connections[name]['database_name'] = database_name
+    new_connection = connections[name].copy()
+    if type or 'type' not in new_connection:
+        new_connection['type'] = type
+    if user or 'user' not in new_connection:
+        new_connection['user'] = user
+    if password or 'password' not in new_connection:
+        new_connection['password'] = password
+    if host or 'host' not in new_connection:
+        new_connection['host'] = host
+    if port or 'port' not in new_connection:
+        new_connection['port'] = port
+    if database or 'database' not in new_connection:
+        new_connection['database'] = database
+    if schema or 'schema' not in new_connection:
+        new_connection['schema'] = schema
+    if warehouse or 'warehouse' not in new_connection:
+        new_connection['warehouse'] = warehouse
+    if account or 'account' not in new_connection:
+        new_connection['account'] = account
+    if project or 'project' not in new_connection:
+        new_connection['project'] = project
+    if key_file or 'key_file' not in new_connection:
+        new_connection['key_file'] = key_file
+
+    credentials, error = get_dialect_credentials(new_connection)
+    if error != '':
+        raise click.ClickException(f'Failed to update connection: {error}.')
 
     if not no_test:
-        ok, error = Connections.test(connections[name])
+        ok, error = Connections.test(credentials)
         if not ok:
-            raise click.ClickException(f'Failed to create connection: {error}')
+            raise click.ClickException(f'Failed to update connection: {error}')
+
+    # TODO: explain
+    print(new_connection)
+    for key, value in new_connection.items():
+        if value:
+            connections[name][key] = value
 
     Connections.save(connections)
     echo_info('Connection was successfully created!')
@@ -85,11 +145,10 @@ def list_connections_command(show_password):
         )
         exit(0)
 
-    for name, connection in connections.items():
-        connection_string = Connections.create_connection_string(connection)
-        if not show_password:
-            connection_string = connection_string.replace(connection['password'], '*****')
-        echo_info(f'{name}: {connection_string}')
+    if not show_password:
+        for conn in connections.values():
+            conn['password'] = '*****'
+    echo_info(yaml.dump(connections))
 
 
 def remove_connection_command(name):
@@ -112,14 +171,17 @@ def test_connections_command(name: Optional[str] = ''):
         # Filter specified connection by name
         connections = {name: connections[name]}
 
-    progress_bar = tqdm(total=len(connections))
     for name, connection in connections.items():
-        ok, error = Connections.test(connection)
+        credentials, error = get_dialect_credentials(connection)
+        if error != '':
+            echo_info(f'{name}... FAIL: {error}')
+            continue
+
+        ok, error = Connections.test(credentials)
         if ok:
-            progress_bar.write(f'{name}... OK')
+            echo_info(f'{name}... OK')
         else:
-            progress_bar.write(f'{name}... FAIL: {error}')
-        progress_bar.update()
+            echo_info(f'{name}... FAIL: {error}')
 
 
 class Connections:
@@ -139,19 +201,6 @@ class Connections:
         return connections[name]
 
     @staticmethod
-    def create_connection_string(connection):
-        return str(
-            sqlalchemy.engine.url.URL(
-                connection['type'],
-                host=connection['host'],
-                port=connection.get('port'),
-                username=connection['user'],
-                password=connection['password'],
-                database=connection.get('database_name'),
-            )
-        )
-
-    @staticmethod
     def save(data: Dict[str, Any]) -> None:
         """Save connections YAML."""
         update_config('connections', data)
@@ -161,21 +210,78 @@ class Connections:
         """Load connections YAML."""
         return read_config('connections')
 
+    @staticmethod
+    def update(
+        type, user, host, port, password, database, schema, warehouse, account, project, key_file
+    ) -> Dict[str, Any]:
+        connection = {}
+        if type:
+            connection['type'] = type
+        if user:
+            connection['user'] = user
+        if password:
+            connection['password'] = password
+        if host:
+            connection['host'] = host
+        if port:
+            connection['port'] = port
+        if database:
+            connection['database'] = database
+        if schema:
+            connection['schema'] = schema
+        if warehouse:
+            connection['warehouse'] = warehouse
+        if account:
+            connection['account'] = account
+        if project:
+            connection['project'] = project
+        if key_file:
+            connection['key_file'] = key_file
+        return connection
+
     @classmethod
-    def test(cls, connection: Dict[str, Any]) -> Tuple[bool, str]:
-        """Test connection string by connecting SQLAlchemy engine."""
-        connection_string = cls.create_connection_string(connection)
-        engine = sqlalchemy.create_engine(connection_string)
+    def test(cls, credentials) -> Tuple[bool, str]:
+        """Test connection string by connecting using DBT."""
+        from dbt.adapters.factory import (
+            get_adapter_class_by_name,
+            get_config_class_by_name,
+        )
+        from dbt.exceptions import FailedToConnectException
+
+        # Create dialect specific configuration
+        adapter_config_cls = get_config_class_by_name(credentials.type)
+        adapter_config = adapter_config_cls()
+        adapter_config.credentials = credentials  # type: ignore
+
+        # Create dialect specific adapter that handles connections
+        adapter_cls = get_adapter_class_by_name(credentials.type)
+        adapter = adapter_cls(adapter_config)  # type: ignore
+
+        # Create dialect specific connection
+        connection = adapter.acquire_connection()  # type: ignore
         try:
-            engine.connect()
-            return True, ''
-        except sqlalchemy.exc.DatabaseError as e:
-            return False, e.orig
+            # This will try to connect to remote database
+            connection.handle
+        except FailedToConnectException as e:
+            return False, str(e)
+        return True, ''
 
 
-def is_dialect_supported(name) -> bool:
+def get_dialect_credentials(connection: Dict[str, Any]):
+    """Use DBT lib to create dialect specific credentials."""
+    from dbt.adapters.factory import load_plugin
+    from dbt.exceptions import RuntimeException
+
+    connection = connection.copy()
+    type_ = connection.pop('type')
+
     try:
-        sqlalchemy.dialects.registry.load(name)
-    except sqlalchemy.exc.NoSuchModuleError:
-        return False
-    return True
+        plugin_cls = load_plugin(type_)
+    except RuntimeException as e:
+        return None, str(e)
+
+    try:
+        credentials = plugin_cls.from_dict(connection)
+    except hologram.ValidationError as e:
+        return False, str(e)
+    return credentials, ''
