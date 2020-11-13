@@ -209,35 +209,6 @@ class Connections:
         """Load connections YAML."""
         return read_config('connections')
 
-    @staticmethod
-    def update(
-        type, user, host, port, password, database, schema, warehouse, account, project, key_file
-    ) -> Dict[str, Any]:
-        connection = {}
-        if type:
-            connection['type'] = type
-        if user:
-            connection['user'] = user
-        if password:
-            connection['password'] = password
-        if host:
-            connection['host'] = host
-        if port:
-            connection['port'] = port
-        if database:
-            connection['database'] = database
-        if schema:
-            connection['schema'] = schema
-        if warehouse:
-            connection['warehouse'] = warehouse
-        if account:
-            connection['account'] = account
-        if project:
-            connection['project'] = project
-        if key_file:
-            connection['key_file'] = key_file
-        return connection
-
     @classmethod
     def test(cls, credentials) -> Tuple[bool, str]:
         """Test connection string by connecting using DBT."""
@@ -282,5 +253,5 @@ def get_dialect_credentials(connection: Dict[str, Any]):
     try:
         credentials = plugin_cls.from_dict(connection)
     except hologram.ValidationError as e:
-        return False, str(e)
+        return False, e.message  # noqa: B306
     return credentials, ''
