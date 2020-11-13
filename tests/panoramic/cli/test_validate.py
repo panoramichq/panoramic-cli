@@ -616,7 +616,14 @@ def test_validate_local_state_missing_field_file(tmp_path, monkeypatch):
         f.write(yaml.dump(VALID_FIELD_MINIMAL))
 
     errors = validate_local_state()
-    assert errors == [MissingFieldFileError(field_slug='field_slug_2', dataset_slug='test_dataset')]
+    assert errors == [
+        MissingFieldFileError(
+            field_slug='field_slug_2',
+            dataset_slug='test_dataset',
+            data_source='sf.db.schema.table1',
+            data_reference='"COLUMN1"',
+        )
+    ]
 
 
 def test_validate_local_state_deprecated_attribute(tmp_path, monkeypatch):

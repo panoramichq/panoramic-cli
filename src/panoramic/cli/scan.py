@@ -1,13 +1,21 @@
+import itertools
 import logging
-from typing import Dict, Iterable, Optional
+from collections import defaultdict
+from typing import Dict, Iterable, List, Optional, Sequence, Tuple
 
 import requests
 from requests.exceptions import RequestException
 
-from panoramic.cli.errors import ScanException, SourceNotFoundException
+from panoramic.cli.context import get_company_slug
+from panoramic.cli.errors import (
+    MissingFieldFileError,
+    ScanException,
+    SourceNotFoundException,
+)
+from panoramic.cli.field_mapper import map_column_to_field, map_error_to_field
 from panoramic.cli.metadata import JobState, MetadataClient
 from panoramic.cli.model_mapper import map_columns_to_model
-from panoramic.cli.pano_model import PanoModel
+from panoramic.cli.pano_model import PanoField, PanoModel
 
 logger = logging.getLogger(__name__)
 
@@ -74,3 +82,40 @@ class Scanner:
     def scan_columns_grouped(self, *, table_filter: Optional[str] = None, timeout: int = 60) -> Iterable[PanoModel]:
         """Scan columns for a given source and group them by model and data source."""
         yield from map_columns_to_model(self.scan_columns(table_filter=table_filter, timeout=timeout))
+
+
+def _group_errors_by_column(
+    errors: Sequence[MissingFieldFileError],
+) -> Dict[Tuple[str, str], List[MissingFieldFileError]]:
+    """Group errors by data_source+data_reference (table+column)."""
+    errors_by_column: Dict[Tuple[str, str], List[MissingFieldFileError]] = defaultdict(list)
+    for error in errors:
+        errors_by_column[(error.data_source, error.data_reference)].append(error)
+    return dict(errors_by_column)
+
+
+def scan_fields_for_errors(errors: Sequence[MissingFieldFileError]) -> List[PanoField]:
+    """Scan fields for missing file errors."""
+    company_slug = get_company_slug()
+
+    fields: List[PanoField] = []
+    errors_by_column = _group_errors_by_column(errors)
+    data_sources = {data_source for data_source, _ in errors_by_column}
+
+    for data_source in data_sources:
+        # TODO: Refresh before scan?
+        connection, table_name = data_source.split('.', 1)
+        for column in Scanner(company_slug, connection).scan_columns(table_filter=table_name):
+            data_reference = column['data_reference']
+            try:
+                datasets = (error.dataset_slug for error in errors_by_column[data_source, data_reference])
+                # Create field for each dataset that is missing the field
+                fields.extend(map_column_to_field(column, data_source=dataset) for dataset in datasets)
+                del errors_by_column[(data_source, data_reference)]
+            except KeyError:
+                pass  # Column does not map to missing field
+
+    # errors for fields we were not able to scan
+    fields.extend(map_error_to_field(error) for error in itertools.chain.from_iterable(errors_by_column.values()))
+
+    return fields

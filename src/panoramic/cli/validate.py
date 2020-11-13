@@ -156,11 +156,25 @@ def validate_missing_files(
 ) -> List[MissingFieldFileError]:
     """Check for missing field files based on field map in model files."""
     fields_slugs_from_fields = {f.slug for f in fields}
-    fields_slugs_from_models = set(itertools.chain.from_iterable(f.field_map for model in models for f in model.fields))
+    # take one model for every field
+    data_reference_by_field_slugs = {
+        field_name: (model.data_source, f.data_reference)
+        for model in models
+        for f in model.fields
+        for field_name in f.field_map
+    }
 
-    field_slugs_with_no_files = fields_slugs_from_models.difference(fields_slugs_from_fields)
+    field_slugs_with_no_files = data_reference_by_field_slugs.keys() - fields_slugs_from_fields
 
-    return [MissingFieldFileError(field_slug=slug, dataset_slug=package_name) for slug in field_slugs_with_no_files]
+    return [
+        MissingFieldFileError(
+            field_slug=slug,
+            dataset_slug=package_name,
+            data_source=data_reference_by_field_slugs[slug][0],
+            data_reference=data_reference_by_field_slugs[slug][1],
+        )
+        for slug in field_slugs_with_no_files
+    ]
 
 
 def validate_orphaned_files(

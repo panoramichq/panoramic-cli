@@ -1,4 +1,4 @@
-from unittest.mock import Mock, call, patch
+from unittest.mock import Mock, call, patch, sentinel
 
 import pytest
 
@@ -12,11 +12,11 @@ from panoramic.cli.command import (
 from panoramic.cli.errors import (
     InvalidDatasetException,
     InvalidModelException,
-    MissingFieldFileError,
     OrphanFieldFileError,
 )
 from panoramic.cli.local.executor import LocalExecutor
 from panoramic.cli.remote.executor import RemoteExecutor
+from panoramic.cli.state import Action
 
 
 @pytest.fixture(autouse=True)
@@ -70,7 +70,6 @@ def test_scan(mock_writer, mock_scanner, mock_refresher, mock_id_generator):
 
     assert mock_refresher.refresh_table.mock_calls == [call('schema1.table1')]
     assert mock_writer.write_scanned_model.call_count == 1
-    assert mock_writer.write_scanned_field.call_count == 1
 
 
 def test_scan_single_table_error(mock_writer, mock_scanner, mock_refresher, mock_id_generator):
@@ -95,7 +94,6 @@ def test_scan_single_table_error(mock_writer, mock_scanner, mock_refresher, mock
     scan('test-source', 'test-filter')
 
     assert mock_writer.write_scanned_model.call_count == 1
-    assert mock_writer.write_scanned_field.call_count == 1
 
 
 @pytest.fixture()
@@ -167,22 +165,23 @@ def test_delete_orphaned_fields(mock_execute, mock_validate, mock_state, capsys)
 
 
 @patch('panoramic.cli.command.get_local_state')
-@patch('panoramic.cli.command.validate_missing_files')
+@patch('panoramic.cli.command.scan_fields_for_errors')
 @patch.object(LocalExecutor, '_execute')
-def test_scaffold_missing_files(mock_execute, mock_validate, mock_state, capsys):
+def test_scaffold_missing_files(mock_execute, mock_scan_fields_for_errors, mock_state, capsys):
     mock_state.return_value.get_objects_by_package.return_value.items.return_value = [
-        ('test_dataset', ([], [Mock(fields=[Mock(field_map=['test_slug'])])])),
+        ('test_dataset', ([], [Mock(data_source='db.schema.test_table', fields=[Mock(field_map=['test_slug'])])])),
     ]
 
-    mock_validate.return_value = [MissingFieldFileError(field_slug='test_slug', dataset_slug='test_dataset')]
+    mock_scan_fields_for_errors.return_value = [sentinel.field]
 
     scaffold_missing_fields(yes=True)
 
-    assert mock_execute.call_count == 1
+    assert mock_execute.mock_calls == [call(Action(desired=sentinel.field))]
     assert capsys.readouterr().out == (
         "Loading local state...\n\n"
         "Fields referenced in models without definition in dataset test_dataset:\n"
         "  test_slug\n\n"
+        "Scanning fields...\n"
         "Updating local state...\n"
         "Updated 1/1 fields\n"
     )

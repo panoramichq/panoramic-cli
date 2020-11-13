@@ -124,7 +124,14 @@ def test_map_column_to_field_identifier():
 
 
 def test_map_error_to_field():
-    assert map_error_to_field(MissingFieldFileError(field_slug='test_field', dataset_slug='test_dataset')) == PanoField(
+    assert map_error_to_field(
+        MissingFieldFileError(
+            field_slug='test_field',
+            dataset_slug='test_dataset',
+            data_source='db.schema.table1',
+            data_reference='"TEST_FIELD"',
+        )
+    ) == PanoField(
         slug='test_field',
         display_name='test_field',
         group='CLI',

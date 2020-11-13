@@ -57,7 +57,9 @@ def map_field_from_local(field: PanoField) -> Field:
     )
 
 
-def map_column_to_field(column: Dict[str, Any], is_identifier: bool = False) -> PanoField:
+def map_column_to_field(
+    column: Dict[str, Any], is_identifier: bool = False, data_source: Optional[str] = None
+) -> PanoField:
     aggregation = (
         Aggregation(type=column['aggregation_type'], params=None)
         if column.get('aggregation_type') is not None
@@ -71,6 +73,7 @@ def map_column_to_field(column: Dict[str, Any], is_identifier: bool = False) -> 
     return PanoField(
         slug=slug,
         field_type=field_type,
+        data_source=data_source,
         display_name=slug,
         group='CLI',
         data_type=column['validation_type'],

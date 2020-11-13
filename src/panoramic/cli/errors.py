@@ -356,15 +356,21 @@ class MissingFieldFileError(ValidationError):
 
     field_slug: str
     dataset_slug: str
+    data_source: str
+    data_reference: str
 
     def __init__(
         self,
         *,
         field_slug: str,
         dataset_slug: str,
+        data_source: str,
+        data_reference: str,
     ) -> None:
         self.field_slug = field_slug
         self.dataset_slug = dataset_slug
+        self.data_source = data_source
+        self.data_reference = data_reference
         super().__init__(f'Missing field file for slug {field_slug} under dataset {dataset_slug}')
 
     def __eq__(self, o: object) -> bool:
