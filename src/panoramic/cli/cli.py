@@ -242,6 +242,11 @@ def connection():
     host: The hostname (server) used for database connection.
     port: The port used for database connection.
     database: The database used for database connection.
+    schema: The schema to build models into by default. Can be overridden by custom models.
+    warehouse: The warehouse to use when building models. (Used by Snowflake)
+    account: The account used for database connection. (Used by Snowflake)
+    project: The project used for database connection. (Used by BigQuery)
+    key_file: Keyfile path to Service Account JSON. (Used by BigQuery)
     """
     pass
 
@@ -259,7 +264,7 @@ def connection():
 @click.option('--warehouse', default='', type=str, help='Connection warehouse name. (Used by Snowflake)')
 @click.option('--account', default='', type=str, help='Connection account name. (Used by Snowflake)')
 @click.option('--project', default='', type=str, help='Connection project name. (Used by BigQuery)')
-@click.option('--key-file', default='', type=str, help='Keyfile path to Service Account Json. (Used by BigQuery)')
+@click.option('--key-file', default='', type=str, help='Keyfile path to Service Account JSON. (Used by BigQuery)')
 @click.option('--no-test', default=False, is_flag=True, help='Do NOT try test the connection.')
 def create(
     name,
@@ -315,7 +320,7 @@ def create(
 @click.option('--warehouse', default='', type=str, help='Connection warehouse name. (Used by Snowflake)')
 @click.option('--account', default='', type=str, help='Connection account name. (Used by Snowflake)')
 @click.option('--project', default='', type=str, help='Connection project name. (Used by BigQuery)')
-@click.option('--key-file', default='', type=str, help='Keyfile path to Service Account Json. (Used by BigQuery)')
+@click.option('--key-file', default='', type=str, help='Keyfile path to Service Account JSON. (Used by BigQuery)')
 @click.option('--no-test', default=False, is_flag=True, help='Do NOT try test the connection.')
 def update(
     name,
