@@ -50,10 +50,12 @@ setup(
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
     ],
     install_requires=[
         'panoramic-auth>=0.2.0',
         'requests<2.24.0',  # requests<2.24.0 is required by 'snowflake-connector-python'
+        'urllib3>=1.26.1',
         'click>=7.1.2',
         'colorama>=0.4.3',
         'PyYAML==5.3.1',

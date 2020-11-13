@@ -7,13 +7,8 @@ generate_homebrew_formula() {
 }
 
 setup_git() {
-  git config --global user.email "travis@travis-ci.org"
-  git config --global user.name "Travis CI"
-}
-
-pull_homebrew_files() {
-  rm -fr .homebrew_repo
-  git clone https://github.com/panoramichq/homebrew-brew.git .homebrew_repo
+  git config --global user.email "panoramic-ci@users.noreply.github.com"
+  git config --global user.name "Panoramic CI"
 }
 
 update_homebrew_formula() {
@@ -24,7 +19,7 @@ update_homebrew_formula() {
   cp brewout/panoramic-cli.rb .homebrew_repo/Formula/panoramic-cli.rb
   cd .homebrew_repo
   git add Formula/panoramic-cli.rb
-  git commit --message "Travis build: $TRAVIS_BUILD_NUMBER"
+  git commit --message "Panoramic CLI build: $GITHUB_RUN_NUMBER"
   cd ..
 }
 
@@ -35,6 +30,5 @@ upload_files() {
 
 generate_homebrew_formula
 setup_git
-pull_homebrew_files
 update_homebrew_formula
 upload_files

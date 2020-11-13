@@ -1,6 +1,6 @@
 # Panoramic CLI
 
-[![Build Status](https://travis-ci.com/panoramichq/panoramic-cli.svg?branch=master)](https://travis-ci.com/panoramichq/panoramic-cli)
+[![Build Status](https://github.com/panoramichq/panoramic-cli/workflows/CI/badge.svg)](https://github.com/panoramichq/panoramic-cli/actions)
 [![Last Commit](https://img.shields.io/github/last-commit/panoramichq/panoramic-cli)](https://github.com/panoramichq/panoramic-cli/commits)
 [![Latest Release](https://img.shields.io/github/v/release/panoramichq/panoramic-cli)](https://github.com/panoramichq/panoramic-cli/releases)
 [![License](https://img.shields.io/pypi/l/panoramic-cli.svg)](https://github.com/panoramichq/panoramic-cli/blob/master/LICENSE)
@@ -30,21 +30,24 @@ Options:
 
 Commands:
   configure         Configure pano CLI options
+  detect-joins      Detect joins under a dataset
+  field             Commands on local field files.
   init              Initialize metadata repository
   list-companies    List available companies
   list-connections  List available data connections
   pull              Pull models from remote
   push              Push models to remote
   scan              Scan models from source
+  validate          Validate local files
 ```
 
 ## Release process
 
 To release a new version of the library, follow these steps:
 
-* In your PR, update version in [setup.py](setup.py) and add entry to [CHANGELOG.md](CHANGELOG.md)
-* After merge, tag the commit with version number from setup.py. For example `git tag v0.1.1`.
-* Once the tag is pushed, it will trigger a build with Travis, which will publish the new version on PyPI.
+- In your PR, update version in [\_\_version\_\_.py](src/panoramic/cli/__version__.py) and add entry to [CHANGELOG.md](CHANGELOG.md)
+- After merge, tag the commit with version number from setup.py. For example `git tag v0.1.1`.
+- Once the tag is pushed, it will trigger a build with GitHub Actions, which will publish the new version on PyPI and create a release on GitHub.
 
 ## Development
 
