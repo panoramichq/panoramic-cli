@@ -9,6 +9,20 @@ from panoramic.cli.errors import ConnectionNotFound
 from panoramic.cli.paths import Paths
 from panoramic.cli.print import echo_info
 
+CONNECTION_KEYS = [
+    'type',
+    'user',
+    'host',
+    'port',
+    'password',
+    'database',
+    'schema',
+    'warehouse',
+    'account',
+    'project',
+    'key_file',
+]
+
 
 def create_connection_command(
     name,
@@ -92,28 +106,33 @@ def update_connection_command(
         password = click.prompt('Enter password: ', hide_input=True, type=str)
 
     new_connection = connections[name].copy()
-    if type or 'type' not in new_connection:
+    if type:
         new_connection['type'] = type
-    if user or 'user' not in new_connection:
+    if user:
         new_connection['user'] = user
-    if password or 'password' not in new_connection:
+    if password:
         new_connection['password'] = password
-    if host or 'host' not in new_connection:
+    if host:
         new_connection['host'] = host
-    if port or 'port' not in new_connection:
+    if port:
         new_connection['port'] = port
-    if database or 'database' not in new_connection:
+    if database:
         new_connection['database'] = database
-    if schema or 'schema' not in new_connection:
+    if schema:
         new_connection['schema'] = schema
-    if warehouse or 'warehouse' not in new_connection:
+    if warehouse:
         new_connection['warehouse'] = warehouse
-    if account or 'account' not in new_connection:
+    if account:
         new_connection['account'] = account
-    if project or 'project' not in new_connection:
+    if project:
         new_connection['project'] = project
-    if key_file or 'key_file' not in new_connection:
+    if key_file:
         new_connection['key_file'] = key_file
+
+    # Fill with default values because DBT requires some fields we don't.
+    for key in CONNECTION_KEYS:
+        if key not in new_connection:
+            new_connection[key] = ''
 
     credentials, error = get_dialect_credentials(new_connection)
     if error != '':
@@ -171,6 +190,11 @@ def test_connections_command(name: Optional[str] = ''):
         connections = {name: connections[name]}
 
     for name, connection in connections.items():
+        # Fill with default values because DBT requires some fields we don't.
+        for key in CONNECTION_KEYS:
+            if key not in connection:
+                connection[key] = ''
+
         credentials, error = get_dialect_credentials(connection)
         if error != '':
             echo_info(f'{name}... FAIL: {error}')
