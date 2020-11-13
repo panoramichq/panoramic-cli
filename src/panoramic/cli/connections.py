@@ -57,7 +57,7 @@ def create_connection_command(
         if not ok:
             raise click.ClickException(f'Failed to create connection: {error}')
 
-    # TODO: explain
+    # Empty values are important for DBT credentials verification, but we don't need to store empty values in config.
     connections[name] = {}
     for key, value in new_connection.items():
         if value:
@@ -124,14 +124,13 @@ def update_connection_command(
         if not ok:
             raise click.ClickException(f'Failed to update connection: {error}')
 
-    # TODO: explain
-    print(new_connection)
+    # Empty values are important for DBT credentials verification, but we don't need to store empty values in config.
     for key, value in new_connection.items():
         if value:
             connections[name][key] = value
 
     Connections.save(connections)
-    echo_info('Connection was successfully created!')
+    echo_info('Connection was successfully updated!')
 
 
 def list_connections_command(show_password):
