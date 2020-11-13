@@ -58,7 +58,10 @@ def map_field_from_local(field: PanoField) -> Field:
 
 
 def map_column_to_field(
-    column: Dict[str, Any], is_identifier: bool = False, data_source: Optional[str] = None
+    column: Dict[str, Any],
+    slug: str,
+    data_source: str,
+    is_identifier: bool = False,
 ) -> PanoField:
     aggregation = (
         Aggregation(type=column['aggregation_type'], params=None)
@@ -66,9 +69,6 @@ def map_column_to_field(
         else None
     )
     field_type = 'dimension' if is_identifier else column['taxon_type']
-
-    assert len(column['field_map']) == 1
-    slug = column['field_map'][0]
 
     return PanoField(
         slug=slug,
