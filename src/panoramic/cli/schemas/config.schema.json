@@ -63,6 +63,20 @@
               "type": "string"
             }
           },
+          "allOf": [
+            {
+              "if": {"properties": {"type": { "const": "postgres" }}},
+              "then": {"required":  ["database", "host"]}
+            },
+            {
+              "if": {"properties": {"type": { "const": "snowflake" }}},
+              "then": {"required":  ["account"]}
+            },
+            {
+              "if": {"properties": {"type": { "const": "bigquery" }}},
+              "then": {"required":  ["project", "key_file"]}
+            }
+          ],
           "required": [
             "type",
             "user",
