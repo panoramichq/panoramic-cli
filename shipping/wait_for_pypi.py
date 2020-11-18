@@ -5,16 +5,17 @@ Ported from homebrew-pypi-poet project
 """
 
 from __future__ import print_function
+
 import argparse
 import codecs
-from contextlib import closing
-from hashlib import sha256
 import json
 import logging
 import os
 import sys
-import warnings
 import time
+import warnings
+from contextlib import closing
+from hashlib import sha256
 
 import pkg_resources
 
@@ -52,8 +53,8 @@ def research_package(name, version=None):
                         break
         if artefact is None:
             raise PackageVersionNotFoundWarning(
-                          "Could not find an exact version match for "
-                          "{} version {}".format(name, version))
+                "Could not find an exact version match for " "{} version {}".format(name, version)
+            )
 
     if artefact is None:  # no version given or exact match not found
         for url in pkg_data['urls']:
@@ -101,8 +102,7 @@ def wait_for(package, version=None):
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description='Wait for PyPI to confirm package exists.')
+    parser = argparse.ArgumentParser(description='Wait for PyPI to confirm package exists.')
     parser.add_argument('package')
     parser.add_argument('version', nargs='?')
     args = parser.parse_args()
