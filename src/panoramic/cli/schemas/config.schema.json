@@ -97,13 +97,13 @@
       "description": "OAuth2 Client ID",
       "type": "string",
       "deprecated": true,
-      "deprecationMessage": "Property is no longer supported, move property to 'auth' section."
+      "deprecationMessage": "property is no longer supported, move property to 'auth' section"
     },
     "client_secret": {
       "description": "OAuth2 Client Secret",
       "type": "string",
       "deprecated": true,
-      "deprecationMessage": "Property is no longer supported, move property to 'auth' section."
+      "deprecationMessage": "property is no longer supported, move property to 'auth' section"
     }
   }
 }

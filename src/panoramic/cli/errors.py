@@ -294,8 +294,8 @@ class DeprecatedConfigProperty(ValidationError):
 
     def __init__(self, property_: str, deprecation_message: Optional[str] = None):
         if deprecation_message is None:
-            deprecation_message = "Property is deprecated."
-        super().__init__(f"{property_}: {deprecation_message}")
+            deprecation_message = "Property is deprecated"
+        super().__init__(f"'{property_}': {deprecation_message}\n  in {Paths.config_file()}")
 
     def __eq__(self, o: object) -> bool:
         if not isinstance(o, DeprecatedAttributeWarning):
