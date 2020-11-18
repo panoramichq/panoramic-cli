@@ -1,7 +1,7 @@
 import pytest
 
 from panoramic.cli.errors import MissingFieldFileError
-from panoramic.cli.field.client import Field
+from panoramic.cli.field.client import Aggregation, Field
 from panoramic.cli.field_mapper import (
     map_column_to_field,
     map_error_to_field,
@@ -71,12 +71,18 @@ def test_map_column_to_field_basic():
             'data_reference': '"slug"',
             'aggregation_type': None,
             'validation_type': 'text',
-        }
+        },
+        slug='field_slug',
+        data_source='data_source',
     )
-    expected = PanoField.from_dict(
-        dict(slug='slug', field_type='dimension', group='CLI', display_name='slug', data_type='text')
+    assert actual == PanoField(
+        slug='field_slug',
+        data_source='data_source',
+        field_type='dimension',
+        group='CLI',
+        display_name='field_slug',
+        data_type='text',
     )
-    assert actual == expected
 
 
 def test_map_column_to_field_aggregation():
@@ -89,19 +95,19 @@ def test_map_column_to_field_aggregation():
             'data_reference': '"slug"',
             'aggregation_type': 'sum',
             'validation_type': 'numeric',
-        }
+        },
+        slug='field_slug',
+        data_source='data_source',
     )
-    expected = PanoField.from_dict(
-        dict(
-            slug='slug',
-            field_type='metric',
-            group='CLI',
-            display_name='slug',
-            data_type='numeric',
-            aggregation=dict(type='sum'),
-        )
+    assert actual == PanoField(
+        slug='field_slug',
+        field_type='metric',
+        group='CLI',
+        data_source='data_source',
+        display_name='field_slug',
+        data_type='numeric',
+        aggregation=Aggregation(type='sum', params=None),
     )
-    assert actual == expected
 
 
 def test_map_column_to_field_identifier():
@@ -115,17 +121,32 @@ def test_map_column_to_field_identifier():
             'aggregation_type': None,
             'validation_type': 'text',
         },
+        slug='field_slug',
+        data_source='data_source',
         is_identifier=True,
     )
-    expected = PanoField.from_dict(
-        dict(slug='slug', field_type='dimension', group='CLI', display_name='slug', data_type='text')
+    assert actual == PanoField(
+        slug='field_slug',
+        data_source='data_source',
+        field_type='dimension',
+        group='CLI',
+        display_name='field_slug',
+        data_type='text',
     )
-    assert actual == expected
 
 
 def test_map_error_to_field():
-    assert map_error_to_field(MissingFieldFileError(field_slug='test_field', dataset_slug='test_dataset')) == PanoField(
+    assert map_error_to_field(
+        MissingFieldFileError(
+            field_slug='test_field',
+            dataset_slug='test_dataset',
+            data_source='db.schema.table1',
+            data_reference='"TEST_FIELD"',
+            identifier=False,
+        )
+    ) == PanoField(
         slug='test_field',
+        data_source='test_dataset',
         display_name='test_field',
         group='CLI',
         data_type='TODO: add data_type',
