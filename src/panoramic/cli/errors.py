@@ -298,7 +298,7 @@ class DeprecatedConfigProperty(ValidationError):
         super().__init__(f"'{property_}': {deprecation_message}\n  in {Paths.config_file()}")
 
     def __eq__(self, o: object) -> bool:
-        if not isinstance(o, DeprecatedAttributeWarning):
+        if not isinstance(o, DeprecatedConfigProperty):
             return False
 
         return str(self) == str(o)
