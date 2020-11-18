@@ -3,6 +3,7 @@
 generate_homebrew_formula() {
   rm -fr brewout
   mkdir -p brewout
+  python shipping/wait_for_pypi.py panoramic-cli $(python shipping/generate-versions-file.py)
   shipping/ppfg.sh -f -c shipping/ppfg -o brewout $(python shipping/generate-versions-file.py)
 }
 
