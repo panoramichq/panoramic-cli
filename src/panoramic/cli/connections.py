@@ -270,7 +270,7 @@ def _update_connection_from_args(
     project: Optional[str],
     key_file: Optional[str],
 ):
-    if type:
+    if type is not None:
         connection['type'] = type
     if user is not None:
         connection['user'] = user
