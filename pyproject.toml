@@ -13,4 +13,4 @@ skip-string-normalization = true
 profile="black"
 
 known_first_party="panoramic"
-known_third_party=["click", "dotenv", "jsonschema", "packaging", "panoramic", "pytest", "requests", "responses", "setuptools", "sqlalchemy", "tqdm", "yaml"]
+known_third_party=["click", "dotenv", "jsonschema", "packaging", "panoramic", "pytest", "requests", "responses", "setuptools", "tqdm", "yaml"]
