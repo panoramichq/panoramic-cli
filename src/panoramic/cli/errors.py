@@ -312,7 +312,7 @@ class JsonSchemaError(ValidationError):
             pass  # Use relative path when possible
 
         error_path = '.'.join(error.path)
-        super().__init__(f'{error_path}.{error.message}\n  in {path}')
+        super().__init__(f'{error.message}\n  for path {error_path}\n  in {path}')
 
     def __eq__(self, o: object) -> bool:
         if not isinstance(o, JsonSchemaError):
