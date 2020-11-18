@@ -34,6 +34,15 @@ class ConfigAwareCommand(Command):
             sys.exit(1)
 
 
+class ConnectionAwareCommand(ConfigAwareCommand):
+    def invoke(self, ctx: Context):
+        try:
+            return super().invoke(ctx)
+        except Exception as e:
+            echo_error(str(e))
+            sys.exit(1)
+
+
 class ContextAwareCommand(ConfigAwareCommand):
     """
     Perform config and context file validation before running command.
@@ -251,36 +260,36 @@ def connection():
     pass
 
 
-@connection.command()
+@connection.command(cls=ConnectionAwareCommand)
 @click.argument('name', type=str)
-@click.option('--type', type=str, help='Type of the database. E.g. "postgres", "snowflake".')
-@click.option('--user', default='', type=str, help='Connection username.')
-@click.option('--password', default='', type=str, help='Connection password.')
+@click.option('--type', default=None, type=str, help='Type of the database. E.g. "postgres", "snowflake".')
+@click.option('--user', default=None, type=str, help='Connection username.')
+@click.option('--password', default=None, type=str, help='Connection password.')
 @click.option('--password-stdin', default=False, is_flag=True, help='Read connection password from standard input.')
-@click.option('--host', default='', type=str, help='Connection hostname.')
-@click.option('--port', default=0, type=int, help='Connection port.')
-@click.option('--database', default='', type=str, help='Connection database name.')
-@click.option('--schema', default='', type=str, help='Connection schema name.')
-@click.option('--warehouse', default='', type=str, help='Connection warehouse name. (Used by Snowflake)')
-@click.option('--account', default='', type=str, help='Connection account name. (Used by Snowflake)')
-@click.option('--project', default='', type=str, help='Connection project name. (Used by BigQuery)')
-@click.option('--key-file', default='', type=str, help='Keyfile path to Service Account JSON. (Used by BigQuery)')
+@click.option('--host', default=None, type=str, help='Connection hostname.')
+@click.option('--port', default=None, type=int, help='Connection port.')
+@click.option('--database', default=None, type=str, help='Connection database name.')
+@click.option('--schema', default=None, type=str, help='Connection schema name.')
+@click.option('--warehouse', default=None, type=str, help='Connection warehouse name. (Used by Snowflake)')
+@click.option('--account', default=None, type=str, help='Connection account name. (Used by Snowflake)')
+@click.option('--project', default=None, type=str, help='Connection project name. (Used by BigQuery)')
+@click.option('--key-file', default=None, type=str, help='Keyfile path to Service Account JSON. (Used by BigQuery)')
 @click.option('--no-test', default=False, is_flag=True, help='Do NOT try test the connection.')
 def create(
-    name,
-    type,
-    user,
-    host,
-    port,
-    password,
-    password_stdin,
-    database,
-    schema,
-    warehouse,
-    account,
-    project,
-    key_file,
-    no_test,
+    name: str,
+    type: Optional[str],
+    user: Optional[str],
+    host: Optional[str],
+    port: Optional[int],
+    password: Optional[str],
+    password_stdin: bool,
+    database: Optional[str],
+    schema: Optional[str],
+    warehouse: Optional[str],
+    account: Optional[str],
+    project: Optional[str],
+    key_file: Optional[str],
+    no_test: bool,
 ):
     """Add new connection.
 
@@ -307,36 +316,36 @@ def create(
     )
 
 
-@connection.command()
+@connection.command(cls=ConnectionAwareCommand)
 @click.argument('name', type=str)
-@click.option('--type', type=str, help='Type of the database. E.g. "postgres", "snowflake".')
-@click.option('--user', default='', type=str, help='Connection username.')
-@click.option('--password', default='', type=str, help='Connection password.')
+@click.option('--type', default=None, type=str, help='Type of the database. E.g. "postgres", "snowflake".')
+@click.option('--user', default=None, type=str, help='Connection username.')
+@click.option('--password', default=None, type=str, help='Connection password.')
 @click.option('--password-stdin', default=False, is_flag=True, help='Read connection password from standard input.')
-@click.option('--host', default='', type=str, help='Connection hostname.')
-@click.option('--port', default=0, type=int, help='Connection port.')
-@click.option('--database', default='', type=str, help='Connection database name.')
-@click.option('--schema', default='', type=str, help='Connection schema name.')
-@click.option('--warehouse', default='', type=str, help='Connection warehouse name. (Used by Snowflake)')
-@click.option('--account', default='', type=str, help='Connection account name. (Used by Snowflake)')
-@click.option('--project', default='', type=str, help='Connection project name. (Used by BigQuery)')
-@click.option('--key-file', default='', type=str, help='Keyfile path to Service Account JSON. (Used by BigQuery)')
+@click.option('--host', default=None, type=str, help='Connection hostname.')
+@click.option('--port', default=None, type=int, help='Connection port.')
+@click.option('--database', default=None, type=str, help='Connection database name.')
+@click.option('--schema', default=None, type=str, help='Connection schema name.')
+@click.option('--warehouse', default=None, type=str, help='Connection warehouse name. (Used by Snowflake)')
+@click.option('--account', default=None, type=str, help='Connection account name. (Used by Snowflake)')
+@click.option('--project', default=None, type=str, help='Connection project name. (Used by BigQuery)')
+@click.option('--key-file', default=None, type=str, help='Keyfile path to Service Account JSON. (Used by BigQuery)')
 @click.option('--no-test', default=False, is_flag=True, help='Do NOT try test the connection.')
 def update(
-    name,
-    type,
-    user,
-    host,
-    port,
-    password,
-    password_stdin,
-    database,
-    schema,
-    warehouse,
-    account,
-    project,
-    key_file,
-    no_test,
+    name: str,
+    type: Optional[str],
+    user: Optional[str],
+    host: Optional[str],
+    port: Optional[int],
+    password: Optional[str],
+    password_stdin: bool,
+    database: Optional[str],
+    schema: Optional[str],
+    warehouse: Optional[str],
+    account: Optional[str],
+    project: Optional[str],
+    key_file: Optional[str],
+    no_test: bool,
 ):
     """Update existing connection.
 
@@ -362,7 +371,7 @@ def update(
     )
 
 
-@connection.command()
+@connection.command(cls=ConnectionAwareCommand)
 @click.argument('name', type=str)
 def remove(name):
     """Remove existing connection.
@@ -374,7 +383,7 @@ def remove(name):
     remove_connection_command(name)
 
 
-@connection.command(name='list')
+@connection.command(name='list', cls=ConnectionAwareCommand)
 @click.option('--show-password', default=False, is_flag=True, help='Show passwords.')
 def list_(show_password):  # we cannot have method 'list' due to conflicts
     """List all available connections.
@@ -386,8 +395,8 @@ def list_(show_password):  # we cannot have method 'list' due to conflicts
     list_connections_command(show_password)
 
 
-@connection.command()
-@click.argument('name', default='', type=str, required=False)
+@connection.command(cls=ConnectionAwareCommand)
+@click.argument('name', default=None, type=str, required=False)
 def test(name):
     """Test connections.
 

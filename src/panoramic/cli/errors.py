@@ -40,12 +40,10 @@ class CliBaseException(Exception):
 
 
 class TimeoutException(CliBaseException):
-
     """Thrown when a remote operation times out."""
 
 
 class IdentifierException(CliBaseException):
-
     """Error refreshing metadata."""
 
     def __init__(self, source_name: str, table_name: str):
@@ -53,7 +51,6 @@ class IdentifierException(CliBaseException):
 
 
 class JoinException(CliBaseException):
-
     """Error detecting joins in a dataset."""
 
     def __init__(self, dataset_name: str):
@@ -61,7 +58,6 @@ class JoinException(CliBaseException):
 
 
 class RefreshException(CliBaseException):
-
     """Error refreshing metadata."""
 
     def __init__(self, source_name: str, table_name: str):
@@ -69,7 +65,6 @@ class RefreshException(CliBaseException):
 
 
 class CompanyNotFoundException(CliBaseException):
-
     """Error when company not found for user (either no access or doesn't exist)."""
 
     def __init__(self, company_slug: str):
@@ -77,7 +72,6 @@ class CompanyNotFoundException(CliBaseException):
 
 
 class SourceNotFoundException(CliBaseException):
-
     """Thrown when a source cannot be found."""
 
     def __init__(self, source_name: str):
@@ -85,7 +79,6 @@ class SourceNotFoundException(CliBaseException):
 
 
 class DatasetNotFoundException(CliBaseException):
-
     """Thrown when a dataset cannot be found."""
 
     def __init__(self, dataset_name: str):
@@ -93,7 +86,6 @@ class DatasetNotFoundException(CliBaseException):
 
 
 class ScanException(CliBaseException):
-
     """Error scanning metadata."""
 
     def __init__(self, source_name: str, table_filter: Optional[str]):
@@ -102,7 +94,6 @@ class ScanException(CliBaseException):
 
 
 class DatasetReadException(CliBaseException):
-
     """Error fetching virtual data sources."""
 
     def __init__(self, company_slug: str):
@@ -110,7 +101,6 @@ class DatasetReadException(CliBaseException):
 
 
 class InvalidModelException(CliBaseException):
-
     """Invalid model submitted to remote."""
 
     messages: List[str]
@@ -125,7 +115,6 @@ class InvalidModelException(CliBaseException):
 
 
 class InvalidDatasetException(CliBaseException):
-
     """Invalid model submitted to remote."""
 
     messages: List[str]
@@ -140,7 +129,6 @@ class InvalidDatasetException(CliBaseException):
 
 
 class InvalidFieldException(CliBaseException):
-
     """Invalid field submitted to remote."""
 
     messages: List[str]
@@ -155,7 +143,6 @@ class InvalidFieldException(CliBaseException):
 
 
 class DatasetWriteException(CliBaseException):
-
     """Error writing dataset to remote state."""
 
     def __init__(self, dataset_name: str):
@@ -163,7 +150,6 @@ class DatasetWriteException(CliBaseException):
 
 
 class ModelWriteException(CliBaseException):
-
     """Error writing dataset to remote state."""
 
     def __init__(self, dataset_name: str, model_name: str):
@@ -171,7 +157,6 @@ class ModelWriteException(CliBaseException):
 
 
 class ModelReadException(CliBaseException):
-
     """Error reading model(s) from remote state."""
 
     def __init__(self, company_slug: str, dataset_name: str):
@@ -179,7 +164,6 @@ class ModelReadException(CliBaseException):
 
 
 class FieldWriteException(CliBaseException):
-
     """Error writing field to remote state."""
 
     def __init__(self, dataset_name: Optional[str], field_name: str):
@@ -191,7 +175,6 @@ class FieldWriteException(CliBaseException):
 
 
 class FieldReadException(CliBaseException):
-
     """Error reading field(s) from remote state."""
 
     def __init__(self, company_slug: str, dataset_name: Optional[str]):
@@ -200,20 +183,17 @@ class FieldReadException(CliBaseException):
 
 
 class ValidationErrorSeverity(Enum):
-
     WARNING = 'WARNING'
     ERROR = 'ERROR'
 
 
 class ValidationError(CliBaseException, ABC):
-
     """Abstract error raised during validation step."""
 
     severity: ClassVar[ValidationErrorSeverity] = ValidationErrorSeverity.ERROR
 
 
 class FileMissingError(ValidationError):
-
     """File that should exist didn't."""
 
     def __init__(self, *, path: Path):
@@ -235,7 +215,6 @@ class FileMissingError(ValidationError):
 
 
 class DuplicateModelNameError(ValidationError):
-
     """Two local models use the same model name."""
 
     def __init__(self, *, model_name: str, paths: List[Path]) -> None:
@@ -255,7 +234,6 @@ class DuplicateModelNameError(ValidationError):
 
 
 class DuplicateFieldSlugError(ValidationError):
-
     """Two local models use the same model name."""
 
     def __init__(self, *, field_slug: str, dataset_slug: Optional[str], paths: List[Path]) -> None:
@@ -276,7 +254,6 @@ class DuplicateFieldSlugError(ValidationError):
 
 
 class InvalidYamlFile(ValidationError):
-
     """YAML syntax error."""
 
     def __init__(self, *, path: Path, error: MarkedYAMLError):
@@ -295,7 +272,6 @@ class InvalidYamlFile(ValidationError):
 
 
 class DeprecatedAttributeWarning(ValidationError):
-
     severity = ValidationErrorSeverity.WARNING
 
     def __init__(self, *, attribute: str, path: Path):
@@ -313,6 +289,21 @@ class DeprecatedAttributeWarning(ValidationError):
         return str(self) == str(o)
 
 
+class DeprecatedConfigProperty(ValidationError):
+    severity = ValidationErrorSeverity.WARNING
+
+    def __init__(self, property_: str, deprecation_message: Optional[str] = None):
+        if deprecation_message is None:
+            deprecation_message = "Property is deprecated."
+        super().__init__(f"{property_}: {deprecation_message}")
+
+    def __eq__(self, o: object) -> bool:
+        if not isinstance(o, DeprecatedAttributeWarning):
+            return False
+
+        return str(self) == str(o)
+
+
 class JsonSchemaError(ValidationError):
     def __init__(self, *, path: Path, error: JsonSchemaValidationError):
         try:
@@ -320,7 +311,8 @@ class JsonSchemaError(ValidationError):
         except ValueError:
             pass  # Use relative path when possible
 
-        super().__init__(f'{error.message}\n  in {path}')
+        error_path = '.'.join(error.path)
+        super().__init__(f'{error_path}.{error.message}\n  in {path}')
 
     def __eq__(self, o: object) -> bool:
         if not isinstance(o, JsonSchemaError):
@@ -330,7 +322,6 @@ class JsonSchemaError(ValidationError):
 
 
 class OrphanFieldFileError(ValidationError):
-
     severity = ValidationErrorSeverity.WARNING
     field_slug: str
     dataset_slug: str
@@ -353,7 +344,6 @@ class OrphanFieldFileError(ValidationError):
 
 
 class MissingFieldFileError(ValidationError):
-
     field_slug: str
     dataset_slug: str
 
@@ -401,9 +391,29 @@ def handle_interrupt(f: Callable):
     return wrapped
 
 
-class ConnectionNotFound(Exception):
-
+class ConnectionNotFound(CliBaseException):
     """Connection not found in config."""
 
     def __init__(self, connection_name: str):
-        super().__init__(f"Connection with name '{connection_name}' was not found")
+        super().__init__(f'Connection with name "{connection_name}" was not found.')
+
+
+class ConnectionAlreadyExistsException(CliBaseException):
+    """Connection with given name already exists."""
+
+    def __init__(self, name: str):
+        super().__init__(f'Connection with name "{name}" already exists.')
+
+
+class ConnectionCreateException(CliBaseException):
+    """Failed to create connection due to error."""
+
+    def __init__(self, error_message: str):
+        super().__init__(f'Failed to create connection: {error_message}.')
+
+
+class ConnectionUpdateException(CliBaseException):
+    """Failed to update connection due to error."""
+
+    def __init__(self, error_message: str):
+        super().__init__(f'Failed to update connection: {error_message}.')

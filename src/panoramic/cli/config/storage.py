@@ -6,9 +6,7 @@ from panoramic.cli.paths import Paths
 
 
 def update_config(section: str, data: Dict[str, Any]) -> None:
-    if section != '':
-        data = {section: data}
-
+    data = {section: data}
     config_file = Paths.config_file()
     if config_file.is_file():
         config_yaml = read_yaml(config_file)

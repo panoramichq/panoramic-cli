@@ -12,6 +12,7 @@ from jsonschema.exceptions import ValidationError as JsonSchemaValidationError
 from panoramic.cli.config.auth import get_client_id_env_var, get_client_secret_env_var
 from panoramic.cli.errors import (
     DeprecatedAttributeWarning,
+    DeprecatedConfigProperty,
     DuplicateFieldSlugError,
     DuplicateModelNameError,
     InvalidYamlFile,
@@ -24,6 +25,7 @@ from panoramic.cli.file_utils import read_yaml
 from panoramic.cli.local.reader import FilePackage, FileReader, GlobalPackage
 from panoramic.cli.pano_model import PanoField, PanoModel
 from panoramic.cli.paths import Paths
+from panoramic.cli.print import echo_warning
 
 
 class JsonSchemas:
@@ -71,6 +73,17 @@ def _check_model_deprecations(data: Dict[str, Any], path: Path) -> List[Deprecat
     if contains_data_type:
         errors.append(DeprecatedAttributeWarning(attribute='data_type', path=path))
 
+    return errors
+
+
+def _check_properties_deprecations(fp: Path, schema: Dict[str, Any]):
+    """Check for deprecated properties in config file.
+    WARNING: this check currently doesn't support recursive lookup of properties!"""
+    errors = []
+    data = read_yaml(fp)
+    for name, value in schema.get('properties', {}).items():
+        if value.get("deprecated", False) and data.get(name) is not None:
+            errors.append(DeprecatedConfigProperty(name, value.get("deprecationMessage")))
     return errors
 
 
@@ -212,7 +225,11 @@ def validate_local_state() -> List[ValidationError]:
 def validate_config():
     """Check config file against schema."""
     try:
-        _validate_file(Paths.config_file(), JsonSchemas.config())
+        path, schema = Paths.config_file(), JsonSchemas.config()
+        _validate_file(path, schema)
+        errors = _check_properties_deprecations(path, schema)
+        for err in errors:
+            echo_warning(err)
     except ValidationError as e:
         try:
             # Valid if we get both values from env vars

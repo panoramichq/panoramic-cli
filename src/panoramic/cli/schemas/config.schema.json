@@ -1,22 +1,95 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "$id": "http://panoramichq.com/config.schema.json",
-    "title": "Config",
-    "description": "Configuration of pano-cli client",
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://panoramichq.com/config.schema.json",
+  "title": "Config",
+  "description": "Configuration of pano-cli client",
+  "type": "object",
+  "additionalProperties": false,
+  "definitions": {
+    "auth": {
+      "type": "object",
+      "properties": {
         "client_id": {
-            "description": "OAuth2 Client ID",
-            "type": "string"
+          "description": "OAuth2 Client ID",
+          "type": "string"
         },
         "client_secret": {
-            "description": "OAuth2 Client Secret",
-            "type": "string"
+          "description": "OAuth2 Client Secret",
+          "type": "string"
         }
-    },
-    "required": [
+      },
+      "required": [
         "client_id",
         "client_secret"
-    ]
+      ]
+    },
+    "connections": {
+      "type": "object",
+      "patternProperties": {
+        "^.*$": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string"
+            },
+            "user": {
+              "type": "string"
+            },
+            "host": {
+              "type": "string"
+            },
+            "port": {
+              "type": "integer"
+            },
+            "password": {
+              "type": "string"
+            },
+            "database": {
+              "type": "string"
+            },
+            "schema": {
+              "type": "string"
+            },
+            "warehouse": {
+              "type": "string"
+            },
+            "account": {
+              "type": "string"
+            },
+            "project": {
+              "type": "string"
+            },
+            "key_file": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "user",
+            "password"
+          ]
+        }
+      }
+    }
+  },
+  "properties": {
+    "auth": {
+      "$ref": "#/definitions/auth"
+    },
+    "connections": {
+      "$ref": "#/definitions/connections"
+    },
+    "client_id": {
+      "description": "OAuth2 Client ID",
+      "type": "string",
+      "deprecated": true,
+      "deprecationMessage": "Property is no longer supported, move property to 'auth' section."
+    },
+    "client_secret": {
+      "description": "OAuth2 Client Secret",
+      "type": "string",
+      "deprecated": true,
+      "deprecationMessage": "Property is no longer supported, move property to 'auth' section."
+    }
+  }
 }

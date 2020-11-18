@@ -3,9 +3,21 @@ from typing import Any, Dict, Optional, Tuple
 import click
 import hologram
 import yaml
+from dbt.adapters.factory import (
+    Credentials,
+    get_adapter_class_by_name,
+    get_config_class_by_name,
+    load_plugin,
+)
+from dbt.exceptions import FailedToConnectException, RuntimeException
 
 from panoramic.cli.config.storage import read_config, update_config
-from panoramic.cli.errors import ConnectionNotFound
+from panoramic.cli.errors import (
+    ConnectionAlreadyExistsException,
+    ConnectionCreateException,
+    ConnectionNotFound,
+    ConnectionUpdateException,
+)
 from panoramic.cli.paths import Paths
 from panoramic.cli.print import echo_info
 
@@ -25,56 +37,58 @@ CONNECTION_KEYS = [
 
 
 def create_connection_command(
-    name,
-    type,
-    user,
-    host,
-    port,
-    password,
-    password_stdin,
-    database,
-    schema,
-    warehouse,
-    account,
-    project,
-    key_file,
-    no_test,
-):
+    name: str,
+    type: Optional[str],
+    user: Optional[str],
+    host: Optional[str],
+    port: Optional[int],
+    password: Optional[str],
+    password_stdin: bool,
+    database: Optional[str],
+    schema: Optional[str],
+    warehouse: Optional[str],
+    account: Optional[str],
+    project: Optional[str],
+    key_file: Optional[str],
+    no_test: bool,
+) -> None:
     """CLI command. Create new connection."""
     connections = Connections.load()
     if name in connections:
-        raise click.ClickException(f'Connection with name "{name}" already exists.')
+        raise ConnectionAlreadyExistsException(name)
 
     if password_stdin:
         password = click.prompt('Enter password: ', hide_input=True, type=str)
 
-    new_connection = {
-        'type': type,
-        'user': user,
-        'host': host,
-        'port': port,
-        'password': password,
-        'database': database,
-        'schema': schema,
-        'warehouse': warehouse,
-        'account': account,
-        'project': project,
-        'key_file': key_file,
-    }
+    new_connection: Dict[str, Any] = {}
+    _update_connection_from_args(
+        new_connection,
+        type=type,
+        user=user,
+        password=password,
+        host=host,
+        port=port,
+        database=database,
+        schema=schema,
+        warehouse=warehouse,
+        account=account,
+        project=project,
+        key_file=key_file,
+    )
 
     credentials, error = get_dialect_credentials(new_connection)
-    if error != '':
-        raise click.ClickException(f'Failed to create connection: {error}')
+    if error is not None:
+        raise ConnectionCreateException(error)
 
     if not no_test:
         ok, error = Connections.test(credentials)
         if not ok:
-            raise click.ClickException(f'Failed to create connection: {error}')
+            raise ConnectionCreateException(error)
 
     # Empty values are important for DBT credentials verification, but we don't need to store empty values in config.
     connections[name] = {}
     for key, value in new_connection.items():
-        if value:
+        if value != '':
             connections[name][key] = value
 
     Connections.save(connections)
@@ -82,77 +96,64 @@ def create_connection_command(
 
 
 def update_connection_command(
-    name,
-    type,
-    user,
-    host,
-    port,
-    password,
-    password_stdin,
-    database,
-    schema,
-    warehouse,
-    account,
-    project,
-    key_file,
-    no_test,
-):
+    name: str,
+    type: Optional[str],
+    user: Optional[str],
+    host: Optional[str],
+    port: Optional[int],
+    password: Optional[str],
+    password_stdin: bool,
+    database: Optional[str],
+    schema: Optional[str],
+    warehouse: Optional[str],
+    account: Optional[str],
+    project: Optional[str],
+    key_file: Optional[str],
+    no_test: bool,
+) -> None:
     """CLI command. Update specific connection."""
     connections = Connections.load()
     if name not in connections:
-        raise click.ClickException(f'Connection with name "{name}" not found.')
+        raise ConnectionNotFound(name)
 
     if password_stdin:
         password = click.prompt('Enter password: ', hide_input=True, type=str)
 
     new_connection = connections[name].copy()
-    if type:
-        new_connection['type'] = type
-    if user:
-        new_connection['user'] = user
-    if password:
-        new_connection['password'] = password
-    if host:
-        new_connection['host'] = host
-    if port:
-        new_connection['port'] = port
-    if database:
-        new_connection['database'] = database
-    if schema:
-        new_connection['schema'] = schema
-    if warehouse:
-        new_connection['warehouse'] = warehouse
-    if account:
-        new_connection['account'] = account
-    if project:
-        new_connection['project'] = project
-    if key_file:
-        new_connection['key_file'] = key_file
-
-    # Fill with default values because DBT requires some fields we don't.
-    for key in CONNECTION_KEYS:
-        if key not in new_connection:
-            new_connection[key] = ''
+    _update_connection_from_args(
+        new_connection,
+        type=type,
+        user=user,
+        password=password,
+        host=host,
+        port=port,
+        database=database,
+        schema=schema,
+        warehouse=warehouse,
+        account=account,
+        project=project,
+        key_file=key_file,
+    )
 
     credentials, error = get_dialect_credentials(new_connection)
-    if error != '':
-        raise click.ClickException(f'Failed to update connection: {error}.')
+    if error is not None:
+        raise ConnectionUpdateException(error)
 
     if not no_test:
         ok, error = Connections.test(credentials)
         if not ok:
-            raise click.ClickException(f'Failed to update connection: {error}')
+            raise ConnectionUpdateException(error)
 
     # Empty values are important for DBT credentials verification, but we don't need to store empty values in config.
     for key, value in new_connection.items():
-        if value:
+        if value != '':
             connections[name][key] = value
 
     Connections.save(connections)
     echo_info('Connection was successfully updated!')
 
 
-def list_connections_command(show_password):
+def list_connections_command(show_password: bool) -> None:
     """CLI command. List all connections."""
     connections = Connections.load()
     if not connections:
@@ -169,23 +170,23 @@ def list_connections_command(show_password):
     echo_info(yaml.dump(connections))
 
 
-def remove_connection_command(name):
+def remove_connection_command(name: str) -> None:
     """CLI command. Remove existing connection."""
     connections = Connections.load()
     if name not in connections:
-        raise click.ClickException(f'Connection with name "{name}" not found.')
+        raise ConnectionNotFound(name)
 
     del connections[name]
     Connections.save(connections)
 
 
-def test_connections_command(name: Optional[str] = ''):
+def test_connections_command(name: Optional[str] = None) -> None:
     """CLI command. Test connections by trying to connect to the database.
     Optionally you can specify name for specific connection to that only that."""
     connections = Connections.load()
-    if name != '':
+    if name is not None:
         if name not in connections:
-            raise click.ClickException(f'Connection with name "{name}" not found.')
+            raise ConnectionNotFound(name)
         # Filter specified connection by name
         connections = {name: connections[name]}
 
@@ -196,7 +197,7 @@ def test_connections_command(name: Optional[str] = ''):
                 connection[key] = ''
 
         credentials, error = get_dialect_credentials(connection)
-        if error != '':
+        if error is not None:
             echo_info(f'{name}... FAIL: {error}')
             continue
 
@@ -236,12 +237,6 @@ class Connections:
     @classmethod
     def test(cls, credentials) -> Tuple[bool, str]:
         """Test connection string by connecting using DBT."""
-        from dbt.adapters.factory import (
-            get_adapter_class_by_name,
-            get_config_class_by_name,
-        )
-        from dbt.exceptions import FailedToConnectException
-
         # Create dialect specific configuration
         adapter_config_cls = get_config_class_by_name(credentials.type)
         adapter_config = adapter_config_cls()
@@ -261,11 +256,52 @@ class Connections:
         return True, ''
 
 
-def get_dialect_credentials(connection: Dict[str, Any]):
-    """Use DBT lib to create dialect specific credentials."""
-    from dbt.adapters.factory import load_plugin
-    from dbt.exceptions import RuntimeException
+def _update_connection_from_args(
+    connection: Dict[str, Any],
+    type: Optional[str],
+    user: Optional[str],
+    host: Optional[str],
+    port: Optional[int],
+    password: Optional[str],
+    database: Optional[str],
+    schema: Optional[str],
+    warehouse: Optional[str],
+    account: Optional[str],
+    project: Optional[str],
+    key_file: Optional[str],
+):
+    if type:
+        connection['type'] = type
+    if user is not None:
+        connection['user'] = user
+    if password is not None:
+        connection['password'] = password
+    if host is not None:
+        connection['host'] = host
+    if port is not None:
+        connection['port'] = port
+    if database is not None:
+        connection['database'] = database
+    if schema is not None:
+        connection['schema'] = schema
+    if warehouse is not None:
+        connection['warehouse'] = warehouse
+    if account is not None:
+        connection['account'] = account
+    if project is not None:
+        connection['project'] = project
+    if key_file is not None:
+        connection['key_file'] = key_file
 
+    # Fill with default values because DBT requires some fields we don't.
+    for key in CONNECTION_KEYS:
+        if key not in connection:
+            connection[key] = ''
+    return connection
+
+
+def get_dialect_credentials(connection: Dict[str, Any]) -> (Tuple[Optional[Credentials], Optional[str]]):
+    """Use DBT lib to create dialect specific credentials."""
     connection = connection.copy()
     type_ = connection.pop('type')
 
@@ -277,5 +313,5 @@ def get_dialect_credentials(connection: Dict[str, Any]):
     try:
         credentials = plugin_cls.from_dict(connection)
     except hologram.ValidationError as e:
-        return False, e.message  # noqa: B306
-    return credentials, ''
+        return None, e.message  # noqa: B306
+    return credentials, None
