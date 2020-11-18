@@ -110,7 +110,14 @@ def scan_fields_for_errors(errors: Sequence[MissingFieldFileError]) -> List[Pano
             try:
                 for error in errors_by_column[data_source, data_reference]:
                     # Create field for each dataset that is missing the field
-                    fields.append(map_column_to_field(column, slug=error.field_slug, data_source=error.dataset_slug))
+                    fields.append(
+                        map_column_to_field(
+                            column,
+                            slug=error.field_slug,
+                            data_source=error.dataset_slug,
+                            is_identifier=error.identifier,
+                        )
+                    )
                 del errors_by_column[data_source, data_reference]
             except KeyError:
                 pass  # Column does not map to missing field

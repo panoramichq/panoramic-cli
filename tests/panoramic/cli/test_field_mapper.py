@@ -142,9 +142,11 @@ def test_map_error_to_field():
             dataset_slug='test_dataset',
             data_source='db.schema.table1',
             data_reference='"TEST_FIELD"',
+            identifier=False,
         )
     ) == PanoField(
         slug='test_field',
+        data_source='test_dataset',
         display_name='test_field',
         group='CLI',
         data_type='TODO: add data_type',

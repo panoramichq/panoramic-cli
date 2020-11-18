@@ -622,6 +622,7 @@ def test_validate_local_state_missing_field_file(tmp_path, monkeypatch):
             dataset_slug='test_dataset',
             data_source='sf.db.schema.table1',
             data_reference='"COLUMN1"',
+            identifier=False,
         )
     ]
 

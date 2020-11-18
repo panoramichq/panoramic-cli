@@ -107,6 +107,7 @@ def test_scan_fields_for_errors(
             dataset_slug='test_dataset',
             data_source='db1.schema.table1',
             data_reference='"TEST_COLUMN"',
+            identifier=False,
         ),
         # not scanned
         MissingFieldFileError(
@@ -114,6 +115,7 @@ def test_scan_fields_for_errors(
             dataset_slug='test_dataset',
             data_source='db2.schema.table1',
             data_reference='10 + 5',
+            identifier=False,
         ),
     ]
 

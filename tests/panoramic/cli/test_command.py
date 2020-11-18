@@ -169,7 +169,13 @@ def test_delete_orphaned_fields(mock_execute, mock_validate, mock_state, capsys)
 @patch.object(LocalExecutor, '_execute')
 def test_scaffold_missing_files(mock_execute, mock_scan_fields_for_errors, mock_state, capsys):
     mock_state.return_value.get_objects_by_package.return_value.items.return_value = [
-        ('test_dataset', ([], [Mock(data_source='db.schema.test_table', fields=[Mock(field_map=['test_slug'])])])),
+        (
+            'test_dataset',
+            (
+                [],
+                [Mock(data_source='db.schema.test_table', identifiers=['id'], fields=[Mock(field_map=['test_slug'])])],
+            ),
+        ),
     ]
 
     mock_scan_fields_for_errors.return_value = [sentinel.field]

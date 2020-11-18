@@ -158,7 +158,7 @@ def validate_missing_files(
     fields_slugs_from_fields = {f.slug for f in fields}
     # take one model for every field
     data_reference_by_field_slugs = {
-        field_name: (model.data_source, f.data_reference)
+        field_name: (model.data_source, f.data_reference, field_name in model.identifiers)
         for model in models
         for f in model.fields
         for field_name in f.field_map
@@ -172,6 +172,7 @@ def validate_missing_files(
             dataset_slug=package_name,
             data_source=data_reference_by_field_slugs[slug][0],
             data_reference=data_reference_by_field_slugs[slug][1],
+            identifier=data_reference_by_field_slugs[slug][2],
         )
         for slug in field_slugs_with_no_files
     ]

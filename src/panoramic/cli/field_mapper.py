@@ -84,7 +84,8 @@ def map_column_to_field(
 def map_error_to_field(error: MissingFieldFileError) -> PanoField:
     return PanoField(
         slug=error.field_slug,
-        field_type='TODO: add field_type',
+        field_type='dimension' if error.identifier else 'TODO: add field_type',
+        data_source=error.dataset_slug,
         display_name=error.field_slug,
         group='CLI',
         data_type='TODO: add data_type',
