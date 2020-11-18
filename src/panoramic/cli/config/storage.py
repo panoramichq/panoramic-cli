@@ -10,7 +10,7 @@ def update_config(section: str, data: Dict[str, Any]) -> None:
         data = {section: data}
 
     config_file = Paths.config_file()
-    if os.path.isfile(config_file):
+    if config_file.is_file():
         config_yaml = read_yaml(config_file)
         config_yaml.update(data)
         write_yaml(config_file, config_yaml)
