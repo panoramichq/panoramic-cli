@@ -373,7 +373,7 @@ def update(
 
 @connection.command(cls=ConnectionAwareCommand)
 @click.argument('name', type=str)
-def remove(name):
+def remove(name: str):
     """Remove existing connection.
 
     pano connection remove postgres-prod
@@ -385,7 +385,7 @@ def remove(name):
 
 @connection.command(name='list', cls=ConnectionAwareCommand)
 @click.option('--show-password', default=False, is_flag=True, help='Show passwords.')
-def list_(show_password):  # we cannot have method 'list' due to conflicts
+def list_(show_password: bool):  # we cannot have method 'list' due to conflicts
     """List all available connections.
 
     pano connection list --show-password
@@ -397,7 +397,7 @@ def list_(show_password):  # we cannot have method 'list' due to conflicts
 
 @connection.command(cls=ConnectionAwareCommand)
 @click.argument('name', default=None, type=str, required=False)
-def test(name):
+def test(name: str):
     """Test connections.
 
     pano connection test
