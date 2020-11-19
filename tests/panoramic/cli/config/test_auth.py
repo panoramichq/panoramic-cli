@@ -16,7 +16,7 @@ def remove_client_creds_env(monkeypatch):
 
 def test_env_vars(monkeypatch):
     with tempfile.TemporaryDirectory() as tmpdirname:
-        monkeypatch.setattr(Path, 'home', lambda: tmpdirname)
+        monkeypatch.setattr(Path, 'home', lambda: Path(tmpdirname))
         Paths.config_dir().mkdir()
 
         with Paths.config_file().open('w') as f:
@@ -32,7 +32,7 @@ def test_env_vars(monkeypatch):
 
 def test_config_file(monkeypatch):
     with tempfile.TemporaryDirectory() as tmpdirname:
-        monkeypatch.setattr(Path, 'home', lambda: tmpdirname)
+        monkeypatch.setattr(Path, 'home', lambda: Path(tmpdirname))
         Paths.config_dir().mkdir()
 
         with Paths.config_file().open('w') as f:
