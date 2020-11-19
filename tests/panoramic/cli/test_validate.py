@@ -1,3 +1,4 @@
+from pathlib import Path
 from typing import Any, Dict
 
 import pytest
@@ -99,7 +100,7 @@ INVALID_CONFIGS = [
 def test_validate_config_invalid_env_var_set(tmp_path, monkeypatch, config):
     monkeypatch.setenv('PANO_CLIENT_ID', 'test-client_id')
     monkeypatch.setenv('PANO_CLIENT_SECRET', 'test-client-secret')
-    monkeypatch.setenv('HOME', str(tmp_path))
+    monkeypatch.setattr(Path, 'home', lambda: str(tmp_path))
 
     Paths.config_dir().mkdir()
     with Paths.config_file().open('w') as f:
@@ -112,7 +113,7 @@ def test_validate_config_invalid_env_var_set(tmp_path, monkeypatch, config):
 def test_validate_config_invalid(tmp_path, monkeypatch, config):
     monkeypatch.delenv('PANO_CLIENT_ID', raising=False)
     monkeypatch.delenv('PANO_CLIENT_SECRET', raising=False)
-    monkeypatch.setenv('HOME', str(tmp_path))
+    monkeypatch.setattr(Path, 'home', lambda: str(tmp_path))
 
     Paths.config_dir().mkdir()
     with Paths.config_file().open('w') as f:
@@ -125,7 +126,7 @@ def test_validate_config_invalid(tmp_path, monkeypatch, config):
 def test_validate_config_invalid_yaml(tmp_path, monkeypatch):
     monkeypatch.delenv('PANO_CLIENT_ID', raising=False)
     monkeypatch.delenv('PANO_CLIENT_SECRET', raising=False)
-    monkeypatch.setenv('HOME', str(tmp_path))
+    monkeypatch.setattr(Path, 'home', lambda: str(tmp_path))
 
     Paths.config_dir().mkdir()
     with Paths.config_file().open('w') as f:
@@ -138,14 +139,14 @@ def test_validate_config_invalid_yaml(tmp_path, monkeypatch):
 def test_validate_config_missing_file(tmp_path, monkeypatch):
     monkeypatch.delenv('PANO_CLIENT_ID', raising=False)
     monkeypatch.delenv('PANO_CLIENT_SECRET', raising=False)
-    monkeypatch.setenv('HOME', str(tmp_path))
+    monkeypatch.setattr(Path, 'home', lambda: str(tmp_path))
 
     with pytest.raises(FileMissingError):
         validate_config()
 
 
 def test_validate_config_valid(tmp_path, monkeypatch):
-    monkeypatch.setenv('HOME', str(tmp_path))
+    monkeypatch.setattr(Path, 'home', lambda: str(tmp_path))
 
     Paths.config_dir().mkdir()
     with Paths.config_file().open('w') as f:
