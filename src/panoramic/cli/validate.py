@@ -229,7 +229,7 @@ def validate_config():
         _validate_file(path, schema)
         errors = _check_properties_deprecations(path, schema)
         for err in errors:
-            echo_warning(err)
+            echo_warning(str(err))
     except ValidationError as e:
         try:
             # Valid if we get both values from env vars
