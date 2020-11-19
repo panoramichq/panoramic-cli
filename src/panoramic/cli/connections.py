@@ -209,16 +209,6 @@ def test_connections_command(name: Optional[str] = None) -> None:
 
 
 class Connections:
-    def __init__(self):
-        self._connections = self.load()
-
-    def get_by_name_cached(self, name: str) -> Dict[str, str]:
-        """Get connection by name. Use when checking connections very often, like in for loop.
-        The cached connections will be used instead of loading connections file every time."""
-        if name not in self._connections:
-            raise ConnectionNotFound(name)
-        return self._connections[name]
-
     @classmethod
     def get_by_name(cls, name: str) -> Dict[str, str]:
         connections = cls.load()
