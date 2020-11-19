@@ -19,7 +19,6 @@ from panoramic.cli.errors import (
     ValidationError,
     ValidationErrorSeverity,
 )
-from panoramic.cli.field_mapper import map_column_to_field, map_error_to_field
 from panoramic.cli.file_utils import write_yaml
 from panoramic.cli.identifier_generator import IdentifierGenerator
 from panoramic.cli.join_detector import JoinDetector
@@ -34,7 +33,7 @@ from panoramic.cli.print import echo_error, echo_errors, echo_info, echo_warning
 from panoramic.cli.refresh import Refresher
 from panoramic.cli.remote import get_state as get_remote_state
 from panoramic.cli.remote.executor import RemoteExecutor
-from panoramic.cli.scan import Scanner
+from panoramic.cli.scan import Scanner, scan_fields_for_errors
 from panoramic.cli.state import Action, ActionList
 from panoramic.cli.validate import (
     validate_config,
@@ -171,19 +170,6 @@ def scan(source_id: str, table_filter: Optional[str], parallel: int = 1, generat
                 model.identifiers = identifiers
                 writer.write_scanned_model(model)
                 progress_bar.write(f'Discovered model {model.model_name}')
-
-            for column in columns:
-                column_slug = column['field_map'][0]
-                try:
-                    field = map_column_to_field(column, is_identifier=column_slug in identifiers)
-                    progress_bar.write(f'Discovered field {field.slug}')
-                    writer.write_scanned_field(field)
-                except Exception:
-                    error_msg = f'Metadata could not be parsed for column {column_slug} under {table_name}'
-                    progress_bar.write(f'Error: {error_msg}')
-                    logger.debug(error_msg, exc_info=True)
-                    # Create an empty field file in case the mapping fails
-                    writer.write_empty_field(column_slug)
         except Exception:
             error_msg = f'Metadata could not be scanned for table {table_name}'
             progress_bar.write(f'Error: {error_msg}')
@@ -392,7 +378,7 @@ def delete_orphaned_fields(target_dataset: Optional[str] = None, yes: bool = Fal
             executor.execute(action)
         except Exception:
             echo_error(f'Error: Failed to execute action {action.description}')
-        echo_info(f'Updated {executor.success_count}/{executor.total_count} fields')
+    echo_info(f'Updated {executor.success_count}/{executor.total_count} fields')
 
 
 def scaffold_missing_fields(target_dataset: Optional[str] = None, yes: bool = False):
@@ -400,17 +386,16 @@ def scaffold_missing_fields(target_dataset: Optional[str] = None, yes: bool = Fa
     echo_info('Loading local state...')
     state = get_local_state(target_dataset=target_dataset)
 
-    action_list: ActionList[PanoField] = ActionList()
+    errors = []
 
     for dataset, (fields, models) in state.get_objects_by_package().items():
         for idx, error in enumerate(validate_missing_files(fields, models, package_name=dataset)):
             if idx == 0:
                 echo_info(f'\nFields referenced in models without definition in dataset {dataset}:')
             echo_info(f'  {error.field_slug}')
-            # Add creation action
-            action_list.add_action(Action(current=None, desired=map_error_to_field(error)))
+            errors.append(error)
 
-    if action_list.is_empty:
+    if len(errors) == 0:
         echo_info('No issues found')
         return
 
@@ -421,6 +406,11 @@ def scaffold_missing_fields(target_dataset: Optional[str] = None, yes: bool = Fa
         # User decided not to fix issues
         return
 
+    # TODO: improve messaging?
+    echo_info('Scanning fields...')
+    fields = scan_fields_for_errors(errors)
+    action_list = ActionList(actions=[Action(desired=field) for field in fields])
+
     echo_info('Updating local state...')
 
     executor = LocalExecutor()
@@ -429,4 +419,4 @@ def scaffold_missing_fields(target_dataset: Optional[str] = None, yes: bool = Fa
             executor.execute(action)
         except Exception:
             echo_error(f'Error: Failed to execute action {action.description}')
-        echo_info(f'Updated {executor.success_count}/{executor.total_count} fields')
+    echo_info(f'Updated {executor.success_count}/{executor.total_count} fields')

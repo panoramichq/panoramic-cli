@@ -37,6 +37,10 @@ class Paths:
         return Paths.fields_dir(Paths.scanned_dir())
 
     @staticmethod
+    def company_fields_dir() -> Path:
+        return Path.cwd() / SystemDirectory.FIELDS.value
+
+    @staticmethod
     def fields_dir(package: Path) -> Path:
         return package / SystemDirectory.FIELDS.value
 

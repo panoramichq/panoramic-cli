@@ -57,7 +57,12 @@ def map_field_from_local(field: PanoField) -> Field:
     )
 
 
-def map_column_to_field(column: Dict[str, Any], is_identifier: bool = False) -> PanoField:
+def map_column_to_field(
+    column: Dict[str, Any],
+    slug: str,
+    data_source: str,
+    is_identifier: bool = False,
+) -> PanoField:
     aggregation = (
         Aggregation(type=column['aggregation_type'], params=None)
         if column.get('aggregation_type') is not None
@@ -65,12 +70,10 @@ def map_column_to_field(column: Dict[str, Any], is_identifier: bool = False) -> 
     )
     field_type = 'dimension' if is_identifier else column['taxon_type']
 
-    assert len(column['field_map']) == 1
-    slug = column['field_map'][0]
-
     return PanoField(
         slug=slug,
         field_type=field_type,
+        data_source=data_source,
         display_name=slug,
         group='CLI',
         data_type=column['validation_type'],
@@ -81,7 +84,8 @@ def map_column_to_field(column: Dict[str, Any], is_identifier: bool = False) -> 
 def map_error_to_field(error: MissingFieldFileError) -> PanoField:
     return PanoField(
         slug=error.field_slug,
-        field_type='TODO: add field_type',
+        field_type='dimension' if error.identifier else 'TODO: add field_type',
+        data_source=error.dataset_slug,
         display_name=error.field_slug,
         group='CLI',
         data_type='TODO: add data_type',

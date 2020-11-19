@@ -1,5 +1,10 @@
 # Changelog
 
+## Version 1.3.3 Release
+
+- Change `pano field scaffold` to scan field metadata
+- Do not output field files during `pano scan`
+
 ## Version 1.3.2 Release
 
 - Update README and global help for pano command
