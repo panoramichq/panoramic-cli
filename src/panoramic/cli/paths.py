@@ -80,7 +80,6 @@ class FileExtension(Enum):
 
 
 class PresetFileName(Enum):
-
     """Enumeration with all available preset file names."""
 
     DATASET_YAML = 'dataset.yaml'
@@ -96,6 +95,5 @@ class PresetFileName(Enum):
 
 
 class SystemDirectory(Enum):
-
     SCANNED = 'scanned'
     FIELDS = 'fields'
