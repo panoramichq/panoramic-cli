@@ -253,7 +253,7 @@ def connection():
     database: The database used for database connection.
     schema: The schema to build models into by default. Can be overridden by custom models.
     warehouse: The warehouse to use when building models. (Used by Snowflake)
-    account: The account used for database connection. (Used by Snowflake)
+    account: The account used for database connection. This will be something like cc123 or cc123.us-east-1 for your particular account. (Used by Snowflake)
     project: The project used for database connection. (Used by BigQuery)
     key_file: Keyfile path to Service Account JSON. (Used by BigQuery)
     """
