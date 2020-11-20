@@ -141,6 +141,7 @@ class FieldClient(OAuth2Client, VersionedClient):
     """Model field HTTP API client."""
 
     base_url: str
+    _base_url_with_trailing_slash: str
 
     def __init__(
         self,
@@ -148,11 +149,21 @@ class FieldClient(OAuth2Client, VersionedClient):
         client_id: Optional[str] = None,
         client_secret: Optional[str] = None,
     ):
-        base_url = base_url if base_url is not None else get_base_url()
         client_id = client_id if client_id is not None else get_client_id()
         client_secret = client_secret if client_secret is not None else get_client_secret()
 
-        self.base_url = base_url
+        # Since we need to request api/virtual?company_id=x and api/virtual/slug?company_id=1
+        # the base gets corrected to not include trailing slash
+        #
+        # Check https://stackoverflow.com/questions/10893374/python-confusions-with-urljoin for more context
+        self.base_url = base_url if base_url is not None else get_base_url()
+        if self.base_url[-1] == '/':
+            self._base_url_with_trailing_slash = self.base_url
+            self.base_url = self.base_url[0:-1]
+        else:
+            # base_url is in it's correct form - without trailing slash
+            self._base_url_with_trailing_slash = self.base_url + '/'
+
         super().__init__(client_id, client_secret)
 
     def upsert_fields(self, company_slug: str, fields: List[Field], data_source: Optional[str] = None):
@@ -175,7 +186,7 @@ class FieldClient(OAuth2Client, VersionedClient):
 
     def delete_fields(self, company_slug: str, slugs: List[str]):
         """Delete a field with a given name."""
-        url = urljoin(self.base_url, 'delete')
+        url = urljoin(self._base_url_with_trailing_slash, 'delete')
         logger.debug(f'Deleting fields : {", ".join(slugs)}')
         response = self.session.post(url, json=slugs, params={'company_slug': company_slug}, timeout=30)
         response.raise_for_status()

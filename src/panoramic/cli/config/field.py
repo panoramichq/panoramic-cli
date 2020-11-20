@@ -1,6 +1,6 @@
 import os
 
-BASE_URL = 'https://diesel.panoramicapi.com/api/v1/federated/taxonomy/taxons'
+BASE_URL = 'https://diesel.panoramicapi.com/api/v1/federated/taxonomy/taxons/'
 
 
 def get_base_url() -> str:

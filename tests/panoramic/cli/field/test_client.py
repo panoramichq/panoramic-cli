@@ -27,7 +27,7 @@ def test_upsert_field():
     # Create with a data source
     responses.add(
         responses.POST,
-        'https://diesel/field/?company_slug=test-company',
+        'https://diesel/field?company_slug=test-company',
         json=[field.to_dict()],
     )
     client.upsert_fields(company_slug='test-company', fields=[field])
@@ -41,7 +41,7 @@ def test_get_fields_dataset_scoped():
 
     responses.add(
         responses.GET,
-        'https://diesel/field/?company_slug=test-company&virtual_data_source=test-source&offset=0&limit=100',
+        'https://diesel/field?company_slug=test-company&virtual_data_source=test-source&offset=0&limit=100',
         json={'data': [field.to_dict()]},
     )
 
@@ -58,7 +58,7 @@ def test_get_all_fields():
 
     responses.add(
         responses.GET,
-        'https://diesel/field/?company_slug=test-company&offset=0&limit=100',
+        'https://diesel/field?company_slug=test-company&offset=0&limit=100',
         json={'data': [field.to_dict()]},
     )
 
