@@ -1,8 +1,9 @@
 # Changelog
 
-## Version 1.3.4 Release
+## Version 1.4.0 Release
 
 - Fix delete action for fields
+- Introduce new configuration structure
 
 ## Version 1.3.3 Release
 
