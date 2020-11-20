@@ -1,7 +1,7 @@
 from pathlib import Path
 
-from panoramic.cli.config.auth import get_dbt_profiles
-from panoramic.cli.context import get_dbt_packages, get_dbt_vars
+from panoramic.cli.connections import Connections
+from panoramic.cli.context import get_dbt_packages, get_dbt_target, get_dbt_vars
 from panoramic.cli.file_utils import write_yaml
 from panoramic.cli.paths import Paths
 
@@ -9,10 +9,12 @@ from panoramic.cli.paths import Paths
 def prepare_dbt_project():
     """Set up DBT project for DBT CLI execution."""
 
+    # Find the target connection
+    target = get_dbt_target()
+
     # Create the config file
-    profiles = get_dbt_profiles()
-    if profiles is not None:
-        write_yaml(Paths.dbt_profiles_file(), profiles)
+    connections = Connections.load()
+    write_yaml(Paths.dbt_profiles_file(), {'default': {'outputs': connections, 'target': target}})
 
     # Create the package file
     packages = get_dbt_packages()

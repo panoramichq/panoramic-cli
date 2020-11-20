@@ -29,11 +29,18 @@
                         "$ref": "#/$defs/package"
                     }
                 },
+                "target": {
+                    "type": "string",
+                    "description": "Target data connection for DBT execution"
+                },
                 "vars": {
                     "type": "object",
                     "descriptioin": "Variables for DBT templates"
                 }
-            }
+            },
+            "required": [
+                "target"
+            ]
         }
     },
     "required": [
