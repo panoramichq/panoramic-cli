@@ -46,6 +46,8 @@ class RemoteWriter:
             return self.delete_model(actionable)
         elif isinstance(actionable, PanoVirtualDataSource):
             return self.delete_data_source(actionable)
+        elif isinstance(actionable, PanoField):
+            return self.delete_field(actionable)
         else:
             raise NotImplementedError(f'delete not implemented for type {type(actionable)}')
 
