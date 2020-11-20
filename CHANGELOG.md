@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 1.3.4 Release
+
+- Fix delete action for fields
+
 ## Version 1.3.3 Release
 
 - Change `pano field scaffold` to scan field metadata
