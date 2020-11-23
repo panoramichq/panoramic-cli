@@ -76,24 +76,24 @@ jobs:
 
       - name: Checkout Homebrew repo
         uses: "actions/checkout@v2"
-        if: startsWith(github.ref, 'refs/tags')
+        #if: startsWith(github.ref, 'refs/tags')
         with:
           repository: panoramichq/homebrew-brew
           ssh-key: ${{ secrets.homebrew_ssh_key }}
           path: .homebrew_repo
 
       - name: Update Homebrew with new release version
-        if: startsWith(github.ref, 'refs/tags')
+        #if: startsWith(github.ref, 'refs/tags')
         run: bash shipping/update_homebrew.sh
 
-      - name: Create Release
-        if: startsWith(github.ref, 'refs/tags')
-        id: create_release
-        uses: panoramichq/github-release@v2.0.3
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          tag: ${GITHUB_REF#refs/tags/}
-          name: Release ${GITHUB_REF#refs/tags/}
-          files: dist/
-          draft: false
-          prerelease: false
+      # - name: Create Release
+      #   if: startsWith(github.ref, 'refs/tags')
+      #   id: create_release
+      #   uses: panoramichq/github-release@v2.0.3
+      #   with:
+      #     token: ${{ secrets.GITHUB_TOKEN }}
+      #     tag: ${GITHUB_REF#refs/tags/}
+      #     name: Release ${GITHUB_REF#refs/tags/}
+      #     files: dist/
+      #     draft: false
+      #     prerelease: false
