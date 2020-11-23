@@ -10,12 +10,6 @@ from panoramic.cli.context import (
 from panoramic.cli.file_utils import write_yaml
 from panoramic.cli.paths import Paths
 
-_CUSTOM_SCHEMA_MACRO = """
-{% macro generate_schema_name(custom_schema_name, node) -%}
-    {{ custom_schema_name | trim }}
-{%- endmacro %}
-"""
-
 
 def prepare_dbt_project():
     """Set up DBT project for DBT CLI execution."""
@@ -59,10 +53,3 @@ def prepare_dbt_project():
         project_data['vars'] = dbt_vars
 
     write_yaml(Paths.dbt_project_file(), project_data)
-
-    macro_file = Paths.dbt_custom_schema_name_macro_file()
-    # create parent dir if not exists
-    if not macro_file.parent.is_dir():
-        macro_file.parent.mkdir()
-
-    macro_file.write_text(_CUSTOM_SCHEMA_MACRO)
