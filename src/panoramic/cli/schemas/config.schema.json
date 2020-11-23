@@ -99,7 +99,9 @@
               },
               "then": {
                 "required": [
-                  "account"
+                  "account",
+                  "role",
+                  "warehouse"
                 ]
               }
             },
