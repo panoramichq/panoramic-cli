@@ -1,20 +1,36 @@
 from pathlib import Path
 
 from panoramic.cli.connections import Connections
-from panoramic.cli.context import get_dbt_packages, get_dbt_target, get_dbt_vars
+from panoramic.cli.context import (
+    get_dbt_packages,
+    get_dbt_target_name,
+    get_dbt_target_parts,
+    get_dbt_vars,
+)
 from panoramic.cli.file_utils import write_yaml
 from panoramic.cli.paths import Paths
+
+_CUSTOM_SCHEMA_MACRO = """
+{% macro generate_schema_name(custom_schema_name, node) -%}
+    {{ custom_schema_name | trim }}
+{%- endmacro %}
+"""
 
 
 def prepare_dbt_project():
     """Set up DBT project for DBT CLI execution."""
 
     # Find the target connection
-    target = get_dbt_target()
+    target_name = get_dbt_target_name()
+    target_parts = get_dbt_target_parts()
 
     # Create the config file
     connections = Connections.load()
-    write_yaml(Paths.dbt_profiles_file(), {'default': {'outputs': connections, 'target': target}})
+    for connection_name, connection_data in connections.items():
+        if connection_name == target_name:
+            connections[connection_name] = {**connection_data, **target_parts}
+
+    write_yaml(Paths.dbt_profiles_file(), {'default': {'outputs': connections, 'target': target_name}})
 
     # Create the package file
     packages = get_dbt_packages()
@@ -43,3 +59,10 @@ def prepare_dbt_project():
         project_data['vars'] = dbt_vars
 
     write_yaml(Paths.dbt_project_file(), project_data)
+
+    macro_file = Paths.dbt_custom_schema_name_macro_file()
+    # create parent dir if not exists
+    if not macro_file.parent.is_dir():
+        macro_file.parent.mkdir()
+
+    macro_file.write_text(_CUSTOM_SCHEMA_MACRO)

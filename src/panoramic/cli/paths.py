@@ -32,6 +32,14 @@ class Paths:
     def dbt_project_file(cls) -> Path:
         return cls.dbt_project_dir() / PresetFileName.DBT_PROJECT_FILE.value
 
+    @classmethod
+    def dbt_custom_schema_name_macro_file(cls) -> Path:
+        return (
+            cls.dbt_project_dir()
+            / PresetFileName.DBT_MACROS_DIR.value
+            / PresetFileName.DBT_MACROS_CUSTOM_SCHEMA_NAME.value
+        )
+
     @staticmethod
     def dotenv_file() -> Path:
         return Path.cwd() / PresetFileName.DOTENV.value
@@ -121,6 +129,8 @@ class PresetFileName(Enum):
     DBT_PROJECT_FILE = 'dbt_project.yml'
     DBT_PACKAGES_FILE = 'packages.yml'
     DBT_PROFILES_FILE = 'profiles.yml'
+    DBT_MACROS_DIR = 'macros'
+    DBT_MACROS_CUSTOM_SCHEMA_NAME = 'generate_schema_name.sql'
 
 
 class SystemDirectory(Enum):

@@ -30,8 +30,21 @@
                     }
                 },
                 "target": {
-                    "type": "string",
-                    "description": "Target data connection for DBT execution"
+                    "type": "object",
+                    "description": "Target data connection for DBT execution",
+                    "properties": {
+                        "name": {
+                            "type": "string",
+                            "description": "Name of target connection"
+                        },
+                        "parts": {
+                            "type": "object",
+                            "description": "Target connection information"
+                        }
+                    },
+                    "required": [
+                        "name"
+                    ]
                 },
                 "vars": {
                     "type": "object",

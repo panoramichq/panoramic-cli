@@ -24,7 +24,13 @@ def get_dbt_vars() -> Optional[Dict[str, Any]]:
 
 
 @functools.lru_cache()
-def get_dbt_target() -> Optional[str]:
+def get_dbt_target_name() -> str:
     """Return dbt target from context."""
-    # target is required if DBT is set
-    return read_yaml(Paths.context_file()).get('dbt', {})['target']
+    # target name is required if DBT is set
+    return read_yaml(Paths.context_file())['dbt']['target']['name']
+
+
+@functools.lru_cache()
+def get_dbt_target_parts() -> Dict[str, Any]:
+    """Return dbt target parts from context."""
+    return read_yaml(Paths.context_file())['dbt']['target']['parts']

@@ -21,6 +21,7 @@ from panoramic.cli.errors import (
 )
 from panoramic.cli.paths import Paths
 from panoramic.cli.print import echo_error, echo_errors, echo_info, echo_warnings
+from panoramic.cli.validate import validate_dbt
 
 _PROFILES_DIR_ARG = '--profiles-dir'
 _PROJECT_DIR_ARG = '--project-dir'
@@ -83,6 +84,7 @@ class DbtCommand(ContextAwareCommand):
         from panoramic.cli.dbt import prepare_dbt_project
 
         try:
+            validate_dbt()
             prepare_dbt_project()
             return super().invoke(ctx)
         except Exception as e:
