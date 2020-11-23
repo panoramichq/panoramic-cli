@@ -434,9 +434,23 @@ def test(name: str):
     test_connections_command(name)
 
 
-@cli.command(context_settings=dict(ignore_unknown_options=True), help='Run dbt command', cls=DbtCommand)
+@cli.command(context_settings=dict(ignore_unknown_options=True), cls=DbtCommand)
 @click.argument('dbt_args', nargs=-1, type=click.UNPROCESSED)
 def dbt(dbt_args: Tuple[str]):
+    """Run DBT command.
+
+    \b
+    Supported commands:
+      pano dbt deps     Update package dependencies from pano.yaml
+      pano dbt compile  Compile pre-model transforms into .dbt/target/compiled
+      pano dbt run      Run compiled transforms against target defined in pano.yaml
+    """
+    # Handle no args passed
+    if len(dbt_args) == 0:
+        ctx = click.get_current_context()
+        click.echo(ctx.get_help())
+        return
+
     args = list(dbt_args)
 
     if _PROFILES_DIR_ARG not in args:

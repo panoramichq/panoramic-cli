@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 1.5.0b0 Release
+
+- Introduce DBT subcommand to manage pre-model transforms
+
 ## Version 1.4.0 Release
 
 - Fix delete action for fields
