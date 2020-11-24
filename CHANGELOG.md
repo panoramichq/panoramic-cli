@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 1.5.0b1 Release
+
+- Fix Homebrew install
+
 ## Version 1.5.0b0 Release
 
 - Introduce DBT subcommand to manage pre-model transforms
