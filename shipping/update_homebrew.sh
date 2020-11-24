@@ -17,6 +17,7 @@ update_homebrew_formula() {
   git checkout master || true
   cd ..
   rm -fr .homebrew_repo/Formula/panoramic-cli.rb
+  mkdir -p .homebrew_repo/Formula
   cp brewout/panoramic-cli.rb .homebrew_repo/Formula/panoramic-cli.rb
   cd .homebrew_repo
   git add Formula/panoramic-cli.rb
@@ -26,7 +27,9 @@ update_homebrew_formula() {
 
 upload_files() {
   cd .homebrew_repo || true
-  git push origin master
+  if [ -f "Formula/panoramic-cli.rb" ]; then
+    git push origin master
+  fi
 }
 
 generate_homebrew_formula
