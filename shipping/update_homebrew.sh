@@ -29,6 +29,7 @@ upload_files() {
   cd .homebrew_repo || true
   if [ -f "Formula/panoramic-cli.rb" ]; then
     #git push origin master
+    echo 1
   fi
 }
 
