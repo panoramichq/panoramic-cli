@@ -21,7 +21,6 @@ update_homebrew_formula() {
   cp brewout/panoramic-cli.rb .homebrew_repo/Formula/panoramic-cli.rb
   cd .homebrew_repo
   git add Formula/panoramic-cli.rb
-  cat Formula/panoramic-cli.rb
   git commit --message "Panoramic CLI build: $GITHUB_RUN_NUMBER"
   cd ..
 }
@@ -29,8 +28,7 @@ update_homebrew_formula() {
 upload_files() {
   cd .homebrew_repo || true
   if [ -f "Formula/panoramic-cli.rb" ]; then
-    #git push origin master
-    echo 1
+    git push origin master
   fi
 }
 
