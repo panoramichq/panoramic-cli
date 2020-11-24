@@ -9,6 +9,7 @@ from dbt.adapters.factory import (
     get_config_class_by_name,
     load_plugin,
 )
+from dbt.adapters.protocol import AdapterProtocol
 from dbt.exceptions import FailedToConnectException, RuntimeException
 
 from panoramic.cli.config.storage import read_config, update_config
@@ -225,7 +226,7 @@ class Connections:
         return read_config('connections')
 
     @classmethod
-    def test(cls, credentials) -> Tuple[bool, str]:
+    def get_connection_adapter(cls, credentials) -> AdapterProtocol:
         """Test connection string by connecting using DBT."""
         # Create dialect specific configuration
         adapter_config_cls = get_config_class_by_name(credentials.type)
@@ -235,6 +236,23 @@ class Connections:
         # Create dialect specific adapter that handles connections
         adapter_cls = get_adapter_class_by_name(credentials.type)
         adapter = adapter_cls(adapter_config)  # type: ignore
+        return adapter
+
+    @classmethod
+    def execute(cls, sql: str, credentials):
+        adapter = cls.get_connection_adapter(credentials)
+        try:
+            adapter.acquire_connection()  # type: ignore
+            res = adapter.execute(sql=sql, fetch=True)
+        except FailedToConnectException:
+            # FIXME handle connection failure
+            raise
+
+        return res
+
+    @classmethod
+    def test(cls, credentials) -> Tuple[bool, str]:
+        adapter = cls.get_connection_adapter(credentials)
 
         # Create dialect specific connection
         connection = adapter.acquire_connection()  # type: ignore
