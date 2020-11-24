@@ -147,7 +147,7 @@ if ! type poet >/dev/null 2>&1; then
   echo "Error: poet could not be installed." 1>&2
   exit 1
 fi
-if ! pip install "$package"=="$version" > /dev/null; then
+if ! pip install --use-feature=2020-resolver "$package"=="$version" > /dev/null; then
   echo "Error: $package $version could not be installed." 1>&2
   exit 1
 fi

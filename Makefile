@@ -1,5 +1,5 @@
 install:
-	pip install -e .[dev]
+	pip install --use-feature=2020-resolver -e .[dev]
 
 pre-commit-install:
 	python -m pre_commit install
