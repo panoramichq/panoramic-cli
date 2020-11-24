@@ -8,13 +8,20 @@ from panoramic.cli.paths import FileExtension, PresetFileName, SystemDirectory
 class GlobalPackage:
 
     field_files: List[Path]
+    transform_files: List[Path]
 
-    def __init__(self, *, field_files: List[Path]) -> None:
+    def __init__(self, *, field_files: List[Path], transform_files: List[Path]) -> None:
         self.field_files = field_files
+        self.transform_files = transform_files
 
     def read_fields(self) -> Iterable[Tuple[Dict[str, Any], Path]]:
         """Parse field files."""
         for f in self.field_files:
+            yield read_yaml(f), f
+
+    def read_transforms(self) -> Iterable[Tuple[Dict[str, str], Path]]:
+        """Parse transform files."""
+        for f in self.transform_files:
             yield read_yaml(f), f
 
 
@@ -102,5 +109,8 @@ class FileReader:
 
     def get_global_package(self) -> GlobalPackage:
         return GlobalPackage(
-            field_files=list(self.cwd.glob(f'{SystemDirectory.FIELDS.value}/*{FileExtension.FIELD_YAML.value}'))
+            field_files=list(self.cwd.glob(f'{SystemDirectory.FIELDS.value}/*{FileExtension.FIELD_YAML.value}')),
+            transform_files=list(
+                self.cwd.glob(f'{SystemDirectory.TRANSFORMS.value}/*{FileExtension.TRANSFORM_YAML.value}')
+            ),
         )

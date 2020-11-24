@@ -10,6 +10,7 @@ from panoramic.cli.pano_model import (
     PanoVirtualDataSource,
 )
 from panoramic.cli.paths import FileExtension, Paths, PresetFileName
+from panoramic.cli.transform.pano_transform import PanoTransform
 
 logger = logging.getLogger(__name__)
 
@@ -135,3 +136,12 @@ class FileWriter:
 
         logger.debug(f'About to delete field {field.id}')
         delete_file(path)
+
+    def write_transform(self, transform: PanoTransform, path: Optional[Path] = None):
+        file_name = f'{transform.name}{FileExtension.TRANSFORM_YAML.value}'
+        if path is not None:
+            path = path / file_name
+        else:
+            path = Paths.transforms_dir() / file_name
+
+        write_yaml(path, transform.to_dict())

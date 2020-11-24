@@ -528,3 +528,36 @@ def dbt(dbt_args: Tuple[str]):
         args.extend([_PROJECT_DIR_ARG, str(Paths.dbt_project_dir())])
 
     return dbt_main(args=args)
+
+
+@cli.group(name='transform')
+def transform_cli():
+    """Commands on local transform files."""
+
+
+@transform_cli.command(name='create', help='Scaffold a new transform file', cls=ContextAwareCommand)
+@handle_exception
+def transform_create():
+    from panoramic.cli.transform.commands import create_command
+
+    echo_info('Scaffolding a new transform...')
+    name = click.prompt('name: ')
+    fields = click.prompt('fields: ', default=[])
+    target = click.prompt('target: ')
+    create_command(name=name, fields=fields, target=target, filters=None)
+
+
+@transform_cli.command(name='compile', help='Compile all transforms in the current project', cls=ContextAwareCommand)
+@handle_exception
+def transform_compile():
+    from panoramic.cli.transform.commands import compile_command
+
+    compile_command()
+
+
+@transform_cli.command(name='exec', help='Execute transforms on a connection', cls=ContextAwareCommand)
+@handle_exception
+def transform_exec():
+    from panoramic.cli.transform.commands import exec_command
+
+    exec_command()

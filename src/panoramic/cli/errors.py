@@ -426,3 +426,10 @@ class ConnectionUpdateException(CliBaseException):
 
     def __init__(self, error_message: str):
         super().__init__(f'Failed to update connection: {error_message}.')
+
+
+class TransformCompileException(CliBaseException):
+    """Failed to comiple a Transform due to an error."""
+
+    def __init__(self, transform_name: str):
+        super().__init__(f'Error compiling transform {transform_name}')

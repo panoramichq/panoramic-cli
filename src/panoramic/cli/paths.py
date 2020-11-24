@@ -69,6 +69,10 @@ class Paths:
         return package / SystemDirectory.FIELDS.value
 
     @staticmethod
+    def transforms_dir():
+        return Path.cwd() / SystemDirectory.TRANSFORMS.value
+
+    @staticmethod
     def dataset_schema_file() -> Path:
         with importlib_resources.path(panoramic.cli.schemas, PresetFileName.DATASET_SCHEMA.value) as path:
             return path
@@ -113,6 +117,7 @@ class FileExtension(Enum):
 
     MODEL_YAML = '.model.yaml'
     FIELD_YAML = '.field.yaml'
+    TRANSFORM_YAML = '.transform.yaml'
 
 
 class PresetFileName(Enum):
@@ -140,5 +145,6 @@ class PresetFileName(Enum):
 
 class SystemDirectory(Enum):
     SCANNED = 'scanned'
+    TRANSFORMS = 'transforms'
     FIELDS = 'fields'
     DBT = '.dbt'
