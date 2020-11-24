@@ -1,6 +1,7 @@
 def install
-  virtualenv_install_with_resources :using => "python3"
-  rm_rf bin/"pano"
+  venv = virtualenv_create(libexec, "python3")
+  venv.pip_install resources
+  venv.pip_install buildpath
   (bin/"pano").write_env_script "#{libexec}/bin/pano", :RUNNING_UNDER_HOMEBREW => "1"
 end
 

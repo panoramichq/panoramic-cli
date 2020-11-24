@@ -37,6 +37,25 @@ EOS
   exit 1
 }
 
+# from http://fahdshariff.blogspot.com/2014/02/retrying-commands-in-shell-scripts.html
+retry() {
+    local -r -i max_attempts="$1"; shift
+    local -r cmd="$@"
+    local -i attempt_num=1
+
+    until $cmd
+    do
+        if (( attempt_num == max_attempts ))
+        then
+            echo "Attempt $attempt_num failed and there are no more attempts left!"
+            return 1
+        else
+            echo "Attempt $attempt_num failed! Trying again in $attempt_num seconds..."
+            sleep $(( attempt_num++ ))
+        fi
+    done
+}
+
 outdir="."
 config_dif="$HOME/.ppfg"
 force=0
@@ -147,7 +166,7 @@ if ! type poet >/dev/null 2>&1; then
   echo "Error: poet could not be installed." 1>&2
   exit 1
 fi
-if ! pip install "$package"=="$version" > /dev/null; then
+if ! retry 60 pip install --use-feature=2020-resolver "$package"=="$version"; then
   echo "Error: $package $version could not be installed." 1>&2
   exit 1
 fi
