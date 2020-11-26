@@ -118,10 +118,7 @@ def _read_events() -> List[Dict[str, Any]]:
     if not events_file.is_file():
         return []
 
-    events = read_json_lines(Paths.analytics_events_file())
-    if events == '':
-        return []
-    return events
+    return read_json_lines(Paths.analytics_events_file())
 
 
 def _read_metadata() -> Dict[str, Any]:
