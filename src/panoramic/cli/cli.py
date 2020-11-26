@@ -34,7 +34,7 @@ class CommandWithAnalytics(Command):
 
         # If command is a subcommand, combine its name with the command name.
         group = ''
-        if ctx.parent.command != cli:  # type: ignore
+        if ctx.parent is not None and ctx.parent.command != cli:  # type: ignore
             group = ctx.parent.command.name  # type: ignore
 
         start_time = time.time()
