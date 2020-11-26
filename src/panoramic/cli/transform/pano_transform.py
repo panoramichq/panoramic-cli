@@ -40,3 +40,11 @@ class PanoTransform:
             data['filters'] = self.filters
 
         return data
+
+    @property
+    def connection_name(self) -> str:
+        return self.target.split('.', 1)[0]
+
+    @property
+    def view_path(self) -> str:
+        return self.target.split('.', 1)[1]
