@@ -43,6 +43,7 @@ setup(
         'jsonschema<3.2.0',
         "importlib_resources ; python_version<'3.7'",
         "dbt>=0.18.1",
+        "analytics-python==1.2.9",
     ],
     extras_require={"tests": TEST_REQUIRES, "dev": TEST_REQUIRES + DEV_REQUIRES},
     include_package_data=True,

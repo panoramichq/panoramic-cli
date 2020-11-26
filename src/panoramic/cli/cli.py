@@ -1,5 +1,6 @@
 import logging
 import sys
+import time
 from collections import defaultdict
 from typing import Optional
 
@@ -8,6 +9,9 @@ from click.core import Command, Context
 from dotenv import load_dotenv
 
 from panoramic.cli.__version__ import __version__
+from panoramic.cli.analytics import write_command_event
+from panoramic.cli.command import configure_anonymous_analytics
+from panoramic.cli.config.storage import read_config
 from panoramic.cli.errors import (
     CompanyNotFoundException,
     SourceNotFoundException,
@@ -20,7 +24,30 @@ from panoramic.cli.paths import Paths
 from panoramic.cli.print import echo_error, echo_errors, echo_info, echo_warnings
 
 
-class ConfigAwareCommand(Command):
+class CommandWithAnalytics(Command):
+    """Execute command and write usage metrics to a file that is conditionally flushed to external system."""
+
+    def invoke(self, ctx: Context):
+        # This will make sure to display opt-out message for existing users that already run pano configure.
+        if not read_config('analytics'):
+            configure_anonymous_analytics()
+
+        # If command is a subcommand, combine its name with the command name.
+        group = ''
+        if ctx.parent.command != cli:  # type: ignore
+            group = ctx.parent.command.name  # type: ignore
+
+        start_time = time.time()
+        try:
+            result = super().invoke(ctx)
+            write_command_event(self.name, group, ctx.params, start_time)
+            return result
+        except Exception as e:
+            write_command_event(self.name, group, ctx.params, start_time, error=str(e))
+            raise e
+
+
+class ConfigAwareCommand(CommandWithAnalytics):
     """Perform config file validation before running command."""
 
     def invoke(self, ctx: Context):
@@ -140,7 +167,7 @@ def push(yes: bool, target_dataset: str, diff: bool):
     push_command(yes=yes, target_dataset=target_dataset, diff=diff)
 
 
-@cli.command(help='Configure pano CLI options')
+@cli.command(help='Configure pano CLI options', cls=CommandWithAnalytics)
 @handle_exception
 def configure():
     from panoramic.cli.command import configure as config_command
@@ -172,7 +199,7 @@ def list_companies():
     list_companies_command()
 
 
-@cli.command(help='Validate local files')
+@cli.command(help='Validate local files', cls=CommandWithAnalytics)
 @handle_exception
 def validate():
     from panoramic.cli.command import validate as validate_command
@@ -405,3 +432,42 @@ def test(name: str):
     from panoramic.cli.connections import test_connections_command
 
     test_connections_command(name)
+
+
+@cli.group()
+def analytics():
+    """Analytics subcommand for managing anonymous usage metrics collection preferences."""
+    pass
+
+
+@analytics.command(name='on', cls=ConfigAwareCommand)
+def analytics_on():
+    """Opt in to anonymous usage analytics.
+
+    pano analytics on
+    """
+    from panoramic.cli.analytics import opt_in_command
+
+    opt_in_command()
+
+
+@analytics.command(name='off', cls=ConfigAwareCommand)
+def analytics_off():
+    """Opt out off anonymous usage analytics.
+
+    pano analytics off
+    """
+    from panoramic.cli.analytics import opt_out_command
+
+    opt_out_command()
+
+
+@analytics.command(name='id', cls=ConfigAwareCommand)
+def analytics_id():
+    """Display current anonymous usage tracking id.
+
+    pano analytics id
+    """
+    from panoramic.cli.analytics import show_tracking_id_command
+
+    show_tracking_id_command()

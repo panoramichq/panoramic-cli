@@ -46,12 +46,19 @@ from panoramic.cli.validate import (
 logger = logging.getLogger(__name__)
 
 
+def configure_anonymous_analytics():
+    # TODO: this will be updated with appropriate text
+    analytics_opt_out = click.confirm('Do you allow us to anonymously collect usage metrics?', default=True)
+    update_config('analytics', {'enabled': analytics_opt_out})
+
+
 def configure():
     """Global configuration for CLI."""
     client_id = click.prompt('Enter your client id', type=str)
     client_secret = click.prompt('Enter your client secret', hide_input=True, type=str)
-
     update_config('auth', {'client_id': client_id, 'client_secret': client_secret})
+
+    configure_anonymous_analytics()
 
 
 def initialize():
