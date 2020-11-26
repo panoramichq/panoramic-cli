@@ -78,7 +78,7 @@ def write_command_event(name: str, group: str, params: Dict[str, Any], start_tim
 def is_enabled() -> bool:
     """Check if user opted out of usage metrics recording."""
     config = read_config('analytics')
-    return config.get('enabled', True)
+    return config.get('enabled', False)
 
 
 def opt_in_command() -> None:
