@@ -47,8 +47,14 @@ logger = logging.getLogger(__name__)
 
 
 def configure_anonymous_analytics():
-    # TODO: this will be updated with appropriate text
-    analytics_opt_out = click.confirm('Do you allow us to anonymously collect usage metrics?', default=True)
+    analytics_opt_out = click.confirm(
+        "\nWith your permission, panoramic-cli can automatically collect \n"
+        "analytical information about usage of the tool\n"
+        "and send it to Panoramic to help improve quality of its products.\n"
+        "No passwords, credentials or personal information will be shared.\n"
+        "\nAllow anonymous usage analytics?",
+        default=True,
+    )
     update_config('analytics', {'enabled': analytics_opt_out})
 
 
