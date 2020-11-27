@@ -12,6 +12,8 @@ from typing import Any, Dict, List
 import analytics  # type: ignore
 
 from panoramic.cli.__version__ import __version__
+from panoramic.cli.config.analytics import get_write_key
+from panoramic.cli.config.analytics import is_enabled as config_is_enabled
 from panoramic.cli.config.storage import read_config, update_config
 from panoramic.cli.file_utils import (
     append_json_line,
@@ -27,7 +29,7 @@ logger = logging.getLogger(__name__)
 
 BLACKLISTED_ARGS = ['password']
 MINIMAL_FLUSH_DURATION = timedelta(minutes=10)
-MINIMAL_FLUSH_EVENTS = 25
+MINIMAL_FLUSH_EVENTS = 10
 
 """
 Usage: currently only way to track data is by using `write_command_event` after execution of each CLI command.
@@ -77,6 +79,9 @@ def write_command_event(name: str, group: str, params: Dict[str, Any], start_tim
 
 def is_enabled() -> bool:
     """Check if user opted out of usage metrics recording."""
+    if not config_is_enabled():
+        return False
+
     config = read_config('analytics')
     return config.get('enabled', False)
 
@@ -146,12 +151,6 @@ def _get_last_flush_time() -> datetime:
     return datetime.now()
 
 
-def _setup_analytics() -> None:
-    """Setup Segment integration by using source write key."""
-    # TODO: finish fetching of write_key
-    analytics.write_key = ""
-
-
 def _flush() -> None:
     """Perform flush to external system.
     This will iterate through all events from current interval and push them to external Analytics system.
@@ -170,6 +169,10 @@ def _flush() -> None:
     if not proceed:
         return
 
+    analytics.write_key = get_write_key()
+    if analytics.write_key is None:
+        return
+
     logger.debug("Flushing analytics events.")
 
     # Because sending of analytics is asynchronous, only way to get error is by adding an on_error callback,
@@ -183,7 +186,6 @@ def _flush() -> None:
         analytics_sent_successfully = False
 
     analytics.on_error = on_error
-    _setup_analytics()
     for event in events:
         analytics.track(_get_user_id(), json.dumps(event))
 

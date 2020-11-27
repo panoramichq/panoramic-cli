@@ -9,7 +9,7 @@ from click.core import Command, Context
 from dotenv import load_dotenv
 
 from panoramic.cli.__version__ import __version__
-from panoramic.cli.analytics import write_command_event
+from panoramic.cli.analytics import is_enabled, write_command_event
 from panoramic.cli.command import configure_anonymous_analytics
 from panoramic.cli.config.storage import read_config
 from panoramic.cli.errors import (
@@ -29,7 +29,7 @@ class CommandWithAnalytics(Command):
 
     def invoke(self, ctx: Context):
         # This will make sure to display opt-out message for existing users that already run pano configure.
-        if not read_config('analytics'):
+        if not read_config('analytics') and not is_enabled():
             configure_anonymous_analytics()
 
         # If command is a subcommand, combine its name with the command name.
@@ -167,7 +167,7 @@ def push(yes: bool, target_dataset: str, diff: bool):
     push_command(yes=yes, target_dataset=target_dataset, diff=diff)
 
 
-@cli.command(help='Configure pano CLI options', cls=CommandWithAnalytics)
+@cli.command(help='Configure pano CLI options')
 @handle_exception
 def configure():
     from panoramic.cli.command import configure as config_command
