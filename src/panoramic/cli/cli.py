@@ -543,14 +543,6 @@ def transform_create():
     create_command(name=name, fields=fields, target=target, filters=None)
 
 
-@transform_cli.command(name='compile', help='Compile all transforms in the current project', cls=ContextAwareCommand)
-@handle_exception
-def transform_compile():
-    from panoramic.cli.transform.commands import compile_command
-
-    compile_command()
-
-
 @transform_cli.command(name='exec', help='Execute transforms', cls=ContextAwareCommand)
 @click.option('--yes', '-y', is_flag=True, default=False, help='Automatically confirm all actions')
 @click.option(
