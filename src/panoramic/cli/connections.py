@@ -239,14 +239,24 @@ class Connections:
         return adapter
 
     @classmethod
-    def execute(cls, sql: str, credentials):
+    def execute(cls, sql: str, credentials) -> Tuple[str, Any]:
         adapter = cls.get_connection_adapter(credentials)
-        try:
-            adapter.acquire_connection()  # type: ignore
-            res = adapter.execute(sql=sql, fetch=True)
-        except FailedToConnectException:
-            # FIXME handle connection failure
-            raise
+
+        with adapter.connection_named('pano'):  # type: ignore
+            conn = adapter.connections.get_thread_connection()
+            with conn.handle.cursor():
+                try:
+                    res = adapter.execute(sql=sql, fetch=True)
+                    conn.handle.commit()
+                except Exception as e:
+                    if conn.handle and 'closed' in dir(conn.handle) and conn.handle.closed == 0:
+                        conn.handle.rollback()
+                    # FIXME: remove prints
+                    print(sql)
+                    print(e)
+                    raise
+                finally:
+                    conn.transaction_open = False
 
         return res
 
