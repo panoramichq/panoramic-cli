@@ -1,5 +1,7 @@
+import logging
 from dataclasses import dataclass
 
+from dbt.exceptions import FailedToConnectException
 from requests import RequestException
 
 from panoramic.cli.connections import (
@@ -7,10 +9,16 @@ from panoramic.cli.connections import (
     Connections,
     get_dialect_credentials,
 )
-from panoramic.cli.errors import ConnectionNotFound, TransformCompileException
+from panoramic.cli.errors import (
+    ConnectionNotFound,
+    TransformCompileException,
+    TransformExecutionFailed,
+)
 from panoramic.cli.print import echo_info
 from panoramic.cli.transform.client import TransformClient
 from panoramic.cli.transform.pano_transform import PanoTransform
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -52,7 +60,18 @@ class TransformExecutor:
             echo_info(f'{connection_name} FAIL: {connection_error}...')
             return
 
-        Connections.execute(sql=self.compiled_query, credentials=credentials)
+        try:
+            logger.debug(f'Executing transform {self.transform.name} on {self.transform.connection_name}')
+            Connections.execute(sql=self.compiled_query, credentials=credentials)
+
+            logger.debug(f'Verifying transform {self.transform.name} on {self.transform.connection_name}')
+            Connections.execute(sql=f'SELECT * from {self.transform.view_path} limit 1', credentials=credentials)
+        except FailedToConnectException:
+            raise
+        except Exception:
+            raise TransformExecutionFailed(
+                transform_name=self.transform.name, connection_name=connection_name, compiled_sql=self.compiled_query
+            )
 
         # Check if the view works
         # Connections.execute(sql=f'SELECT * from {schema_view} LIMIT 1')

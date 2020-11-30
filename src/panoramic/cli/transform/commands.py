@@ -1,4 +1,8 @@
-from typing import List, Optional
+from pathlib import Path
+from typing import List, Optional, Tuple
+
+import click
+from tqdm import tqdm
 
 from panoramic.cli.context import get_company_slug
 from panoramic.cli.local.reader import FileReader
@@ -30,21 +34,44 @@ def compile_command():
             echo_error(str(e))
 
 
-def exec_command(yes: bool = False):
+def exec_command(
+    compile_only: bool = False,
+    yes: bool = False,
+):
     company_slug = get_company_slug()
     global_package = FileReader().get_global_package()
+    executors: List[Tuple[TransformExecutor, Path]] = []
 
-    for transform_dict, _transform_path in global_package.read_transforms():
-        try:
-            transform = PanoTransform.from_dict(transform_dict)
-            transform_executor = TransformExecutor.from_transform(transform=transform, company_slug=company_slug)
+    parsed_transforms = [
+        (PanoTransform.from_dict(transform_dict), transform_path)
+        for transform_dict, transform_path in global_package.read_transforms()
+    ]
 
-            echo_info(transform_executor.compiled_query)
-            # FIXME: if yes: execute
-            if not yes:
-                return
+    sorted_transforms = sorted(parsed_transforms, key=lambda pair: pair[0].connection_name)
 
-            transform_executor.execute()
-            # TODO: Add better rendering than just printing the transformed sql out
-        except Exception as e:
-            echo_error(str(e))
+    echo_info('Compiling transforms...')
+    with tqdm(sorted_transforms) as compiling_bar:
+        for transform, transform_path in compiling_bar:
+            try:
+                transform_executor = TransformExecutor.from_transform(transform=transform, company_slug=company_slug)
+
+                compiling_bar.write(f'[{transform.connection_name}] {transform_executor.compiled_query}')
+                compiling_bar.write('')
+                executors.append((transform_executor, transform_path))
+            except Exception as e:
+                compiling_bar.write(f'Error: Failed to compile transform {transform_path}:\n  {str(e)}')
+
+    if compile_only or not yes and not click.confirm('Do you want to execute transforms?'):
+        return
+
+    echo_info('Executing transforms...')
+    with tqdm(executors) as exec_bar:
+        for (transform_executor, transform_path) in exec_bar:
+            try:
+                exec_bar.write(
+                    f'Executing: {transform_executor.transform.name} on {transform_executor.transform.connection_name}'
+                )
+                transform_executor.execute()
+                exec_bar.write(f'\u2713 [{transform_executor.transform.connection_name}] {transform.name}')
+            except Exception as e:
+                exec_bar.write(f'Error: Failed to execute transform {transform_path}:\n  {str(e)}')

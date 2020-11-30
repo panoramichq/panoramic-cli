@@ -555,9 +555,13 @@ def transform_compile():
     compile_command()
 
 
-@transform_cli.command(name='exec', help='Execute transforms on a connection', cls=ContextAwareCommand)
+@transform_cli.command(name='exec', help='Execute transforms', cls=ContextAwareCommand)
+@click.option('--yes', '-y', is_flag=True, default=False, help='Automatically confirm all actions')
+@click.option(
+    '--compile', 'compile_only', is_flag=True, default=False, help='Only compile transforms to sql statements'
+)
 @handle_exception
-def transform_exec():
+def transform_exec(yes: bool, compile_only: bool):
     from panoramic.cli.transform.commands import exec_command
 
-    exec_command()
+    exec_command(yes=yes, compile_only=compile_only)
