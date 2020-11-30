@@ -7,7 +7,7 @@ from tqdm import tqdm
 from panoramic.cli.context import get_company_slug
 from panoramic.cli.local.reader import FileReader
 from panoramic.cli.local.writer import FileWriter
-from panoramic.cli.print import echo_error, echo_info
+from panoramic.cli.print import echo_info
 from panoramic.cli.transform.executor import TransformExecutor
 from panoramic.cli.transform.pano_transform import PanoTransform
 
@@ -17,21 +17,6 @@ def create_command(name: str, fields: List[str], target: str, filters: Optional[
 
     writer = FileWriter()
     writer.write_transform(transform)
-
-
-def compile_command():
-    company_slug = get_company_slug()
-    global_package = FileReader().get_global_package()
-
-    for transform_dict, _transform_path in global_package.read_transforms():
-        try:
-            transform = PanoTransform.from_dict(transform_dict)
-            transform_executor = TransformExecutor.from_transform(transform=transform, company_slug=company_slug)
-
-            # TODO: Add better rendering than just printing the transformed sql out
-            echo_info(transform_executor.compiled_query)
-        except Exception as e:
-            echo_error(str(e))
 
 
 def exec_command(
@@ -59,7 +44,7 @@ def exec_command(
                 compiling_bar.write('')
                 executors.append((transform_executor, transform_path))
             except Exception as e:
-                compiling_bar.write(f'Error: Failed to compile transform {transform_path}:\n  {str(e)}')
+                compiling_bar.write(f'\nError: Failed to compile transform {transform_path}:\n  {str(e)}')
 
     if compile_only or not yes and not click.confirm('Do you want to execute transforms?'):
         return
@@ -74,4 +59,4 @@ def exec_command(
                 transform_executor.execute()
                 exec_bar.write(f'\u2713 [{transform_executor.transform.connection_name}] {transform.name}')
             except Exception as e:
-                exec_bar.write(f'Error: Failed to execute transform {transform_path}:\n  {str(e)}')
+                exec_bar.write(f'\nError: Failed to execute transform {transform_path}:\n  {str(e)}')
