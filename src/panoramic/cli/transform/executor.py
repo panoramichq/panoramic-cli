@@ -2,7 +2,11 @@ from dataclasses import dataclass
 
 from requests import RequestException
 
-from panoramic.cli.connections import Connections, get_dialect_credentials
+from panoramic.cli.connections import (
+    CONNECTION_KEYS,
+    Connections,
+    get_dialect_credentials,
+)
 from panoramic.cli.errors import ConnectionNotFound, TransformCompileException
 from panoramic.cli.print import echo_info
 from panoramic.cli.transform.client import TransformClient
@@ -36,6 +40,10 @@ class TransformExecutor:
             connection = Connections.get_by_name(connection_name)
         except ValueError:
             raise ConnectionNotFound(connection_name)
+
+        for key in CONNECTION_KEYS:
+            if key not in connection:
+                connection[key] = ''
 
         credentials, connection_error = get_dialect_credentials(connection)
 
