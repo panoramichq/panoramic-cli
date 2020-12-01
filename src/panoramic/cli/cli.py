@@ -11,7 +11,6 @@ from dotenv import load_dotenv
 from panoramic.cli.__version__ import __version__
 from panoramic.cli.analytics import is_enabled, write_command_event
 from panoramic.cli.command import configure_anonymous_analytics
-from panoramic.cli.config.storage import read_config
 from panoramic.cli.errors import (
     CompanyNotFoundException,
     SourceNotFoundException,
@@ -29,7 +28,7 @@ class CommandWithAnalytics(Command):
 
     def invoke(self, ctx: Context):
         # This will make sure to display opt-out message for existing users that already run pano configure.
-        if not read_config('analytics') and not is_enabled():
+        if not is_enabled():
             configure_anonymous_analytics()
 
         # If command is a subcommand, combine its name with the command name.
