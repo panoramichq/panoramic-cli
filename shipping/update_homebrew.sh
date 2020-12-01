@@ -13,14 +13,30 @@ setup_git() {
 }
 
 update_homebrew_formula() {
+  PACKAGE_VERSION=$(python shipping/generate-versions-file.py)
+
   cd .homebrew_repo || true
   git checkout master || true
   cd ..
-  rm -fr .homebrew_repo/Formula/panoramic-cli.rb
   mkdir -p .homebrew_repo/Formula
-  cp brewout/panoramic-cli.rb .homebrew_repo/Formula/panoramic-cli.rb
+
+  # Check for a pre-release, if this returns False then we update the main release file
+  IS_PRERELEASE=$(python -c 'import packaging.version as v;import os;print(v.parse(os.environ["PACKAGE_VERSION"]).is_prerelease)')
+
+  rm -fr .homebrew_repo/Formula/panoramic-cli@"$PACKAGE_VERSION".rb
+  cp brewout/panoramic-cli.rb .homebrew_repo/Formula/panoramic-cli@"$PACKAGE_VERSION".rb
+
+  if [[ "$IS_PRERELEASE" == "False" ]]; then
+    rm -fr .homebrew_repo/Formula/panoramic-cli.rb
+    cp brewout/panoramic-cli.rb .homebrew_repo/Formula/panoramic-cli.rb
+  fi
+
   cd .homebrew_repo
-  git add Formula/panoramic-cli.rb
+  git add Formula/panoramic-cli@"$PACKAGE_VERSION".rb
+  if [[ "$IS_PRERELEASE" == "False" ]]; then
+    git add Formula/panoramic-cli.rb
+  fi
+
   git commit --message "Panoramic CLI build: $GITHUB_RUN_NUMBER"
   cd ..
 }
