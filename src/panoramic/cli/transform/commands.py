@@ -1,22 +1,49 @@
 from pathlib import Path
-from typing import List, Optional, Tuple
+from typing import List, Tuple
 
 import click
 from tqdm import tqdm
 
+from panoramic.cli.connections import Connections
 from panoramic.cli.context import get_company_slug
 from panoramic.cli.local.reader import FileReader
 from panoramic.cli.local.writer import FileWriter
-from panoramic.cli.print import echo_info
+from panoramic.cli.paths import FileExtension, Paths
+from panoramic.cli.print import echo_error, echo_info
 from panoramic.cli.transform.executor import TransformExecutor
 from panoramic.cli.transform.pano_transform import PanoTransform
 
 
-def create_command(name: str, fields: List[str], target: str, filters: Optional[str]):
-    transform = PanoTransform(name=name, fields=fields, target=target, filters=filters)
+def create_command():
+    echo_info('Scaffolding a new transform...')
+    name = click.prompt('name: ')
 
+    connections = Connections.load()
+    connection_names = connections.keys() if connections else []
+    connection_base_text = 'connection: '
+
+    if len(connection_names) == 0:
+        connection_prompt_text = connection_base_text
+    elif len(connection_names) > 3:
+        connection_prompt_text = f'{connection_base_text} (Available - {{{",".join(list(connection_names)[:3])}}},...)'
+    else:
+        connection_prompt_text = f'{connection_base_text} (Available - {{{",".join(connection_names)}}})'
+
+    # Assemble target based on input
+    connection = click.prompt(connection_prompt_text)
+
+    schema = click.prompt('schema:', default='pano')  # Fixme: think through a default schema?
+    view = click.prompt('view: ')
+    target = f'{connection}.{schema}.{view}'
+
+    transform = PanoTransform(name=name, fields=[], target=target)
     writer = FileWriter()
-    writer.write_transform(transform)
+    transform_path = Paths.transforms_dir() / f'{transform.name}{FileExtension.TRANSFORM_YAML.value}'
+
+    if not Path.exists(transform_path):
+        writer.write_transform(transform)
+    else:
+        echo_error(f'Transform {transform_path} already exists')
 
 
 def exec_command(

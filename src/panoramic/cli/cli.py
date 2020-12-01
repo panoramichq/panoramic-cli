@@ -540,11 +540,7 @@ def transform_cli():
 def transform_create():
     from panoramic.cli.transform.commands import create_command
 
-    echo_info('Scaffolding a new transform...')
-    name = click.prompt('name: ')
-    fields = click.prompt('fields: ', default=[])
-    target = click.prompt('target: ')
-    create_command(name=name, fields=fields, target=target, filters=None)
+    create_command()
 
 
 @transform_cli.command(name='exec', help='Execute transforms', cls=ContextAwareCommand)
