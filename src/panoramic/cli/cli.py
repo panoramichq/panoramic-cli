@@ -39,10 +39,10 @@ class CommandWithAnalytics(Command):
         start_time = time.time()
         try:
             result = super().invoke(ctx)
-            write_command_event(self.name, group, ctx.params, start_time)
+            write_command_event(self.name, group, start_time)
             return result
         except Exception as e:
-            write_command_event(self.name, group, ctx.params, start_time, error=str(e))
+            write_command_event(self.name, group, start_time, error=str(e))
             raise e
 
 

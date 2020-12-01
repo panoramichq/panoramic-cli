@@ -27,7 +27,6 @@ from panoramic.cli.print import echo_info
 
 logger = logging.getLogger(__name__)
 
-BLACKLISTED_ARGS = ['password']
 MINIMAL_FLUSH_DURATION = timedelta(minutes=10)
 MINIMAL_FLUSH_EVENTS = 10
 
@@ -39,7 +38,7 @@ Data will be stored to events journal and flushed based on conditions set here.
 """
 
 
-def write_command_event(name: str, group: str, params: Dict[str, Any], start_time: float, error: str = '') -> None:
+def write_command_event(name: str, group: str, start_time: float, error: str = '') -> None:
     """
     Generate command execution context and store it in analytics events file as JSON line.
     Truncate blacklisted parameters, like password.
@@ -48,14 +47,9 @@ def write_command_event(name: str, group: str, params: Dict[str, Any], start_tim
     if not is_enabled():
         return
 
-    for arg in BLACKLISTED_ARGS:
-        if arg in params:
-            del params[arg]
-
     properties = {
         'command': {
             'name': ' '.join((group, name)),
-            'args': params,
             'duration_seconds': time.time() - start_time,
             'error': error,
         },
