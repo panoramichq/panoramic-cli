@@ -8,6 +8,7 @@ import click
 from tqdm import tqdm
 
 from panoramic.cli.companies.client import CompaniesClient
+from panoramic.cli.config.analytics import is_enabled as analytics_is_enabled
 from panoramic.cli.config.storage import update_config
 from panoramic.cli.context import get_company_slug
 from panoramic.cli.controller import reconcile
@@ -48,11 +49,8 @@ logger = logging.getLogger(__name__)
 
 def configure_anonymous_analytics():
     analytics_opt_out = click.confirm(
-        "\nWith your permission, panoramic-cli can automatically collect \n"
-        "analytical information about usage of the tool\n"
-        "and send it to Panoramic to help improve quality of its products.\n"
-        "No passwords, credentials or personal information will be shared.\n"
-        "\nAllow anonymous usage analytics?",
+        "\nDo you want to provide usage metrics to Panoramic?\n"
+        "No passwords,credentials, or personal information will be shared.",
         default=True,
     )
     update_config('analytics', {'enabled': analytics_opt_out})
@@ -64,7 +62,8 @@ def configure():
     client_secret = click.prompt('Enter your client secret', hide_input=True, type=str)
     update_config('auth', {'client_id': client_id, 'client_secret': client_secret})
 
-    configure_anonymous_analytics()
+    if analytics_is_enabled():
+        configure_anonymous_analytics()
 
 
 def initialize():

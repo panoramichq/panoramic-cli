@@ -3,7 +3,6 @@ import logging
 import platform
 import shutil
 import time
-import uuid
 from datetime import datetime, timedelta
 from typing import Any, Dict, List
 
@@ -14,6 +13,7 @@ import analytics  # type: ignore
 from panoramic.cli.__version__ import __version__
 from panoramic.cli.config.analytics import get_write_key
 from panoramic.cli.config.analytics import is_enabled as config_is_enabled
+from panoramic.cli.config.auth import get_client_id
 from panoramic.cli.config.storage import read_config, update_config
 from panoramic.cli.file_utils import (
     append_json_line,
@@ -105,16 +105,23 @@ def show_tracking_id_command() -> None:
 
 
 def _get_user_id() -> str:
-    """Look for unique user ID that is used while storing events.
-    If no user ID was found, generate new id for user and store it in analytics metadata file.
-    """
-    metadata = _read_metadata()
-    if 'user_id' in metadata:
-        return metadata['user_id']
+    """Get client_id from configuration step. If doesn't exist yet use just empty string."""
+    try:
+        return get_client_id()
+    except KeyError:
+        return ''
 
-    user_id = str(uuid.uuid4())
-    _update_metadata({'user_id': user_id})
-    return user_id
+    # Old implementation, can be removed later when above solution if verified and released.
+    # """Look for unique user ID that is used while storing events.
+    # If no user ID was found, generate new id for user and store it in analytics metadata file.
+    # """
+    # metadata = _read_metadata()
+    # if 'user_id' in metadata:
+    #     return metadata['user_id']
+    #
+    # user_id = str(uuid.uuid4())
+    # _update_metadata({'user_id': user_id})
+    # return user_id
 
 
 def _read_events() -> List[Dict[str, Any]]:
