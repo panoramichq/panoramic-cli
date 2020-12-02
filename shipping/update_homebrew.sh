@@ -24,7 +24,9 @@ update_homebrew_formula() {
   IS_PRERELEASE=$(python -c 'import packaging.version as v;import os;print(v.parse(os.environ["PACKAGE_VERSION"]).is_prerelease)')
 
   rm -fr .homebrew_repo/Formula/panoramic-cli@"$PACKAGE_VERSION".rb
-  cp brewout/panoramic-cli.rb .homebrew_repo/Formula/panoramic-cli@"$PACKAGE_VERSION".rb
+  CLASS_NAME=$(ruby shipping/string_to_class.rb panoramic-cli@"$PACKAGE_VERSION")
+  echo $CLASS_NAME
+  sed -e "s/PanoramicCli/$CLASS_NAME/" brewout/panoramic-cli.rb > .homebrew_repo/Formula/panoramic-cli@"$PACKAGE_VERSION".rb
 
   if [[ "$IS_PRERELEASE" == "False" ]]; then
     rm -fr .homebrew_repo/Formula/panoramic-cli.rb
@@ -33,6 +35,7 @@ update_homebrew_formula() {
 
   cd .homebrew_repo
   git add Formula/panoramic-cli@"$PACKAGE_VERSION".rb
+
   if [[ "$IS_PRERELEASE" == "False" ]]; then
     git add Formula/panoramic-cli.rb
   fi
