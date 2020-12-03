@@ -72,6 +72,3 @@ class TransformExecutor:
             raise TransformExecutionFailed(
                 transform_name=self.transform.name, connection_name=connection_name, compiled_sql=self.compiled_query
             )
-
-        # Check if the view works
-        # Connections.execute(sql=f'SELECT * from {schema_view} LIMIT 1')
