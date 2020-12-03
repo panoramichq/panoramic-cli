@@ -1,3 +1,4 @@
+import logging
 from typing import Any, Dict, Optional, Tuple
 
 import click
@@ -35,6 +36,8 @@ CONNECTION_KEYS = [
     'project',
     'key_file',
 ]
+
+logger = logging.getLogger(__name__)
 
 
 def create_connection_command(
@@ -248,12 +251,10 @@ class Connections:
                 try:
                     res = adapter.execute(sql=sql, fetch=True)
                     conn.handle.commit()
-                except Exception as e:
+                except Exception:
                     if conn.handle and 'closed' in dir(conn.handle) and conn.handle.closed == 0:
                         conn.handle.rollback()
-                    # FIXME: remove prints
-                    print(sql)
-                    print(e)
+                    logger.debug(sql)
                     raise
                 finally:
                     conn.transaction_open = False
