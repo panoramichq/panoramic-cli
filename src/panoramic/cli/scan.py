@@ -115,7 +115,6 @@ def scan_fields_for_errors(errors: Sequence[MissingFieldFileError]) -> List[Pano
                             column,
                             slug=error.field_slug,
                             data_source=error.dataset_slug,
-                            is_identifier=error.identifier,
                         )
                     )
                 del errors_by_column[data_source, data_reference]

@@ -31,7 +31,8 @@
     },
     "field_type": {
       "description": "Type of field",
-      "type": "string"
+      "type": "string",
+      "deprecated": true
     },
     "description": {
       "description": "Free text describing the field",
@@ -68,7 +69,6 @@
     "slug",
     "group",
     "display_name",
-    "data_type",
-    "field_type"
+    "data_type"
   ]
 }

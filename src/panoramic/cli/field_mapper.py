@@ -16,7 +16,6 @@ def map_field_from_remote(field: Field) -> PanoField:
         group=field.group,
         display_name=field.display_name,
         data_type=field.data_type,
-        field_type=field.field_type,
         description=field.description,
         data_source=data_source,
         aggregation=field.aggregation,
@@ -48,7 +47,6 @@ def map_field_from_local(field: PanoField) -> Field:
         group=field.group,
         display_name=field.display_name,
         data_type=field.data_type,
-        field_type=field.field_type,
         description=field.description,
         data_source=field.data_source,
         aggregation=field.aggregation,
@@ -61,18 +59,15 @@ def map_column_to_field(
     column: Dict[str, Any],
     slug: str,
     data_source: str,
-    is_identifier: bool = False,
 ) -> PanoField:
     aggregation = (
         Aggregation(type=column['aggregation_type'], params=None)
         if column.get('aggregation_type') is not None
         else None
     )
-    field_type = 'dimension' if is_identifier else column['taxon_type']
 
     return PanoField(
         slug=slug,
-        field_type=field_type,
         data_source=data_source,
         display_name=slug,
         group='CLI',
@@ -84,7 +79,6 @@ def map_column_to_field(
 def map_error_to_field(error: MissingFieldFileError) -> PanoField:
     return PanoField(
         slug=error.field_slug,
-        field_type='dimension' if error.identifier else 'TODO: add field_type',
         data_source=error.dataset_slug,
         display_name=error.field_slug,
         group='CLI',

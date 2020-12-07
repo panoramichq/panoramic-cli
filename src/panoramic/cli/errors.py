@@ -348,7 +348,7 @@ class MissingFieldFileError(ValidationError):
     dataset_slug: str
     data_source: str
     data_reference: str
-    identifier: bool
+    identifier: bool  # FIXME: might not be used anymore
 
     def __init__(
         self,

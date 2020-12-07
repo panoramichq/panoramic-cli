@@ -76,7 +76,6 @@ class PanoField(Actionable):
     group: str
     display_name: str
     data_type: str
-    field_type: str
     description: Optional[str]
     data_source: Optional[str]
     calculation: Optional[str]
@@ -90,7 +89,6 @@ class PanoField(Actionable):
         group: str,
         display_name: str,
         data_type: str,
-        field_type: str,
         description: Optional[str] = None,
         data_source: Optional[str] = None,
         calculation: Optional[str] = None,
@@ -104,7 +102,6 @@ class PanoField(Actionable):
         self.group = group
         self.display_name = display_name
         self.data_type = data_type
-        self.field_type = field_type
         self.description = description
         self.data_source = data_source
         self.calculation = calculation
@@ -124,7 +121,6 @@ class PanoField(Actionable):
             'group': self.group,
             'display_name': self.display_name,
             'data_type': self.data_type,
-            'field_type': self.field_type,
             'data_source': self.data_source,
         }
 
@@ -147,7 +143,6 @@ class PanoField(Actionable):
             group=inputs['group'],
             display_name=inputs['display_name'],
             data_type=inputs['data_type'],
-            field_type=inputs['field_type'],
             description=inputs.get('description'),
             data_source=inputs.get('data_source'),
             aggregation=Aggregation.from_dict(aggregation) if aggregation is not None else None,
@@ -171,7 +166,6 @@ class PanoField(Actionable):
                 self.group,
                 self.display_name,
                 self.data_type,
-                self.field_type,
                 self.description,
                 self.data_source,
                 self.calculation,

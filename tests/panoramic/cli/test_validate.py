@@ -190,7 +190,6 @@ VALID_FIELD_MINIMAL: Dict[str, Any] = {
     'group': 'group',
     'display_name': 'Display name',
     'data_type': 'data_type',
-    'field_type': 'field_type',
 }
 
 VALID_FIELD_FULL: Dict[str, Any] = {
@@ -198,7 +197,6 @@ VALID_FIELD_FULL: Dict[str, Any] = {
     'group': 'group',
     'display_name': 'Full display name',
     'data_type': 'data_type',
-    'field_type': 'field_type',
     'calculation': 'calculation',
     'aggregation': {'type': 'sum'},
     'display_format': 'display_format',
@@ -394,8 +392,6 @@ INVALID_FIELDS = [
     {**VALID_FIELD_MINIMAL, 'slug': 123},
     # group not set
     {k: v for k, v in VALID_FIELD_MINIMAL.items() if k != 'group'},
-    # field_type not set
-    {k: v for k, v in VALID_FIELD_MINIMAL.items() if k != 'field_type'},
     # data_type not set
     {k: v for k, v in VALID_FIELD_MINIMAL.items() if k != 'data_type'},
     # typo in api_version
@@ -655,10 +651,13 @@ def test_validate_local_state_deprecated_attribute(tmp_path, monkeypatch):
 
     Paths.fields_dir(dataset_dir).mkdir()
     with (Paths.fields_dir(dataset_dir) / 'test_field.field.yaml').open('w') as f:
-        f.write(yaml.dump(VALID_FIELD_MINIMAL))
+        f.write(yaml.dump({**VALID_FIELD_MINIMAL, 'field_type': 'field_type'}))
 
     errors = validate_local_state()
-    assert errors == [DeprecatedAttributeWarning(attribute='data_type', path=dataset_dir / 'test_model.model.yaml')]
+    assert errors == [
+        DeprecatedAttributeWarning(attribute='data_type', path=dataset_dir / 'test_model.model.yaml'),
+        DeprecatedAttributeWarning(attribute='field_type', path=dataset_dir / 'test_field.field.yaml'),
+    ]
 
 
 def test_validate_local_state_orphan_field_files(tmp_path, monkeypatch):

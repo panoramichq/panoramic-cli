@@ -15,7 +15,6 @@ from panoramic.cli.pano_model import PanoField
 def dummy_local_field() -> PanoField:
     data = dict(
         slug='slug',
-        field_type='field_type',
         group='group',
         display_name='Display name',
         data_type='data_type',
@@ -28,7 +27,6 @@ def dummy_local_field() -> PanoField:
 def dummy_remote_field() -> Field:
     data = dict(
         slug='slug',
-        field_type='field_type',
         group='group',
         display_name='Display name',
         data_type='data_type',
@@ -78,7 +76,6 @@ def test_map_column_to_field_basic():
     assert actual == PanoField(
         slug='field_slug',
         data_source='data_source',
-        field_type='dimension',
         group='CLI',
         display_name='field_slug',
         data_type='text',
@@ -101,37 +98,11 @@ def test_map_column_to_field_aggregation():
     )
     assert actual == PanoField(
         slug='field_slug',
-        field_type='metric',
         group='CLI',
         data_source='data_source',
         display_name='field_slug',
         data_type='numeric',
         aggregation=Aggregation(type='sum', params=None),
-    )
-
-
-def test_map_column_to_field_identifier():
-    actual = map_column_to_field(
-        {
-            'column_name': 'slug',
-            'data_type': 'TEXT',
-            'taxon_type': 'metric',
-            'field_map': ['slug'],
-            'data_reference': '"slug"',
-            'aggregation_type': None,
-            'validation_type': 'text',
-        },
-        slug='field_slug',
-        data_source='data_source',
-        is_identifier=True,
-    )
-    assert actual == PanoField(
-        slug='field_slug',
-        data_source='data_source',
-        field_type='dimension',
-        group='CLI',
-        display_name='field_slug',
-        data_type='text',
     )
 
 
@@ -150,5 +121,4 @@ def test_map_error_to_field():
         display_name='test_field',
         group='CLI',
         data_type='TODO: add data_type',
-        field_type='TODO: add field_type',
     )
