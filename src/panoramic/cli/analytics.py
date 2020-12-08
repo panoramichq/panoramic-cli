@@ -1,4 +1,3 @@
-import json
 import logging
 import platform
 import shutil
@@ -55,7 +54,7 @@ def write_command_event(name: str, group: str, start_time: float, error: str = '
             'duration_seconds': time.time() - start_time,
             'error': error,
         },
-        'timestamp': str(datetime.now().isoformat()),
+        'timestamp': datetime.now().isoformat(),
         'platform': platform.platform(),
         'app_version': __version__,
         'python_version': platform.python_version(),
@@ -191,7 +190,8 @@ def _flush() -> None:
     analytics.on_error = on_error
     for event in events:
         event_type = event.pop('type')
-        analytics.track(_get_user_id(), event_type, json.dumps(event), event['timestamp'])
+        timestamp = datetime.fromisoformat(event['timestamp'])
+        analytics.track(user_id=_get_user_id(), event=event_type, properties=event, timestamp=timestamp)
 
     # Batching is automatic according to:
     # https://segment.com/docs/connections/sources/catalog/libraries/server/python/#batching
