@@ -47,13 +47,15 @@ def write_command_event(name: str, group: str, start_time: float, error: str = '
     if not is_enabled():
         return
 
+    command_name = ' '.join((group, name))
     properties = {
+        'type': command_name,
         'command': {
-            'name': ' '.join((group, name)),
+            'name': command_name,
             'duration_seconds': time.time() - start_time,
             'error': error,
         },
-        'timestamp': time.time(),
+        'timestamp': str(datetime.now().isoformat()),
         'platform': platform.platform(),
         'app_version': __version__,
         'python_version': platform.python_version(),
@@ -188,7 +190,8 @@ def _flush() -> None:
 
     analytics.on_error = on_error
     for event in events:
-        analytics.track(_get_user_id(), json.dumps(event))
+        event_type = event.pop('type')
+        analytics.track(_get_user_id(), event_type, json.dumps(event), event['timestamp'])
 
     # Batching is automatic according to:
     # https://segment.com/docs/connections/sources/catalog/libraries/server/python/#batching
