@@ -39,4 +39,4 @@ def get_client_secret() -> str:
 
 @functools.lru_cache()
 def get_dbt_profiles() -> Optional[Dict[str, Any]]:
-    return read_config().get('dbt', {}).get('profiles')
+    return read_config('dbt').get('profiles')
