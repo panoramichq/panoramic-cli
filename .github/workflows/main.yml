@@ -92,8 +92,8 @@ jobs:
         uses: panoramichq/github-release@v2.0.3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          tag: ${GITHUB_REF#refs/tags/}
-          name: Release ${GITHUB_REF#refs/tags/}
+          tag: ${{ github.event.release.tag_name }}
+          name: Release ${{ github.event.release.tag_name }}
           files: dist/
           draft: false
           prerelease: false
