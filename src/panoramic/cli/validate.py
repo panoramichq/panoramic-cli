@@ -139,6 +139,16 @@ def _validate_package_models(package: FilePackage) -> Tuple[List[PanoModel], Lis
     return models, errors
 
 
+def _check_field_deprecations(data: Dict[str, Any], path: Path) -> List[DeprecatedAttributeWarning]:
+    """Check for deprecated attributes in a field."""
+    errors = []
+    has_field_type_defined = 'field_type' in data.keys()
+    if has_field_type_defined:
+        errors.append(DeprecatedAttributeWarning(attribute='field_type', path=path))
+
+    return errors
+
+
 def _validate_package_fields(
     package: Union[FilePackage, GlobalPackage]
 ) -> Tuple[List[PanoField], List[ValidationError]]:
@@ -151,6 +161,8 @@ def _validate_package_fields(
             field = PanoField.from_dict(field_data)
             fields.append(field)
             field_paths_by_id[(field.data_source, field.slug)].append(field_path)
+
+            errors.extend(_check_field_deprecations(field_data, field_path))
         except InvalidYamlFile as e:
             errors.append(e)
         except JsonSchemaValidationError as e:

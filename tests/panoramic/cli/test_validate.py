@@ -656,7 +656,7 @@ def test_validate_local_state_deprecated_attribute(tmp_path, monkeypatch):
     errors = validate_local_state()
     assert errors == [
         DeprecatedAttributeWarning(attribute='data_type', path=dataset_dir / 'test_model.model.yaml'),
-        DeprecatedAttributeWarning(attribute='field_type', path=dataset_dir / 'test_field.field.yaml'),
+        DeprecatedAttributeWarning(attribute='field_type', path=dataset_dir / 'fields' / 'test_field.field.yaml'),
     ]
 
 
