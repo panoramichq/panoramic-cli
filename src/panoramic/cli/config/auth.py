@@ -1,5 +1,6 @@
 import functools
 import os
+from typing import Any, Dict, Optional
 
 from panoramic.cli.config.storage import read_config
 
@@ -34,3 +35,8 @@ def get_client_secret() -> str:
             return config['auth']['client_secret']
         # Backwards compatibility for auth credentials
         return config['client_secret']
+
+
+@functools.lru_cache()
+def get_dbt_profiles() -> Optional[Dict[str, Any]]:
+    return read_config('dbt').get('profiles')

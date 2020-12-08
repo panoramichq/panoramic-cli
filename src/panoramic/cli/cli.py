@@ -1,11 +1,14 @@
 import logging
+import os
 import sys
 import time
 from collections import defaultdict
-from typing import Optional
+from pathlib import Path
+from typing import Optional, Tuple
 
 import click
 from click.core import Command, Context
+from dbt.main import main as dbt_main
 from dotenv import load_dotenv
 
 from panoramic.cli.__version__ import __version__
@@ -21,6 +24,10 @@ from panoramic.cli.errors import (
 )
 from panoramic.cli.paths import Paths
 from panoramic.cli.print import echo_error, echo_errors, echo_info, echo_warnings
+from panoramic.cli.validate import validate_dbt
+
+_PROFILES_DIR_ARG = '--profiles-dir'
+_PROJECT_DIR_ARG = '--project-dir'
 
 
 class CommandWithAnalytics(Command):
@@ -52,12 +59,16 @@ class ConfigAwareCommand(CommandWithAnalytics):
     def invoke(self, ctx: Context):
         from panoramic.cli.validate import validate_config
 
+        cwd = Path.cwd()
+
         try:
             validate_config()
             return super().invoke(ctx)
         except ValidationError as e:
             echo_error(str(e))
             sys.exit(1)
+        finally:
+            os.chdir(cwd)  # DBT sets cwd so we need to reset it
 
 
 class ConnectionAwareCommand(ConfigAwareCommand):
@@ -88,6 +99,22 @@ class ContextAwareCommand(ConfigAwareCommand):
             validate_context()
             return super().invoke(ctx)
         except (ValidationError, SourceNotFoundException, CompanyNotFoundException) as e:
+            echo_error(str(e))
+            sys.exit(1)
+
+
+class DbtCommand(ContextAwareCommand):
+    """Command proxied to DBT CLI tool."""
+
+    def invoke(self, ctx: Context):
+        from panoramic.cli.dbt import prepare_dbt_project
+
+        try:
+            validate_dbt()
+            prepare_dbt_project()
+            return super().invoke(ctx)
+        except Exception as e:
+            # TODO: Catch DBT exception here?
             echo_error(str(e))
             sys.exit(1)
 
@@ -470,3 +497,30 @@ def analytics_id():
     from panoramic.cli.analytics import show_tracking_id_command
 
     show_tracking_id_command()
+
+
+@cli.command(context_settings=dict(ignore_unknown_options=True), cls=DbtCommand)
+@click.argument('dbt_args', nargs=-1, type=click.UNPROCESSED)
+def dbt(dbt_args: Tuple[str]):
+    """Run DBT command.
+
+    \b
+    Supported commands:
+      pano dbt deps     Update package dependencies from pano.yaml
+      pano dbt compile  Compile pre-model transforms into .dbt/target/compiled
+      pano dbt run      Run compiled transforms against target defined in pano.yaml
+    """
+    # Handle no args passed
+    if len(dbt_args) == 0:
+        ctx = click.get_current_context()
+        click.echo(ctx.get_help())
+        return
+
+    args = list(dbt_args)
+
+    if _PROFILES_DIR_ARG not in args:
+        args.extend([_PROFILES_DIR_ARG, str(Paths.dbt_config_dir())])
+    if _PROJECT_DIR_ARG not in args:
+        args.extend([_PROJECT_DIR_ARG, str(Paths.dbt_project_dir())])
+
+    return dbt_main(args=args)

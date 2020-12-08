@@ -1,5 +1,18 @@
 # Changelog
 
+## Version 1.5.0 Release
+
+- Introduce DBT subcommand to manage pre-model transforms
+- Fix Homebrew install
+
+## Version 1.5.0b1 Release
+
+- Fix Homebrew install
+
+## Version 1.5.0b0 Release
+
+- Introduce DBT subcommand to manage pre-model transforms
+
 ## Version 1.4.0 Release
 
 - Fix delete action for fields

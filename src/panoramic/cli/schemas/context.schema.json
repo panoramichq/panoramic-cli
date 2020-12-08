@@ -16,10 +16,96 @@
         "company_slug": {
             "description": "OAuth2 Client ID",
             "type": "string"
+        },
+        "dbt": {
+            "type": "object",
+            "description": "Configuration for DBT packages",
+            "properties": {
+                "dependencies": {
+                    "type": "array",
+                    "description": "List of DBT packages",
+                    "items": {
+                        "type": "object",
+                        "$ref": "#/$defs/package"
+                    }
+                },
+                "target": {
+                    "type": "object",
+                    "description": "Target data connection for DBT execution",
+                    "properties": {
+                        "name": {
+                            "type": "string",
+                            "description": "Name of target connection"
+                        },
+                        "parts": {
+                            "type": "object",
+                            "description": "Target connection information"
+                        }
+                    },
+                    "required": [
+                        "name"
+                    ]
+                },
+                "vars": {
+                    "type": "object",
+                    "descriptioin": "Variables for DBT templates"
+                }
+            },
+            "required": [
+                "target"
+            ]
         }
     },
     "required": [
         "api_version",
         "company_slug"
-    ]
+    ],
+    "$defs": {
+        "package": {
+            "description": "DBT Dependency",
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "package": {
+                    "type": "string",
+                    "description": "Name of DBT package"
+                },
+                "version": {
+                    "type": "string",
+                    "description": "Version of DBT package"
+                },
+                "git": {
+                    "type": "string",
+                    "description": "Git URL for package"
+                },
+                "revision": {
+                    "type": "string",
+                    "description": "Name of a branch or tag"
+                },
+                "local": {
+                    "type": "string",
+                    "description": "Path to local package"
+                }
+            },
+            "anyOf": [
+                {
+                    "required": [
+                        "package",
+                        "version"
+                    ]
+                },
+                {
+                    "required": [
+                        "git",
+                        "revision"
+                    ]
+                },
+                {
+                    "required": [
+                        "local"
+                    ]
+                }
+            ]
+        }
+    }
 }
