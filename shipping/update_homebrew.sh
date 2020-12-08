@@ -13,7 +13,7 @@ setup_git() {
 }
 
 update_homebrew_formula() {
-  PACKAGE_VERSION=$(python shipping/generate-versions-file.py)
+  PACKAGE_VERSION=$(python setup.py --version)
 
   cd .homebrew_repo || true
   git checkout master || true
@@ -21,7 +21,7 @@ update_homebrew_formula() {
   mkdir -p .homebrew_repo/Formula
 
   # Check for a pre-release, if this returns False then we update the main release file
-  IS_PRERELEASE=$(python -c 'import packaging.version as v;import os;print(v.parse(os.environ["PACKAGE_VERSION"]).is_prerelease)')
+  IS_PRERELEASE=$(echo $PACKAGE_VERSION | python -c 'import packaging.version as v;print(v.parse(input()).is_prerelease)')
 
   rm -fr .homebrew_repo/Formula/panoramic-cli@"$PACKAGE_VERSION".rb
   CLASS_NAME=$(ruby shipping/string_to_class.rb panoramic-cli@"$PACKAGE_VERSION")
