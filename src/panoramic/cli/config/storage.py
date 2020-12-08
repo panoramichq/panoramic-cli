@@ -1,4 +1,3 @@
-import os
 from typing import Any, Dict
 
 from panoramic.cli.file_utils import read_yaml, write_yaml
@@ -18,7 +17,7 @@ def update_config(section: str, data: Dict[str, Any]) -> None:
 
 def read_config(section: str = '') -> Dict[str, Any]:
     config_file = Paths.config_file()
-    if not os.path.isfile(config_file):
+    if not config_file.is_file():
         return {}
 
     config = read_yaml(config_file)

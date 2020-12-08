@@ -258,3 +258,8 @@ def validate_config():
 def validate_context():
     """Check context file against schema."""
     _validate_file(Paths.context_file(), JsonSchemas.context())
+
+
+def validate_dbt():
+    """Check context and config files contain valid DBT configuration."""
+    pass
