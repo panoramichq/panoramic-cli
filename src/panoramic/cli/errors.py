@@ -429,7 +429,7 @@ class ConnectionUpdateException(CliBaseException):
 
 
 class TransformCompileException(CliBaseException):
-    """Failed to comiple a Transform due to an error."""
+    """Failed to compile a Transform due to an error."""
 
     def __init__(self, transform_name: str):
         super().__init__(f'Error compiling transform {transform_name}')
