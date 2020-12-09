@@ -49,11 +49,9 @@ def write_command_event(name: str, group: str, start_time: float, error: str = '
     command_name = ' '.join((group, name))
     properties = {
         'type': command_name,
-        'command': {
-            'name': command_name,
-            'duration_seconds': time.time() - start_time,
-            'error': error,
-        },
+        'name': command_name,
+        'duration_seconds': time.time() - start_time,
+        'error': error,
         'timestamp': datetime.now().isoformat(),
         'platform': platform.platform(),
         'app_version': __version__,
