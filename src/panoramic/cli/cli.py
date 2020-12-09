@@ -529,6 +529,7 @@ def dbt(dbt_args: Tuple[str]):
 @cli.group(name='transform')
 def transform_cli():
     """Commands on local transform files."""
+    pass
 
 
 @transform_cli.command(name='create', help='Scaffold a new transform file', cls=ContextAwareCommand)
