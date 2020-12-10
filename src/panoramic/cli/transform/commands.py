@@ -40,10 +40,10 @@ def create_command():
     writer = FileWriter()
     transform_path = Paths.transforms_dir() / f'{transform.name}{FileExtension.TRANSFORM_YAML.value}'
 
-    if not Path.exists(transform_path):
-        writer.write_transform(transform)
-    else:
+    if Path.exists(transform_path):
         echo_error(f'Transform {transform_path} already exists')
+    else:
+        writer.write_transform(transform)
 
 
 def exec_command(
