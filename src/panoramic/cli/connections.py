@@ -252,7 +252,7 @@ class Connections:
                     res = adapter.execute(sql=sql, fetch=True)
                     conn.handle.commit()
                 except Exception:
-                    if conn.handle and 'closed' in dir(conn.handle) and conn.handle.closed == 0:
+                    if conn.handle and getattr(conn.handle, 'closed', None) is not None and conn.handle.closed == 0:
                         conn.handle.rollback()
                     logger.debug(sql)
                     raise
