@@ -1,5 +1,6 @@
 import logging
 import os
+from typing import Optional
 
 import requests
 from packaging import version
@@ -10,6 +11,15 @@ from panoramic.cli.print import echo_error
 URL = "https://a1.panocdn.com/updates/pano-cli/versions.json"
 
 logger = logging.getLogger(__name__)
+
+
+def fetch_analytics_write_key() -> Optional[str]:
+    """We can reuse existing versions.json for purpose of distributing analytics write key.
+    Later we can migrate to a different solution."""
+    response = requests.get(URL, headers={'User-Agent': 'pano-cli/analytics'}, timeout=5)
+    response.raise_for_status()
+    data = response.json()
+    return data.get('analytics_write_key')
 
 
 def __fetch_minimum_supported_version(current_version) -> str:

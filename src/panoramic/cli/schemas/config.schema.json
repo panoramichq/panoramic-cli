@@ -33,6 +33,15 @@
         "client_secret"
       ]
     },
+    "analytics": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "description": "Specifies if user is opt-ed out of anonymous usage metrics collection",
+          "type": "boolean"
+        }
+      }
+    },
     "connections": {
       "type": "object",
       "patternProperties": {
@@ -136,6 +145,9 @@
     },
     "connections": {
       "$ref": "#/definitions/connections"
+    },
+    "analytics": {
+      "$ref": "#/definitions/analytics"
     },
     "client_id": {
       "description": "OAuth2 Client ID",

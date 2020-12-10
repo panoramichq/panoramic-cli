@@ -93,6 +93,18 @@ class Paths:
         with importlib_resources.path(panoramic.cli.schemas, PresetFileName.CONTEXT_SCHEMA.value) as path:
             return path
 
+    @classmethod
+    def analytics_dir(cls) -> Path:
+        return cls.config_dir() / PresetFileName.ANALYTICS_DIR.value
+
+    @classmethod
+    def analytics_events_file(cls) -> Path:
+        return cls.analytics_dir() / PresetFileName.ANALYTICS_EVENTS.value
+
+    @classmethod
+    def analytics_metadata_file(cls) -> Path:
+        return cls.analytics_dir() / PresetFileName.ANALYTICS_METADATA.value
+
 
 class FileExtension(Enum):
     """
@@ -118,6 +130,9 @@ class PresetFileName(Enum):
     DATASET_SCHEMA = 'dataset.schema.json'
     CONFIG_SCHEMA = 'config.schema.json'
     CONTEXT_SCHEMA = 'context.schema.json'
+    ANALYTICS_DIR = 'analytics'
+    ANALYTICS_EVENTS = 'events.jsonl'
+    ANALYTICS_METADATA = 'metadata.yaml'
     DBT_PROJECT_FILE = 'dbt_project.yml'
     DBT_PACKAGES_FILE = 'packages.yml'
     DBT_PROFILES_FILE = 'profiles.yml'

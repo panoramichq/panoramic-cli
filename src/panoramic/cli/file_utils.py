@@ -1,6 +1,7 @@
+import json
 import logging
 from pathlib import Path
-from typing import IO, Any, Dict, Optional, Union
+from typing import IO, Any, Dict, List, Optional, Union
 
 import yaml
 
@@ -52,6 +53,39 @@ def read_yaml(path: Path) -> Dict[str, Any]:
         raise FileMissingError(path=path)
     except yaml.MarkedYAMLError as e:
         raise InvalidYamlFile(path=path, error=e)
+
+
+def append_json_line(abs_filepath: Path, json_dict: Dict[str, Any]) -> None:
+    """
+    Writes json dict to path as single line. Useful to create JSON lines file. https://jsonlines.org/
+    """
+    logger.debug(f'Write json {abs_filepath}')
+    ensure_dir(abs_filepath)
+    with open(abs_filepath, 'a') as f:
+        data = json.dumps(json_dict)
+        f.write(data + '\n')
+
+
+def read_json_lines(path: Path) -> List[Dict[str, Any]]:
+    """
+    Reads json lines from path. https://jsonlines.org/
+    """
+    logger.debug(f'Read json {path}')
+    try:
+        json_lines = []
+        with open(path, 'r') as f:
+            for line in f.readlines():
+                json_lines.append(json.loads(line))
+        return json_lines
+    except FileNotFoundError:
+        raise FileMissingError(path=path)
+
+
+def truncate_file(path: Path) -> None:
+    """
+    Opening file in write mode will remove files content.
+    """
+    open(path, 'w').close()
 
 
 def delete_file(abs_filepath: Path):
