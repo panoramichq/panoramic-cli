@@ -34,7 +34,7 @@ class TransformExecutor:
             transform_client = TransformClient()
             transform_executor = cls(company_slug=company_slug, transform=transform, compiled_query='')
 
-            compiled_query = transform_client.compile_transform(transform, company_slug)
+            compiled_query = transform_client.compile_transform(transform, company_slug, transform.connection_name)
             create_view_statement = f"CREATE OR REPLACE VIEW {transform.view_path} AS ({compiled_query})"
 
             transform_executor.compiled_query = create_view_statement

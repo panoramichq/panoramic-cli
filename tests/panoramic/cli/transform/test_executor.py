@@ -18,3 +18,4 @@ def test_wraps_with_create_view_statement(mock_transform_client):
 
     transform_executor = TransformExecutor.from_transform(company_slug='company_slug', transform=transform)
     assert transform_executor.compiled_query == 'CREATE OR REPLACE VIEW schema.view_name AS (SELECT 1)'
+    mock_transform_client.compile_transform.assert_called_with(transform, 'company_slug', 'connection')
