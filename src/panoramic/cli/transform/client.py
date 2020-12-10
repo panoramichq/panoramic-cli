@@ -30,10 +30,14 @@ class TransformClient(OAuth2Client, VersionedClient):
         self.base_url = base_url
         super().__init__(client_id, client_secret)
 
-    def compile_transform(self, transform: PanoTransform, company_slug: str) -> str:
+    def compile_transform(self, transform: PanoTransform, company_slug: str, connection_name: str) -> str:
         logger.debug(f'Compiling transform with name {transform.name}')
         url = urljoin(self.base_url, 'compile')
-        response = self.session.post(url=url, json=transform.to_dict(), params={'company_slug': company_slug})
+        response = self.session.post(
+            url=url,
+            json=transform.to_dict(),
+            params={'company_slug': company_slug, 'physical_data_source': connection_name},
+        )
         response.raise_for_status()
 
         return response.json()['data']['sql']
