@@ -86,4 +86,6 @@ def exec_command(
                 transform_executor.execute()
                 exec_bar.write(f'\u2713 [{transform_executor.transform.connection_name}] {transform.name}')
             except Exception as e:
-                exec_bar.write(f'\nError: Failed to execute transform {transform_path}:\n  {str(e)}')
+                exec_bar.write(
+                    f'\u2717 [{transform_executor.transform.connection_name}] {transform.name} \nError: Failed to execute transform {transform_path}:\n  {str(e)}'
+                )
