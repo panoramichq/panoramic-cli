@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 1.6.0 Release
+
+- Implement anonymous usage metrics collections
+
 ## Version 1.5.0 Release
 
 - Introduce DBT subcommand to manage pre-model transforms
