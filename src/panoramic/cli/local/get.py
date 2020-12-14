@@ -1,8 +1,22 @@
-from typing import Optional
+from pathlib import Path
+from typing import List, Optional, Tuple
 
 from panoramic.cli.local.reader import FileReader
 from panoramic.cli.pano_model import PanoField, PanoModel, PanoVirtualDataSource
 from panoramic.cli.state import VirtualState
+from panoramic.cli.transform.pano_transform import PanoTransform
+
+
+def get_transforms() -> List[Tuple[PanoTransform, Path]]:
+    global_package = FileReader().get_global_package()
+
+    parsed_transforms = [
+        (PanoTransform.from_dict(transform_dict), transform_path)
+        for transform_dict, transform_path in global_package.read_transforms()
+    ]
+
+    sorted_transforms = sorted(parsed_transforms, key=lambda pair: (pair[0].connection_name, pair[0].name))
+    return sorted_transforms
 
 
 def get_state(target_dataset: Optional[str] = None) -> VirtualState:
