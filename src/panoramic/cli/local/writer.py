@@ -137,11 +137,8 @@ class FileWriter:
         logger.debug(f'About to delete field {field.id}')
         delete_file(path)
 
-    def write_transform(self, transform: PanoTransform, path: Optional[Path] = None):
+    def write_transform(self, transform: PanoTransform):
         file_name = f'{transform.name}{FileExtension.TRANSFORM_YAML.value}'
-        if path is not None:
-            path = path / file_name
-        else:
-            path = Paths.transforms_dir() / file_name
+        path = Paths.transforms_dir() / file_name
 
         write_yaml(path, transform.to_dict())
