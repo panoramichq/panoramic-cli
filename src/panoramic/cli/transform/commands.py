@@ -6,7 +6,7 @@ from tqdm import tqdm
 
 from panoramic.cli.connections import Connections
 from panoramic.cli.context import get_company_slug
-from panoramic.cli.local.reader import FileReader
+from panoramic.cli.local.get import get_transforms
 from panoramic.cli.local.writer import FileWriter
 from panoramic.cli.paths import FileExtension, Paths
 from panoramic.cli.print import echo_error, echo_info
@@ -16,11 +16,11 @@ from panoramic.cli.transform.pano_transform import PanoTransform
 
 def create_command():
     echo_info('Scaffolding a new transform...')
-    name = click.prompt('name: ')
+    name = click.prompt('name')
 
     connections = Connections.load()
     connection_names = connections.keys() if connections else []
-    connection_base_text = 'connection: '
+    connection_base_text = 'connection'
 
     if len(connection_names) == 0:
         connection_prompt_text = connection_base_text
@@ -51,18 +51,12 @@ def exec_command(
     yes: bool = False,
 ):
     company_slug = get_company_slug()
-    global_package = FileReader().get_global_package()
     executors: List[Tuple[TransformExecutor, Path]] = []
 
-    parsed_transforms = [
-        (PanoTransform.from_dict(transform_dict), transform_path)
-        for transform_dict, transform_path in global_package.read_transforms()
-    ]
-
-    sorted_transforms = sorted(parsed_transforms, key=lambda pair: pair[0].connection_name)
+    transforms_with_path = get_transforms()
 
     echo_info('Compiling transforms...')
-    with tqdm(sorted_transforms) as compiling_bar:
+    with tqdm(transforms_with_path) as compiling_bar:
         for transform, transform_path in compiling_bar:
             try:
                 transform_executor = TransformExecutor.from_transform(transform=transform, company_slug=company_slug)
