@@ -2,7 +2,7 @@ import logging
 from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor
 from copy import deepcopy
-from operator import itemgetter
+from operator import attrgetter, itemgetter
 from typing import Any, Dict, Optional
 
 import click
@@ -367,11 +367,11 @@ def delete_orphaned_fields(target_dataset: Optional[str] = None, yes: bool = Fal
 
     action_list: ActionList[PanoField] = ActionList()
 
-    for dataset, (fields, models) in state.get_objects_by_package().items():
+    for dataset, (fields, models) in sorted(state.get_objects_by_package().items(), key=itemgetter(0)):
         fields_by_slug = {f.slug: f for f in fields}
         errors = sorted(
             validate_orphaned_files(fields, models, package_name=dataset),
-            key=itemgetter('field_slug'),
+            key=attrgetter('field_slug'),
         )
         for idx, error in enumerate(errors):
             if idx == 0:
@@ -410,7 +410,7 @@ def scaffold_missing_fields(target_dataset: Optional[str] = None, yes: bool = Fa
     for dataset, (fields, models) in sorted(state.get_objects_by_package().items(), key=itemgetter(0)):
         errors = sorted(
             validate_missing_files(fields, models, package_name=dataset),
-            key=itemgetter('field_slug'),
+            key=attrgetter('field_slug'),
         )
         for idx, error in enumerate(errors):
             if idx == 0:
