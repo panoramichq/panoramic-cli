@@ -196,9 +196,7 @@ def test_connections_command(name: Optional[str] = None) -> None:
 
     for name, connection in connections.items():
         # Fill with default values because DBT requires some fields we don't.
-        for key in CONNECTION_KEYS:
-            if key not in connection:
-                connection[key] = ''
+        connection = fill_dbt_required_connection_keys(connection)
 
         credentials, error = get_dialect_credentials(connection)
         if error is not None:
@@ -313,6 +311,10 @@ def _update_connection_from_args(
         connection['key_file'] = key_file
 
     # Fill with default values because DBT requires some fields we don't.
+    return fill_dbt_required_connection_keys(connection)
+
+
+def fill_dbt_required_connection_keys(connection: Dict[str, Any]) -> Dict[str, Any]:
     for key in CONNECTION_KEYS:
         if key not in connection:
             connection[key] = ''

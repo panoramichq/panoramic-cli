@@ -48,3 +48,18 @@ class PanoTransform:
     @property
     def view_path(self) -> str:
         return self.target.split('.', 1)[1]
+
+
+class CompiledTransform:
+    transform: PanoTransform
+    company_slug: str
+    compiled_query: str
+
+    def __init__(self, transform: PanoTransform, company_slug: str, compiled_query: str):
+        self.transform = transform
+        self.company_slug = company_slug
+        self.compiled_query = compiled_query
+
+    @property
+    def correctness_query(self) -> str:
+        return f'SELECT * from {self.transform.view_path} limit 1'
