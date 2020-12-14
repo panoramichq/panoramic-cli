@@ -2,6 +2,7 @@ import logging
 from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor
 from copy import deepcopy
+from operator import itemgetter
 from typing import Any, Dict, Optional
 
 import click
@@ -73,7 +74,7 @@ def initialize():
     client = CompaniesClient()
 
     try:
-        companies = client.get_companies()
+        companies = sorted(client.get_companies())
     except Exception:
         logger.debug('Failed to fetch available companies', exc_info=True)
         companies = []
@@ -94,7 +95,7 @@ def list_connections():
     """List available data connections for company from context."""
     client = PhysicalDataSourceClient()
 
-    sources = client.get_sources(get_company_slug())
+    sources = sorted(client.get_sources(get_company_slug()))
     if len(sources) == 0:
         echo_error('No data connections have been found')
     else:
@@ -105,7 +106,7 @@ def list_connections():
 def list_companies():
     """List available companies for user."""
     client = CompaniesClient()
-    companies = client.get_companies()
+    companies = sorted(client.get_companies())
     if len(companies) == 0:
         echo_error('No companies have been found')
     else:
@@ -368,7 +369,11 @@ def delete_orphaned_fields(target_dataset: Optional[str] = None, yes: bool = Fal
 
     for dataset, (fields, models) in state.get_objects_by_package().items():
         fields_by_slug = {f.slug: f for f in fields}
-        for idx, error in enumerate(validate_orphaned_files(fields, models, package_name=dataset)):
+        errors = sorted(
+            validate_orphaned_files(fields, models, package_name=dataset),
+            key=itemgetter('field_slug'),
+        )
+        for idx, error in enumerate(errors):
             if idx == 0:
                 echo_info(f'\nFields without calculation or reference in a model in dataset {dataset}:')
             echo_info(f'  {error.field_slug}')
@@ -402,8 +407,12 @@ def scaffold_missing_fields(target_dataset: Optional[str] = None, yes: bool = Fa
 
     errors = []
 
-    for dataset, (fields, models) in state.get_objects_by_package().items():
-        for idx, error in enumerate(validate_missing_files(fields, models, package_name=dataset)):
+    for dataset, (fields, models) in sorted(state.get_objects_by_package().items(), key=itemgetter(0)):
+        errors = sorted(
+            validate_missing_files(fields, models, package_name=dataset),
+            key=itemgetter('field_slug'),
+        )
+        for idx, error in enumerate(errors):
             if idx == 0:
                 echo_info(f'\nFields referenced in models without definition in dataset {dataset}:')
             echo_info(f'  {error.field_slug}')
