@@ -7,8 +7,11 @@ from panoramic.cli.connections import (
     fill_dbt_required_connection_keys,
     get_dialect_credentials,
 )
-from panoramic.cli.errors import ConnectionNotFound, TransformExecutionFailed
-from panoramic.cli.print import echo_info
+from panoramic.cli.errors import (
+    ConnectionFormatException,
+    ConnectionNotFound,
+    TransformExecutionFailed,
+)
 from panoramic.cli.transform.pano_transform import CompiledTransform
 
 logger = logging.getLogger(__name__)
@@ -27,9 +30,7 @@ class TransformExecutor:
         credentials, credential_error = get_dialect_credentials(connection_credentials_dict)
 
         if credential_error is not None:
-            # FIXME: raise a better error
-            echo_info(f'{connection_name} FAIL: {credential_error}...')
-            return
+            raise ConnectionFormatException(connection_name, credential_error)
 
         try:
             logger.debug(f'Executing transform {compiled_transform.transform.name} on {connection_name}')
