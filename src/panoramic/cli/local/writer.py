@@ -2,7 +2,7 @@ import logging
 from pathlib import Path
 from typing import Optional
 
-from panoramic.cli.file_utils import delete_file, write_yaml
+from panoramic.cli.file_utils import delete_file, ensure_dir, write_yaml
 from panoramic.cli.pano_model import (
     Actionable,
     PanoField,
@@ -10,7 +10,7 @@ from panoramic.cli.pano_model import (
     PanoVirtualDataSource,
 )
 from panoramic.cli.paths import FileExtension, Paths, PresetFileName
-from panoramic.cli.transform.pano_transform import PanoTransform
+from panoramic.cli.transform.pano_transform import CompiledTransform, PanoTransform
 
 logger = logging.getLogger(__name__)
 
@@ -142,3 +142,21 @@ class FileWriter:
         path = Paths.transforms_dir() / file_name
 
         write_yaml(path, transform.to_dict())
+
+    def write_compiled_transform(self, compiled_transform: CompiledTransform) -> Path:
+        file_name = f'{compiled_transform.transform.name}{FileExtension.COMPILED_TRANSFORM_SQL.value}'
+        path = Paths.transforms_compiled_dir() / file_name
+
+        ensure_dir(path)
+
+        with open(path, 'w') as f:
+            f.writelines(
+                [
+                    '-- Compiled with parameters:\n'
+                    f'-- \tconnection: {compiled_transform.transform.connection_name}\n',
+                    f'-- \tcompany_slug: {compiled_transform.company_slug}\n' '\n',
+                    compiled_transform.compiled_query,
+                ]
+            )
+
+        return path
