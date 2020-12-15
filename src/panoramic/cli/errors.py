@@ -428,6 +428,13 @@ class ConnectionUpdateException(CliBaseException):
         super().__init__(f'Failed to update connection: {error_message}.')
 
 
+class ConnectionFormatException(CliBaseException):
+    """Failed to update connection due to error."""
+
+    def __init__(self, connection_name: str, credential_error: str):
+        super().__init__(f'Invalid credentials format for connection {connection_name} FAIL: {credential_error}')
+
+
 class TransformCompileException(CliBaseException):
     """Failed to compile a Transform due to an error."""
 
