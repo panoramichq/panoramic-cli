@@ -34,6 +34,7 @@ class TransformExecutor:
 
         try:
             logger.debug(f'Executing transform {compiled_transform.transform.name} on {connection_name}')
+            # TODO: Consider moving into SQL Executor class that manages connection state
             Connections.execute(sql=compiled_transform.compiled_query, credentials=credentials)
 
             logger.debug(
