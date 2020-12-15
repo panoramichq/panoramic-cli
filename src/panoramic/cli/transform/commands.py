@@ -55,11 +55,17 @@ def exec_command(
 
     transforms_with_path = get_transforms()
 
+    if len(transforms_with_path) == 0:
+        echo_info('No transforms found...')
+        return
+
+    transform_compiler = TransformCompiler(company_slug)
+
     echo_info('Compiling transforms...')
     with tqdm(transforms_with_path) as compiling_bar:
         for transform, transform_path in compiling_bar:
             try:
-                compiled_transform = TransformCompiler.compile(transform=transform, company_slug=company_slug)
+                compiled_transform = transform_compiler.compile(transform=transform)
 
                 # FIXME: output to ./transforms/.compiled/filename.sql
                 # compiling_bar.write(f'[{transform.connection_name}] {compiled_transform.compiled_query}')
@@ -82,6 +88,7 @@ def exec_command(
                 exec_bar.write(
                     f'Executing: {compiled_transform.transform.name} on {compiled_transform.transform.connection_name}'
                 )
+
                 TransformExecutor.execute(compiled_transform)
                 exec_bar.write(f'\u2713 [{compiled_transform.transform.connection_name}] {transform.name}')
             except Exception as e:

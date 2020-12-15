@@ -16,7 +16,8 @@ def test_wraps_with_create_view_statement(mock_transform_client):
     mock_transform_client.compile_transform.return_value = 'SELECT 1'
     transform = PanoTransform(name='test', fields=['a'], target='connection.schema.view_name')
 
-    compiled_transform = TransformCompiler.compile(transform=transform, company_slug='company_slug')
+    transform_compiler = TransformCompiler(company_slug="company_slug")
+    compiled_transform = transform_compiler.compile(transform=transform)
 
     assert compiled_transform.company_slug == 'company_slug'
     assert compiled_transform.compiled_query == 'CREATE OR REPLACE VIEW schema.view_name AS (SELECT 1)'
