@@ -10,6 +10,7 @@ from panoramic.cli.transform.pano_transform import PanoTransform
 def get_transforms() -> List[Tuple[PanoTransform, Path]]:
     global_package = FileReader().get_global_package()
 
+    # TODO: Consider adding path on transform object
     parsed_transforms = [
         (PanoTransform.from_dict(transform_dict), transform_path)
         for transform_dict, transform_path in global_package.read_transforms()
