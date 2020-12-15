@@ -10,7 +10,7 @@ from panoramic.cli.local.get import get_transforms
 from panoramic.cli.local.writer import FileWriter
 from panoramic.cli.paths import FileExtension, Paths
 from panoramic.cli.print import echo_error, echo_info
-from panoramic.cli.transform.compiler import TransformCompiler
+from panoramic.cli.transform.compiler import CompiledQueryWriter, TransformCompiler
 from panoramic.cli.transform.executor import TransformExecutor
 from panoramic.cli.transform.pano_transform import CompiledTransform, PanoTransform
 
@@ -66,11 +66,13 @@ def exec_command(
         for transform, transform_path in compiling_bar:
             try:
                 compiled_transform = transform_compiler.compile(transform=transform)
-
-                # FIXME: output to ./transforms/.compiled/filename.sql
-                # compiling_bar.write(f'[{transform.connection_name}] {compiled_transform.compiled_query}')
-                # compiling_bar.write('')
                 compiled_transforms.append((compiled_transform, transform_path))
+
+                compiled_sql_path = CompiledQueryWriter.write(
+                    compiled_transform=compiled_transform, transform_path=transform_path
+                )
+
+                compiling_bar.write(f'[{transform.name}] writing compiled query to {compiled_sql_path}')
             except Exception as e:
                 compiling_bar.write(f'\nError: Failed to compile transform {transform_path}:\n  {str(e)}')
 
