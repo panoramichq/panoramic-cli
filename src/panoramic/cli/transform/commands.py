@@ -33,7 +33,7 @@ def create_command():
     # Assemble target based on input
     connection = click.prompt(connection_prompt_text)
 
-    target_view_path = click.prompt('view path')
+    target_view_path = click.prompt(f'target: {connection}.', prompt_suffix="")
     target = f'{connection}.{target_view_path}'
 
     transform = PanoTransform(name=name, fields=[], target=target)
