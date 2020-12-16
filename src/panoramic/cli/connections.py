@@ -1,3 +1,4 @@
+import logging
 from typing import Any, Dict, Optional, Tuple
 
 import click
@@ -9,6 +10,7 @@ from dbt.adapters.factory import (
     get_config_class_by_name,
     load_plugin,
 )
+from dbt.adapters.protocol import AdapterProtocol
 from dbt.exceptions import FailedToConnectException, RuntimeException
 
 from panoramic.cli.config.storage import read_config, update_config
@@ -34,6 +36,8 @@ CONNECTION_KEYS = [
     'project',
     'key_file',
 ]
+
+logger = logging.getLogger(__name__)
 
 
 def create_connection_command(
@@ -192,9 +196,7 @@ def test_connections_command(name: Optional[str] = None) -> None:
 
     for name, connection in connections.items():
         # Fill with default values because DBT requires some fields we don't.
-        for key in CONNECTION_KEYS:
-            if key not in connection:
-                connection[key] = ''
+        connection = fill_dbt_required_connection_keys(connection)
 
         credentials, error = get_dialect_credentials(connection)
         if error is not None:
@@ -225,7 +227,7 @@ class Connections:
         return read_config('connections')
 
     @classmethod
-    def test(cls, credentials) -> Tuple[bool, str]:
+    def get_connection_adapter(cls, credentials) -> AdapterProtocol:
         """Test connection string by connecting using DBT."""
         # Create dialect specific configuration
         adapter_config_cls = get_config_class_by_name(credentials.type)
@@ -235,6 +237,31 @@ class Connections:
         # Create dialect specific adapter that handles connections
         adapter_cls = get_adapter_class_by_name(credentials.type)
         adapter = adapter_cls(adapter_config)  # type: ignore
+        return adapter
+
+    @classmethod
+    def execute(cls, sql: str, credentials) -> Tuple[str, Any]:
+        adapter = cls.get_connection_adapter(credentials)
+
+        with adapter.connection_named('pano'):  # type: ignore
+            conn = adapter.connections.get_thread_connection()
+            with conn.handle.cursor():
+                try:
+                    res = adapter.execute(sql=sql, fetch=True)
+                    conn.handle.commit()
+                except Exception:
+                    if conn.handle and getattr(conn.handle, 'closed', None) is not None and conn.handle.closed == 0:
+                        conn.handle.rollback()
+                    logger.debug(sql)
+                    raise
+                finally:
+                    conn.transaction_open = False
+
+        return res
+
+    @classmethod
+    def test(cls, credentials) -> Tuple[bool, str]:
+        adapter = cls.get_connection_adapter(credentials)
 
         # Create dialect specific connection
         connection = adapter.acquire_connection()  # type: ignore
@@ -284,6 +311,10 @@ def _update_connection_from_args(
         connection['key_file'] = key_file
 
     # Fill with default values because DBT requires some fields we don't.
+    return fill_dbt_required_connection_keys(connection)
+
+
+def fill_dbt_required_connection_keys(connection: Dict[str, Any]) -> Dict[str, Any]:
     for key in CONNECTION_KEYS:
         if key not in connection:
             connection[key] = ''

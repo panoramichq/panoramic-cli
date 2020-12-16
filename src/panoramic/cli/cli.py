@@ -528,3 +528,29 @@ def dbt(dbt_args: Tuple[str]):
         args.extend([_PROJECT_DIR_ARG, str(Paths.dbt_project_dir())])
 
     return dbt_main(args=args)
+
+
+@cli.group(name='transform')
+def transform_cli():
+    """Commands on local transform files."""
+    pass
+
+
+@transform_cli.command(name='create', help='Scaffold a new transform file', cls=ContextAwareCommand)
+@handle_exception
+def transform_create():
+    from panoramic.cli.transform.commands import create_command
+
+    create_command()
+
+
+@transform_cli.command(name='exec', help='Execute transforms', cls=ContextAwareCommand)
+@click.option('--yes', '-y', is_flag=True, default=False, help='Automatically confirm all actions')
+@click.option(
+    '--compile', 'compile_only', is_flag=True, default=False, help='Only compile transforms to sql statements'
+)
+@handle_exception
+def transform_exec(yes: bool, compile_only: bool):
+    from panoramic.cli.transform.commands import exec_command
+
+    exec_command(yes=yes, compile_only=compile_only)

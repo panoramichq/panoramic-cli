@@ -426,3 +426,27 @@ class ConnectionUpdateException(CliBaseException):
 
     def __init__(self, error_message: str):
         super().__init__(f'Failed to update connection: {error_message}.')
+
+
+class ConnectionFormatException(CliBaseException):
+    """Failed to update connection due to error."""
+
+    def __init__(self, connection_name: str, credential_error: str):
+        super().__init__(f'Invalid credentials format for connection {connection_name} FAIL: {credential_error}')
+
+
+class TransformCompileException(CliBaseException):
+    """Failed to compile a Transform due to an error."""
+
+    def __init__(self, transform_name: str):
+        super().__init__(f'Error compiling transform {transform_name}')
+
+
+class TransformExecutionFailed(Exception):
+    """Failed to execute a transform on the remote connection"""
+
+    compiled_sql: str
+
+    def __init__(self, transform_name: str, connection_name: str, compiled_sql: str):
+        self.compiled_sql = compiled_sql
+        super().__init__(f'Error executing transform {transform_name} on {connection_name}')

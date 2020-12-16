@@ -1,5 +1,12 @@
 # Changelog
 
+## Version 1.7.0 Release
+
+- Introduces Pano Transforms
+- A new `pano transform` command group
+- A `pano transform create` command to help with transform file scaffolding
+- A `pano transform exec` command to execute/compile transforms on top of a connection
+
 ## Version 1.6.0 Release
 
 - Implement anonymous usage metrics collections
