@@ -2,6 +2,7 @@ import logging
 import os
 import sys
 import time
+import warnings
 from collections import defaultdict
 from pathlib import Path
 from typing import Optional, Tuple
@@ -148,7 +149,10 @@ def cli(debug):
     """Run checks at the beginning of every command."""
     if debug:
         logger = logging.getLogger()
-        logger.setLevel("DEBUG")
+        logger.setLevel(logging.DEBUG)
+
+    # hide unclosed socket errors
+    warnings.filterwarnings("ignore", category=ResourceWarning, message="unclosed.*<socket.socket.*>")
 
     load_dotenv(dotenv_path=Paths.dotenv_file())
 
