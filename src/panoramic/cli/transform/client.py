@@ -36,7 +36,6 @@ class TransformClient(OAuth2Client, VersionedClient):
         response = self.session.post(
             url=url,
             json=transform.to_dict(),
-            headers={'panoramic-husky-dremio-target': 'true'},
             params={'company_slug': company_slug, 'physical_data_source': connection_name},
         )
         response.raise_for_status()

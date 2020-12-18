@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 1.7.1 Release
+
+- Bugfix for badly generated transform queries
+
 ## Version 1.7.0 Release
 
 - Introduces Pano Transforms
