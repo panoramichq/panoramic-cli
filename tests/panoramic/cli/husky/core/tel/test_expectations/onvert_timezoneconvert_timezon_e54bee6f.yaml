@@ -1,0 +1,6 @@
+convert_timezone(twitter|date);twitter;dimension
+---
+api_response_message: 'convert_timezone requires 2 or 3 arguments: expression, timezone_from(optionally
+  also, timezone_to), but only one was given. Occurred at position 1, line 1 in expression
+  "convert_timezone(twitter|date)"'
+exception_class: <class 'panoramic.cli.husky.core.tel.exceptions.TelExpressionException'>

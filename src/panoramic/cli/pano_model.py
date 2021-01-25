@@ -1,7 +1,6 @@
+import json
 from abc import ABC
 from typing import Any, Dict, List, Optional, Tuple, Union
-
-from panoramic.cli.field.client import Aggregation
 
 
 class Actionable(ABC):
@@ -24,6 +23,40 @@ class Actionable(ABC):
 
     def __eq__(self, o: object) -> bool:
         raise NotImplementedError('__eq__ not implemented for base class')
+
+
+class Aggregation:
+
+    type: str
+    params: Optional[Dict[str, Any]]
+
+    def __init__(
+        self,
+        *,
+        type: str,
+        params: Optional[Dict[str, Any]],
+    ):
+        self.type = type
+        self.params = params
+
+    @classmethod
+    def from_dict(cls, inputs: Dict[str, Any]) -> 'Aggregation':
+        return cls(type=inputs['type'], params=inputs.get('params'))
+
+    def to_dict(self) -> Dict[str, Any]:
+        data: Dict[str, Any] = {'type': self.type}
+        if self.params is not None:
+            data['params'] = self.params
+        return data
+
+    def __hash__(self) -> int:
+        return hash(json.dumps(self.to_dict()))
+
+    def __eq__(self, o: object) -> bool:
+        if not isinstance(o, Aggregation):
+            return False
+
+        return self.to_dict() == o.to_dict()
 
 
 class PanoModelField:

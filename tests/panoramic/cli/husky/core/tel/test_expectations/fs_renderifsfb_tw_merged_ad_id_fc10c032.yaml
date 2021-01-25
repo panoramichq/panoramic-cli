@@ -1,0 +1,8 @@
+ifs(fb_tw_merged_ad_id == 'tw', twitter|spend, fb_tw_merged_ad_id == 'fb', facebook_ads|spend,
+  generic_cpm);facebook_ads|twitter;metric
+---
+api_response_message: Condition arguments in function ifs must be metric taxons when
+  the outcome is post-aggregation metric. Occurred at position 1, line 1 in expression
+  "ifs(fb_tw_merged_ad_id == 'tw', twitter|spend, fb_tw_merged_ad_id == 'fb', facebook_ads|spend,
+  generic_cpm)"
+exception_class: <class 'panoramic.cli.husky.core.tel.exceptions.TelExpressionException'>

@@ -1,0 +1,5 @@
+date_diff();<no-vds>
+---
+api_response_message: 'date_diff requires 3 arguments: time_unit, start_time, end_time,
+  but none were given. Occurred at position 1, line 1 in expression "date_diff()"'
+exception_class: <class 'panoramic.cli.husky.core.tel.exceptions.TelExpressionException'>

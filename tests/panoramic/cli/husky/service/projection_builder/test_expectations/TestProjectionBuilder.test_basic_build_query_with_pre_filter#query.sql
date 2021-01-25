@@ -1,0 +1,4 @@
+SELECT 'data-source' AS __data_source, sum(impressions) AS impressions, sum(spend) AS spend 
+FROM (SELECT schema_metric_table_hourly_4ba9264ca9b14f09.impressions AS impressions, schema_metric_table_hourly_4ba9264ca9b14f09.spend AS spend 
+FROM schema.metric_table_hourly AS schema_metric_table_hourly_4ba9264ca9b14f09 LEFT JOIN schema.entity_table AS schema_entity_table_83a8d33392b3cf56 ON schema_metric_table_hourly_4ba9264ca9b14f09.ad_id = schema_entity_table_83a8d33392b3cf56.ad_id  
+WHERE CAST(schema_entity_table_83a8d33392b3cf56.ad_name AS VARCHAR) LIKE 'zombies!' ESCAPE '/') GROUP BY __data_source

@@ -1,0 +1,6 @@
+date_diff('SECOND', twitter|date, facebook_ads|date);facebook_ads|twitter
+---
+api_response_message: date_diff accepts only taxons from the same data source or after
+  merge() is applied. Occurred at position 1, line 1 in expression "date_diff('SECOND',
+  twitter|date, facebook_ads|date)"
+exception_class: <class 'panoramic.cli.husky.core.tel.exceptions.TelExpressionException'>

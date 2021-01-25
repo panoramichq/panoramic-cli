@@ -1,0 +1,16 @@
+ifs(generic_spend > 1, twitter|spend, generic_spend > 0, facebook_ads|spend, generic_spend);facebook_ads|twitter;metric
+---
+data_source_formula_templates: []
+dimension_formulas: []
+invalid_value: false
+override_mappings: []
+phase: TelPhase.metric_post
+post_formula:
+  sql: __1
+pre_formulas:
+- PreFormula('''CASE WHEN (coalesce(facebook_ads_spend_5811c78c7c741b5a, 0) + coalesce(twitter_spend_68657fbb141b10c8,
+  0) > 1) THEN twitter_spend_68657fbb141b10c8 WHEN (coalesce(facebook_ads_spend_5811c78c7c741b5a,
+  0) + coalesce(twitter_spend_68657fbb141b10c8, 0) > 0) THEN facebook_ads_spend_5811c78c7c741b5a
+  ELSE coalesce(facebook_ads_spend_5811c78c7c741b5a, 0) + coalesce(twitter_spend_68657fbb141b10c8,
+  0) END''','''__1''', AggregationDefinition(type=AggregationType.sum, params=None),
+  None)

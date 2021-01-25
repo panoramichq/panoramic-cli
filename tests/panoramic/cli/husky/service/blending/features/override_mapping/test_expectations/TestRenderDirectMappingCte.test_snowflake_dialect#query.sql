@@ -1,0 +1,1 @@
+SELECT 'orig_1' AS original, 'changed_1' AS changed UNION ALL SELECT 'orig_2' AS original, 'changed_2' AS changed UNION ALL SELECT CAST(NULL AS VARCHAR) AS original, 'changed_3' AS changed UNION ALL SELECT 'orig_4' AS original, '--PANO-NULL--' AS changed

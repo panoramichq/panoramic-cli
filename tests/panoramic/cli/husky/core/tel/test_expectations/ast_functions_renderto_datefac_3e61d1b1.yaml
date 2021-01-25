@@ -1,0 +1,5 @@
+to_date(facebook_ads|done);facebook_ads;dimension
+---
+api_response_message: Argument 2 in function to_date is required, if the first argument
+  is not a number. Occurred at position 9, line 1 in expression "to_date(facebook_ads|done)"
+exception_class: <class 'panoramic.cli.husky.core.tel.exceptions.TelExpressionException'>

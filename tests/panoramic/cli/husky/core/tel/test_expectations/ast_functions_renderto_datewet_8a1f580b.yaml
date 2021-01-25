@@ -1,0 +1,5 @@
+to_date(wetransfer_product_name);<no-vds>;dimension
+---
+api_response_message: Taxon "wetransfer_product_name" not found. Occurred at position
+  9, line 1 in expression "to_date(wetransfer_product_name)"
+exception_class: <class 'panoramic.cli.husky.core.tel.exceptions.TelExpressionException'>

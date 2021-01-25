@@ -1,0 +1,32 @@
+cumulative(generic_cpm, date);facebook_ads|twitter;metric
+---
+data_source_formula_templates: []
+dimension_formulas:
+- PreFormula('''date''','''__2''', AggregationDefinition(type=AggregationType.not_set,
+  params=None), None)
+- PreFormula('''date''','''__5''', AggregationDefinition(type=AggregationType.not_set,
+  params=None), None)
+invalid_value: false
+override_mappings: []
+phase: TelPhase.metric_post
+post_formula:
+  exclude_slugs:
+  - __3
+  - __6
+  - date
+  sql: sum(__1) OVER (ORDER BY __3 ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)
+    / nullif(sum(__4) OVER (ORDER BY __6 ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT
+    ROW), 0)
+  template: sum(__1) OVER (PARTITION BY ${dimension_slugs} ORDER BY __3 ROWS BETWEEN
+    UNBOUNDED PRECEDING AND CURRENT ROW) / nullif(sum(__4) OVER (PARTITION BY ${dimension_slugs}
+    ORDER BY __6 ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW), 0)
+pre_formulas:
+- PreFormula('''1000 * (coalesce(facebook_ads_spend_5811c78c7c741b5a, 0) + coalesce(twitter_spend_68657fbb141b10c8,
+  0))''','''__1''', AggregationDefinition(type=AggregationType.sum, params=None),
+  None)
+- PreFormula('''__2''','''__3''', AggregationDefinition(type=AggregationType.group_by,
+  params=None), None)
+- PreFormula('''coalesce(facebook_ads_impressions_0bf2e36fb4e71190, 0) + coalesce(twitter_impressions_ef12a84724a0ad7d,
+  0)''','''__4''', AggregationDefinition(type=AggregationType.sum, params=None), None)
+- PreFormula('''__5''','''__6''', AggregationDefinition(type=AggregationType.group_by,
+  params=None), None)

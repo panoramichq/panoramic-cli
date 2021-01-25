@@ -1,0 +1,18 @@
+concat(merge(twitter|ad_id,facebook_ads|ad_id),merge(twitter|ad_name,facebook_ads|ad_name));facebook_ads|twitter;dimension
+---
+data_source_formula_templates:
+- SqlFormulaTemplate(SqlTemplate('''${twitter|ad_id}'''),'''__1''', 'twitter',{'twitter|ad_id'})
+- SqlFormulaTemplate(SqlTemplate('''${facebook_ads|ad_id}'''),'''__2''', 'facebook_ads',{'facebook_ads|ad_id'})
+- SqlFormulaTemplate(SqlTemplate('''${twitter|ad_name}'''),'''__3''', 'twitter',{'twitter|ad_name'})
+- SqlFormulaTemplate(SqlTemplate('''${facebook_ads|ad_name}'''),'''__4''', 'facebook_ads',{'facebook_ads|ad_name'})
+dimension_formulas:
+- PreFormula('''concat(coalesce(__1, __2), coalesce(__3, __4))''','''__5''', AggregationDefinition(type=AggregationType.not_set,
+  params=None), None)
+invalid_value: false
+override_mappings: []
+phase: TelPhase.metric_post
+post_formula:
+  sql: __6
+pre_formulas:
+- PreFormula('''__5''','''__6''', AggregationDefinition(type=AggregationType.group_by,
+  params=None), None)

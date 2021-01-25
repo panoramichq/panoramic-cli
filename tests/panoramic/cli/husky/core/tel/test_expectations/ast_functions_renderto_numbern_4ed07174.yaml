@@ -1,0 +1,6 @@
+to_number();<no-vds>;metric
+---
+api_response_message: 'to_number requires 1 or 2 arguments: expression(optionally
+  also, precision), but none were given. Occurred at position 1, line 1 in expression
+  "to_number()"'
+exception_class: <class 'panoramic.cli.husky.core.tel.exceptions.TelExpressionException'>

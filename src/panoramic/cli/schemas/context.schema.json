@@ -13,10 +13,6 @@
                 "v1"
             ]
         },
-        "company_slug": {
-            "description": "OAuth2 Client ID",
-            "type": "string"
-        },
         "dbt": {
             "type": "object",
             "description": "Configuration for DBT packages",
@@ -57,8 +53,7 @@
         }
     },
     "required": [
-        "api_version",
-        "company_slug"
+        "api_version"
     ],
     "$defs": {
         "package": {

@@ -1,0 +1,13 @@
+iff(twitter|spend<10,iff(twitter|spend<5,4,9),11);twitter
+---
+data_source_formula_templates: []
+dimension_formulas: []
+invalid_value: false
+override_mappings: []
+phase: TelPhase.metric_post
+post_formula:
+  sql: __1
+pre_formulas:
+- PreFormula('''CASE WHEN (twitter_spend_68657fbb141b10c8 < 10) THEN CASE WHEN (twitter_spend_68657fbb141b10c8
+  < 5) THEN 4 ELSE 9 END ELSE 11 END''','''__1''', AggregationDefinition(type=AggregationType.sum,
+  params=None), None)

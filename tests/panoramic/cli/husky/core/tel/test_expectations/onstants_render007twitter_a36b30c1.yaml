@@ -1,0 +1,10 @@
+-0.07;twitter
+---
+data_source_formula_templates: []
+dimension_formulas: []
+invalid_value: false
+override_mappings: []
+phase: TelPhase.metric_post
+post_formula:
+  sql: '-0.07'
+pre_formulas: []

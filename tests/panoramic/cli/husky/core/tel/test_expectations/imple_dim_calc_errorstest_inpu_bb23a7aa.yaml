@@ -1,0 +1,6 @@
+merge(?twitter|ad_id, ?twitter|ad_name);twitter;dimension
+---
+api_response_message: 'merge() accepts only one taxon per distinct data source, but
+  more taxons were provided for following data sources: twitter. Occurred at position
+  1, line 1 in expression "merge(?twitter|ad_id, ?twitter|ad_name)"'
+exception_class: <class 'panoramic.cli.husky.core.tel.exceptions.TelExpressionException'>

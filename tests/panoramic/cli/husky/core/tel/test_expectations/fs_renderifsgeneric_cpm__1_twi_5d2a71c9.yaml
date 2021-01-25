@@ -1,0 +1,25 @@
+ifs(generic_cpm > 1, twitter|spend, generic_cpm > 0, facebook_ads|spend, 42);facebook_ads|twitter;metric
+---
+data_source_formula_templates: []
+dimension_formulas: []
+invalid_value: false
+override_mappings: []
+phase: TelPhase.metric_post
+post_formula:
+  sql: CASE WHEN (__1 / nullif(__2, 0) > 1) THEN __5 WHEN (__3 / nullif(__4, 0) >
+    0) THEN __6 ELSE 42 END
+pre_formulas:
+- PreFormula('''1000 * (coalesce(facebook_ads_spend_5811c78c7c741b5a, 0) + coalesce(twitter_spend_68657fbb141b10c8,
+  0))''','''__1''', AggregationDefinition(type=AggregationType.sum, params=None),
+  None)
+- PreFormula('''coalesce(facebook_ads_impressions_0bf2e36fb4e71190, 0) + coalesce(twitter_impressions_ef12a84724a0ad7d,
+  0)''','''__2''', AggregationDefinition(type=AggregationType.sum, params=None), None)
+- PreFormula('''1000 * (coalesce(facebook_ads_spend_5811c78c7c741b5a, 0) + coalesce(twitter_spend_68657fbb141b10c8,
+  0))''','''__3''', AggregationDefinition(type=AggregationType.sum, params=None),
+  None)
+- PreFormula('''coalesce(facebook_ads_impressions_0bf2e36fb4e71190, 0) + coalesce(twitter_impressions_ef12a84724a0ad7d,
+  0)''','''__4''', AggregationDefinition(type=AggregationType.sum, params=None), None)
+- PreFormula('''twitter_spend_68657fbb141b10c8''','''__5''', AggregationDefinition(type=AggregationType.sum,
+  params=None), None)
+- PreFormula('''facebook_ads_spend_5811c78c7c741b5a''','''__6''', AggregationDefinition(type=AggregationType.sum,
+  params=None), None)

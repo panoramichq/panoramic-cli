@@ -1,0 +1,5 @@
+to_bool(date);<no-vds>;dimension
+---
+api_response_message: 'Argument 1 in function to_bool must be of type: number or string
+  or boolean. Occurred at position 9, line 1 in expression "to_bool(date)"'
+exception_class: <class 'panoramic.cli.husky.core.tel.exceptions.TelExpressionException'>

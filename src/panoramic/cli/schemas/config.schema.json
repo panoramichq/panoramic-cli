@@ -9,37 +9,6 @@
     "auth": {
       "type": "object",
       "properties": {
-        "client_id": {
-          "description": "OAuth2 Client ID",
-          "type": "string"
-        },
-        "client_secret": {
-          "description": "OAuth2 Client Secret",
-          "type": "string"
-        },
-        "dbt": {
-          "type": "object",
-          "description": "DBT Configuration",
-          "properties": {
-            "profiles": {
-              "type": "object",
-              "description": "DBT user profiles"
-            }
-          }
-        }
-      },
-      "required": [
-        "client_id",
-        "client_secret"
-      ]
-    },
-    "analytics": {
-      "type": "object",
-      "properties": {
-        "enabled": {
-          "description": "Specifies if user is opt-ed out of anonymous usage metrics collection",
-          "type": "boolean"
-        }
       }
     },
     "connections": {
@@ -48,92 +17,12 @@
         "^.*$": {
           "type": "object",
           "properties": {
-            "type": {
-              "type": "string"
-            },
-            "user": {
-              "type": "string"
-            },
-            "host": {
-              "type": "string"
-            },
-            "port": {
-              "type": "integer"
-            },
-            "password": {
-              "type": "string"
-            },
-            "database": {
-              "type": "string"
-            },
-            "schema": {
-              "type": "string"
-            },
-            "warehouse": {
-              "type": "string"
-            },
-            "account": {
-              "type": "string"
-            },
-            "project": {
-              "type": "string"
-            },
-            "key_file": {
+            "connection_string": {
               "type": "string"
             }
           },
-          "allOf": [
-            {
-              "if": {
-                "properties": {
-                  "type": {
-                    "const": "postgres"
-                  }
-                }
-              },
-              "then": {
-                "required": [
-                  "database",
-                  "host"
-                ]
-              }
-            },
-            {
-              "if": {
-                "properties": {
-                  "type": {
-                    "const": "snowflake"
-                  }
-                }
-              },
-              "then": {
-                "required": [
-                  "account",
-                  "role",
-                  "warehouse"
-                ]
-              }
-            },
-            {
-              "if": {
-                "properties": {
-                  "type": {
-                    "const": "bigquery"
-                  }
-                }
-              },
-              "then": {
-                "required": [
-                  "project",
-                  "key_file"
-                ]
-              }
-            }
-          ],
           "required": [
-            "type",
-            "user",
-            "password"
+            "connection_string"
           ]
         }
       }
@@ -145,21 +34,6 @@
     },
     "connections": {
       "$ref": "#/definitions/connections"
-    },
-    "analytics": {
-      "$ref": "#/definitions/analytics"
-    },
-    "client_id": {
-      "description": "OAuth2 Client ID",
-      "type": "string",
-      "deprecated": true,
-      "deprecationMessage": "property is no longer supported, move property to 'auth' section"
-    },
-    "client_secret": {
-      "description": "OAuth2 Client Secret",
-      "type": "string",
-      "deprecated": true,
-      "deprecationMessage": "property is no longer supported, move property to 'auth' section"
     }
   }
 }

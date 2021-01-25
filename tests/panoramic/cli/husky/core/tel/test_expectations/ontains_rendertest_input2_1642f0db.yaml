@@ -1,0 +1,8 @@
+contains(twitter|spend, 'id');twitter
+---
+api_response_message: 'Argument 1 in function contains must be of type: string. Occurred
+  at position 10, line 1 in expression "contains(twitter|spend, ''id'')"
+
+  Argument 1 in function contains must have a phase lower or equal than dimension.
+  Occurred at position 10, line 1 in expression "contains(twitter|spend, ''id'')"'
+exception_class: <class 'panoramic.cli.husky.core.tel.exceptions.TelExpressionException'>

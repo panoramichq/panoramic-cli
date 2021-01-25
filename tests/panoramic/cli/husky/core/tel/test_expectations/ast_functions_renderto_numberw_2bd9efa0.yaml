@@ -1,0 +1,8 @@
+to_number(wetransfer_product_name,fb_tw_spend_all_optional);twitter;metric
+---
+api_response_message: 'Argument 2 in function to_number must be a constant of type:
+  integer. Occurred at position 35, line 1 in expression "to_number(wetransfer_product_name,fb_tw_spend_all_optional)"
+
+  Taxon "wetransfer_product_name" not found. Occurred at position 11, line 1 in expression
+  "to_number(wetransfer_product_name,fb_tw_spend_all_optional)"'
+exception_class: <class 'panoramic.cli.husky.core.tel.exceptions.TelExpressionException'>

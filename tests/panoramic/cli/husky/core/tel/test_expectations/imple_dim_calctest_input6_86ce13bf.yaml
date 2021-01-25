@@ -1,0 +1,16 @@
+merge(tw_ad_id, fb_ad_id);facebook_ads|twitter;dimension
+---
+data_source_formula_templates:
+- SqlFormulaTemplate(SqlTemplate('''${twitter|ad_id}'''),'''__1''', 'twitter',{'twitter|ad_id'})
+- SqlFormulaTemplate(SqlTemplate('''${facebook_ads|ad_id}'''),'''__2''', 'facebook_ads',{'facebook_ads|ad_id'})
+dimension_formulas:
+- PreFormula('''coalesce(__1, __2)''','''__3''', AggregationDefinition(type=AggregationType.not_set,
+  params=None), None)
+invalid_value: false
+override_mappings: []
+phase: TelPhase.metric_post
+post_formula:
+  sql: __4
+pre_formulas:
+- PreFormula('''__3''','''__4''', AggregationDefinition(type=AggregationType.group_by,
+  params=None), None)

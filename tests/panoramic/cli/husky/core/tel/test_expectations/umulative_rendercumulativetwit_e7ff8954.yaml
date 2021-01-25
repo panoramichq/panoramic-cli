@@ -1,0 +1,8 @@
+cumulative(twitter|spend, twitter|spend);twitter;metric
+---
+api_response_message: 'Argument 2 in function cumulative must be of type: datetime.
+  Occurred at position 27, line 1 in expression "cumulative(twitter|spend, twitter|spend)"
+
+  Argument 2 in function cumulative must have a phase lower or equal than dimension.
+  Occurred at position 27, line 1 in expression "cumulative(twitter|spend, twitter|spend)"'
+exception_class: <class 'panoramic.cli.husky.core.tel.exceptions.TelExpressionException'>

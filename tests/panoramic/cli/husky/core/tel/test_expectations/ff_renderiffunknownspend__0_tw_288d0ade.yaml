@@ -1,0 +1,10 @@
+iff(?unknown|spend == 0, twitter|spend);twitter;metric
+---
+data_source_formula_templates: []
+dimension_formulas: []
+invalid_value: true
+override_mappings: []
+phase: TelPhase.metric_post
+post_formula:
+  sql: 'NULL'
+pre_formulas: []

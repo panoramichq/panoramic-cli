@@ -1,0 +1,6 @@
+to_date(fb_tw_spend_all_optional, 'YYYY-MM-DD');twitter;dimension
+---
+api_response_message: Argument 2 in function to_date is allowed only if the first
+  argument is not a number. Occurred at position 35, line 1 in expression "to_date(fb_tw_spend_all_optional,
+  'YYYY-MM-DD')"
+exception_class: <class 'panoramic.cli.husky.core.tel.exceptions.TelExpressionException'>

@@ -1,0 +1,5 @@
+to_number(date);<no-vds>;metric
+---
+api_response_message: 'Argument 1 in function to_number must be of type: number or
+  string or boolean. Occurred at position 11, line 1 in expression "to_number(date)"'
+exception_class: <class 'panoramic.cli.husky.core.tel.exceptions.TelExpressionException'>

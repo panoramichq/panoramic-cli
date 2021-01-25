@@ -1,0 +1,7 @@
+
+api_version: v1
+slug: company_test_field
+display_name: Company test field
+group: Custom
+field_type: dimension
+data_type: text

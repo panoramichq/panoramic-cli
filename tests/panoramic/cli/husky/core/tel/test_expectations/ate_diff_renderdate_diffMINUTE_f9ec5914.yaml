@@ -1,0 +1,17 @@
+date_diff('MINUTE', twitter|date, merged_date);facebook_ads|twitter;dimension
+---
+data_source_formula_templates:
+- SqlFormulaTemplate(SqlTemplate('''${twitter|date}'''),'''__1''', 'twitter',{'twitter|date'})
+- SqlFormulaTemplate(SqlTemplate('''${facebook_ads|date}'''),'''__2''', 'facebook_ads',{'facebook_ads|date'})
+- SqlFormulaTemplate(SqlTemplate('''${twitter|date}'''),'''__3''', 'twitter',{'twitter|date'})
+dimension_formulas:
+- PreFormula('''timestampdiff(MINUTE, __1, coalesce(__2, __3))''','''__4''', AggregationDefinition(type=AggregationType.not_set,
+  params=None), None)
+invalid_value: false
+override_mappings: []
+phase: TelPhase.metric_post
+post_formula:
+  sql: __5
+pre_formulas:
+- PreFormula('''__4''','''__5''', AggregationDefinition(type=AggregationType.group_by,
+  params=None), None)

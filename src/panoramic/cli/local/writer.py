@@ -154,7 +154,7 @@ class FileWriter:
                 [
                     '-- Compiled with parameters:\n'
                     f'-- \tconnection: {compiled_transform.transform.connection_name}\n',
-                    f'-- \tcompany_slug: {compiled_transform.company_slug}\n' '\n',
+                    f'-- \tcompany_id: {compiled_transform.company_id}\n' '\n',
                     compiled_transform.compiled_query,
                 ]
             )

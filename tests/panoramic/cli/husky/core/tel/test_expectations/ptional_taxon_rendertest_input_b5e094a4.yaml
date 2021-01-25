@@ -1,0 +1,12 @@
+?required_spend + 5;facebook_ads
+---
+data_source_formula_templates: []
+dimension_formulas: []
+invalid_value: false
+override_mappings: []
+phase: TelPhase.metric_post
+post_formula:
+  sql: coalesce(__1, 0) + coalesce(5, 0)
+pre_formulas:
+- PreFormula('''facebook_ads_spend_5811c78c7c741b5a''','''__1''', AggregationDefinition(type=AggregationType.sum,
+  params=None), None)

@@ -1,0 +1,17 @@
+iff(fb_tw_merged_ad_id == 'id', twitter|spend);facebook_ads|twitter;metric
+---
+data_source_formula_templates:
+- SqlFormulaTemplate(SqlTemplate('''${facebook_ads|ad_id}'''),'''__1''', 'facebook_ads',{'facebook_ads|ad_id'})
+- SqlFormulaTemplate(SqlTemplate('''${twitter|ad_id}'''),'''__2''', 'twitter',{'twitter|ad_id'})
+dimension_formulas:
+- PreFormula('''coalesce(__1, __2)''','''__3''', AggregationDefinition(type=AggregationType.not_set,
+  params=None), None)
+invalid_value: false
+override_mappings: []
+phase: TelPhase.metric_post
+post_formula:
+  sql: __4
+pre_formulas:
+- PreFormula('''CASE WHEN (__3 = 'id') THEN twitter_spend_68657fbb141b10c8 ELSE 0
+  END''','''__4''', AggregationDefinition(type=AggregationType.sum, params=None),
+  None)

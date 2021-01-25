@@ -1,0 +1,9 @@
+iff(true);<no-vds>
+---
+api_response_message: 'iff requires 2 or 3 arguments: condition, positive_outcome(optionally
+  also, negative_outcome), but only one was given. Occurred at position 1, line 1
+  in expression "iff(true)"
+
+  Outcome arguments in function iff must have compatible data types. Occurred at position
+  1, line 1 in expression "iff(true)"'
+exception_class: <class 'panoramic.cli.husky.core.tel.exceptions.TelExpressionException'>

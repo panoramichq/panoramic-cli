@@ -1,0 +1,14 @@
+generic_cpm;facebook_ads
+---
+data_source_formula_templates: []
+dimension_formulas: []
+invalid_value: false
+override_mappings: []
+phase: TelPhase.metric_post
+post_formula:
+  sql: __1 / nullif(__2, 0)
+pre_formulas:
+- PreFormula('''1000 * facebook_ads_spend_5811c78c7c741b5a''','''__1''', AggregationDefinition(type=AggregationType.sum,
+  params=None), None)
+- PreFormula('''facebook_ads_impressions_0bf2e36fb4e71190''','''__2''', AggregationDefinition(type=AggregationType.sum,
+  params=None), None)

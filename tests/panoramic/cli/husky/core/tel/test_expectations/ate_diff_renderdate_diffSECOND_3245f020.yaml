@@ -1,0 +1,10 @@
+date_diff('SECOND', twitter|date, twitter|spend);twitter
+---
+api_response_message: 'Argument 3 in function date_diff must be of type: datetime.
+  Occurred at position 35, line 1 in expression "date_diff(''SECOND'', twitter|date,
+  twitter|spend)"
+
+  Argument 3 in function date_diff must have a phase lower or equal than dimension.
+  Occurred at position 35, line 1 in expression "date_diff(''SECOND'', twitter|date,
+  twitter|spend)"'
+exception_class: <class 'panoramic.cli.husky.core.tel.exceptions.TelExpressionException'>

@@ -1,0 +1,18 @@
+coalesce(twitter|spend / twitter|impressions) / coalesce(facebook_ads|spend / facebook_ads|impressions);facebook_ads|twitter
+---
+data_source_formula_templates: []
+dimension_formulas: []
+invalid_value: false
+override_mappings: []
+phase: TelPhase.metric_post
+post_formula:
+  sql: (__1 / nullif(__2, 0)) / nullif(__3 / nullif(__4, 0), 0)
+pre_formulas:
+- PreFormula('''twitter_spend_68657fbb141b10c8''','''__1''', AggregationDefinition(type=AggregationType.sum,
+  params=None), None)
+- PreFormula('''twitter_impressions_ef12a84724a0ad7d''','''__2''', AggregationDefinition(type=AggregationType.sum,
+  params=None), None)
+- PreFormula('''facebook_ads_spend_5811c78c7c741b5a''','''__3''', AggregationDefinition(type=AggregationType.sum,
+  params=None), None)
+- PreFormula('''facebook_ads_impressions_0bf2e36fb4e71190''','''__4''', AggregationDefinition(type=AggregationType.sum,
+  params=None), None)

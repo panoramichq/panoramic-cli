@@ -1,0 +1,48 @@
+distributed:
+  client:
+    heartbeat: "10s"
+    scheduler-info-interval: "5s"
+  comm:
+    timeouts:
+      connect: "30s"
+      tcp: "45s"
+    retry:
+      count: 3
+      delay:
+        min: "2s"
+        max: "30s"
+    socket-backlog: 4096
+  deploy:
+    lost-worker-timeout: "35s"
+  scheduler:
+    events-cleanup-delay: "1800s"
+    locks:
+      lease-validation-interval: "3s"
+      lease-timeout: "1260s"
+    http:
+      routes: [
+        'distributed.http.scheduler.prometheus',
+        'distributed.http.scheduler.info',
+        'distributed.http.scheduler.json',
+        'distributed.http.health',
+        'distributed.http.statics',
+        'federated.identifier_parser.dask_routes.scheduler_routes',
+      ]
+  worker:
+    connections:
+      outgoing: 50
+      incoming: 25
+    memory:
+      target: 0.75
+      spill: 0.85
+      pause: 0.90
+      terminate: 0.95
+    http:
+      routes: [
+        'distributed.http.worker.prometheus',
+        'distributed.http.health',
+        'distributed.http.statics',
+        'federated.identifier_parser.dask_routes.worker_routes',
+      ]
+  admin:
+    log-length: 3000

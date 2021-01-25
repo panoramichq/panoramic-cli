@@ -1,0 +1,8 @@
+year(?twitter|spend);<no-vds>
+---
+api_response_message: 'Argument 1 in function year must be of type: datetime. Occurred
+  at position 6, line 1 in expression "year(?twitter|spend)"
+
+  Argument 1 in function year must have a phase lower or equal than dimension. Occurred
+  at position 6, line 1 in expression "year(?twitter|spend)"'
+exception_class: <class 'panoramic.cli.husky.core.tel.exceptions.TelExpressionException'>

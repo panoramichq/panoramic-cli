@@ -1,0 +1,16 @@
+contains(lower(twitter|ad_id), 'text_asd');twitter;dimension
+---
+data_source_formula_templates:
+- SqlFormulaTemplate(SqlTemplate('''lower(${twitter|ad_id}) LIKE '%%text/_asd%%' ESCAPE
+  '/''''),'''__1''', 'twitter',{'twitter|ad_id'})
+dimension_formulas:
+- PreFormula('''__1''','''__2''', AggregationDefinition(type=AggregationType.not_set,
+  params=None), None)
+invalid_value: false
+override_mappings: []
+phase: TelPhase.metric_post
+post_formula:
+  sql: __3
+pre_formulas:
+- PreFormula('''__2''','''__3''', AggregationDefinition(type=AggregationType.group_by,
+  params=None), None)

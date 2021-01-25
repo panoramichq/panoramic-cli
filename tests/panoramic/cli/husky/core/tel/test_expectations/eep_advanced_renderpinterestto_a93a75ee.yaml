@@ -1,0 +1,12 @@
+pinterest|total_conversions_value
+---
+data_source_formula_templates: []
+dimension_formulas: []
+invalid_value: false
+override_mappings: []
+phase: TelPhase.metric_post
+post_formula:
+  sql: __1
+pre_formulas:
+- PreFormula('''pinterest_total_conversions_value_in_micro_d_83919c1d6b0dc364 * 1000000''','''__1''',
+  AggregationDefinition(type=AggregationType.sum, params=None), None)

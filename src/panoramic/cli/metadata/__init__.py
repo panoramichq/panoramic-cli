@@ -1,6 +1,5 @@
-from panoramic.cli.metadata.client import JobState, MetadataClient
+from panoramic.cli.metadata.client import JobState
 
 __all__ = [
-    'MetadataClient',
     'JobState',
 ]

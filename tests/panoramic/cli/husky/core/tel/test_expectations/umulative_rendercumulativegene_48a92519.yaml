@@ -1,0 +1,21 @@
+cumulative(generic_spend, date);facebook_ads|twitter;metric
+---
+data_source_formula_templates: []
+dimension_formulas:
+- PreFormula('''date''','''__2''', AggregationDefinition(type=AggregationType.not_set,
+  params=None), None)
+invalid_value: false
+override_mappings: []
+phase: TelPhase.metric_post
+post_formula:
+  exclude_slugs:
+  - __3
+  - date
+  sql: sum(__1) OVER (ORDER BY __3 ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)
+  template: sum(__1) OVER (PARTITION BY ${dimension_slugs} ORDER BY __3 ROWS BETWEEN
+    UNBOUNDED PRECEDING AND CURRENT ROW)
+pre_formulas:
+- PreFormula('''coalesce(facebook_ads_spend_5811c78c7c741b5a, 0) + coalesce(twitter_spend_68657fbb141b10c8,
+  0)''','''__1''', AggregationDefinition(type=AggregationType.sum, params=None), None)
+- PreFormula('''__2''','''__3''', AggregationDefinition(type=AggregationType.group_by,
+  params=None), None)

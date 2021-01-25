@@ -1,0 +1,18 @@
+date_diff('YEAR', merged_date, merged_date);facebook_ads|twitter;dimension
+---
+data_source_formula_templates:
+- SqlFormulaTemplate(SqlTemplate('''${facebook_ads|date}'''),'''__1''', 'facebook_ads',{'facebook_ads|date'})
+- SqlFormulaTemplate(SqlTemplate('''${twitter|date}'''),'''__2''', 'twitter',{'twitter|date'})
+- SqlFormulaTemplate(SqlTemplate('''${facebook_ads|date}'''),'''__3''', 'facebook_ads',{'facebook_ads|date'})
+- SqlFormulaTemplate(SqlTemplate('''${twitter|date}'''),'''__4''', 'twitter',{'twitter|date'})
+dimension_formulas:
+- PreFormula('''timestampdiff(YEAR, coalesce(__1, __2), coalesce(__3, __4))''','''__5''',
+  AggregationDefinition(type=AggregationType.not_set, params=None), None)
+invalid_value: false
+override_mappings: []
+phase: TelPhase.metric_post
+post_formula:
+  sql: __6
+pre_formulas:
+- PreFormula('''__5''','''__6''', AggregationDefinition(type=AggregationType.group_by,
+  params=None), None)

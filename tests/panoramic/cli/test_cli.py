@@ -8,11 +8,7 @@ from panoramic.cli.cli import (
     ContextAwareCommand,
     LocalStateAwareCommand,
 )
-from panoramic.cli.errors import (
-    CompanyNotFoundException,
-    SourceNotFoundException,
-    ValidationError,
-)
+from panoramic.cli.errors import SourceNotFoundException, ValidationError
 
 
 @patch('panoramic.cli.validate.validate_config')
@@ -26,16 +22,6 @@ def test_context_aware_command_source_not_found(_, __, capsys):
 
 
 @patch('panoramic.cli.validate.validate_config')
-@patch('panoramic.cli.validate.validate_context', side_effect=CompanyNotFoundException('test'))
-def test_context_aware_command_company_not_found(_, __, capsys):
-    """Check command fails when no context."""
-    with pytest.raises(SystemExit):
-        ContextAwareCommand(name='test-command').invoke(Mock())
-
-    assert capsys.readouterr().out == 'Error: Company test not found. Do you have access to it?\n'
-
-
-@patch('panoramic.cli.validate.validate_config')
 @patch('panoramic.cli.validate.validate_context', side_effect=ValidationError('test'))
 def test_context_aware_command_invalid(_, __, capsys):
     """Check command fails when no context."""
@@ -45,11 +31,9 @@ def test_context_aware_command_invalid(_, __, capsys):
     assert capsys.readouterr().out == 'Error: test\n'
 
 
-@patch('panoramic.cli.command.analytics_module_is_enabled', return_value=False)
-@patch('panoramic.cli.analytics.is_enabled', return_value=False)
 @patch('panoramic.cli.validate.validate_config')
 @patch('panoramic.cli.validate.validate_context')
-def test_context_aware_command_valid(_, __, ___, ____):
+def test_context_aware_command_valid(_, __):
     """Check command succeeds when context exists."""
 
     def test_callback():
@@ -70,10 +54,8 @@ def test_config_aware_command_invalid(_, capsys):
     assert capsys.readouterr().out == 'Error: test\n'
 
 
-@patch('panoramic.cli.command.analytics_module_is_enabled', return_value=False)
-@patch('panoramic.cli.analytics.is_enabled', return_value=False)
 @patch('panoramic.cli.validate.validate_config')
-def test_config_aware_command_config_exists(_, __, ___):
+def test_config_aware_command_config_exists(_):
     """Check command succeeds when context exists."""
 
     def test_callback():
@@ -96,12 +78,10 @@ def test_local_state_aware_command_invalid(_, __, ___, capsys):
     assert capsys.readouterr().out == '\nError: test\n'
 
 
-@patch('panoramic.cli.command.analytics_module_is_enabled', return_value=False)
-@patch('panoramic.cli.analytics.is_enabled', return_value=False)
 @patch('panoramic.cli.validate.validate_config')
 @patch('panoramic.cli.validate.validate_context')
 @patch('panoramic.cli.validate.validate_local_state')
-def test_local_state_aware_command_valid(_, __, ___, ____, _____):
+def test_local_state_aware_command_valid(_, __, ___):
     """Check command succeeds when context exists."""
 
     def test_callback():

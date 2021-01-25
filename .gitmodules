@@ -1,4 +1,0 @@
-[submodule "e2e"]
-	path = e2e
-	url = ../pano-cli-e2e-tests.git
-	branch = master

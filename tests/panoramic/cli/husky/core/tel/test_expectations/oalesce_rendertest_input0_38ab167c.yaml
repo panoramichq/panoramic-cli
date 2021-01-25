@@ -1,0 +1,5 @@
+coalesce();xxx
+---
+api_response_message: 'coalesce requires 1 arguments: expression, but none were given.
+  Occurred at position 1, line 1 in expression "coalesce()"'
+exception_class: <class 'panoramic.cli.husky.core.tel.exceptions.TelExpressionException'>

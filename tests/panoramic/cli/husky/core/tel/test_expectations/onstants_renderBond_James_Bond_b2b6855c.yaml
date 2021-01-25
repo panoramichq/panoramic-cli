@@ -1,0 +1,10 @@
+'''Bond, James Bond'';twitter'
+---
+data_source_formula_templates: []
+dimension_formulas: []
+invalid_value: false
+override_mappings: []
+phase: TelPhase.metric_post
+post_formula:
+  sql: '''Bond, James Bond'''
+pre_formulas: []

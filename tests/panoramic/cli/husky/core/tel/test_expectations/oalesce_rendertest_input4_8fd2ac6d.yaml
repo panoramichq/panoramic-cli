@@ -1,0 +1,12 @@
+coalesce(?facebook_ads|spend, twitter|spend);twitter
+---
+data_source_formula_templates: []
+dimension_formulas: []
+invalid_value: false
+override_mappings: []
+phase: TelPhase.metric_post
+post_formula:
+  sql: __1
+pre_formulas:
+- PreFormula('''twitter_spend_68657fbb141b10c8''','''__1''', AggregationDefinition(type=AggregationType.sum,
+  params=None), None)

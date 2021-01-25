@@ -1,0 +1,2 @@
+SELECT schema_metric_gender_table_hourly_339db5a4187d677f.ad_id AS ad_id, schema_metric_gender_table_hourly_339db5a4187d677f.gender AS gender, schema_metric_gender_table_hourly_339db5a4187d677f.impressions AS impressions, schema_metric_gender_table_hourly_339db5a4187d677f.spend AS spend 
+FROM schema.metric_gender_table_hourly AS schema_metric_gender_table_hourly_339db5a4187d677f 

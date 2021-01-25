@@ -16,5 +16,9 @@ ignore = E265,
 
 statistics = True
 exclude = .git,
-          __pycache__
+          __pycache__,
+          .venv,
+          src/panoramic/cli/tel_grammar,
+          grammar,
+          contrib
 max-line-length = 120
