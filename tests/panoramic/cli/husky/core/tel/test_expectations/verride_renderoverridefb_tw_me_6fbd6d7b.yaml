@@ -1,0 +1,20 @@
+override(fb_tw_merged_ad_id, 'override-mapping-slug');twitter;dimension
+---
+data_source_formula_templates:
+- SqlFormulaTemplate(SqlTemplate('''${twitter|ad_id}'''),'''__1''', 'twitter',{'twitter|ad_id'})
+dimension_formulas:
+- PreFormula('''CASE WHEN (__om___1_override_mapping_slug_true_74e7be5267346d1a.changed
+  = '--PANO-NULL--') THEN NULL ELSE coalesce(__om___1_override_mapping_slug_true_74e7be5267346d1a.changed,
+  'Unknown') END''','''__2''', AggregationDefinition(type=AggregationType.not_set,
+  params=None), None)
+invalid_value: false
+override_mappings:
+- column: __1
+  include_missing_values: true
+  override_mapping_slug: override-mapping-slug
+phase: TelPhase.metric_post
+post_formula:
+  sql: __3
+pre_formulas:
+- PreFormula('''__2''','''__3''', AggregationDefinition(type=AggregationType.group_by,
+  params=None), None)

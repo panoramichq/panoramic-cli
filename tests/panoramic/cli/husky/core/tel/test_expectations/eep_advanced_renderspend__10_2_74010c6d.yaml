@@ -1,0 +1,14 @@
+'(spend + 10/2) / views '
+---
+data_source_formula_templates: []
+dimension_formulas: []
+invalid_value: false
+override_mappings: []
+phase: TelPhase.metric_post
+post_formula:
+  sql: ((coalesce(__1, 0) + coalesce(5.0, 0)) / nullif(__2, 0))
+pre_formulas:
+- PreFormula('''spend''','''__1''', AggregationDefinition(type=AggregationType.sum,
+  params=None), None)
+- PreFormula('''views''','''__2''', AggregationDefinition(type=AggregationType.sum,
+  params=None), None)

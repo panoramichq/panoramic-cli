@@ -1,0 +1,12 @@
+iff(not true, twitter|spend);twitter;metric
+---
+data_source_formula_templates: []
+dimension_formulas: []
+invalid_value: false
+override_mappings: []
+phase: TelPhase.metric_post
+post_formula:
+  sql: __1
+pre_formulas:
+- PreFormula('''CASE WHEN false THEN twitter_spend_68657fbb141b10c8 ELSE 0 END''','''__1''',
+  AggregationDefinition(type=AggregationType.sum, params=None), None)

@@ -1,0 +1,8 @@
+ifs(1, twitter|ad_id, 2, facebook_ads|ad_id);facebook_ads|twitter;dimension
+---
+api_response_message: 'Argument 1 in function ifs must be of type: boolean. Occurred
+  at position 5, line 1 in expression "ifs(1, twitter|ad_id, 2, facebook_ads|ad_id)"
+
+  Argument 3 in function ifs must be of type: boolean. Occurred at position 23, line
+  1 in expression "ifs(1, twitter|ad_id, 2, facebook_ads|ad_id)"'
+exception_class: <class 'panoramic.cli.husky.core.tel.exceptions.TelExpressionException'>

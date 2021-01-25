@@ -1,0 +1,22 @@
+iff(fb_tw_merged_ad_id == 'tw', ?twitter|spend, iff(fb_tw_merged_ad_id == 'fb', ?facebook_ads|spend,
+  ?unknown|spend));facebook_ads|twitter;metric
+---
+data_source_formula_templates:
+- SqlFormulaTemplate(SqlTemplate('''${facebook_ads|ad_id}'''),'''__1''', 'facebook_ads',{'facebook_ads|ad_id'})
+- SqlFormulaTemplate(SqlTemplate('''${twitter|ad_id}'''),'''__2''', 'twitter',{'twitter|ad_id'})
+- SqlFormulaTemplate(SqlTemplate('''${facebook_ads|ad_id}'''),'''__4''', 'facebook_ads',{'facebook_ads|ad_id'})
+- SqlFormulaTemplate(SqlTemplate('''${twitter|ad_id}'''),'''__5''', 'twitter',{'twitter|ad_id'})
+dimension_formulas:
+- PreFormula('''coalesce(__1, __2)''','''__3''', AggregationDefinition(type=AggregationType.not_set,
+  params=None), None)
+- PreFormula('''coalesce(__4, __5)''','''__6''', AggregationDefinition(type=AggregationType.not_set,
+  params=None), None)
+invalid_value: false
+override_mappings: []
+phase: TelPhase.metric_post
+post_formula:
+  sql: __7
+pre_formulas:
+- PreFormula('''CASE WHEN (__3 = 'tw') THEN twitter_spend_68657fbb141b10c8 ELSE CASE
+  WHEN (__6 = 'fb') THEN facebook_ads_spend_5811c78c7c741b5a ELSE 0 END END''','''__7''',
+  AggregationDefinition(type=AggregationType.sum, params=None), None)

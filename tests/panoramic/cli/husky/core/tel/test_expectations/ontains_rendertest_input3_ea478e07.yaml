@@ -1,0 +1,6 @@
+contains(twitter|ad_id, 'id', twitter|ad_id);twitter
+---
+api_response_message: 'Argument 3 in function contains must be a constant of type:
+  string. Occurred at position 31, line 1 in expression "contains(twitter|ad_id, ''id'',
+  twitter|ad_id)"'
+exception_class: <class 'panoramic.cli.husky.core.tel.exceptions.TelExpressionException'>

@@ -1,0 +1,10 @@
+convert_timezone(twitter|spend, 'UTC', 'Europe/Prague');twitter;dimension
+---
+api_response_message: 'Argument 1 in function convert_timezone must be of type: datetime.
+  Occurred at position 18, line 1 in expression "convert_timezone(twitter|spend, ''UTC'',
+  ''Europe/Prague'')"
+
+  Argument 1 in function convert_timezone must have a phase lower or equal than dimension.
+  Occurred at position 18, line 1 in expression "convert_timezone(twitter|spend, ''UTC'',
+  ''Europe/Prague'')"'
+exception_class: <class 'panoramic.cli.husky.core.tel.exceptions.TelExpressionException'>

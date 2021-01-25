@@ -1,0 +1,10 @@
+convert_timezone(twitter|date, 'INVALID', 'INVALID TOO');twitter;dimension
+---
+api_response_message: 'Argument 2 in function convert_timezone is not a valid timezone
+  name. Occurred at position 32, line 1 in expression "convert_timezone(twitter|date,
+  ''INVALID'', ''INVALID TOO'')"
+
+  Argument 3 in function convert_timezone is not a valid timezone name. Occurred at
+  position 43, line 1 in expression "convert_timezone(twitter|date, ''INVALID'', ''INVALID
+  TOO'')"'
+exception_class: <class 'panoramic.cli.husky.core.tel.exceptions.TelExpressionException'>

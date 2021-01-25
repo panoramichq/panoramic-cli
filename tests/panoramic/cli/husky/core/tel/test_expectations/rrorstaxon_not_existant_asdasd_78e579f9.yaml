@@ -1,0 +1,5 @@
+taxon_not_existant_asdasd + impressions
+---
+api_response_message: Taxon "taxon_not_existant_asdasd" not found. Occurred at position
+  1, line 1 in expression "taxon_not_existant_asdasd + impressions"
+exception_class: <class 'panoramic.cli.husky.core.tel.exceptions.TelExpressionException'>

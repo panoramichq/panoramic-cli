@@ -1,0 +1,12 @@
+'spend_w_impr '
+---
+data_source_formula_templates: []
+dimension_formulas: []
+invalid_value: false
+override_mappings: []
+phase: TelPhase.metric_post
+post_formula:
+  sql: __1
+pre_formulas:
+- PreFormula('''coalesce(spend, 0) + coalesce(impressions, 0)''','''__1''', AggregationDefinition(type=AggregationType.sum,
+  params=None), None)

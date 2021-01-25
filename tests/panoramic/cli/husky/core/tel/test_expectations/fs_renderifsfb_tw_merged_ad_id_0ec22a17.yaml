@@ -1,0 +1,10 @@
+ifs(fb_tw_merged_ad_id == 'tw', twitter|ad_id, fb_tw_merged_ad_id == 'fb', facebook_ads|spend);facebook_ads|twitter;dimension
+---
+api_response_message: 'ifs cannot combine dimension and metric outcomes. Occurred
+  at position 1, line 1 in expression "ifs(fb_tw_merged_ad_id == ''tw'', twitter|ad_id,
+  fb_tw_merged_ad_id == ''fb'', facebook_ads|spend)"
+
+  Outcome arguments in function ifs must have compatible data types. Occurred at position
+  1, line 1 in expression "ifs(fb_tw_merged_ad_id == ''tw'', twitter|ad_id, fb_tw_merged_ad_id
+  == ''fb'', facebook_ads|spend)"'
+exception_class: <class 'panoramic.cli.husky.core.tel.exceptions.TelExpressionException'>

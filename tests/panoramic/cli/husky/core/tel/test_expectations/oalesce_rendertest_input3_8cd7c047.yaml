@@ -1,0 +1,23 @@
+coalesce(generic_cpm,enhanced_cpm);facebook_ads|twitter
+---
+data_source_formula_templates: []
+dimension_formulas:
+- PreFormula('''objective''','''__3''', AggregationDefinition(type=AggregationType.not_set,
+  params=None), None)
+invalid_value: false
+override_mappings: []
+phase: TelPhase.metric_post
+post_formula:
+  sql: coalesce(__1 / nullif(__2, 0), __4 / nullif(__5, 0))
+pre_formulas:
+- PreFormula('''1000 * (coalesce(facebook_ads_spend_5811c78c7c741b5a, 0) + coalesce(twitter_spend_68657fbb141b10c8,
+  0))''','''__1''', AggregationDefinition(type=AggregationType.sum, params=None),
+  None)
+- PreFormula('''coalesce(facebook_ads_impressions_0bf2e36fb4e71190, 0) + coalesce(twitter_impressions_ef12a84724a0ad7d,
+  0)''','''__2''', AggregationDefinition(type=AggregationType.sum, params=None), None)
+- PreFormula('''1000 * CASE WHEN (__3 = 'LINK_CLICKS') THEN (coalesce(facebook_ads_spend_5811c78c7c741b5a,
+  0) + coalesce(twitter_spend_68657fbb141b10c8, 0)) * 1.5 ELSE coalesce(facebook_ads_spend_5811c78c7c741b5a,
+  0) + coalesce(twitter_spend_68657fbb141b10c8, 0) END''','''__4''', AggregationDefinition(type=AggregationType.sum,
+  params=None), None)
+- PreFormula('''coalesce(facebook_ads_impressions_0bf2e36fb4e71190, 0) + coalesce(twitter_impressions_ef12a84724a0ad7d,
+  0)''','''__5''', AggregationDefinition(type=AggregationType.sum, params=None), None)

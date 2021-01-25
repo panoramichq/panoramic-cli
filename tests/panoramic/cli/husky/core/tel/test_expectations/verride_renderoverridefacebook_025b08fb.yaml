@@ -1,0 +1,6 @@
+override();facebook_ads|twitter;dimension
+---
+api_response_message: 'override requires 2 or 3 arguments: original_dimension, override_mapping_slug(optionally
+  also, include_missing_values), but none were given. Occurred at position 1, line
+  1 in expression "override()"'
+exception_class: <class 'panoramic.cli.husky.core.tel.exceptions.TelExpressionException'>

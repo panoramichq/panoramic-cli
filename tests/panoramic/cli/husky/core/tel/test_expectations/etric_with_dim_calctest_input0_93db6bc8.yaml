@@ -1,0 +1,19 @@
+"\n                        iff(\n                        fb_tw_merged_objective ==\
+  \ \"views\",generic_spend,generic_spend*1.5)\n                        ;facebook_ads|twitter"
+---
+data_source_formula_templates:
+- SqlFormulaTemplate(SqlTemplate('''${facebook_ads|objective}'''),'''__1''', 'facebook_ads',{'facebook_ads|objective'})
+- SqlFormulaTemplate(SqlTemplate('''${twitter|objective}'''),'''__2''', 'twitter',{'twitter|objective'})
+dimension_formulas:
+- PreFormula('''coalesce(__1, __2)''','''__3''', AggregationDefinition(type=AggregationType.not_set,
+  params=None), None)
+invalid_value: false
+override_mappings: []
+phase: TelPhase.metric_post
+post_formula:
+  sql: __4
+pre_formulas:
+- PreFormula('''CASE WHEN (__3 = 'views') THEN coalesce(facebook_ads_spend_5811c78c7c741b5a,
+  0) + coalesce(twitter_spend_68657fbb141b10c8, 0) ELSE (coalesce(facebook_ads_spend_5811c78c7c741b5a,
+  0) + coalesce(twitter_spend_68657fbb141b10c8, 0)) * 1.5 END''','''__4''', AggregationDefinition(type=AggregationType.sum,
+  params=None), None)

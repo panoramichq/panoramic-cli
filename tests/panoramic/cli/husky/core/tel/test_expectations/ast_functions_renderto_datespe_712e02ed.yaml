@@ -1,0 +1,14 @@
+to_date(spend);<no-vds>;dimension
+---
+data_source_formula_templates: []
+dimension_formulas:
+- PreFormula('''to_date(spend)''','''__1''', AggregationDefinition(type=AggregationType.not_set,
+  params=None), None)
+invalid_value: false
+override_mappings: []
+phase: TelPhase.metric_post
+post_formula:
+  sql: __2
+pre_formulas:
+- PreFormula('''__1''','''__2''', AggregationDefinition(type=AggregationType.group_by,
+  params=None), None)

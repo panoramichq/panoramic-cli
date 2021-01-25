@@ -1,0 +1,20 @@
+iff(fb_tw_merged_ad_id == 'tw', 10, iff(fb_tw_merged_ad_id == 'fb', 20, iff(?unknown
+  == 'un', 30, 40)));facebook_ads|twitter;metric
+---
+data_source_formula_templates:
+- SqlFormulaTemplate(SqlTemplate('''${facebook_ads|ad_id}'''),'''__1''', 'facebook_ads',{'facebook_ads|ad_id'})
+- SqlFormulaTemplate(SqlTemplate('''${twitter|ad_id}'''),'''__2''', 'twitter',{'twitter|ad_id'})
+- SqlFormulaTemplate(SqlTemplate('''${facebook_ads|ad_id}'''),'''__3''', 'facebook_ads',{'facebook_ads|ad_id'})
+- SqlFormulaTemplate(SqlTemplate('''${twitter|ad_id}'''),'''__4''', 'twitter',{'twitter|ad_id'})
+dimension_formulas:
+- PreFormula('''CASE WHEN (coalesce(__1, __2) = 'tw') THEN 10 ELSE CASE WHEN (coalesce(__3,
+  __4) = 'fb') THEN 20 ELSE CASE WHEN false THEN 30 ELSE 40 END END END''','''__5''',
+  AggregationDefinition(type=AggregationType.not_set, params=None), None)
+invalid_value: false
+override_mappings: []
+phase: TelPhase.metric_post
+post_formula:
+  sql: __6
+pre_formulas:
+- PreFormula('''__5''','''__6''', AggregationDefinition(type=AggregationType.sum,
+  params=None), None)

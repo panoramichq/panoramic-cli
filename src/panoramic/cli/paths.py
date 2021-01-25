@@ -17,32 +17,8 @@ class Paths:
         return Path.cwd() / PresetFileName.CONTEXT.value
 
     @staticmethod
-    def dbt_project_dir() -> Path:
-        return Path.cwd() / SystemDirectory.DBT.value
-
-    @classmethod
-    def dbt_modules_dir(cls) -> Path:
-        return cls.dbt_project_dir() / PresetFileName.DBT_MODULES_DIR.value
-
-    @classmethod
-    def dbt_packages_file(cls) -> Path:
-        return cls.dbt_project_dir() / PresetFileName.DBT_PACKAGES_FILE.value
-
-    @classmethod
-    def dbt_project_file(cls) -> Path:
-        return cls.dbt_project_dir() / PresetFileName.DBT_PROJECT_FILE.value
-
-    @staticmethod
     def dotenv_file() -> Path:
         return Path.cwd() / PresetFileName.DOTENV.value
-
-    @staticmethod
-    def dbt_config_dir() -> Path:
-        return Path.home() / PresetFileName.CONFIG_DIR.value / PresetFileName.DBT_DIR.value
-
-    @classmethod
-    def dbt_profiles_file(cls) -> Path:
-        return cls.dbt_config_dir() / PresetFileName.DBT_PROFILES_FILE.value
 
     @staticmethod
     def config_dir() -> Path:
@@ -101,18 +77,6 @@ class Paths:
         with importlib_resources.path(panoramic.cli.schemas, PresetFileName.CONTEXT_SCHEMA.value) as path:
             return path
 
-    @classmethod
-    def analytics_dir(cls) -> Path:
-        return cls.config_dir() / PresetFileName.ANALYTICS_DIR.value
-
-    @classmethod
-    def analytics_events_file(cls) -> Path:
-        return cls.analytics_dir() / PresetFileName.ANALYTICS_EVENTS.value
-
-    @classmethod
-    def analytics_metadata_file(cls) -> Path:
-        return cls.analytics_dir() / PresetFileName.ANALYTICS_METADATA.value
-
 
 class FileExtension(Enum):
     """
@@ -132,24 +96,15 @@ class PresetFileName(Enum):
     CONTEXT = 'pano.yaml'
     DOTENV = '.env'
     CONFIG_DIR = '.pano'
-    DBT_DIR = '.dbt'
     CONFIG = 'config'
-    DBT_MODULES_DIR = 'dbt_modules'
     MODEL_SCHEMA = 'model.schema.json'
     FIELD_SCHEMA = 'field.schema.json'
     DATASET_SCHEMA = 'dataset.schema.json'
     CONFIG_SCHEMA = 'config.schema.json'
     CONTEXT_SCHEMA = 'context.schema.json'
-    ANALYTICS_DIR = 'analytics'
-    ANALYTICS_EVENTS = 'events.jsonl'
-    ANALYTICS_METADATA = 'metadata.yaml'
-    DBT_PROJECT_FILE = 'dbt_project.yml'
-    DBT_PACKAGES_FILE = 'packages.yml'
-    DBT_PROFILES_FILE = 'profiles.yml'
 
 
 class SystemDirectory(Enum):
     SCANNED = 'scanned'
     TRANSFORMS = 'transforms'
     FIELDS = 'fields'
-    DBT = '.dbt'

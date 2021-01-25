@@ -1,0 +1,21 @@
+ifs(fb_tw_merged_ad_id == 'tw', twitter|ad_id, fb_tw_merged_ad_id == 'fb', facebook_ads|ad_id);facebook_ads|twitter;dimension
+---
+data_source_formula_templates:
+- SqlFormulaTemplate(SqlTemplate('''${facebook_ads|ad_id}'''),'''__1''', 'facebook_ads',{'facebook_ads|ad_id'})
+- SqlFormulaTemplate(SqlTemplate('''${twitter|ad_id}'''),'''__2''', 'twitter',{'twitter|ad_id'})
+- SqlFormulaTemplate(SqlTemplate('''${facebook_ads|ad_id}'''),'''__3''', 'facebook_ads',{'facebook_ads|ad_id'})
+- SqlFormulaTemplate(SqlTemplate('''${twitter|ad_id}'''),'''__4''', 'twitter',{'twitter|ad_id'})
+- SqlFormulaTemplate(SqlTemplate('''${twitter|ad_id}'''),'''__5''', 'twitter',{'twitter|ad_id'})
+- SqlFormulaTemplate(SqlTemplate('''${facebook_ads|ad_id}'''),'''__6''', 'facebook_ads',{'facebook_ads|ad_id'})
+dimension_formulas:
+- PreFormula('''CASE WHEN (coalesce(__1, __2) = 'tw') THEN __5 WHEN (coalesce(__3,
+  __4) = 'fb') THEN __6 ELSE NULL END''','''__7''', AggregationDefinition(type=AggregationType.not_set,
+  params=None), None)
+invalid_value: false
+override_mappings: []
+phase: TelPhase.metric_post
+post_formula:
+  sql: __8
+pre_formulas:
+- PreFormula('''__7''','''__8''', AggregationDefinition(type=AggregationType.group_by,
+  params=None), None)

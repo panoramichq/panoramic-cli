@@ -1,0 +1,6 @@
+iff(generic_spend > 0, fb_tw_merged_ad_id);facebook_ads|twitter;dimension
+---
+api_response_message: Condition arguments in function iff must be dimension taxons
+  when the outcome is dimension. Occurred at position 1, line 1 in expression "iff(generic_spend
+  > 0, fb_tw_merged_ad_id)"
+exception_class: <class 'panoramic.cli.husky.core.tel.exceptions.TelExpressionException'>

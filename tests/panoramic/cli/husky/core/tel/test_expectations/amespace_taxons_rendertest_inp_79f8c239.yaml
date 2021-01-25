@@ -1,0 +1,17 @@
+enhanced_cpm_2;facebook_ads
+---
+data_source_formula_templates: []
+dimension_formulas:
+- PreFormula('''objective''','''__1''', AggregationDefinition(type=AggregationType.not_set,
+  params=None), None)
+invalid_value: false
+override_mappings: []
+phase: TelPhase.metric_post
+post_formula:
+  sql: __2 / nullif(__3, 0)
+pre_formulas:
+- PreFormula('''1000 * CASE WHEN (__1 = 'LINK_CLICKS') THEN facebook_ads_spend_5811c78c7c741b5a
+  * 1.5 ELSE facebook_ads_spend_5811c78c7c741b5a END''','''__2''', AggregationDefinition(type=AggregationType.sum,
+  params=None), None)
+- PreFormula('''facebook_ads_impressions_0bf2e36fb4e71190''','''__3''', AggregationDefinition(type=AggregationType.sum,
+  params=None), None)

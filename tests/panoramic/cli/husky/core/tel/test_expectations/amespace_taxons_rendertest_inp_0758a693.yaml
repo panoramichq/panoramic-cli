@@ -1,0 +1,12 @@
+generic_spend2;adwords|facebook_ads
+---
+data_source_formula_templates: []
+dimension_formulas: []
+invalid_value: false
+override_mappings: []
+phase: TelPhase.metric_post
+post_formula:
+  sql: __1
+pre_formulas:
+- PreFormula('''coalesce(facebook_ads_spend_5811c78c7c741b5a, 0) + coalesce(adwords_spend_a4a9ec96df6a4664,
+  0)''','''__1''', AggregationDefinition(type=AggregationType.sum, params=None), None)

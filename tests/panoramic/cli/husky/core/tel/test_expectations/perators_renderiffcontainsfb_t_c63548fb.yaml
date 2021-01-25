@@ -1,0 +1,24 @@
+iff(contains(fb_tw_merged_ad_id, 'id1', 'id2') && contains(fb_tw_merged_ad_id, 'id3',
+  'id4'), fb_tw_merged_ad_id);facebook_ads|twitter;dimension
+---
+data_source_formula_templates:
+- SqlFormulaTemplate(SqlTemplate('''${facebook_ads|ad_id}'''),'''__1''', 'facebook_ads',{'facebook_ads|ad_id'})
+- SqlFormulaTemplate(SqlTemplate('''${twitter|ad_id}'''),'''__2''', 'twitter',{'twitter|ad_id'})
+- SqlFormulaTemplate(SqlTemplate('''${facebook_ads|ad_id}'''),'''__3''', 'facebook_ads',{'facebook_ads|ad_id'})
+- SqlFormulaTemplate(SqlTemplate('''${twitter|ad_id}'''),'''__4''', 'twitter',{'twitter|ad_id'})
+- SqlFormulaTemplate(SqlTemplate('''${facebook_ads|ad_id}'''),'''__5''', 'facebook_ads',{'facebook_ads|ad_id'})
+- SqlFormulaTemplate(SqlTemplate('''${twitter|ad_id}'''),'''__6''', 'twitter',{'twitter|ad_id'})
+dimension_formulas:
+- PreFormula('''CASE WHEN ((coalesce(__1, __2) LIKE '%%id1%%' ESCAPE '/' OR coalesce(__1,
+  __2) LIKE '%%id2%%' ESCAPE '/') AND (coalesce(__3, __4) LIKE '%%id3%%' ESCAPE '/'
+  OR coalesce(__3, __4) LIKE '%%id4%%' ESCAPE '/')) THEN coalesce(__5, __6) ELSE NULL
+  END''','''__7''', AggregationDefinition(type=AggregationType.not_set, params=None),
+  None)
+invalid_value: false
+override_mappings: []
+phase: TelPhase.metric_post
+post_formula:
+  sql: __8
+pre_formulas:
+- PreFormula('''__7''','''__8''', AggregationDefinition(type=AggregationType.group_by,
+  params=None), None)

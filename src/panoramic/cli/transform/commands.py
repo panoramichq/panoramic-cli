@@ -4,8 +4,8 @@ from typing import List, Tuple
 import click
 from tqdm import tqdm
 
+from panoramic.cli.config.companies import get_company_id
 from panoramic.cli.connections import Connections
-from panoramic.cli.context import get_company_slug
 from panoramic.cli.local.get import get_transforms
 from panoramic.cli.local.writer import FileWriter
 from panoramic.cli.paths import FileExtension, Paths
@@ -50,7 +50,6 @@ def exec_command(
     compile_only: bool = False,
     yes: bool = False,
 ):
-    company_slug = get_company_slug()
     compiled_transforms: List[Tuple[CompiledTransform, Path]] = []
 
     transforms_with_path = get_transforms()
@@ -59,7 +58,7 @@ def exec_command(
         echo_info('No transforms found...')
         return
 
-    transform_compiler = TransformCompiler(company_slug)
+    transform_compiler = TransformCompiler(get_company_id())
 
     file_writer = FileWriter()
 

@@ -1,0 +1,10 @@
+contains(?twitter|ad_id, 'id');<no-vds>;dimension
+---
+data_source_formula_templates: []
+dimension_formulas: []
+invalid_value: true
+override_mappings: []
+phase: TelPhase.metric_post
+post_formula:
+  sql: 'NULL'
+pre_formulas: []

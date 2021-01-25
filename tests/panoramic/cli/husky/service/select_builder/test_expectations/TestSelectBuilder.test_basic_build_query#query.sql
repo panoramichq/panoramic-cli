@@ -1,0 +1,2 @@
+SELECT schema_metric_table_hourly_4ba9264ca9b14f09.ad_id AS ad_id, schema_metric_table_hourly_4ba9264ca9b14f09.impressions AS impressions 
+FROM schema.metric_table_hourly AS schema_metric_table_hourly_4ba9264ca9b14f09 

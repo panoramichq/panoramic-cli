@@ -1,0 +1,6 @@
+date_diff(twitter|ad_id, twitter|date, twitter|date);twitter
+---
+api_response_message: 'Argument 1 in function date_diff must be a constant of type:
+  string. Occurred at position 11, line 1 in expression "date_diff(twitter|ad_id,
+  twitter|date, twitter|date)"'
+exception_class: <class 'panoramic.cli.husky.core.tel.exceptions.TelExpressionException'>

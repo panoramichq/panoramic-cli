@@ -1,0 +1,16 @@
+upper(fb_tw_merged_objective);facebook_ads;dimension
+---
+data_source_formula_templates:
+- SqlFormulaTemplate(SqlTemplate('''upper(${facebook_ads|objective})'''),'''__1''',
+  'facebook_ads',{'facebook_ads|objective'})
+dimension_formulas:
+- PreFormula('''__1''','''__2''', AggregationDefinition(type=AggregationType.not_set,
+  params=None), None)
+invalid_value: false
+override_mappings: []
+phase: TelPhase.metric_post
+post_formula:
+  sql: __3
+pre_formulas:
+- PreFormula('''__2''','''__3''', AggregationDefinition(type=AggregationType.group_by,
+  params=None), None)

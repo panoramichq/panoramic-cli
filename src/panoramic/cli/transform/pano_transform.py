@@ -52,12 +52,12 @@ class PanoTransform:
 
 class CompiledTransform:
     transform: PanoTransform
-    company_slug: str
+    company_id: str
     compiled_query: str
 
-    def __init__(self, transform: PanoTransform, company_slug: str, compiled_query: str):
+    def __init__(self, transform: PanoTransform, company_id: str, compiled_query: str):
         self.transform = transform
-        self.company_slug = company_slug
+        self.company_id = company_id
         self.compiled_query = compiled_query
 
     @property

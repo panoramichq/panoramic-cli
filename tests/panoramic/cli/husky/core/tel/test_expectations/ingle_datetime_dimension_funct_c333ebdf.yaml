@@ -1,0 +1,5 @@
+year();<no-vds>
+---
+api_response_message: 'year requires 1 arguments: taxon, but none were given. Occurred
+  at position 1, line 1 in expression "year()"'
+exception_class: <class 'panoramic.cli.husky.core.tel.exceptions.TelExpressionException'>

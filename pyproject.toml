@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 
 [tool.black]
 line-length = 120
-target-version = ['py37']
+target-version = ['py38']
 skip-string-normalization = true
 
 
@@ -13,4 +13,4 @@ skip-string-normalization = true
 profile="black"
 
 known_first_party="panoramic"
-known_third_party=["click", "dbt", "dotenv", "jsonschema", "packaging", "panoramic", "pytest", "requests", "responses", "setuptools", "tqdm", "yaml"]
+known_third_party=["click", "dotenv", "jsonschema", "packaging", "panoramic", "pytest", "requests", "responses", "setuptools", "tqdm", "yaml", "sqlalchemy", "snowflake-sqlalchemy", "pybigquery", "schematics", "cachetools", "pydash", "Unidecode", "networkx", "xxhash", "Jinja2", "antlr4-python3-runtime", "deepdiff", "pydantic", "typing_extensions"]

@@ -1,0 +1,14 @@
+(spend / impressions) * 30
+---
+data_source_formula_templates: []
+dimension_formulas: []
+invalid_value: false
+override_mappings: []
+phase: TelPhase.metric_post
+post_formula:
+  sql: ((__1 / nullif(__2, 0)) * 30)
+pre_formulas:
+- PreFormula('''spend''','''__1''', AggregationDefinition(type=AggregationType.sum,
+  params=None), None)
+- PreFormula('''impressions''','''__2''', AggregationDefinition(type=AggregationType.sum,
+  params=None), None)

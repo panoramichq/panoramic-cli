@@ -1,0 +1,6 @@
+concat(?twitter|ad_id, ?twitter|ad_name, ?facebook_ads|ad_name);facebook_ads|twitter;dimension
+---
+api_response_message: concat accepts only taxons from same data source or after merge()
+  is applied. Occurred at position 1, line 1 in expression "concat(?twitter|ad_id,
+  ?twitter|ad_name, ?facebook_ads|ad_name)"
+exception_class: <class 'panoramic.cli.husky.core.tel.exceptions.TelExpressionException'>

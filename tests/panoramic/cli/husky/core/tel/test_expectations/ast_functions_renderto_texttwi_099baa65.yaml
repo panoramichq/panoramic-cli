@@ -1,0 +1,14 @@
+to_text(twitter|spend);twitter;dimension
+---
+data_source_formula_templates: []
+dimension_formulas:
+- PreFormula('''CAST(twitter_spend_68657fbb141b10c8 AS VARCHAR)''','''__1''', AggregationDefinition(type=AggregationType.not_set,
+  params=None), None)
+invalid_value: false
+override_mappings: []
+phase: TelPhase.metric_post
+post_formula:
+  sql: __2
+pre_formulas:
+- PreFormula('''__1''','''__2''', AggregationDefinition(type=AggregationType.group_by,
+  params=None), None)

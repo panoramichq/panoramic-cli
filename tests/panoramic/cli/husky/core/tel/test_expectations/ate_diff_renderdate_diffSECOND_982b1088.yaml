@@ -1,0 +1,6 @@
+date_diff('SECOND', twitter|date);twitter
+---
+api_response_message: 'date_diff requires 3 arguments: time_unit, start_time, end_time,
+  but 2 were given. Occurred at position 1, line 1 in expression "date_diff(''SECOND'',
+  twitter|date)"'
+exception_class: <class 'panoramic.cli.husky.core.tel.exceptions.TelExpressionException'>

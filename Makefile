@@ -8,7 +8,13 @@ lint:
 	pre-commit run --all-files
 
 test:
-	python -m pytest tests e2e
+	python -m pytest tests e2e -vv
+
+e2e:
+	python -m pytest e2e
+
+unit_test:
+	python -m pytest tests
 
 black:
 	pre-commit run black
@@ -22,4 +28,17 @@ isort:
 mypy:
 	pre-commit run mypy
 
-.PHONY: install pre-commit-install lint tests black flake8 isort mypy
+clean:
+	git clean -f -d -x
+
+build-tel:
+	docker run \
+		-v $(PWD):/workdir \
+		--workdir /workdir \
+		--rm ryohji/antlr4:latest \
+		antlr4 -visitor -Dlanguage=Python3 -o src/panoramic/cli/tel_grammar -Xexact-output-dir grammar/Tel.g4
+
+docs:
+	python -m docs.generate_tel_docs
+
+.PHONY: install pre-commit-install lint tests black flake8 isort mypy e2e docs

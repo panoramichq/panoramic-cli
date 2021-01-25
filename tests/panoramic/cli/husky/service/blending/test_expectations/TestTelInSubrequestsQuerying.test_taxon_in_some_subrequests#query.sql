@@ -1,0 +1,10 @@
+SELECT fb_tw_adwords_impressions_all_optional AS fb_tw_adwords_impressions_all_optional, fb_tw_adwords_spend_all_optional AS fb_tw_adwords_spend_all_optional 
+FROM (SELECT fb_tw_adwords_impressions_all_optional AS fb_tw_adwords_impressions_all_optional, fb_tw_adwords_spend_all_optional AS fb_tw_adwords_spend_all_optional 
+FROM (SELECT sum(adwords_impressions_c62a8b11347285de) AS fb_tw_adwords_impressions_all_optional, sum(facebook_ads_spend_5811c78c7c741b5a) AS fb_tw_adwords_spend_all_optional 
+FROM (SELECT adwords_impressions_c62a8b11347285de, facebook_ads_spend_5811c78c7c741b5a 
+FROM (SELECT adwords_impressions_c62a8b11347285de, facebook_ads_spend_5811c78c7c741b5a 
+FROM (SELECT sum(q0.adwords_impressions_c62a8b11347285de) as adwords_impressions_c62a8b11347285de, sum(q1.facebook_ads_spend_5811c78c7c741b5a) as facebook_ads_spend_5811c78c7c741b5a 
+FROM (SELECT adwords_column_mock, __data_source 
+FROM adwords_table_mock) AS q0 FULL OUTER JOIN (SELECT facebook_column_mock, __data_source 
+FROM facebook_table_mock) AS q1 ON q0.__data_source = q1.__data_source)))))
+ LIMIT 100

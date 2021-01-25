@@ -1,6 +1,5 @@
 import logging
 import os
-from typing import Optional
 
 import requests
 from packaging import version
@@ -11,15 +10,6 @@ from panoramic.cli.print import echo_error
 URL = "https://a1.panocdn.com/updates/pano-cli/versions.json"
 
 logger = logging.getLogger(__name__)
-
-
-def fetch_analytics_write_key() -> Optional[str]:
-    """We can reuse existing versions.json for purpose of distributing analytics write key.
-    Later we can migrate to a different solution."""
-    response = requests.get(URL, headers={'User-Agent': 'pano-cli/analytics'}, timeout=5)
-    response.raise_for_status()
-    data = response.json()
-    return data.get('analytics_write_key')
 
 
 def __fetch_minimum_supported_version(current_version) -> str:
@@ -42,9 +32,9 @@ def __get_upgrade_command() -> str:
     Return the appropriate command for the user to upgrade to the newest version.
     """
     if os.environ.get('RUNNING_UNDER_HOMEBREW') is not None:
-        return "`brew update && brew upgrade panoramic-cli`"
+        return "`brew update && brew upgrade pano`"
     # Always fall back to assuming PIP
-    return "`pip install --upgrade panoramic-cli`"
+    return "`pip install --upgrade pano`"
 
 
 def is_version_supported(current_version: str) -> bool:

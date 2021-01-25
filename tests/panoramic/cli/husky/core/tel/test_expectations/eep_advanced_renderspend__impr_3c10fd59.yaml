@@ -1,0 +1,20 @@
+((spend + impressions) / 2) * cpm / cpm
+---
+data_source_formula_templates: []
+dimension_formulas: []
+invalid_value: false
+override_mappings: []
+phase: TelPhase.metric_post
+post_formula:
+  sql: (__1 * (__2 / nullif(__3, 0))) / nullif(__4 / nullif(__5, 0), 0)
+pre_formulas:
+- PreFormula('''(((coalesce(spend, 0) + coalesce(impressions, 0)) / nullif(2, 0)))''','''__1''',
+  AggregationDefinition(type=AggregationType.sum, params=None), None)
+- PreFormula('''1000 * spend''','''__2''', AggregationDefinition(type=AggregationType.sum,
+  params=None), None)
+- PreFormula('''impressions''','''__3''', AggregationDefinition(type=AggregationType.sum,
+  params=None), None)
+- PreFormula('''1000 * spend''','''__4''', AggregationDefinition(type=AggregationType.sum,
+  params=None), None)
+- PreFormula('''impressions''','''__5''', AggregationDefinition(type=AggregationType.sum,
+  params=None), None)

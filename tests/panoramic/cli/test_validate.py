@@ -22,7 +22,6 @@ from panoramic.cli.validate import (
 
 VALID_CONTEXT = {
     'api_version': 'v1',
-    'company_slug': 'test_company',
 }
 
 
@@ -30,17 +29,11 @@ INVALID_CONTEXTS = [
     # typo in version
     {
         'api_versio': 'v1',
-        'company_slug': 'test_company',
     },
     # wrong type in version
     {
         'api_version': 1,
-        'company_slug': 'test_company',
     },
-    # typo in slug
-    {'api_version': 'v1', 'company_slu': 'test_company'},
-    # wrong type in slug
-    {'api_version': 'v1', 'company_slug': 100},
 ]
 
 
@@ -79,53 +72,11 @@ def test_validate_context_valid(tmp_path, monkeypatch):
 
 
 VALID_CONFIG = {
-    'client_id': 'test-client-id',
-    'client_secret': 'test-client-secret',
+    'auth': {},
 }
 
 
-INVALID_CONFIGS = [
-    # typo in client_id
-    {'client_i': 'test_client_id', 'client_secret': 'test_client_secret'},
-    # wrong type in client_id
-    {'client_id': 100, 'client_secret': 'test_client_secret'},
-    # typo in client_secret
-    {'client_id': 'test_client_id', 'client_secre': 'test_client_secret'},
-    # wrong type in client_secret
-    {'client_id': 'test_client_id', 'client_secret': 200},
-]
-
-
-@pytest.mark.parametrize('config', INVALID_CONFIGS)
-def test_validate_config_invalid_env_var_set(tmp_path, monkeypatch, config):
-    monkeypatch.setenv('PANO_CLIENT_ID', 'test-client_id')
-    monkeypatch.setenv('PANO_CLIENT_SECRET', 'test-client-secret')
-    monkeypatch.setattr(Path, 'home', lambda: tmp_path)
-
-    Paths.config_dir().mkdir()
-    with Paths.config_file().open('w') as f:
-        f.write(yaml.dump(config))
-
-    validate_config()
-
-
-@pytest.mark.parametrize('config', INVALID_CONFIGS)
-def test_validate_config_invalid(tmp_path, monkeypatch, config):
-    monkeypatch.delenv('PANO_CLIENT_ID', raising=False)
-    monkeypatch.delenv('PANO_CLIENT_SECRET', raising=False)
-    monkeypatch.setattr(Path, 'home', lambda: tmp_path)
-
-    Paths.config_dir().mkdir()
-    with Paths.config_file().open('w') as f:
-        f.write(yaml.dump(config))
-
-    with pytest.raises(JsonSchemaError):
-        validate_config()
-
-
 def test_validate_config_invalid_yaml(tmp_path, monkeypatch):
-    monkeypatch.delenv('PANO_CLIENT_ID', raising=False)
-    monkeypatch.delenv('PANO_CLIENT_SECRET', raising=False)
     monkeypatch.setattr(Path, 'home', lambda: tmp_path)
 
     Paths.config_dir().mkdir()
@@ -137,8 +88,6 @@ def test_validate_config_invalid_yaml(tmp_path, monkeypatch):
 
 
 def test_validate_config_missing_file(tmp_path, monkeypatch):
-    monkeypatch.delenv('PANO_CLIENT_ID', raising=False)
-    monkeypatch.delenv('PANO_CLIENT_SECRET', raising=False)
     monkeypatch.setattr(Path, 'home', lambda: tmp_path)
 
     with pytest.raises(FileMissingError):

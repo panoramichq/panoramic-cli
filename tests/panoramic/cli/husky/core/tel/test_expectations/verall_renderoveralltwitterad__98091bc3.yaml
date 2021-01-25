@@ -1,0 +1,5 @@
+overall(twitter|ad_id);twitter;metric
+---
+api_response_message: 'Argument 1 in function overall must be of type: number. Occurred
+  at position 9, line 1 in expression "overall(twitter|ad_id)"'
+exception_class: <class 'panoramic.cli.husky.core.tel.exceptions.TelExpressionException'>

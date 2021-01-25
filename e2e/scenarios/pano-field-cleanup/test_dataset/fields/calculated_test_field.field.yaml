@@ -1,0 +1,8 @@
+
+api_version: v1
+slug: calculated_test_field
+display_name: Dataset test field
+group: Custom
+calculation: 10
+field_type: metric
+data_type: text

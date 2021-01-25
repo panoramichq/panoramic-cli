@@ -1,0 +1,15 @@
+iff(NOT (generic_spend IS NOT NULL) && (generic_spend IS NULL) && TRUE || FALSE, generic_spend);facebook_ads|twitter;metric
+---
+data_source_formula_templates: []
+dimension_formulas: []
+invalid_value: false
+override_mappings: []
+phase: TelPhase.metric_post
+post_formula:
+  sql: __1
+pre_formulas:
+- PreFormula('''CASE WHEN ((coalesce(facebook_ads_spend_5811c78c7c741b5a, 0) + coalesce(twitter_spend_68657fbb141b10c8,
+  0) IS NULL) AND (coalesce(facebook_ads_spend_5811c78c7c741b5a, 0) + coalesce(twitter_spend_68657fbb141b10c8,
+  0) IS NULL)) THEN coalesce(facebook_ads_spend_5811c78c7c741b5a, 0) + coalesce(twitter_spend_68657fbb141b10c8,
+  0) ELSE 0 END''','''__1''', AggregationDefinition(type=AggregationType.sum, params=None),
+  None)

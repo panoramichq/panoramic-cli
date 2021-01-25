@@ -1,0 +1,5 @@
+spend / + impressions
+---
+api_response_message: Unexpected symbol "+". Occurred at position 9, line 1 in expression
+  "spend / + impressions"
+exception_class: <class 'panoramic.cli.husky.core.tel.exceptions.TelExpressionException'>

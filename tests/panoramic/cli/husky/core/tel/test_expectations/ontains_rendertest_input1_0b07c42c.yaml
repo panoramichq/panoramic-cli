@@ -1,0 +1,5 @@
+contains(twitter|ad_id);twitter
+---
+api_response_message: 'contains requires 2 arguments: expression, searched_constant,
+  but only one was given. Occurred at position 1, line 1 in expression "contains(twitter|ad_id)"'
+exception_class: <class 'panoramic.cli.husky.core.tel.exceptions.TelExpressionException'>

@@ -6,28 +6,29 @@ repos:
       name: black
       entry: "python -m black ."
       language: system
-      language_version: python3.7
+      language_version: python3.8
       pass_filenames: false
 
   - repo: https://gitlab.com/pycqa/flake8
     rev: 3.8.4
     hooks:
       - id: flake8
-        language_version: python3.7
+        language_version: python3.8
         additional_dependencies: [flake8-bugbear]
+        exclude: ^(src/panoramic/cli/tel_grammar/|contrib/)
 
   - repo: https://github.com/timothycrosley/isort
     rev: 5.6.4
     hooks:
       - id: isort
         additional_dependencies: [toml]
-        language_version: python3.7
+        language_version: python3.8
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v3.3.0
     hooks:
-      - id: trailing-whitespace
-      - id: end-of-file-fixer
+#      - id: trailing-whitespace
+#      - id: end-of-file-fixer
       - id: debug-statements
 
   - repo: local

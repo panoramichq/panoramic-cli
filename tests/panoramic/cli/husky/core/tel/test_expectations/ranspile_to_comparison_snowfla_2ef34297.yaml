@@ -1,0 +1,12 @@
+facebook_ads|spend
+---
+data_source_formula_templates: []
+dimension_formulas: []
+invalid_value: false
+override_mappings: []
+phase: TelPhase.metric_post
+post_formula:
+  sql: __1
+pre_formulas:
+- PreFormula('''comparison_facebook_ads_spend_ee3c8ce54c851643''','''__1''', AggregationDefinition(type=AggregationType.sum,
+  params=None), None)

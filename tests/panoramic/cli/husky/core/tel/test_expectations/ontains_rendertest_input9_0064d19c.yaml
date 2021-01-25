@@ -1,0 +1,16 @@
+iff(contains(twitter|ad_id, 'id1', 'id2'), spend, 0);twitter;metric
+---
+data_source_formula_templates:
+- SqlFormulaTemplate(SqlTemplate('''${twitter|ad_id}'''),'''__1''', 'twitter',{'twitter|ad_id'})
+dimension_formulas:
+- PreFormula('''__1''','''__2''', AggregationDefinition(type=AggregationType.not_set,
+  params=None), None)
+invalid_value: false
+override_mappings: []
+phase: TelPhase.metric_post
+post_formula:
+  sql: __3
+pre_formulas:
+- PreFormula('''CASE WHEN (__2 LIKE '%%id1%%' ESCAPE '/' OR __2 LIKE '%%id2%%' ESCAPE
+  '/') THEN spend ELSE 0 END''','''__3''', AggregationDefinition(type=AggregationType.sum,
+  params=None), None)

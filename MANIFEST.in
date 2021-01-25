@@ -1,10 +1,23 @@
 include *.toml *.ini *.md *.yaml .flake8 Makefile LICENSE
+include src/panoramic/__init__.py
 include src/panoramic/cli/py.typed
-recursive-include tests *.py
+include src/panoramic/cli/datacol/py.typed
+recursive-include tests *.py *.csv *.yaml
+recursive-include src *.yaml
+recursive-include src/panoramic/cli/tel_grammar *
 include src/panoramic/cli/schemas/*.json
 exclude .gitmodules
 exclude .dockerignore
+exclude e2e/scenarios/pano-field-scaffold/test_dataset/fields/dataset_test_field.field.yaml
+recursive-exclude src *.sql *.pyc
+recursive-exclude tests *.sql *.pyc
+prune tests/panoramic/cli/husky/core/tel/test_expectations
+prune tests/panoramic/cli/husky/federated/transform/test_expectations
+prune contrib
+prune grammar
 prune e2e
 prune shipping
 prune .vscode
 prune .devcontainer
+recursive-include docs *.md
+recursive-include docs *.py

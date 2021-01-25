@@ -1,0 +1,14 @@
+spend / impressions
+---
+data_source_formula_templates: []
+dimension_formulas: []
+invalid_value: false
+override_mappings: []
+phase: TelPhase.metric_post
+post_formula:
+  sql: __1 / nullif(__2, 0)
+pre_formulas:
+- PreFormula('''comparison_spend_5eb761e62a53b4c0''','''__1''', AggregationDefinition(type=AggregationType.sum,
+  params=None), None)
+- PreFormula('''comparison_impressions_2b66864e9ec66eff''','''__2''', AggregationDefinition(type=AggregationType.sum,
+  params=None), None)

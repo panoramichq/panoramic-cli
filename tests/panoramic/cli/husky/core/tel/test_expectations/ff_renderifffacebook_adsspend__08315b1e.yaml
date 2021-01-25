@@ -1,0 +1,13 @@
+iff(facebook_ads|spend > twitter|spend,facebook_ads|spend,twitter|spend);facebook_ads|twitter
+---
+data_source_formula_templates: []
+dimension_formulas: []
+invalid_value: false
+override_mappings: []
+phase: TelPhase.metric_post
+post_formula:
+  sql: __1
+pre_formulas:
+- PreFormula('''CASE WHEN (facebook_ads_spend_5811c78c7c741b5a > twitter_spend_68657fbb141b10c8)
+  THEN facebook_ads_spend_5811c78c7c741b5a ELSE twitter_spend_68657fbb141b10c8 END''','''__1''',
+  AggregationDefinition(type=AggregationType.sum, params=None), None)

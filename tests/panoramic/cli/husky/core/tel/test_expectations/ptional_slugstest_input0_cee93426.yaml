@@ -1,0 +1,5 @@
+?facebook_ads|spend + twitter|spend;facebook_ads
+---
+api_response_message: Missing required taxon "twitter|spend". Occurred at position
+  23, line 1 in expression "?facebook_ads|spend + twitter|spend"
+exception_class: <class 'panoramic.cli.husky.core.tel.exceptions.TelExpressionException'>

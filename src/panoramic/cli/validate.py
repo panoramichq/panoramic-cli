@@ -9,7 +9,6 @@ from typing import Any, Dict, List, Tuple, Union
 import jsonschema
 from jsonschema.exceptions import ValidationError as JsonSchemaValidationError
 
-from panoramic.cli.config.auth import get_client_id_env_var, get_client_secret_env_var
 from panoramic.cli.errors import (
     DeprecatedAttributeWarning,
     DeprecatedConfigProperty,
@@ -239,27 +238,13 @@ def validate_local_state() -> List[ValidationError]:
 
 def validate_config():
     """Check config file against schema."""
-    try:
-        path, schema = Paths.config_file(), JsonSchemas.config()
-        _validate_file(path, schema)
-        errors = _check_properties_deprecations(path, schema)
-        for err in errors:
-            echo_warning(str(err))
-    except ValidationError as e:
-        try:
-            # Valid if we get both values from env vars
-            get_client_id_env_var()
-            get_client_secret_env_var()
-        except Exception:
-            # Raise original exception if env vars don't help
-            raise e
+    path, schema = Paths.config_file(), JsonSchemas.config()
+    _validate_file(path, schema)
+    errors = _check_properties_deprecations(path, schema)
+    for err in errors:
+        echo_warning(str(err))
 
 
 def validate_context():
     """Check context file against schema."""
     _validate_file(Paths.context_file(), JsonSchemas.context())
-
-
-def validate_dbt():
-    """Check context and config files contain valid DBT configuration."""
-    pass

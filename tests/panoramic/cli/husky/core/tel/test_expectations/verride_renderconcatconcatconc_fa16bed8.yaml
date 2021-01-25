@@ -1,0 +1,29 @@
+concat(concat(concat(override(fb_tw_merged_ad_id, 'override-mapping-slug'), 's'),
+  override(fb_tw_merged_ad_id, 'override-mapping-slug-2')), '-a');facebook_ads|twitter;dimension
+---
+data_source_formula_templates:
+- SqlFormulaTemplate(SqlTemplate('''${facebook_ads|ad_id}'''),'''__1''', 'facebook_ads',{'facebook_ads|ad_id'})
+- SqlFormulaTemplate(SqlTemplate('''${twitter|ad_id}'''),'''__2''', 'twitter',{'twitter|ad_id'})
+- SqlFormulaTemplate(SqlTemplate('''${facebook_ads|ad_id}'''),'''__3''', 'facebook_ads',{'facebook_ads|ad_id'})
+- SqlFormulaTemplate(SqlTemplate('''${twitter|ad_id}'''),'''__4''', 'twitter',{'twitter|ad_id'})
+dimension_formulas:
+- PreFormula('''concat(concat(concat(CASE WHEN (__om_coalesce___1____2__override_mapping_slu_cc7b65c98c5d77d6.changed
+  = '--PANO-NULL--') THEN NULL ELSE coalesce(__om_coalesce___1____2__override_mapping_slu_cc7b65c98c5d77d6.changed,
+  'Unknown') END, 's'), CASE WHEN (__om_coalesce___3____4__override_mapping_slu_6716e9235144a03b.changed
+  = '--PANO-NULL--') THEN NULL ELSE coalesce(__om_coalesce___3____4__override_mapping_slu_6716e9235144a03b.changed,
+  'Unknown') END), '-a')''','''__5''', AggregationDefinition(type=AggregationType.not_set,
+  params=None), None)
+invalid_value: false
+override_mappings:
+- column: coalesce(__1, __2)
+  include_missing_values: true
+  override_mapping_slug: override-mapping-slug
+- column: coalesce(__3, __4)
+  include_missing_values: true
+  override_mapping_slug: override-mapping-slug-2
+phase: TelPhase.metric_post
+post_formula:
+  sql: __6
+pre_formulas:
+- PreFormula('''__5''','''__6''', AggregationDefinition(type=AggregationType.group_by,
+  params=None), None)

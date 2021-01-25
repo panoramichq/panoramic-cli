@@ -1,0 +1,6 @@
+override(fb_tw_merged_ad_id, fb_tw_merged_ad_id);facebook_ads|twitter;dimension
+---
+api_response_message: 'Argument 2 in function override must be a constant of type:
+  string. Occurred at position 30, line 1 in expression "override(fb_tw_merged_ad_id,
+  fb_tw_merged_ad_id)"'
+exception_class: <class 'panoramic.cli.husky.core.tel.exceptions.TelExpressionException'>

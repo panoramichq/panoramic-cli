@@ -1,0 +1,16 @@
+iff(generic_cpm<10,10,facebook_ads|spend);facebook_ads
+---
+data_source_formula_templates: []
+dimension_formulas: []
+invalid_value: false
+override_mappings: []
+phase: TelPhase.metric_post
+post_formula:
+  sql: CASE WHEN (__1 / nullif(__2, 0) < 10) THEN 10 ELSE __3 END
+pre_formulas:
+- PreFormula('''1000 * facebook_ads_spend_5811c78c7c741b5a''','''__1''', AggregationDefinition(type=AggregationType.sum,
+  params=None), None)
+- PreFormula('''facebook_ads_impressions_0bf2e36fb4e71190''','''__2''', AggregationDefinition(type=AggregationType.sum,
+  params=None), None)
+- PreFormula('''facebook_ads_spend_5811c78c7c741b5a''','''__3''', AggregationDefinition(type=AggregationType.sum,
+  params=None), None)
