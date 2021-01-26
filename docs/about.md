@@ -14,6 +14,7 @@ The model descriptions and transformations are stored as YAML files in the follo
             <field files>.yaml
     transformations
         <transformation files>.yaml
+    fields
 ```
 
 pano.yaml file must be at the root of the project and must contain:
@@ -23,6 +24,8 @@ api_version: v1
 ```
 
 Datasets represent logically related data models. Dataset and model have are semantic descriptions of database schemas and tables. Fields are description of columns in tables. Fields may simply point to existing columns, or they may contain calculations, using TEL functions, or by combining of other fields.
+
+Fields on the project level contain global fields, shared by all models.
 
 NOTE: Schemas for all descriptor files can be found under src/panoramic/schemas directory.
 
@@ -62,6 +65,11 @@ Joins are an array of join definitions. Join definition has following properties
 - `fields`: array of fields (field slugs) to use in the join
 
 ## Field YAML file
+First terminology. Field and taxon are the refer to the same thing, just historically fields were called taxons.
+Raw taxons are those which are directly pointing to an existing database column. Computed taxons contain use some computations performed outside of the existing columns.
+Field slugs for fields defined under a dataset must be namespaced, by using this syntax: `model_slug|field_slug`. The pipe operator denotes a namespace.
+Global fields must not have any namespace and must live under the `project root/fields` directory.
+
 Fields may be automatically scaffolded (pre-created) by running:
 ```sh
 pano field scaffold
@@ -88,6 +96,7 @@ slug: person_key
 - `field_type` is either `metric` or `dimension`
 - `slug` is the ID of the field
 - `group` is a logical group of the field, but there is no further functionality related to it. It may have any value at the moment
+- `calculation` an optional TEL calculation expression, see further explanation in the section below
 
 #### Data Types
 Supported data types are from the list below. They translate roughly to equivalent column types in supported database.
@@ -105,10 +114,10 @@ Supported data types are from the list below. They translate roughly to equivale
 
 #### Aggregation
 An aggregation definition has two properties:
-- `type`: either of `sum`, `avg`, `min`, `max`, `count_all`, `count_distinct`, `group_by`, `first_by`, `last_by`
+- `type`: either of `sum`, `min`, `max`, `count_all`, `count_distinct`, `group_by`, `first_by`, `last_by`
 - `params`: dependening on a type, it contains:
-    - `fields` for `count_distinct`
-    - `sort_dimensions` for `first_by` and `last_by`, with following properties:
+    - `fields` for `count_distinct`, containing field slugs
+    - `sort_dimensions` for `first_by` and `last_by`, as an array of object with following properties:
         - `taxon`: field slug
         - `order_by`: `asc` or `desc`
 
@@ -118,11 +127,13 @@ Transformation files use the model definitions to build views that can be deploy
 pano transform create
 ```
 
-This command will propmpt the connection to use, and the target (the resulting view FQN). Then one must edit this transform file, stored under transformations subfolder, and add fields to include in this view. After that, transformations may be deployed by executing:
+This command will prompt the connection to use, and the target (the resulting view FQN). Then one must edit this transform file, stored under transformations subfolder, and add fields to include in this view. After that, transformations may be deployed by executing:
 
 ```sh
 pano transform exec
 ```
+
+Optionally, one might pass `--compile` argument to the `transform exec` command to only get the resulting SQL views created (they will be storred in transformations/.compiled/ folder.)
 
 # Calculated fields
 Calculated fields must not have an `aggregation` property and instead they must provide a `calculation` property. Value of this property is the formula in TEL language.
@@ -131,7 +142,7 @@ Simplest example could be a sum of two fields, `field1 + field2` for instance. A
 NOTE: aggregation type is deduced from the calculation field itself, therefore it must not be explicitely specified by the field definition file.
 
 ## TEL functions
-See tel-functions.md document for details.
+See [tel-functions.md](https://github.com/akovari/panoramic-cli/blob/docs/docs/about.md#tel-functions) document for details.
 
 # Connections
 Connections in `pano` use [SqlAlchemy](https://www.sqlalchemy.org/), so there must be an appropriate SqlAlchemy connector present in user's Python path, and then connection must be created using the appropriate connection string for this connector.
@@ -141,5 +152,19 @@ Managing connections with `pano` is done through the `connection` command:
 pano connection -h
 ```
 
-# Other notes
-Field and taxon are the refer to the same thing, just historically fields were called taxons.
+## Snowflake example
+Creating a Snowflake connection:
+
+```sh
+pano connection create --type snowflake conn_name 'snowflake://<user_login_name>:<password>@<account_name>/<database_name>/<schema_name>?warehouse=<warehouse_name>&role=<role_name>'
+
+```
+
+## BigQuery example
+Creating a BigQuery conneciton:
+
+```sh
+pano connection create --type bigquery conn_name 'bigquery://'
+```
+
+Before running this, make sure, the environment variable `GOOGLE_APPLICATION_CREDENTIALS` is pointing to the file with Google [credentials](https://cloud.google.com/docs/authentication/production).
