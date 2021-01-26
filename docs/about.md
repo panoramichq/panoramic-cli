@@ -57,6 +57,8 @@ joins: []
 model_name: database.public.table
 ```
 
+The `data_source` refers to the FQN of the table/view. `data_reference` is the model TEL expression, typically a name of a column. `field_map` refers to one or more taxons.
+
 ### Joins definitions
 Joins are an array of join definitions. Join definition has following properties:
 - `join_type`: either of `left`, `right` or `inner`
@@ -142,7 +144,7 @@ Simplest example could be a sum of two fields, `field1 + field2` for instance. A
 NOTE: aggregation type is deduced from the calculation field itself, therefore it must not be explicitely specified by the field definition file.
 
 ## TEL functions
-See [tel-functions.md](https://github.com/akovari/panoramic-cli/blob/docs/docs/about.md#tel-functions) document for details.
+See [tel-functions.md](https://github.com/akovari/panoramic-cli/blob/docs/docs/about.md#tel-functions) document for details. There are two dialects of TEL language, one for calculations and one for `data_reference`s in field definitions, that dialect is called "model TEL". The main difference is that "model TEL" uses double quote strings to denote SQL columns, but there may be few minor other differences, as outlined in the linked document.
 
 # Connections
 Connections in `pano` use [SqlAlchemy](https://www.sqlalchemy.org/), so there must be an appropriate SqlAlchemy connector present in user's Python path, and then connection must be created using the appropriate connection string for this connector.
