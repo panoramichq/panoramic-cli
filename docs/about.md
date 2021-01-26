@@ -72,7 +72,6 @@ This will create YAML files for fields defined in all the model files. They look
 aggregation:
   type: group_by
 api_version: v1
-data_type: text
 display_name: person key
 field_type: dimension
 group: CLI
@@ -82,26 +81,11 @@ slug: person_key
 ### Description of the properties
 
 - `aggregation` a specification of the aggregation type, see section below
-- `data_type` must be a valid data type, see table below
 - `api_version` must be set to `v1`
 - `display_name` is just a human readable name
 - `field_type` is either `metric` or `dimension`
 - `slug` is the ID of the field
 - `group` is a logical group of the field, but there is no further functionality related to it. It may have any value at the moment
-
-#### Data Types
-Supported data types are from the list below. They translate roughly to equivalent column types in supported database.
-- text
-- integer
-- numeric
-- datetime
-- enum (aka predefined list)
-- percent
-- money
-- url
-- boolean
-- duration
-- variant
 
 #### Aggregation
 An aggregation definition has two properties:
