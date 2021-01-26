@@ -1,6 +1,5 @@
 import pytest
 
-from panoramic.cli.husky.core.enums import DbDataType
 from panoramic.cli.husky.core.federated.model.models import FdqModelAttribute
 from panoramic.cli.husky.core.federated.model.tel.data_structures import (
     AttributeValidationTelVisitorParams,
@@ -12,11 +11,11 @@ from panoramic.cli.husky.core.tel.exceptions import TelExpressionException
 from panoramic.cli.husky.core.tel.tel_dialect import ModelTelDialect
 
 _TMP_MODEL_ATTRIBUTES = [
-    FdqModelAttribute(data_type=DbDataType.CHARACTER_VARYING, data_reference='"column_0"', field_map=['source_taxon']),
-    FdqModelAttribute(data_type=DbDataType.CHARACTER_VARYING, data_reference='"column_1"', field_map=['gender']),
-    FdqModelAttribute(data_type=DbDataType.CHARACTER_VARYING, data_reference='"column_2"', field_map=['ad_id']),
-    FdqModelAttribute(data_type=DbDataType.INTEGER, data_reference='"column_3"', field_map=['spend']),
-    FdqModelAttribute(data_type=DbDataType.INTEGER, data_reference='spend + 10', field_map=['spend_2']),
+    FdqModelAttribute(data_reference='"column_0"', field_map=['source_taxon']),
+    FdqModelAttribute(data_reference='"column_1"', field_map=['gender']),
+    FdqModelAttribute(data_reference='"column_2"', field_map=['ad_id']),
+    FdqModelAttribute(data_reference='"column_3"', field_map=['spend']),
+    FdqModelAttribute(data_reference='spend + 10', field_map=['spend_2']),
 ]
 
 

@@ -39,11 +39,6 @@ class ModelAttribute(SchematicsModel):
 
     quantity_type: ValueQuantityType = EnumType(ValueQuantityType, default=ValueQuantityType.scalar)
 
-    column_sql_type: Optional[str] = NonEmptyStringType(default=None)
-    """
-    Type of the column this attribute points to.
-    """
-
     @memoized_property
     def taxon_memoized(self):
         """

@@ -1,11 +1,10 @@
 from collections import Counter
 from enum import Enum
-from typing import Dict, List, Optional, Set
+from typing import Dict, List, Set
 
 from pydantic import Field, root_validator
 from pydantic.error_wrappers import ErrorWrapper, ValidationError
 
-from panoramic.cli.husky.core.enums import DbDataType
 from panoramic.cli.husky.core.federated.model.tel.data_structures import (
     AttributeValidationTelVisitorParams,
 )
@@ -26,11 +25,6 @@ class FdqModelJoinRelationship(Enum):
 
 
 class FdqModelAttribute(PydanticModel):
-    data_type: Optional[DbDataType]
-    """
-    Type of the column this attribute points to.
-    """
-
     data_reference: str = Field(..., min_length=1)
     """
     Transformation applied to the model attribute

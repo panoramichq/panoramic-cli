@@ -93,21 +93,14 @@ class AggregationDefinition(PydanticModel):
         if values['type'] == AggregationType.not_set or values['type'] in cls._SIMPLE_AGGS:
             values['params'] = None
             return values
-        elif agg_type == AggregationType.count_distinct.value:
-            if 'params' not in values or values['params'] is None:
-                # this is a temporary solution for FE
-                # TODO: remove this once FE starts using field "aggregation" instead of field "aggregation_type"
-                values['params'] = AggregationParamsCountDistinct()
-            else:
-                values['params'] = AggregationParamsCountDistinct(**values['params'])
-
-            return values
 
         if 'params' not in values:
             raise ValueError('Missing "params" field')
 
         if agg_type in cls._WITH_SORT_DIMENSION_AGGS:
             values['params'] = AggregationParamsSortDimension(**values['params'])
+        elif agg_type == AggregationType.count_distinct.value:
+            values['params'] = AggregationParamsCountDistinct(**values['params'])
         else:
             raise ValueError(f'Unsupported aggregation type - {values["type"]}')
 

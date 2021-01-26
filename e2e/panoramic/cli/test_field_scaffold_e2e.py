@@ -33,7 +33,6 @@ def test_field_scaffold_e2e(_, clear_fields):
 #     assert (
 #         (fields_dir / 'dataset_test_field.field.yaml').read_text()
 #         == """api_version: v1
-# data_type: text
 # display_name: dataset_test_field
 # field_type: dimension
 # group: CLI
