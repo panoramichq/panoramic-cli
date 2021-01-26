@@ -54,7 +54,12 @@ joins: []
 model_name: database.public.table
 ```
 
-TBD joins.
+### Joins definitions
+Joins are an array of join definitions. Join definition has following properties:
+- `join_type`: either of `left`, `right` or `inner`
+- `relationship`: `one_to_one` or `many_to_one`
+- `to_model`: name of other model to join on
+- `fields`: array of fields (field slugs) to use in the join
 
 ## Field YAML file
 Fields may be automatically scaffolded (pre-created) by running:
@@ -76,15 +81,15 @@ slug: person_key
 
 ### Description of the properties
 
-- TBD aggregations
-- `data_type` must be a valid data type, see table below.
+- `aggregation` a specification of the aggregation type, see section below
+- `data_type` must be a valid data type, see table below
 - `api_version` must be set to `v1`
 - `display_name` is just a human readable name
 - `field_type` is either `metric` or `dimension`
 - `slug` is the ID of the field
-- `group` is a logical group of the field, but there is no further functionality related to it. It may have any value at the moment.
+- `group` is a logical group of the field, but there is no further functionality related to it. It may have any value at the moment
 
-### Data Types
+#### Data Types
 Supported data types are from the list below. They translate roughly to equivalent column types in supported database.
 - text
 - integer
@@ -97,6 +102,15 @@ Supported data types are from the list below. They translate roughly to equivale
 - boolean
 - duration
 - variant
+
+#### Aggregation
+An aggregation definition has two properties:
+- `type`: either of `sum`, `avg`, `min`, `max`, `count_all`, `count_distinct`, `group_by`, `first_by`, `last_by`
+- `params`: dependening on a type, it contains:
+    - `fields` for `count_distinct`
+    - `sort_dimensions` for `first_by` and `last_by`, with following properties:
+        - `taxon`: field slug
+        - `order_by`: `asc` or `desc`
 
 ## Transformation YAML file
 Transformation files use the model definitions to build views that can be deployed to the database, using a connection stored in the `pano` tool configuration. To create a transformation, run:
@@ -126,3 +140,6 @@ Managing connections with `pano` is done through the `connection` command:
 ```sh
 pano connection -h
 ```
+
+# Other notes
+Field and taxon are the refer to the same thing, just historically fields were called taxons.
