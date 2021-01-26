@@ -1,7 +1,7 @@
 import datetime
 from unittest.mock import patch
 
-from panoramic.cli.husky.core.model.enums import ModelVisibility, TimeGranularity
+from panoramic.cli.husky.core.model.enums import ModelVisibility
 from panoramic.cli.husky.service.model_retriever.component import ModelRetriever
 from panoramic.cli.husky.service.types.api_scope_types import Scope
 from tests.panoramic.cli.husky.test.mocks.husky_model import generate_husky_mock_model
@@ -43,7 +43,6 @@ mock_response = [
         visibility=ModelVisibility.available,
         company_id='company_2',
         project_id='project_2',
-        time_granularity=TimeGranularity.hour,
     ),
     generate_husky_mock_model(
         name='appnexus_model',

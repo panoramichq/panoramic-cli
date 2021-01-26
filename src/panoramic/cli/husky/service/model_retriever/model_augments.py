@@ -1,6 +1,5 @@
 from typing import Dict, List
 
-from panoramic.cli.husky.core.federated.utils import prefix_with_virtual_data_source
 from panoramic.cli.husky.core.model.enums import TimeGranularity
 from panoramic.cli.husky.core.model.models import (
     AttributeNotFound,
@@ -76,22 +75,12 @@ class ModelAugments:
     def _model_add_time_attributes(cls, model: HuskyModel):
         try:
             time_attrs: List[ModelAttribute] = []
-            date_taxon_slug = prefix_with_virtual_data_source(model.data_source, TaxonSlugs.DATE)
-            date_hour_taxon_slug = prefix_with_virtual_data_source(model.data_source, TaxonSlugs.DATE_HOUR)
 
-            if (
-                model.time_granularity
-                and model.time_granularity is TimeGranularity.day
-                and model.has_taxon(date_taxon_slug)
-            ):
+            if model.time_granularity is TimeGranularity.day:
                 time_attrs = ModelAugments._prepare_derived_time_attributes(
                     TaxonSlugs.DATE, ModelAugments._model_attributes_day
                 )
-            elif (
-                model.time_granularity
-                and model.time_granularity == TimeGranularity.hour
-                and model.has_taxon(date_hour_taxon_slug)
-            ):
+            elif model.time_granularity is TimeGranularity.hour:
                 # Hourly models should always have date_hour attribute. This is correct.
                 time_attrs = ModelAugments._prepare_derived_time_attributes(
                     TaxonSlugs.DATE_HOUR,

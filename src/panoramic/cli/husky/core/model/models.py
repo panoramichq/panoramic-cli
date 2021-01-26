@@ -1,5 +1,8 @@
 from typing import Dict, List, Optional, Set
 
+from panoramic.cli.husky.service.constants import TaxonSlugs
+
+from panoramic.cli.husky.core.federated.utils import prefix_with_virtual_data_source
 from schematics.types import BooleanType, DictType, ListType, ModelType, StringType
 
 from panoramic.cli.husky.common.exception_enums import ExceptionErrorCode
@@ -170,11 +173,6 @@ class HuskyModel(SchematicsModel):
     Unique alias used in SQL for this model (if None, use full object name to reference columns)
     """
 
-    time_granularity: Optional[TimeGranularity] = EnumType(TimeGranularity)
-    """
-    Optional attribute which sets time granularity explicitly (in case it cannot be inferred from model's name)
-    """
-
     fully_qualified_name_parts: Optional[List[str]] = ListType(NonEmptyStringType(required=True))
     """
     All parts of the fully qualified name. Can contain 2..N values, depending on the actual federated database.
@@ -210,6 +208,21 @@ class HuskyModel(SchematicsModel):
             raise ValueError('Missing physical data source')
         else:
             return self.fully_qualified_name_parts[0]
+
+    @memoized_property
+    def time_granularity(self) -> Optional[TimeGranularity]:
+        """
+        Time granularity of model's data (if it can be inferred)
+        """
+
+        date_taxon_slug = prefix_with_virtual_data_source(self.data_source, TaxonSlugs.DATE)
+        date_hour_taxon_slug = prefix_with_virtual_data_source(self.data_source, TaxonSlugs.DATE_HOUR)
+        if self.has_taxon(date_taxon_slug):
+            return TimeGranularity.day
+        elif self.has_taxon(date_hour_taxon_slug):
+            return TimeGranularity.hour
+
+        return None
 
     def full_object_name(self, ctx: HuskyQueryContext) -> str:
         """

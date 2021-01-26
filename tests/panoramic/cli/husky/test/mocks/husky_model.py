@@ -1,7 +1,7 @@
 import datetime
 from typing import Optional
 
-from panoramic.cli.husky.core.model.enums import ModelVisibility, TimeGranularity
+from panoramic.cli.husky.core.model.enums import ModelVisibility
 from panoramic.cli.husky.core.model.models import HuskyModel, ModelJoin
 from panoramic.cli.husky.service.model_retriever.model_augments import ModelAugments
 
@@ -191,8 +191,8 @@ def get_mock_metric_time_taxon_model() -> HuskyModel:
                 'mock_data_source|date': dict(
                     tel_transformation='"date"', taxon='mock_data_source|date', identifier=True
                 ),
+                f'{MOCK_DATA_SOURCE_NAME}|date': dict(tel_transformation='"date"', taxon=f'{MOCK_DATA_SOURCE_NAME}|date', identifier=False),
             },
-            time_granularity=TimeGranularity.day,
             data_sources=[MOCK_DATA_SOURCE_NAME],
             joins=[
                 ModelJoin(
