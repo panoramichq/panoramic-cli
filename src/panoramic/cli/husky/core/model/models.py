@@ -1,13 +1,11 @@
 from typing import Dict, List, Optional, Set
 
-from panoramic.cli.husky.service.constants import TaxonSlugs
-
-from panoramic.cli.husky.core.federated.utils import prefix_with_virtual_data_source
 from schematics.types import BooleanType, DictType, ListType, ModelType, StringType
 
 from panoramic.cli.husky.common.exception_enums import ExceptionErrorCode
 from panoramic.cli.husky.common.my_memoize import memoized_property
 from panoramic.cli.husky.common.util import serialize_class_with_props
+from panoramic.cli.husky.core.federated.utils import prefix_with_virtual_data_source
 from panoramic.cli.husky.core.model.enums import (
     HuskyModelType,
     JoinDirection,
@@ -25,6 +23,7 @@ from panoramic.cli.husky.core.schematics.model import (
 )
 from panoramic.cli.husky.core.sql_alchemy_util import compile_query, quote_identifier
 from panoramic.cli.husky.core.tel.tel_dialect import ModelTelDialect
+from panoramic.cli.husky.service.constants import TaxonSlugs
 from panoramic.cli.husky.service.context import (
     SNOWFLAKE_HUSKY_CONTEXT,
     HuskyQueryContext,

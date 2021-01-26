@@ -191,7 +191,9 @@ def get_mock_metric_time_taxon_model() -> HuskyModel:
                 'mock_data_source|date': dict(
                     tel_transformation='"date"', taxon='mock_data_source|date', identifier=True
                 ),
-                f'{MOCK_DATA_SOURCE_NAME}|date': dict(tel_transformation='"date"', taxon=f'{MOCK_DATA_SOURCE_NAME}|date', identifier=False),
+                f'{MOCK_DATA_SOURCE_NAME}|date': dict(
+                    tel_transformation='"date"', taxon=f'{MOCK_DATA_SOURCE_NAME}|date', identifier=False
+                ),
             },
             data_sources=[MOCK_DATA_SOURCE_NAME],
             joins=[
