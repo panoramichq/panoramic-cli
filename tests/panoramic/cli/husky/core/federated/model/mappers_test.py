@@ -172,7 +172,6 @@ def test_api_model_to_internal(api_model):
         'data_sources': [_VIRTUAL_DATA_SOURCE],
         'fully_qualified_name_parts': api_model.data_source.split('.'),
         'model_type': 'metric',
-        'time_granularity': None,
         'attributes': {
             attr.taxon: attr.to_primitive()
             for api_attr in api_model.attributes

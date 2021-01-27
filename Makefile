@@ -7,14 +7,13 @@ pre-commit-install:
 lint:
 	pre-commit run --all-files
 
-test:
-	python -m pytest tests e2e -vv
+test: unit_test e2e
 
 e2e:
-	python -m pytest e2e
+	PYTHONPATH=$(shell pwd)/src python -m pytest e2e
 
 unit_test:
-	python -m pytest tests
+	PYTHONPATH=$(shell pwd)/src python -m pytest tests
 
 black:
 	pre-commit run black
