@@ -21,7 +21,8 @@ def test_connections_e2e(mock_create_engine, monkeypatch, tmpdir):
             'connection',
             'create',
             'my-connection',
-            '--url' '"sqlite://"',
+            '--url',
+            'sqlite://',
             '--no-test',
         ],
     )
@@ -43,7 +44,7 @@ def test_connections_e2e(mock_create_engine, monkeypatch, tmpdir):
     assert result.output == yaml.dump(connections_json['connections']) + "\n"
 
     # Update
-    result = runner.invoke(cli, ['connection', 'update', 'my-connection', '--url', '"sqlite://"'])
+    result = runner.invoke(cli, ['connection', 'update', 'my-connection', '--url', 'sqlite://'])
     assert result.exit_code == 0, result.output
 
     # List
