@@ -116,7 +116,7 @@ Supported data types are from the list below. They translate roughly to equivale
 
 #### Aggregation
 An aggregation definition has two properties:
-- `type`: either of `sum`, `min`, `max`, `count_all`, `count_distinct`, `group_by`, `first_by`, `last_by`
+- `type`: either of `sum`, `min`, `max`, `avg`, `count_all`, `count_distinct`, `group_by`, `first_by`, `last_by`
 - `params`: dependening on a type, it contains:
     - `fields` for `count_distinct`, containing field slugs
     - `sort_dimensions` for `first_by` and `last_by`, as an array of object with following properties:
