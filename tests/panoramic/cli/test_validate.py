@@ -1,4 +1,3 @@
-from pathlib import Path
 from typing import Any, Dict
 
 import pytest
@@ -13,11 +12,7 @@ from panoramic.cli.errors import (
 )
 from panoramic.cli.local.get import get_state
 from panoramic.cli.paths import Paths, PresetFileName
-from panoramic.cli.validate import (
-    validate_config,
-    validate_context,
-    validate_local_state,
-)
+from panoramic.cli.validate import validate_context, validate_local_state
 
 VALID_CONTEXT = {
     'api_version': 'v1',
@@ -73,34 +68,6 @@ def test_validate_context_valid(tmp_path, monkeypatch):
 VALID_CONFIG = {
     'auth': {},
 }
-
-
-def test_validate_config_invalid_yaml(tmp_path, monkeypatch):
-    monkeypatch.setattr(Path, 'home', lambda: tmp_path)
-
-    Paths.config_dir().mkdir()
-    with Paths.config_file().open('w') as f:
-        f.write('not:\nyaml')
-
-    with pytest.raises(InvalidYamlFile):
-        validate_config()
-
-
-def test_validate_config_missing_file(tmp_path, monkeypatch):
-    monkeypatch.setattr(Path, 'home', lambda: tmp_path)
-
-    with pytest.raises(FileMissingError):
-        validate_config()
-
-
-def test_validate_config_valid(tmp_path, monkeypatch):
-    monkeypatch.setattr(Path, 'home', lambda: tmp_path)
-
-    Paths.config_dir().mkdir()
-    with Paths.config_file().open('w') as f:
-        f.write(yaml.dump(VALID_CONFIG))
-
-    validate_config()
 
 
 VALID_DATASET = {

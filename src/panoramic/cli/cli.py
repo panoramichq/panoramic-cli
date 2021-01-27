@@ -23,21 +23,7 @@ _PROFILES_DIR_ARG = '--profiles-dir'
 _PROJECT_DIR_ARG = '--project-dir'
 
 
-class ConfigAwareCommand(Command):
-    """Perform config file validation before running command."""
-
-    def invoke(self, ctx: Context):
-        from panoramic.cli.validate import validate_config
-
-        try:
-            validate_config()
-            return super().invoke(ctx)
-        except ValidationError as e:
-            echo_error(str(e))
-            sys.exit(1)
-
-
-class ConnectionAwareCommand(ConfigAwareCommand):
+class ConnectionAwareCommand(Command):
     def invoke(self, ctx: Context):
         try:
             return super().invoke(ctx)
@@ -46,7 +32,7 @@ class ConnectionAwareCommand(ConfigAwareCommand):
             sys.exit(1)
 
 
-class ContextAwareCommand(ConfigAwareCommand):
+class ContextAwareCommand(Command):
     """
     Perform config and context file validation before running command.
 
@@ -121,14 +107,6 @@ def scan(connection_name: str, filter: Optional[str]):
     from panoramic.cli.command import scan as scan_command
 
     scan_command(connection_name, filter)
-
-
-@cli.command(help='Configure pano CLI options')
-@handle_exception
-def configure():
-    from panoramic.cli.command import configure as config_command
-
-    config_command()
 
 
 @cli.command(help='Validate local files', cls=Command)
@@ -208,51 +186,59 @@ def connection():
     """Connection subcommand for managing connections.
 
     \b
-    All connections are stored in ~/.pano/config file.
+    All connections are stored in the project pano.yaml file.
     You can edit this file either manually or using provided commands.
 
     Expected YAML structure:
 
     \b
     name:
-      connection_string: postgres://my_user@<password>@localhost:5432/my_db
+      url: postgres://my_user@<password>@localhost:5432/my_db
 
     \b
     name: The name of the connection that will be used as reference to specify which connection to use.
-    connection_string: SqlAlchemy compatible connection string.
+    url: SqlAlchemy compatible connection URL.
     """
     pass
 
 
 @connection.command(cls=ConnectionAwareCommand)
 @click.argument('name', type=str, nargs=1)
-@click.argument('connection-string', type=str)
-@click.option('--no-test', default=False, is_flag=True, help='Do NOT try test the connection.')
+@click.option('--url', type=str, help='Connection URL (SqlAlchemy format).')
+@click.option('--dialect', type=click.Choice(['snowflake', 'bigquery']), help='Dialect. Use when no URL is provided.')
+@click.option(
+    '--no-test', default=False, is_flag=True, help='Do NOT try test the connection. Only if the URL was specified'
+)
 def create(
     name: str,
-    connection_string: str,
+    url: str,
+    dialect: str,
     no_test: bool,
 ):
-    """Add new connection.
+    """Add new connection. Either a URL or a dialect must be provided.
 
-    pano connection create sf-prod 'snowflake://{username}:{password}@{full account name}/{database_name}/{schema}'
+    pano connection create sf-prod --url 'snowflake://{username}:{password}@{full account name}/{database_name}/{schema}'
+    pano connection create sf-prod --dialect snowflake
     """
     from panoramic.cli.connections import create_connection_command
 
     create_connection_command(
         name=name,
-        connection_string=connection_string,
+        url=url,
+        dialect=dialect,
         no_test=no_test,
     )
 
 
 @connection.command(cls=ConnectionAwareCommand)
 @click.argument('name', type=str, nargs=1)
-@click.argument('connection-string', type=str)
+@click.option('--url', type=str, help='Connection URL (SqlAlchemy format).')
+@click.option('--dialect', type=click.Choice(['snowflake', 'bigquery']), help='Dialect. Use when no URL is provided.')
 @click.option('--no-test', default=False, is_flag=True, help='Do NOT try test the connection.')
 def update(
     name: str,
-    connection_string: str,
+    url: str,
+    dialect: str,
     no_test: bool,
 ):
     """Update existing connection.
@@ -263,7 +249,8 @@ def update(
 
     update_connection_command(
         name=name,
-        connection_string=connection_string,
+        url=url,
+        dialect=dialect,
         no_test=no_test,
     )
 

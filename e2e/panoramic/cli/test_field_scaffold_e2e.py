@@ -17,8 +17,7 @@ def clear_fields(monkeypatch):
     yield
 
 
-@patch('panoramic.cli.validate.validate_config', return_value=None)
-def test_field_scaffold_e2e(_, clear_fields):
+def test_field_scaffold_e2e(clear_fields):
     runner = CliRunner()
     result = runner.invoke(cli, ['field', 'scaffold', '-y', '--no-remote'])
 
@@ -43,8 +42,7 @@ slug: dataset_test_field
 
 
 @patch('panoramic.cli.command.scaffold_missing_fields')
-@patch('panoramic.cli.validate.validate_config', return_value=None)
-def test_field_scaffold_error_e2e(_, mock_scaffold, monkeypatch):
+def test_field_scaffold_error_e2e(mock_scaffold, monkeypatch):
     monkeypatch.chdir(Path('e2e') / 'scenarios' / 'pano-push-pull')
     mock_scaffold.side_effect = Exception('Test Exception')
 

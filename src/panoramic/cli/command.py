@@ -26,7 +26,6 @@ from panoramic.cli.print import echo_error, echo_errors, echo_info, echo_warning
 from panoramic.cli.scan import scan_fields_for_errors
 from panoramic.cli.state import Action, ActionList
 from panoramic.cli.validate import (
-    validate_config,
     validate_context,
     validate_local_state,
     validate_missing_files,
@@ -44,11 +43,6 @@ def configure():
 def validate() -> bool:
     """Check local files against schema."""
     errors = []
-
-    try:
-        validate_config()
-    except ValidationError as e:
-        errors.append(e)
 
     try:
         validate_context()

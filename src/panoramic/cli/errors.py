@@ -170,8 +170,6 @@ class FileMissingError(ValidationError):
     def __init__(self, *, path: Path):
         if path == Paths.context_file():
             msg = f'Context file ({path.name}) not found in current working directory. Run pano init to create it.'
-        elif path == Paths.config_file():
-            msg = f'Config file ({path.absolute()}) not found. Run pano configure to create it.'
         else:
             # Should not happen => we only check above files exist explicitly
             msg = f'File Missing - {path}'
@@ -266,7 +264,7 @@ class DeprecatedConfigProperty(ValidationError):
     def __init__(self, property_: str, deprecation_message: Optional[str] = None):
         if deprecation_message is None:
             deprecation_message = "Property is deprecated"
-        super().__init__(f"'{property_}': {deprecation_message}\n  in {Paths.config_file()}")
+        super().__init__(f"'{property_}': {deprecation_message}")
 
     def __eq__(self, o: object) -> bool:
         if not isinstance(o, DeprecatedConfigProperty):
@@ -376,6 +374,13 @@ class ConnectionNotFound(CliBaseException):
 
     def __init__(self, connection_name: str):
         super().__init__(f'Connection with name "{connection_name}" was not found.')
+
+
+class ConnectionUrlNotAvailableFound(CliBaseException):
+    """Connection not found in config."""
+
+    def __init__(self):
+        super().__init__('Connection has no url stored. Please call: pano connection update <connection> --url <url>')
 
 
 class ConnectionAlreadyExistsException(CliBaseException):

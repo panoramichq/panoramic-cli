@@ -24,7 +24,6 @@ from panoramic.cli.file_utils import read_yaml
 from panoramic.cli.local.reader import FilePackage, FileReader, GlobalPackage
 from panoramic.cli.pano_model import PanoField, PanoModel
 from panoramic.cli.paths import Paths
-from panoramic.cli.print import echo_warning
 
 
 class JsonSchemas:
@@ -228,15 +227,6 @@ def validate_local_state() -> List[ValidationError]:
         errors.extend(package_errors)
 
     return errors
-
-
-def validate_config():
-    """Check config file against schema."""
-    path, schema = Paths.config_file(), JsonSchemas.config()
-    _validate_file(path, schema)
-    errors = _check_properties_deprecations(path, schema)
-    for err in errors:
-        echo_warning(str(err))
 
 
 def validate_context():

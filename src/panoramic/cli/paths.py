@@ -21,14 +21,6 @@ class Paths:
         return Path.cwd() / PresetFileName.DOTENV.value
 
     @staticmethod
-    def config_dir() -> Path:
-        return Path.home() / PresetFileName.CONFIG_DIR.value
-
-    @classmethod
-    def config_file(cls) -> Path:
-        return cls.config_dir() / PresetFileName.CONFIG.value
-
-    @staticmethod
     def scanned_dir() -> Path:
         return Path.cwd() / SystemDirectory.SCANNED.value
 
@@ -95,8 +87,6 @@ class PresetFileName(Enum):
     DATASET_YAML = 'dataset.yaml'
     CONTEXT = 'pano.yaml'
     DOTENV = '.env'
-    CONFIG_DIR = '.pano'
-    CONFIG = 'config'
     MODEL_SCHEMA = 'model.schema.json'
     FIELD_SCHEMA = 'field.schema.json'
     DATASET_SCHEMA = 'dataset.schema.json'

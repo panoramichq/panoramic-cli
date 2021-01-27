@@ -37,7 +37,7 @@ class HuskyQueryContext:
                 request_pds = data_request.physical_data_sources[0]
                 connection = Connections.get_by_name(request_pds, True)
 
-                query_runtime_name = Connections.get_connection_engine(connection).dialect.name
+                query_runtime_name = Connections.get_dialect_name(connection)
                 query_runtime = EnumHelper.from_value_safe(HuskyQueryRuntime, query_runtime_name)
                 if query_runtime is None:
                     raise UnsupportedSQLOutputException(query_runtime_name)

@@ -11,6 +11,7 @@ from panoramic.cli.errors import (
     ConnectionCreateException,
     ConnectionNotFound,
     ConnectionUpdateException,
+    ConnectionUrlNotAvailableFound,
     ExecuteInvalidArgumentsException,
 )
 from panoramic.cli.husky.service.utils.exceptions import UnknownPhysicalDataSource
@@ -22,7 +23,8 @@ logger = logging.getLogger(__name__)
 
 def create_connection_command(
     name: str,
-    connection_string: str,
+    url: Optional[str],
+    dialect: Optional[str],
     no_test: bool,
 ) -> None:
     """CLI command. Create new connection."""
@@ -30,10 +32,16 @@ def create_connection_command(
     if name in connections:
         raise ConnectionAlreadyExistsException(name)
 
-    new_connection = {'connection_string': connection_string}
+    if (url and dialect) or (not url and not dialect):
+        raise ConnectionCreateException('Must specify either a URL or dialect, not both.')
+
+    if url:
+        new_connection = {'url': url}
+    elif dialect:
+        new_connection = {'dialect': dialect}
     connections[name] = new_connection
 
-    if not no_test:
+    if url and not no_test:
         ok, error = Connections.test(new_connection)
         if not ok:
             raise ConnectionCreateException(error)
@@ -44,7 +52,8 @@ def create_connection_command(
 
 def update_connection_command(
     name: str,
-    connection_string: str,
+    url: Optional[str],
+    dialect: Optional[str],
     no_test: bool,
 ) -> None:
     """CLI command. Update specific connection."""
@@ -52,17 +61,17 @@ def update_connection_command(
     if name not in connections:
         raise ConnectionNotFound(name)
 
-    new_connection = {'connection_string': connection_string}
-    connections[name] = new_connection
+    if url:
+        updated_connection = {'url': url}
+    elif dialect:
+        updated_connection = {'dialect': dialect}
 
-    if not no_test:
-        ok, error = Connections.test(new_connection)
+    connections[name] = updated_connection
+
+    if url and not no_test:
+        ok, error = Connections.test(updated_connection)
         if not ok:
             raise ConnectionUpdateException(error)
-
-    for key, value in new_connection.items():
-        if value != '':
-            connections[name][key] = value
 
     Connections.save(connections)
     echo_info('Connection was successfully updated!')
@@ -72,7 +81,7 @@ def list_connections_command() -> None:
     """CLI command. List all connections."""
     connections = Connections.load()
     if not connections:
-        config_file = Paths.config_file()
+        config_file = Paths.context_file()
         echo_info(
             f'No connections found.\n'
             f'Use "pano connection create" to create connection or edit "{config_file}" file.'
@@ -154,9 +163,12 @@ class Connections:
         return connections[name]
 
     @classmethod
-    def get_connection_string(cls, connection: Dict[str, Any]) -> str:
+    def get_url(cls, connection: Dict[str, Any]) -> str:
         """Gets connection string from physical data source connection"""
-        return connection['connection_string']
+        try:
+            return connection['url']
+        except KeyError:
+            raise ConnectionUrlNotAvailableFound()
 
     @staticmethod
     def save(data: Dict[str, Any]) -> None:
@@ -170,7 +182,14 @@ class Connections:
 
     @classmethod
     def get_connection_engine(cls, connection) -> Engine:
-        return create_engine(cls.get_connection_string(connection))
+        return create_engine(cls.get_url(connection))
+
+    @classmethod
+    def get_dialect_name(cls, connection) -> str:
+        try:
+            return connection['dialect']
+        except KeyError:
+            return create_engine(cls.get_url(connection)).dialect.name
 
     @classmethod
     def execute(cls, sql: str, connection) -> Any:

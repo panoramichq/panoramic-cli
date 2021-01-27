@@ -5,6 +5,31 @@
     "description": "Context for pano-cli client",
     "type": "object",
     "additionalProperties": false,
+    "definitions": {
+        "connections": {
+            "type": "object",
+            "properties": {
+                "url": {
+                    "type": "string"
+                },
+                "dialect": {
+                    "type": "string",
+                    "enum": [
+                        "bigquery",
+                        "snowflake"
+                    ]
+                }
+            },
+            "anyOf": [
+                {
+                    "required": ["url"]
+                },
+                {
+                    "required": ["dialect"]
+                }
+            ]
+        }
+    },
     "properties": {
         "api_version": {
             "description": "Version of the Context schema",
@@ -12,95 +37,14 @@
             "enum": [
                 "v1"
             ]
-        },
-        "dbt": {
-            "type": "object",
-            "description": "Configuration for DBT packages",
-            "properties": {
-                "dependencies": {
-                    "type": "array",
-                    "description": "List of DBT packages",
-                    "items": {
-                        "type": "object",
-                        "$ref": "#/$defs/package"
-                    }
-                },
-                "target": {
-                    "type": "object",
-                    "description": "Target data connection for DBT execution",
-                    "properties": {
-                        "name": {
-                            "type": "string",
-                            "description": "Name of target connection"
-                        },
-                        "parts": {
-                            "type": "object",
-                            "description": "Target connection information"
-                        }
-                    },
-                    "required": [
-                        "name"
-                    ]
-                },
-                "vars": {
-                    "type": "object",
-                    "descriptioin": "Variables for DBT templates"
-                }
-            },
-            "required": [
-                "target"
-            ]
         }
     },
     "required": [
         "api_version"
     ],
     "$defs": {
-        "package": {
-            "description": "DBT Dependency",
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-                "package": {
-                    "type": "string",
-                    "description": "Name of DBT package"
-                },
-                "version": {
-                    "type": "string",
-                    "description": "Version of DBT package"
-                },
-                "git": {
-                    "type": "string",
-                    "description": "Git URL for package"
-                },
-                "revision": {
-                    "type": "string",
-                    "description": "Name of a branch or tag"
-                },
-                "local": {
-                    "type": "string",
-                    "description": "Path to local package"
-                }
-            },
-            "anyOf": [
-                {
-                    "required": [
-                        "package",
-                        "version"
-                    ]
-                },
-                {
-                    "required": [
-                        "git",
-                        "revision"
-                    ]
-                },
-                {
-                    "required": [
-                        "local"
-                    ]
-                }
-            ]
+        "connections": {
+            "$ref": "#/definitions/connections"
         }
     }
 }
