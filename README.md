@@ -36,6 +36,8 @@ Commands:
   validate          Validate local files
 ```
 
+See docs folder for more extensive documentation.
+
 ## Release process
 
 To release a new version of the library, follow these steps:
