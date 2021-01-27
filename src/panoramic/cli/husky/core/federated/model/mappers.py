@@ -1,8 +1,6 @@
 from collections import defaultdict
 from typing import Dict, List, Set
 
-from panoramic.cli.husky.common.enum import EnumHelper
-from panoramic.cli.husky.core.enums import DbDataType
 from panoramic.cli.husky.core.federated.model.models import (
     FdqModel,
     FdqModelAttribute,
@@ -34,13 +32,10 @@ class FdqModelAttributeMapper:
         and cutoff virtual data source from taxon slug, if needed
         """
         # type is same across all attributes
-        data_type = model_attributes[0].column_sql_type
-
         return FdqModelAttribute.construct(
             field_map=[remove_virtual_data_source_prefix(virtual_data_source, attr.taxon) for attr in model_attributes],
             # for backward compatibility, we reuse column_name for a bit
             data_reference=transformation,
-            data_type=EnumHelper.from_value_safe(DbDataType, data_type),
         )
 
     @classmethod
@@ -59,7 +54,6 @@ class FdqModelAttributeMapper:
                         'tel_transformation': attr.data_reference,
                         'taxon': prefix_with_virtual_data_source(virtual_data_source, taxon_slug).lower(),
                         'identifier': taxon_slug in identifiers,
-                        'column_sql_type': None if attr.data_type is None else attr.data_type.value,
                     }
                 )
             )

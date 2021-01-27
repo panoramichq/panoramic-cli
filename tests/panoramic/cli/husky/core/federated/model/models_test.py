@@ -1,7 +1,6 @@
 import pytest
 from pydantic import ValidationError
 
-from panoramic.cli.husky.core.enums import DbDataType
 from panoramic.cli.husky.core.federated.model.models import (
     FdqModel,
     FdqModelJoinRelationship,
@@ -27,11 +26,10 @@ def _tmp_model(fields=None, joins=None, identifiers=None):
         (
             _tmp_model(
                 [
-                    {'data_reference': '"column_name"', 'field_map': ['taxon_1'], 'data_type': DbDataType.INTEGER},
+                    {'data_reference': '"column_name"', 'field_map': ['taxon_1']},
                     {
                         'data_reference': '"column_name" + 10',
                         'field_map': ['taxon_1'],
-                        'data_type': DbDataType.INTEGER,
                     },
                 ]
             ),
@@ -41,11 +39,10 @@ def _tmp_model(fields=None, joins=None, identifiers=None):
         (
             _tmp_model(
                 [
-                    {'data_reference': '"column_name"', 'field_map': ['taxon_1'], 'data_type': DbDataType.INTEGER},
+                    {'data_reference': '"column_name"', 'field_map': ['taxon_1']},
                     {
                         'data_reference': '"column_name" + taxon_3',
                         'field_map': ['taxon_2'],
-                        'data_type': DbDataType.INTEGER,
                     },
                 ]
             ),
@@ -61,11 +58,10 @@ def _tmp_model(fields=None, joins=None, identifiers=None):
         (
             _tmp_model(
                 [
-                    {'data_reference': '"column_name"', 'field_map': ['taxon_1'], 'data_type': DbDataType.INTEGER},
+                    {'data_reference': '"column_name"', 'field_map': ['taxon_1']},
                     {
                         'data_reference': '"column_name" + taxon_2',
                         'field_map': ['taxon_2'],
-                        'data_type': DbDataType.INTEGER,
                     },
                 ]
             ),
@@ -80,16 +76,14 @@ def _tmp_model(fields=None, joins=None, identifiers=None):
         (
             _tmp_model(
                 [
-                    {'data_reference': '"column_name"', 'field_map': ['taxon_1'], 'data_type': DbDataType.INTEGER},
+                    {'data_reference': '"column_name"', 'field_map': ['taxon_1']},
                     {
                         'data_reference': '"column_name_2" + taxon_3',
                         'field_map': ['taxon_2'],
-                        'data_type': DbDataType.INTEGER,
                     },
                     {
                         'data_reference': '\"column_name_3\" + 5 / taxon_2',
                         'field_map': ['taxon_3'],
-                        'data_type': DbDataType.INTEGER,
                     },
                 ]
             ),
@@ -107,7 +101,6 @@ def _tmp_model(fields=None, joins=None, identifiers=None):
                     {
                         'data_reference': '"column_name_3" + 5 / taxon_3',
                         'field_map': ['taxon_3'],
-                        'data_type': DbDataType.INTEGER,
                     }
                 ]
             ),
@@ -122,16 +115,14 @@ def _tmp_model(fields=None, joins=None, identifiers=None):
         (
             _tmp_model(
                 [
-                    {'data_reference': '"column_name"', 'field_map': ['taxon_2'], 'data_type': DbDataType.INTEGER},
+                    {'data_reference': '"column_name"', 'field_map': ['taxon_2']},
                     {
                         'data_reference': '"column_name_2" + taxon_2',
                         'field_map': ['taxon_3'],
-                        'data_type': DbDataType.DATE,
                     },
                     {
                         'data_reference': '"column_name_3" + 5',
                         'field_map': ['taxon_4'],
-                        'data_type': DbDataType.DATE,
                     },
                 ],
                 [
@@ -152,14 +143,13 @@ def _tmp_model(fields=None, joins=None, identifiers=None):
         (
             _tmp_model(
                 [
-                    {'data_reference': '"column_name"', 'field_map': ['taxon_2'], 'data_type': DbDataType.INTEGER},
+                    {'data_reference': '"column_name"', 'field_map': ['taxon_2']},
                     {
                         'data_reference': '"column_name_2" + taxon_2',
                         'field_map': ['taxon_3', 'taxon_6'],
-                        'data_type': DbDataType.INTEGER,
                     },
-                    {'data_reference': '"column_name_3"', 'field_map': ['taxon_4'], 'data_type': DbDataType.DATE},
-                    {'data_reference': '"column_name_3"', 'field_map': ['taxon_5'], 'data_type': DbDataType.DATE},
+                    {'data_reference': '"column_name_3"', 'field_map': ['taxon_4']},
+                    {'data_reference': '"column_name_3"', 'field_map': ['taxon_5']},
                 ],
                 [
                     {
@@ -177,16 +167,14 @@ def _tmp_model(fields=None, joins=None, identifiers=None):
         (
             _tmp_model(
                 [
-                    {'data_reference': '"column_name"', 'field_map': ['taxon_1'], 'data_type': DbDataType.INTEGER},
+                    {'data_reference': '"column_name"', 'field_map': ['taxon_1']},
                     {
                         'data_reference': '"column_name_2" + taxon_3',
                         'field_map': ['taxon_x', 'taxon_5'],
-                        'data_type': DbDataType.INTEGER,
                     },
                     {
                         'data_reference': '"column_name_3" + 5 / taxon_5',
                         'field_map': ['taxon_3'],
-                        'data_type': DbDataType.INTEGER,
                     },
                 ]
             ),
@@ -200,7 +188,7 @@ def _tmp_model(fields=None, joins=None, identifiers=None):
         # identifiers not present as attributes
         (
             _tmp_model(
-                fields=[{'data_reference': '"column_name"', 'field_map': ['taxon_1'], 'data_type': DbDataType.INTEGER}],
+                fields=[{'data_reference': '"column_name"', 'field_map': ['taxon_1']}],
                 identifiers=['taxon_2'],
             ),
             [("exc=ValueError('Identifier(s) taxon_2 are not present as fields on the model') loc=('__root__',)")],

@@ -22,24 +22,24 @@ def test_field_scaffold_e2e(_, clear_fields):
     runner = CliRunner()
     result = runner.invoke(cli, ['field', 'scaffold', '-y'])
 
-    # fields_dir
+    fields_dir = Paths.fields_dir(Path('test_dataset'))
     Paths.fields_dir(Path('test_dataset'))
 
     assert result.exit_code == 0
-    # TODO uncomment once scaffold starts working
 
-
-#     assert {f.name for f in fields_dir.iterdir()} == {'dataset_test_field.field.yaml'}
-#     assert (
-#         (fields_dir / 'dataset_test_field.field.yaml').read_text()
-#         == """api_version: v1
-# data_type: text
-# display_name: dataset_test_field
-# field_type: dimension
-# group: CLI
-# slug: dataset_test_field
-# """
-#     )
+    assert {f.name for f in fields_dir.iterdir()} == {'dataset_test_field.field.yaml'}
+    assert (
+        (fields_dir / 'dataset_test_field.field.yaml').read_text()
+        == """aggregation:
+  type: group_by
+api_version: v1
+data_type: text
+display_name: dataset_test_field
+field_type: dimension
+group: CLI
+slug: dataset_test_field
+"""
+    )
 
 
 @patch('panoramic.cli.command.scaffold_missing_fields')

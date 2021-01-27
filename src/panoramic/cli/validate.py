@@ -65,14 +65,8 @@ class JsonSchemas:
 
 def _check_model_deprecations(data: Dict[str, Any], path: Path) -> List[DeprecatedAttributeWarning]:
     """Check for deprecated attributes in a model."""
-    errors = []
 
-    fields: List[Dict[str, Any]] = data.get('fields', [])
-    contains_data_type = any('data_type' in f for f in fields)
-    if contains_data_type:
-        errors.append(DeprecatedAttributeWarning(attribute='data_type', path=path))
-
-    return errors
+    return []
 
 
 def _check_properties_deprecations(fp: Path, schema: Dict[str, Any]):

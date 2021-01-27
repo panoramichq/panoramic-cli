@@ -1,6 +1,5 @@
 import pytest
 
-from panoramic.cli.husky.core.enums import DbDataType
 from panoramic.cli.husky.core.federated.model.mappers import (
     FdqModelAttributeMapper,
     FdqModelJoinMapper,
@@ -37,7 +36,6 @@ _USER_ID = 'usr-id'
             [
                 ModelAttribute(
                     {
-                        'column_sql_type': DbDataType.CHARACTER_VARYING,
                         'tel_transformation': '"another_col"',
                         'taxon': f'{_VIRTUAL_DATA_SOURCE}|taxon_slug',
                     }
@@ -49,7 +47,6 @@ _USER_ID = 'usr-id'
             [
                 ModelAttribute(
                     {
-                        'column_sql_type': DbDataType.SMALLINT,
                         'tel_transformation': '"col_name"',
                         'taxon': f'{_VIRTUAL_DATA_SOURCE}|taxon_slug_2',
                     }
@@ -62,7 +59,6 @@ def test_api_model_attribute_from_internal(transformation, model_attrs):
     attr = FdqModelAttributeMapper.from_internal(transformation, model_attrs, _VIRTUAL_DATA_SOURCE)
 
     assert attr.dict(by_alias=True) == {
-        'data_type': model_attrs[0].column_sql_type,
         'data_reference': transformation,
         'field_map': [remove_virtual_data_source_prefix(_VIRTUAL_DATA_SOURCE, model_attrs[0].taxon)],
     }
@@ -71,8 +67,8 @@ def test_api_model_attribute_from_internal(transformation, model_attrs):
 @pytest.mark.parametrize(
     'model_attr',
     [
-        FdqModelAttribute(data_type=DbDataType.DATE, data_reference='"first_col"', field_map=['taxon_slug']),
-        FdqModelAttribute(data_type=DbDataType.INTEGER, data_reference='"col_name"', field_map=['taxon_slug_2']),
+        FdqModelAttribute(data_reference='"first_col"', field_map=['taxon_slug']),
+        FdqModelAttribute(data_reference='"col_name"', field_map=['taxon_slug_2']),
     ],
 )
 def test_api_model_attribute_to_internal(model_attr):
@@ -81,7 +77,6 @@ def test_api_model_attribute_to_internal(model_attr):
 
     assert [attr.to_primitive() for attr in attrs] == [
         {
-            'column_sql_type': model_attr.data_type,
             'tel_transformation': model_attr.data_reference,
             'taxon': prefix_with_virtual_data_source(_VIRTUAL_DATA_SOURCE, model_attr.field_map[0]),
             'identifier': model_attr.field_map[0] in identifiers,
@@ -144,11 +139,8 @@ def test_api_model_join_from_internal():
             model_name='api-model-slug-2',
             data_source='physical.table2',
             fields=[
+                FdqModelAttribute(data_reference='"col_name"', field_map=['taxon_slug_3']),
                 FdqModelAttribute(
-                    data_type=DbDataType.INTEGER, data_reference='"col_name"', field_map=['taxon_slug_3']
-                ),
-                FdqModelAttribute(
-                    data_type=DbDataType.DATE,
                     data_reference='"col_name_2"',
                     field_map=['taxon_slug', 'taxon_slug_2'],
                 ),
@@ -210,14 +202,12 @@ def test_api_model_to_internal(api_model):
                 'company_id': _COMPANY_ID,
                 'attributes': {
                     prefix_with_virtual_data_source(_VIRTUAL_DATA_SOURCE, 'taxon_slug'): {
-                        'column_sql_type': DbDataType.DATE,
                         'tel_transformation': '"col_name"',
                         'taxon': prefix_with_virtual_data_source(_VIRTUAL_DATA_SOURCE, 'taxon_slug'),
                         'identifier': True,
                     },
                     prefix_with_virtual_data_source(_VIRTUAL_DATA_SOURCE, 'taxon_slug_2'): {
                         'tel_transformation': '"another_co"',
-                        'column_sql_type': DbDataType.INTEGER,
                         'taxon': prefix_with_virtual_data_source(_VIRTUAL_DATA_SOURCE, 'taxon_slug_2'),
                         'identifier': False,
                     },

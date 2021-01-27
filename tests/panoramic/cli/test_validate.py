@@ -5,7 +5,6 @@ import pytest
 import yaml
 
 from panoramic.cli.errors import (
-    DeprecatedAttributeWarning,
     FileMissingError,
     InvalidYamlFile,
     JsonSchemaError,
@@ -575,39 +574,6 @@ def test_validate_local_state_missing_field_file(tmp_path, monkeypatch):
             identifier=False,
         )
     ]
-
-
-def test_validate_local_state_deprecated_attribute(tmp_path, monkeypatch):
-    monkeypatch.chdir(tmp_path)
-
-    dataset_dir = tmp_path / 'test_dataset'
-    dataset_dir.mkdir()
-
-    with (dataset_dir / PresetFileName.DATASET_YAML.value).open('w') as f:
-        f.write(yaml.dump(VALID_DATASET))
-
-    with (dataset_dir / 'test_model.model.yaml').open('w') as f:
-        f.write(
-            yaml.dump(
-                {
-                    **VALID_MODEL_MINIMAL,
-                    'fields': [
-                        {
-                            'data_type': 'CHARACTER VARYING',
-                            'field_map': ['field_slug'],
-                            'data_reference': '"FIELD_SLUG"',
-                        }
-                    ],
-                }
-            )
-        )
-
-    Paths.fields_dir(dataset_dir).mkdir()
-    with (Paths.fields_dir(dataset_dir) / 'test_field.field.yaml').open('w') as f:
-        f.write(yaml.dump(VALID_FIELD_MINIMAL))
-
-    errors = validate_local_state()
-    assert errors == [DeprecatedAttributeWarning(attribute='data_type', path=dataset_dir / 'test_model.model.yaml')]
 
 
 def test_validate_local_state_orphan_field_files(tmp_path, monkeypatch):
