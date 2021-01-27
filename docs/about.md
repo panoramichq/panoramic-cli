@@ -160,7 +160,7 @@ pano connection -h
 Creating a Snowflake connection:
 
 ```sh
-pano connection create --type snowflake conn_name 'snowflake://<user_login_name>:<password>@<account_name>/<database_name>/<schema_name>?warehouse=<warehouse_name>&role=<role_name>'
+pano connection create --type snowflake conn_name --url 'snowflake://<user_login_name>:<password>@<account_name>/<database_name>/<schema_name>?warehouse=<warehouse_name>&role=<role_name>'
 
 ```
 
@@ -168,11 +168,12 @@ pano connection create --type snowflake conn_name 'snowflake://<user_login_name>
 Creating a BigQuery conneciton:
 
 ```sh
-pano connection create --type bigquery conn_name 'bigquery://'
+pano connection create --type bigquery conn_name --url 'bigquery://'
 ```
 
 Before running this, make sure, the environment variable `GOOGLE_APPLICATION_CREDENTIALS` is pointing to the file with Google [credentials](https://cloud.google.com/docs/authentication/production).
 
+NOTE: It is also possible to create a "dummy" connection, by not specifying the `--url`, but instead by providing a `--dialect <snowflake | bigquery>` option.
 
 # Metadata scanning
 
