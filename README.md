@@ -33,6 +33,7 @@ Commands:
   detect-joins      Detect joins under a dataset
   field             Commands on local field files.
   init              Initialize metadata repository
+  scan              Scan remote database and generates models for found objects
   validate          Validate local files
 ```
 

@@ -18,6 +18,10 @@ class ValidationType(str, Enum):
     variant = 'variant'
 
 
+METRIC_VALIDATION_TYPES: Set[ValidationType] = {ValidationType.integer, ValidationType.numeric}
+"""Set of validation types for metrics"""
+
+
 class AggregationType(str, Enum):
     # simple aggregations
     sum = 'sum'

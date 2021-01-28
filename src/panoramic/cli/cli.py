@@ -113,16 +113,14 @@ def cli(debug):
 
 
 @cli.command(help='Scan models from source', cls=ContextAwareCommand)
-@click.argument('source-id', type=str, required=True)
-@click.option('--filter', '-f', type=str, help='Filter down what schemas to scan')
-@click.option('--generate-identifiers', '-i', is_flag=True, help='Generate identifiers for models')
-@click.option('--parallel', '-p', type=int, default=8, help='Parallelize metadata scan')
+@click.argument('connection_name', type=str, required=True)
+@click.option('--filter', '-f', type=str, help='Filter down what models to scan using regular expression')
 @handle_exception
 @handle_interrupt
-def scan(source_id: str, filter: Optional[str], parallel: int, generate_identifiers: bool):
+def scan(connection_name: str, filter: Optional[str]):
     from panoramic.cli.command import scan as scan_command
 
-    scan_command(source_id, filter, parallel, generate_identifiers)
+    scan_command(connection_name, filter)
 
 
 @cli.command(help='Configure pano CLI options')
@@ -175,13 +173,14 @@ def cleanup(target_dataset: str, yes: bool):
 @field_cli.command(help='Scaffold fields defined in models', cls=ContextAwareCommand)
 @click.option('--target-dataset', '-t', type=str, help='Target a specific dataset')
 @click.option('--yes', '-y', is_flag=True, default=False, help='Automatically confirm all actions')
+@click.option('--no-remote', is_flag=True, default=False, help='Do not remote connection to determine data types')
 @handle_exception
-def scaffold(target_dataset: str, yes: bool):
+def scaffold(target_dataset: str, yes: bool, no_remote: bool):
     from panoramic.cli.command import (
         scaffold_missing_fields as scaffold_missing_fields_command,
     )
 
-    scaffold_missing_fields_command(target_dataset=target_dataset, yes=yes)
+    scaffold_missing_fields_command(target_dataset=target_dataset, yes=yes, no_remote=no_remote)
 
 
 @field_cli.command(help='My cmd', cls=LocalStateAwareCommand)

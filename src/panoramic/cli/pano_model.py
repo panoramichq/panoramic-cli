@@ -64,10 +64,12 @@ class PanoModelField:
 
     field_map: List[str]
     data_reference: str
+    data_type: Optional[str]  # only relevant for metadata scan (should contain ValidationEnum values)
 
-    def __init__(self, *, field_map: List[str], data_reference: str):
+    def __init__(self, *, field_map: List[str], data_reference: str, data_type: Optional[str]):
         self.field_map = field_map
         self.data_reference = data_reference
+        self.data_type = data_type
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -78,8 +80,7 @@ class PanoModelField:
     @classmethod
     def from_dict(cls, inputs: Dict[str, Any]) -> 'PanoModelField':
         return cls(
-            field_map=inputs['field_map'],
-            data_reference=inputs['data_reference'],
+            field_map=inputs['field_map'], data_reference=inputs['data_reference'], data_type=inputs.get('data_type')
         )
 
     def identifier(self) -> str:

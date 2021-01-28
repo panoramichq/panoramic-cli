@@ -1,4 +1,5 @@
 import logging
+import re
 from collections import defaultdict
 from copy import deepcopy
 from typing import Dict, Optional
@@ -7,13 +8,19 @@ import click
 from tqdm import tqdm
 
 from panoramic.cli.config.storage import update_config
+from panoramic.cli.connections import Connections
 from panoramic.cli.diff import echo_diff
 from panoramic.cli.errors import JoinException, ValidationError, ValidationErrorSeverity
+from panoramic.cli.husky.common.enum import EnumHelper
 from panoramic.cli.husky.federated.join_detection.detect import (
     detect_joins as detect_join_for_models,
 )
+from panoramic.cli.husky.federated.transform.exceptions import UnsupportedDialectError
+from panoramic.cli.husky.service.types.enums import HuskyQueryRuntime
 from panoramic.cli.local import get_state as get_local_state
 from panoramic.cli.local.executor import LocalExecutor
+from panoramic.cli.local.writer import FileWriter
+from panoramic.cli.metadata.scanner import Scanner
 from panoramic.cli.pano_model import PanoField, PanoModel, PanoModelJoin
 from panoramic.cli.print import echo_error, echo_errors, echo_info, echo_warnings
 from panoramic.cli.scan import scan_fields_for_errors
@@ -66,60 +73,43 @@ def validate() -> bool:
     return True
 
 
-def scan(source_id: str, table_filter: Optional[str], parallel: int = 1, generate_identifiers: bool = False):
+def scan(connection_name: str, filter_reg_ex: Optional[str] = None):
     """Scan all metadata for given source and filter."""
-    pass
-    # TODO implement
-    # scanner = Scanner(company_slug, source_id)
-    # scanner.fetch_token()
-    #
-    # tables = list(scanner.scan_tables(table_filter=table_filter))
-    #
-    # if len(tables) == 0:
-    #     echo_info('No tables have been found')
-    #     return
-    #
-    # refresher = Refresher(company_slug, source_id)
-    # refresher.fetch_token()
-    #
-    # if generate_identifiers:
-    #     id_generator = IdentifierGenerator(company_slug, source_id)
-    #     id_generator.fetch_token()
-    #
-    # writer = FileWriter()
-    #
-    # progress_bar = tqdm(total=len(tables))
-    #
-    # def _process_table(table: Dict[str, Any]):
-    #     # drop source name from table name
-    #     table_name = table['data_source'].split('.', 1)[1]
-    #
-    #     try:
-    #         refresher.refresh_table(table_name)
-    #         if generate_identifiers:
-    #             identifiers = id_generator.generate(table_name)
-    #         else:
-    #             identifiers = []
-    #
-    #         columns = list(scanner.scan_columns(table_filter=table_name))
-    #         for model in map_columns_to_model(columns):
-    #             model.identifiers = identifiers
-    #             writer.write_scanned_model(model)
-    #             progress_bar.write(f'Discovered model {model.model_name}')
-    #     except Exception:
-    #         error_msg = f'Metadata could not be scanned for table {table_name}'
-    #         progress_bar.write(f'Error: {error_msg}')
-    #         logger.debug(error_msg, exc_info=True)
-    #         # Create an empty model file even when scan fails
-    #         writer.write_empty_model(table['model_name'])
-    #     finally:
-    #         progress_bar.update()
-    #
-    # executor = ThreadPoolExecutor(max_workers=parallel)
-    # for _ in executor.map(_process_table, tables):
-    #     pass
-    #
-    # progress_bar.write(f'Scanned {progress_bar.total} tables')
+
+    connection_info = Connections.get_by_name(connection_name, True)
+    connection_engine = Connections.get_connection_engine(connection_info)
+
+    dialect_name = EnumHelper.from_value_safe(HuskyQueryRuntime, connection_engine.dialect.name)
+    if not dialect_name:
+        raise UnsupportedDialectError(connection_engine.dialect)
+
+    scanner_cls = Scanner.get_scanner(dialect_name)
+    scanner = scanner_cls(connection_name)
+
+    echo_info('Started scanning the data source')
+    scanner.scan(force_reset=True)
+    echo_info('Finished scanning the data source')
+
+    # apply regular expression as a filter on model names
+    if filter_reg_ex:
+        re_compiled = re.compile(filter_reg_ex)
+        models = [model for model in scanner.models.values() if re_compiled.match(model.model_name)]
+    else:
+        models = list(scanner.models.values())
+
+    if len(scanner.models) == 0:
+        echo_info('No tables have been found')
+        return
+
+    progress_bar = tqdm(total=len(scanner.models))
+    writer = FileWriter()
+    for model in models:
+        writer.write_scanned_model(model)
+        progress_bar.write(f'Discovered model {model.model_name}')
+
+        progress_bar.update()
+
+    progress_bar.write(f'Scanned {progress_bar.total} tables')
 
 
 def detect_joins(target_dataset: Optional[str] = None, diff: bool = False, overwrite: bool = False, yes: bool = False):
@@ -234,7 +224,7 @@ def delete_orphaned_fields(target_dataset: Optional[str] = None, yes: bool = Fal
     echo_info(f'Updated {executor.success_count}/{executor.total_count} fields')
 
 
-def scaffold_missing_fields(target_dataset: Optional[str] = None, yes: bool = False):
+def scaffold_missing_fields(target_dataset: Optional[str] = None, yes: bool = False, no_remote: bool = True):
     """Scaffold missing field files."""
     echo_info('Loading local state...')
     state = get_local_state(target_dataset=target_dataset)
@@ -259,8 +249,27 @@ def scaffold_missing_fields(target_dataset: Optional[str] = None, yes: bool = Fa
         # User decided not to fix issues
         return
 
+    loaded_models: Dict[str, PanoModel] = {}
+    if not no_remote:
+        # determine connection name (remove once we have only one connection)
+        all_connections = Connections.load()
+        first_connection_name = list(all_connections.keys())[0]
+        conn_info = Connections.get_by_name(first_connection_name, True)
+        conn_engine = Connections.get_connection_engine(conn_info)
+        dialect_name = EnumHelper.from_value_safe(HuskyQueryRuntime, conn_engine.dialect.name)
+        if not dialect_name:
+            raise UnsupportedDialectError(conn_engine.dialect)
+
+        scanner_cls = Scanner.get_scanner(dialect_name)
+        scanner = scanner_cls(first_connection_name)
+
+        echo_info('Scanning remote storage...')
+        scanner.scan()
+        echo_info('Finished scanning remote storage...')
+        loaded_models = scanner.models
+
     echo_info('Scanning fields...')
-    fields = scan_fields_for_errors(errors)
+    fields = scan_fields_for_errors(errors, loaded_models)
     action_list = ActionList(actions=[Action(desired=field) for field in fields])
 
     echo_info('Updating local state...')
