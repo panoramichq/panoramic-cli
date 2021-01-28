@@ -11,7 +11,7 @@ TEST_REQUIRES = [
     "freezegun>=0.3.15",
     "typing_extensions>=3.7.4",
 ]
-DEV_REQUIRES = ["mypy>=0.790", "flake8>=3.8.3", "black==20.8b0", "pre-commit>=2.1.1"]
+DEV_REQUIRES = ["mypy>=0.790", "flake8>=3.8.3", "black==20.8b0", "pre-commit==2.9.3"]
 
 setup(
     name="pano",
