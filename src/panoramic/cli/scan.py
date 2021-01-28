@@ -1,7 +1,7 @@
 import itertools
 import logging
 from collections import defaultdict
-from typing import Dict, List, Sequence
+from typing import Dict, List, Sequence, Tuple
 
 from panoramic.cli.errors import MissingFieldFileError
 from panoramic.cli.husky.common.enum import EnumHelper
@@ -17,11 +17,11 @@ logger = logging.getLogger(__name__)
 
 def _group_errors_by_column(
     errors: Sequence[MissingFieldFileError],
-) -> Dict[str, List[MissingFieldFileError]]:
+) -> Dict[Tuple[str, str], List[MissingFieldFileError]]:
     """Group errors by data_source+data_reference (table+column)."""
-    errors_by_column: Dict[str, List[MissingFieldFileError]] = defaultdict(list)
+    errors_by_column: Dict[Tuple[str, str], List[MissingFieldFileError]] = defaultdict(list)
     for error in errors:
-        errors_by_column[error.data_reference].append(error)
+        errors_by_column[(error.dataset_slug, error.data_reference)].append(error)
     return dict(errors_by_column)
 
 

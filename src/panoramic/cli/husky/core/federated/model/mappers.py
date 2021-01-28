@@ -151,7 +151,7 @@ class FdqModelMapper:
             'name': prefix_with_virtual_data_source(virtual_data_source, model.model_name).lower(),
             'data_sources': [virtual_data_source],
             'model_type': HuskyModelType.METRIC,
-            'fully_qualified_name_parts': [virtual_data_source] + model.model_name.split('.'),
+            'fully_qualified_name_parts': model.model_name.split('.'),
             'visibility': model.visibility,
             'company_id': company_id,
             'attributes': {

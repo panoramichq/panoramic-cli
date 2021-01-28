@@ -162,7 +162,7 @@ def test_api_model_to_internal(api_model):
     husky_model = FdqModelMapper.to_internal(api_model, _VIRTUAL_DATA_SOURCE, 'company_id')
     assert husky_model.to_primitive() == {
         'data_sources': [_VIRTUAL_DATA_SOURCE],
-        'fully_qualified_name_parts': [_VIRTUAL_DATA_SOURCE, api_model.model_name],
+        'fully_qualified_name_parts': [api_model.model_name],
         'model_type': 'metric',
         'attributes': {
             attr.taxon: attr.to_primitive()

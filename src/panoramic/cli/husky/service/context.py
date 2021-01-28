@@ -31,10 +31,10 @@ class HuskyQueryContext:
     def from_request(
         cls,
         data_request: Union[BlendingDataRequest, InternalDataRequest],
-        default_runtime: Optional[HuskyQueryRuntime] = None,
+        force_runtime: Optional[HuskyQueryRuntime] = None,
     ):
-        if default_runtime:
-            return cls(default_runtime)
+        if force_runtime:
+            return cls(force_runtime)
         connection = Connection.get()
 
         query_runtime_name = Connection.get_dialect_name(connection)

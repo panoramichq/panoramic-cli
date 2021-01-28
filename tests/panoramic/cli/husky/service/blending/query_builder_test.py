@@ -81,7 +81,7 @@ class TestDataframeBlending(BaseTest):
             }
         )
         self._husky_context = HuskyQueryContext.from_request(
-            self._blending_request, default_runtime=HuskyQueryRuntime.snowflake
+            self._blending_request, force_runtime=HuskyQueryRuntime.snowflake
         )
         self._info = BlendingQueryInfo.create(self._blending_request, self._husky_context)
 
@@ -317,7 +317,7 @@ class TestDataframeBlendingEnhancedCpm(BaseTest):
             }
         )
         self._husky_context = HuskyQueryContext.from_request(
-            self._blending_request, default_runtime=HuskyQueryRuntime.snowflake
+            self._blending_request, force_runtime=HuskyQueryRuntime.snowflake
         )
         self._info = BlendingQueryInfo.create(self._blending_request, self._husky_context)
 
@@ -390,7 +390,7 @@ class TestDataframeBlendingCumulativeSum(BaseTest):
             }
         )
         self._husky_context = HuskyQueryContext.from_request(
-            self._blending_request, default_runtime=HuskyQueryRuntime.snowflake
+            self._blending_request, force_runtime=HuskyQueryRuntime.snowflake
         )
         self._info = BlendingQueryInfo.create(self._blending_request, self._husky_context)
 
@@ -461,7 +461,7 @@ class TestTaxonlessQuerying(BaseTest):
             }
         )
         self._husky_context = HuskyQueryContext.from_request(
-            self._blending_request, default_runtime=HuskyQueryRuntime.snowflake
+            self._blending_request, force_runtime=HuskyQueryRuntime.snowflake
         )
         self._info = BlendingQueryInfo.create(self._blending_request, self._husky_context)
 
@@ -535,7 +535,7 @@ class TestTelInSubrequestsQuerying(BaseTest):
             }
         )
         self._husky_context = HuskyQueryContext.from_request(
-            self._blending_request, default_runtime=HuskyQueryRuntime.snowflake
+            self._blending_request, force_runtime=HuskyQueryRuntime.snowflake
         )
         self._info = BlendingQueryInfo.create(self._blending_request, self._husky_context)
         adwords_df = Dataframe(
@@ -596,7 +596,7 @@ class TestTelInSubrequestsQuerying(BaseTest):
             }
         )
         self._husky_context = HuskyQueryContext.from_request(
-            self._blending_request, default_runtime=HuskyQueryRuntime.snowflake
+            self._blending_request, force_runtime=HuskyQueryRuntime.snowflake
         )
         self._info = BlendingQueryInfo.create(self._blending_request, self._husky_context)
         adwords_df = Dataframe(
@@ -663,7 +663,7 @@ class TestTelInSubrequestsQuerying(BaseTest):
             }
         )
         self._husky_context = HuskyQueryContext.from_request(
-            self._blending_request, default_runtime=HuskyQueryRuntime.snowflake
+            self._blending_request, force_runtime=HuskyQueryRuntime.snowflake
         )
         self._info = BlendingQueryInfo.create(self._blending_request, self._husky_context)
         adwords_df = Dataframe(
@@ -707,7 +707,7 @@ class TestTelInSubrequestsQuerying(BaseTest):
             }
         )
         self._husky_context = HuskyQueryContext.from_request(
-            self._blending_request, default_runtime=HuskyQueryRuntime.snowflake
+            self._blending_request, force_runtime=HuskyQueryRuntime.snowflake
         )
         self._info = BlendingQueryInfo.create(self._blending_request, self._husky_context)
         adwords_df = Dataframe(
@@ -757,7 +757,7 @@ class TestTelInSubrequestsQuerying(BaseTest):
             }
         )
         self._husky_context = HuskyQueryContext.from_request(
-            self._blending_request, default_runtime=HuskyQueryRuntime.snowflake
+            self._blending_request, force_runtime=HuskyQueryRuntime.snowflake
         )
         self._info = BlendingQueryInfo.create(self._blending_request, self._husky_context)
         adwords_df = Dataframe(
@@ -816,7 +816,7 @@ class TestTelInSubrequestsQuerying(BaseTest):
             }
         )
         self._husky_context = HuskyQueryContext.from_request(
-            self._blending_request, default_runtime=HuskyQueryRuntime.snowflake
+            self._blending_request, force_runtime=HuskyQueryRuntime.snowflake
         )
         self._info = BlendingQueryInfo.create(self._blending_request, self._husky_context)
         twitter_df = Dataframe(
@@ -907,7 +907,7 @@ class TestTelInSubrequestsQuerying(BaseTest):
             }
         )
         self._husky_context = HuskyQueryContext.from_request(
-            self._blending_request, default_runtime=HuskyQueryRuntime.snowflake
+            self._blending_request, force_runtime=HuskyQueryRuntime.snowflake
         )
         self._info = BlendingQueryInfo.create(self._blending_request, self._husky_context)
         twitter_df = Dataframe(
@@ -969,7 +969,7 @@ class TestTelInSubrequestsQuerying(BaseTest):
             }
         )
         self._husky_context = HuskyQueryContext.from_request(
-            self._blending_request, default_runtime=HuskyQueryRuntime.snowflake
+            self._blending_request, force_runtime=HuskyQueryRuntime.snowflake
         )
         self._info = BlendingQueryInfo.create(self._blending_request, self._husky_context)
         adwords_df = Dataframe(
@@ -1063,7 +1063,7 @@ class TestTelOverride(BaseTest):
             }
         )
 
-        husky_context = HuskyQueryContext.from_request(blending_request, default_runtime=HuskyQueryRuntime.snowflake)
+        husky_context = HuskyQueryContext.from_request(blending_request, force_runtime=HuskyQueryRuntime.snowflake)
         query_info = BlendingQueryInfo.create(blending_request, husky_context)
         twitter_df = Dataframe(
             create_single_query_mock('twitter'),
@@ -1160,7 +1160,7 @@ class TestTelOverride(BaseTest):
             }
         )
 
-        husky_context = HuskyQueryContext.from_request(blending_request, default_runtime=HuskyQueryRuntime.snowflake)
+        husky_context = HuskyQueryContext.from_request(blending_request, force_runtime=HuskyQueryRuntime.snowflake)
         query_info = BlendingQueryInfo.create(blending_request, husky_context)
         twitter_df = Dataframe(
             create_single_query_mock('twitter'),
@@ -1216,7 +1216,7 @@ class TestAggregationDefinitions(BaseTest):
             }
         )
         self._husky_context = HuskyQueryContext.from_request(
-            self._blending_request, default_runtime=HuskyQueryRuntime.snowflake
+            self._blending_request, force_runtime=HuskyQueryRuntime.snowflake
         )
         self._info = BlendingQueryInfo.create(self._blending_request, self._husky_context)
 
@@ -1315,6 +1315,6 @@ class TestPhysicalDataSource(BaseTest):
     def test_bigquery_output(self, mock__get_taxons, mock__get_source_dialect_by_name):
         with pytest.raises(ModelNotFoundException):
             QueryBuilder.validate_data_request(
-                HuskyQueryContext.from_request(self._blending_request, default_runtime=HuskyQueryRuntime.bigquery),
+                HuskyQueryContext.from_request(self._blending_request, force_runtime=HuskyQueryRuntime.bigquery),
                 self._blending_request,
             )

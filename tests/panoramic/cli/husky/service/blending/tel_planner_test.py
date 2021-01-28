@@ -59,7 +59,7 @@ class TestTelPlanner(BaseTest):
             }
         )
         self._husky_context = HuskyQueryContext.from_request(
-            self._blending_request, default_runtime=HuskyQueryRuntime.snowflake
+            self._blending_request, force_runtime=HuskyQueryRuntime.snowflake
         )
         self._info = BlendingQueryInfo.create(self._blending_request, self._husky_context)
 
