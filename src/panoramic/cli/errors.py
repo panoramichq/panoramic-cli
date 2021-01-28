@@ -316,6 +316,7 @@ class MissingFieldFileError(ValidationError):
     dataset_slug: str
     data_reference: str
     identifier: bool
+    model_name: str
 
     def __init__(
         self,
@@ -324,11 +325,13 @@ class MissingFieldFileError(ValidationError):
         dataset_slug: str,
         data_reference: str,
         identifier: bool,
+        model_name: str,
     ) -> None:
         self.field_slug = field_slug
         self.dataset_slug = dataset_slug
         self.data_reference = data_reference
         self.identifier = identifier
+        self.model_name = model_name
         super().__init__(f'Missing field file for slug {field_slug} under dataset {dataset_slug}')
 
     def __eq__(self, o: object) -> bool:

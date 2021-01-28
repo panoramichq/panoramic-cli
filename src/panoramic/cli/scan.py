@@ -21,7 +21,7 @@ def _group_errors_by_column(
     """Group errors by data_source+data_reference (table+column)."""
     errors_by_column: Dict[Tuple[str, str], List[MissingFieldFileError]] = defaultdict(list)
     for error in errors:
-        errors_by_column[(error.dataset_slug, error.data_reference)].append(error)
+        errors_by_column[(error.model_name, error.data_reference)].append(error)
     return dict(errors_by_column)
 
 
@@ -39,7 +39,7 @@ def scan_fields_for_errors(
 
 def map_error_to_field(error: MissingFieldFileError, loaded_models: Dict[str, PanoModel]) -> PanoField:
     # try to find the field in scanned state
-    model = loaded_models.get(error.data_source)
+    model = loaded_models.get(error.model_name)
     data_type = ValidationType.text
 
     if model:
@@ -62,7 +62,6 @@ def map_error_to_field(error: MissingFieldFileError, loaded_models: Dict[str, Pa
     return PanoField(
         slug=error.field_slug,
         field_type=field_type.value,
-        data_source=error.dataset_slug,
         display_name=error.field_slug,
         group='CLI',
         data_type=data_type.value,

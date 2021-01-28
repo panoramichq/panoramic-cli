@@ -531,6 +531,7 @@ def test_validate_local_state_missing_field_file(tmp_path, monkeypatch):
             dataset_slug='test_dataset',
             data_reference='"COLUMN1"',
             identifier=False,
+            model_name='model1',
         )
     ]
 

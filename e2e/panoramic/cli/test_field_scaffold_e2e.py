@@ -22,7 +22,6 @@ def test_field_scaffold_e2e(clear_fields):
     result = runner.invoke(cli, ['field', 'scaffold', '-y', '--no-remote'])
 
     fields_dir = Paths.fields_dir(Path('test_dataset'))
-    Paths.fields_dir(Path('test_dataset'))
 
     assert result.exit_code == 0
 

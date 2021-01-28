@@ -1,6 +1,6 @@
 from typing import Dict
 
-from panoramic.cli.connections import Connections
+from panoramic.cli.connection import Connection
 from panoramic.cli.husky.core.taxonomy.enums import ValidationType
 from panoramic.cli.metadata.engines.with_connection import WithConnection
 from panoramic.cli.pano_model import PanoModel, PanoModelField
@@ -50,7 +50,7 @@ class SnowflakeScanner(WithConnection):
             self.reset()
 
         # list all available databases
-        dbs = Connections.execute('SHOW DATABASES', connection)
+        dbs = Connection.execute('SHOW DATABASES', connection)
 
         for db_row in dbs:
             db_name = db_row['name']
@@ -65,19 +65,17 @@ class SnowflakeScanner(WithConnection):
                     table_schema, table_name, column_name
                 '''
 
-            rows = Connections.execute(query, connection)
+            rows = Connection.execute(query, connection)
 
             for col_row in rows:
                 # generate correct model name
-                model_name = '.'.join([self._connection_name, db_name, col_row['table_schema'], col_row['table_name']])
+                model_name = '.'.join([db_name, col_row['table_schema'], col_row['table_name']])
                 column_name = col_row['column_name']
                 data_type_raw = col_row['data_type']
 
                 if model_name not in self._models:
                     # create a new model, if no model with the name is found
-                    model = PanoModel(
-                        model_name=model_name, data_source=model_name, fields=[], joins=[], identifiers=[]
-                    )
+                    model = PanoModel(model_name=model_name, fields=[], joins=[], identifiers=[])
                     self._models[model_name] = model
 
                 # determine data type
