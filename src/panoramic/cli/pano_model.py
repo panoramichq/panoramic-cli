@@ -64,7 +64,7 @@ class PanoModelField:
 
     field_map: List[str]
     data_reference: str
-    data_type: Optional[str]
+    data_type: Optional[str]  # only relevant for metadata scan (should contain ValidationEnum values)
 
     def __init__(self, *, field_map: List[str], data_reference: str, data_type: Optional[str]):
         self.field_map = field_map
