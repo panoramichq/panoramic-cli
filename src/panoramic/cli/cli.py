@@ -173,13 +173,14 @@ def cleanup(target_dataset: str, yes: bool):
 @field_cli.command(help='Scaffold fields defined in models', cls=ContextAwareCommand)
 @click.option('--target-dataset', '-t', type=str, help='Target a specific dataset')
 @click.option('--yes', '-y', is_flag=True, default=False, help='Automatically confirm all actions')
+@click.option('--no-remote', is_flag=True, default=False, help='Do not remote connection to determine data types')
 @handle_exception
-def scaffold(target_dataset: str, yes: bool):
+def scaffold(target_dataset: str, yes: bool, no_remote: bool):
     from panoramic.cli.command import (
         scaffold_missing_fields as scaffold_missing_fields_command,
     )
 
-    scaffold_missing_fields_command(target_dataset=target_dataset, yes=yes)
+    scaffold_missing_fields_command(target_dataset=target_dataset, yes=yes, no_remote=no_remote)
 
 
 @field_cli.command(help='My cmd', cls=LocalStateAwareCommand)

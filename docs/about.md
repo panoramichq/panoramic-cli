@@ -15,6 +15,7 @@ The model descriptions and transformations are stored as YAML files in the follo
     transformations
         <transformation files>.yaml
     fields
+    scanned
 ```
 
 pano.yaml file must be at the root of the project and must contain:
@@ -29,6 +30,7 @@ Fields on the project level contain global fields, shared by all models.
 
 NOTE: Schemas for all descriptor files can be found under src/panoramic/schemas directory.
 
+<a name="dataset.yaml"></a>
 ## dataset.yaml
 Dataset descriptor contains a slug (identifier) and a display name (this is just a human readable name).
 
@@ -170,3 +172,28 @@ pano connection create --type bigquery conn_name 'bigquery://'
 ```
 
 Before running this, make sure, the environment variable `GOOGLE_APPLICATION_CREDENTIALS` is pointing to the file with Google [credentials](https://cloud.google.com/docs/authentication/production).
+
+
+# Metadata scanning
+
+You can let the tool to inspect your database storage and generate models & fields for them.
+
+Run following command to scan your database storage for any models
+
+```she
+pano scan conn_name
+```
+
+Now, you have all scanned models in directory `<project root>/scanned`.
+You should, either create a new dataset (create a new directory in project root with [dataset.yaml](#dataset.yaml) file),
+or copy the relevant models from this directory into desired dataset.
+
+At the moment, you may be missing definitions for some field files (used in newly created models).
+Run following command to generate their definitions:
+
+```sh
+pano field scaffold
+```
+
+By default, it scans the DB again to determine data types for missing fields.
+You may suppress this behavior by adding flag `--no-remote`. In that case, all fields are created as text dimensions.

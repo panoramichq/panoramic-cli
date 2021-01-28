@@ -224,7 +224,7 @@ def delete_orphaned_fields(target_dataset: Optional[str] = None, yes: bool = Fal
     echo_info(f'Updated {executor.success_count}/{executor.total_count} fields')
 
 
-def scaffold_missing_fields(target_dataset: Optional[str] = None, yes: bool = False):
+def scaffold_missing_fields(target_dataset: Optional[str] = None, yes: bool = False, no_remote: bool = True):
     """Scaffold missing field files."""
     echo_info('Loading local state...')
     state = get_local_state(target_dataset=target_dataset)
@@ -249,8 +249,27 @@ def scaffold_missing_fields(target_dataset: Optional[str] = None, yes: bool = Fa
         # User decided not to fix issues
         return
 
+    loaded_models: Dict[str, PanoModel] = {}
+    if not no_remote:
+        # determine connection name (remove once we have only one connection)
+        all_connections = Connections.load()
+        first_connection_name = list(all_connections.keys())[0]
+        conn_info = Connections.get_by_name(first_connection_name, True)
+        conn_engine = Connections.get_connection_engine(conn_info)
+        dialect_name = EnumHelper.from_value_safe(HuskyQueryRuntime, conn_engine.dialect.name)
+        if not dialect_name:
+            raise UnsupportedDialectError(conn_engine.dialect)
+
+        scanner_cls = Scanner.get_scanner(dialect_name)
+        scanner = scanner_cls(first_connection_name)
+
+        echo_info('Scanning remote storage...')
+        scanner.scan()
+        echo_info('Finished scanning remote storage...')
+        loaded_models = scanner.models
+
     echo_info('Scanning fields...')
-    fields = scan_fields_for_errors(errors)
+    fields = scan_fields_for_errors(errors, loaded_models)
     action_list = ActionList(actions=[Action(desired=field) for field in fields])
 
     echo_info('Updating local state...')

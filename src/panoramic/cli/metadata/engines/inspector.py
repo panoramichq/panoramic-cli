@@ -1,10 +1,10 @@
 from sqlalchemy.engine.reflection import Inspector
 
 from panoramic.cli.connections import Connections
-from panoramic.cli.metadata.engines.base import BaseScanner
+from panoramic.cli.metadata.engines.with_connection import WithConnection
 
 
-class InspectorScanner(BaseScanner):
+class InspectorScanner(WithConnection):
     """Metadata scanner using SQLAlchemy inspector"""
 
     def scan(self, *, force_reset: bool = False):

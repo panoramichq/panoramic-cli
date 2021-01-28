@@ -2,11 +2,11 @@ from typing import Dict
 
 from panoramic.cli.connections import Connections
 from panoramic.cli.husky.core.taxonomy.enums import ValidationType
-from panoramic.cli.metadata.engines.base import BaseScanner
+from panoramic.cli.metadata.engines.with_connection import WithConnection
 from panoramic.cli.pano_model import PanoModel, PanoModelField
 
 
-class SnowflakeScanner(BaseScanner):
+class SnowflakeScanner(WithConnection):
     """Snowflake metadata scanner"""
 
     _SF_DATA_TYPES_MAP: Dict[str, ValidationType] = {
