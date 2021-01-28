@@ -20,7 +20,7 @@ def clear_fields(monkeypatch):
 @patch('panoramic.cli.validate.validate_config', return_value=None)
 def test_field_scaffold_e2e(_, clear_fields):
     runner = CliRunner()
-    result = runner.invoke(cli, ['field', 'scaffold', '-y'])
+    result = runner.invoke(cli, ['field', 'scaffold', '-y', '--no-remote'])
 
     fields_dir = Paths.fields_dir(Path('test_dataset'))
     Paths.fields_dir(Path('test_dataset'))
@@ -49,7 +49,7 @@ def test_field_scaffold_error_e2e(_, mock_scaffold, monkeypatch):
     mock_scaffold.side_effect = Exception('Test Exception')
 
     runner = CliRunner()
-    result = runner.invoke(cli, ['field', 'scaffold'])
+    result = runner.invoke(cli, ['field', 'scaffold', '--no-remote'])
 
     assert result.exit_code == 1
     assert result.stdout.startswith('Error: Internal error occurred\nTraceback (most recent call last):\n')
