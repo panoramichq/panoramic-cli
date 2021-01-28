@@ -1,6 +1,5 @@
 from panoramic.cli.husky.common.exception_enums import ComponentType, ExceptionErrorCode
 from panoramic.cli.husky.core.errors import BaseDieselException
-from panoramic.cli.husky.service.types.enums import HuskyQueryRuntime
 
 
 class TransformException(BaseDieselException):
@@ -10,9 +9,9 @@ class TransformException(BaseDieselException):
 
 
 class UnsupportedDialectError(BaseDieselException):
-    def __init__(self, dialect: HuskyQueryRuntime):
+    def __init__(self, dialect: str):
         super().__init__(
             ExceptionErrorCode.FDQ_UNSUPPORTED_DIALECT,
-            'You are trying to use unsupported dialect',
+            f'You are trying to use unsupported dialect - "{dialect}"',
             component_type=ComponentType.FEDERATED,
         )

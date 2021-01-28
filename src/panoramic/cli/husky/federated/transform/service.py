@@ -54,7 +54,7 @@ class TransformService:
                 mapping[safe_quote_identifier(slug_name, query_context.dialect)] = correct_column_name
         else:
             # unsupported dialect
-            raise UnsupportedDialectError(query_context.query_runtime)
+            raise UnsupportedDialectError(query_context.query_runtime.value)
 
         query = select([literal_column(slug).label(label) for slug, label in mapping.items()]).select_from(df.query)
 
