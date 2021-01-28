@@ -17,10 +17,6 @@
             "description": "Name of the model",
             "type": "string"
         },
-        "data_source": {
-            "description": "Reference to a table or a view in data connection",
-            "type": "string"
-        },
         "identifiers": {
             "description": "Identifiers of the model",
             "type": "array",
@@ -49,8 +45,7 @@
         }
     },
     "required": [
-        "model_name",
-        "data_source"
+        "model_name"
     ],
     "$defs": {
         "field": {

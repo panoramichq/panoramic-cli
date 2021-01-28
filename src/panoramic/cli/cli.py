@@ -183,17 +183,16 @@ def cmd():
 
 @cli.group()
 def connection():
-    """Connection subcommand for managing connections.
+    """Connection subcommand for managing a connection.
 
     \b
-    All connections are stored in the project pano.yaml file.
+    Connection is stored in the project pano.yaml file.
     You can edit this file either manually or using provided commands.
 
     Expected YAML structure:
 
     \b
-    name:
-      url: postgres://my_user@<password>@localhost:5432/my_db
+    url: postgres://my_user@<password>@localhost:5432/my_db
 
     \b
     name: The name of the connection that will be used as reference to specify which connection to use.
@@ -203,97 +202,55 @@ def connection():
 
 
 @connection.command(cls=ConnectionAwareCommand)
-@click.argument('name', type=str, nargs=1)
 @click.option('--url', type=str, help='Connection URL (SqlAlchemy format).')
 @click.option('--dialect', type=click.Choice(['snowflake', 'bigquery']), help='Dialect. Use when no URL is provided.')
 @click.option(
     '--no-test', default=False, is_flag=True, help='Do NOT try test the connection. Only if the URL was specified'
 )
-def create(
-    name: str,
+def setup(
     url: str,
     dialect: str,
     no_test: bool,
 ):
     """Add new connection. Either a URL or a dialect must be provided.
 
-    pano connection create sf-prod --url 'snowflake://{username}:{password}@{full account name}/{database_name}/{schema}'
-    pano connection create sf-prod --dialect snowflake
+    pano connection setup --url 'snowflake://{username}:{password}@{full account name}/{database_name}/{schema}'
+    pano connection setup --dialect snowflake
     """
-    from panoramic.cli.connections import create_connection_command
+    from panoramic.cli.connection import setup_connection_command
 
-    create_connection_command(
-        name=name,
+    setup_connection_command(
         url=url,
         dialect=dialect,
         no_test=no_test,
     )
 
 
-@connection.command(cls=ConnectionAwareCommand)
-@click.argument('name', type=str, nargs=1)
-@click.option('--url', type=str, help='Connection URL (SqlAlchemy format).')
-@click.option('--dialect', type=click.Choice(['snowflake', 'bigquery']), help='Dialect. Use when no URL is provided.')
-@click.option('--no-test', default=False, is_flag=True, help='Do NOT try test the connection.')
-def update(
-    name: str,
-    url: str,
-    dialect: str,
-    no_test: bool,
-):
-    """Update existing connection.
+@connection.command(name='show', cls=ConnectionAwareCommand)
+def show():
+    """SHow the connection details.
 
-    pano connection update sf-prod 'snowflake://{username}:{password}@{full account name}/{database_name}/{schema}'
+    pano connection show
     """
-    from panoramic.cli.connections import update_connection_command
+    from panoramic.cli.connection import show_connection_command
 
-    update_connection_command(
-        name=name,
-        url=url,
-        dialect=dialect,
-        no_test=no_test,
-    )
+    show_connection_command()
 
 
 @connection.command(cls=ConnectionAwareCommand)
-@click.argument('name', type=str)
-def remove(name: str):
-    """Remove existing connection.
-
-    pano connection remove postgres-prod
-    """
-    from panoramic.cli.connections import remove_connection_command
-
-    remove_connection_command(name)
-
-
-@connection.command(name='list', cls=ConnectionAwareCommand)
-def list_():  # we cannot have method 'list' due to conflicts
-    """List all available connections.
-
-    pano connection list
-    """
-    from panoramic.cli.connections import list_connections_command
-
-    list_connections_command()
-
-
-@connection.command(cls=ConnectionAwareCommand)
-@click.argument('name', default=None, type=str, required=False)
-def test(name: str):
-    """Test connections.
+def test():
+    """Test the connection.
 
     pano connection test
     """
-    from panoramic.cli.connections import test_connections_command
+    from panoramic.cli.connection import test_connection_command
 
-    test_connections_command(name)
+    test_connection_command()
 
 
 @connection.command(cls=ConnectionAwareCommand)
 @click.argument('query', type=str, default=None, required=False)
 @click.option('--file', type=click.File('rb'), nargs=1, help='File with the query.')
-@click.option('--connection', type=str, nargs=1, help='Name of the connection.')
 @click.option(
     '--type',
     type=click.Choice(['view', 'table', 'raw']),
@@ -305,21 +262,19 @@ def test(name: str):
 def execute(
     query: Optional[str],
     file: Optional[click.File],
-    connection: str,
     type: Optional[str],
     name: Optional[str],
 ):
     """Execute a query or a file using the specified connection.
 
-    pano connection execute --connection demo 'select true'
+    pano connection execute --type view 'select * from table'
     """
-    from panoramic.cli.connections import execute_command
+    from panoramic.cli.connection import execute_command
 
     execute_command(
         name=name,
         query=query,
         file=cast(IO, file),
-        connection=connection,
         type=type,
     )
 

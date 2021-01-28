@@ -77,12 +77,10 @@ VALID_DATASET = {
 }
 VALID_MODEL_MINIMAL: Dict[str, Any] = {
     'model_name': 'sf.db.schema.table1',
-    'data_source': 'sf.db.schema.table1',
     'api_version': 'v1',
 }
 VALID_MODEL_FULL = {
     'model_name': 'sf.db.schema.table1',
-    'data_source': 'sf.db.schema.table1',
     'api_version': 'v1',
     'identifiers': ['ad_id'],
     'joins': [
@@ -166,10 +164,6 @@ INVALID_MODELS = [
     {**VALID_MODEL_MINIMAL, 'model_nae': 'sf.db.schema.table1'},
     # wrong type in model_name
     {**VALID_MODEL_MINIMAL, 'model_name': 100},
-    # typo in data_source
-    {**VALID_MODEL_MINIMAL, 'data_sourc': 'sf.db.schema.table1'},
-    # wrong type in data_source
-    {**VALID_MODEL_MINIMAL, 'data_source': 200},
     # typo in api_version
     {
         **VALID_MODEL_MINIMAL,
@@ -371,7 +365,6 @@ def test_validate_local_state_valid(tmp_path, monkeypatch):
 
     state = get_state()
     assert len(state.models) == 2
-    assert len(state.data_sources) == 1
     assert len(state.fields) == 2
 
 
@@ -536,7 +529,6 @@ def test_validate_local_state_missing_field_file(tmp_path, monkeypatch):
         MissingFieldFileError(
             field_slug='field_slug_2',
             dataset_slug='test_dataset',
-            data_source='sf.db.schema.table1',
             data_reference='"COLUMN1"',
             identifier=False,
         )

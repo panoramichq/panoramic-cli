@@ -67,7 +67,7 @@ def test_scaffold_missing_files(mock_execute, mock_state, capsys):
             'test_dataset',
             (
                 [],
-                [Mock(data_source='db.schema.test_table', identifiers=['id'], fields=[Mock(field_map=['test_slug'])])],
+                [Mock(identifiers=['id'], fields=[Mock(field_map=['test_slug'])])],
             ),
         ),
     ]

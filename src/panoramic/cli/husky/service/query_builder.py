@@ -1,5 +1,5 @@
 import logging
-from typing import List, Optional, Set
+from typing import List, Optional
 
 from panoramic.cli.husky.core.sql_alchemy_util import compile_query
 from panoramic.cli.husky.core.tel.result import TaxonToTemplate
@@ -33,7 +33,6 @@ class QueryBuilder:
         preloaded_taxons: TaxonMap,
         dimension_templates: Optional[List[SqlFormulaTemplate]] = None,
         filter_templates: Optional[TaxonToTemplate] = None,
-        allowed_physical_data_sources: Optional[Set[str]] = None,
     ) -> Dataframe:
         """
         Returns Query and Taxons obtained in it
@@ -53,10 +52,7 @@ class QueryBuilder:
             raise MultipleDataSources(data_sources)
         data_source = subrequest.properties.data_sources[0]
 
-        models = ModelRetriever.load_models(
-            data_sources, subrequest.scope, subrequest.properties.model_name, allowed_physical_data_sources
-        )
-        physical_data_sources = {model.physical_data_source for model in models}
+        models = ModelRetriever.load_models(data_sources, subrequest.scope, subrequest.properties.model_name)
 
         # Build Graph
         graph = GraphBuilder.create_with_models(models)
@@ -87,7 +83,6 @@ class QueryBuilder:
             subrequest.order_by,
             subrequest.limit,
             subrequest.offset,
-            physical_data_sources,
             dimension_templates,
         )
 

@@ -49,7 +49,6 @@ class ProjectionBuilder:
         order_by: Optional[List[TaxonDataOrder]],
         limit: Optional[int],
         offset: Optional[int],
-        used_physical_data_sources: Set[str],
         dimension_templates: Optional[List[SqlFormulaTemplate]] = None,
     ) -> Dataframe:
         """
@@ -124,4 +123,4 @@ class ProjectionBuilder:
             model_info.model_name for model_info in taxon_model_info_map.values() if model_info.model_name is not None
         }
 
-        return Dataframe(new_query, projected_df_columns, used_model_names, used_physical_data_sources)
+        return Dataframe(new_query, projected_df_columns, used_model_names)

@@ -5,8 +5,15 @@
     "description": "Context for pano-cli client",
     "type": "object",
     "additionalProperties": false,
-    "definitions": {
-        "connections": {
+    "properties": {
+        "api_version": {
+            "description": "Version of the Context schema",
+            "type": "string",
+            "enum": [
+                "v1"
+            ]
+        },
+        "connection": {
             "type": "object",
             "properties": {
                 "url": {
@@ -30,21 +37,7 @@
             ]
         }
     },
-    "properties": {
-        "api_version": {
-            "description": "Version of the Context schema",
-            "type": "string",
-            "enum": [
-                "v1"
-            ]
-        }
-    },
     "required": [
         "api_version"
-    ],
-    "$defs": {
-        "connections": {
-            "$ref": "#/definitions/connections"
-        }
-    }
+    ]
 }

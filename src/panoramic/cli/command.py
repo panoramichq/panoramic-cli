@@ -7,8 +7,7 @@ from typing import Dict, Optional
 import click
 from tqdm import tqdm
 
-from panoramic.cli.config.storage import update_config
-from panoramic.cli.connections import Connections
+from panoramic.cli.config.storage import update_context
 from panoramic.cli.diff import echo_diff
 from panoramic.cli.errors import JoinException, ValidationError, ValidationErrorSeverity
 from panoramic.cli.husky.common.enum import EnumHelper
@@ -37,7 +36,7 @@ logger = logging.getLogger(__name__)
 
 def configure():
     """Just create an empty config file"""
-    update_config('auth', {})
+    update_context('auth', {})
 
 
 def validate() -> bool:

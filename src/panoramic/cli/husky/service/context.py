@@ -1,8 +1,8 @@
-from typing import Union
+from typing import Optional, Union
 
 from sqlalchemy.engine import default
 
-from panoramic.cli.connections import Connections
+from panoramic.cli.connection import Connection
 from panoramic.cli.husky.common.enum import EnumHelper
 from panoramic.cli.husky.service.helpers import RUNTIME_DIALECTS
 from panoramic.cli.husky.service.types.api_data_request_types import (
@@ -10,10 +10,7 @@ from panoramic.cli.husky.service.types.api_data_request_types import (
     InternalDataRequest,
 )
 from panoramic.cli.husky.service.types.enums import HuskyQueryRuntime
-from panoramic.cli.husky.service.utils.exceptions import (
-    TooManyPhysicalDataSourcesException,
-    UnsupportedSQLOutputException,
-)
+from panoramic.cli.husky.service.utils.exceptions import UnsupportedSQLOutputException
 
 
 class HuskyQueryContext:
@@ -31,22 +28,21 @@ class HuskyQueryContext:
         return RUNTIME_DIALECTS[self._query_runtime]
 
     @classmethod
-    def from_request(cls, data_request: Union[BlendingDataRequest, InternalDataRequest]):
-        if data_request.physical_data_sources:
-            if len(data_request.physical_data_sources) == 1:
-                request_pds = data_request.physical_data_sources[0]
-                connection = Connections.get_by_name(request_pds, True)
+    def from_request(
+        cls,
+        data_request: Union[BlendingDataRequest, InternalDataRequest],
+        default_runtime: Optional[HuskyQueryRuntime] = None,
+    ):
+        if default_runtime:
+            return cls(default_runtime)
+        connection = Connection.get()
 
-                query_runtime_name = Connections.get_dialect_name(connection)
-                query_runtime = EnumHelper.from_value_safe(HuskyQueryRuntime, query_runtime_name)
-                if query_runtime is None:
-                    raise UnsupportedSQLOutputException(query_runtime_name)
+        query_runtime_name = Connection.get_dialect_name(connection)
+        query_runtime = EnumHelper.from_value_safe(HuskyQueryRuntime, query_runtime_name)
+        if query_runtime is None:
+            raise UnsupportedSQLOutputException(query_runtime_name)
 
-                return cls(query_runtime)
-            elif len(data_request.physical_data_sources) > 1:
-                raise TooManyPhysicalDataSourcesException(data_request.physical_data_sources)
-        else:
-            return cls(HuskyQueryRuntime.snowflake)
+        return cls(query_runtime)
 
 
 SNOWFLAKE_HUSKY_CONTEXT = HuskyQueryContext(HuskyQueryRuntime.snowflake)

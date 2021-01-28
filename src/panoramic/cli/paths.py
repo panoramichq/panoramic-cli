@@ -60,11 +60,6 @@ class Paths:
             return path
 
     @staticmethod
-    def config_schema_file() -> Path:
-        with importlib_resources.path(panoramic.cli.schemas, PresetFileName.CONFIG_SCHEMA.value) as path:
-            return path
-
-    @staticmethod
     def context_schema_file() -> Path:
         with importlib_resources.path(panoramic.cli.schemas, PresetFileName.CONTEXT_SCHEMA.value) as path:
             return path
@@ -90,7 +85,6 @@ class PresetFileName(Enum):
     MODEL_SCHEMA = 'model.schema.json'
     FIELD_SCHEMA = 'field.schema.json'
     DATASET_SCHEMA = 'dataset.schema.json'
-    CONFIG_SCHEMA = 'config.schema.json'
     CONTEXT_SCHEMA = 'context.schema.json'
 
 

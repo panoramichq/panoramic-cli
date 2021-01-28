@@ -72,11 +72,6 @@ class InternalDataRequest(schematics.Model):
 
     origin: Optional[DataRequestOrigin] = ModelType(DataRequestOrigin)
 
-    physical_data_sources: Optional[List[str]] = ListType(NonEmptyStringType, required=False)
-    """
-    Data sources which should be considered when building the query.
-    """
-
 
 class ApiDataRequest(schematics.Model, ApiModelSchematics):
     """API representation of data request"""
@@ -156,9 +151,4 @@ class BlendingDataRequest(schematics.Model):
     filters = PolyModelType(get_all_filter_clauses())  # Omitting type here to avoid circular dependencies
     """
     Typically metric filters, applied after all computations and aggregations.
-    """
-
-    physical_data_sources: Optional[List[str]] = ListType(NonEmptyStringType, required=False)
-    """
-    Data sources which should be considered when building the query.
     """

@@ -50,12 +50,6 @@ class JsonSchemas:
 
     @staticmethod
     @functools.lru_cache()
-    def config() -> Dict[str, Any]:
-        with Paths.config_schema_file().open('r') as f:
-            return json.load(f)
-
-    @staticmethod
-    @functools.lru_cache()
     def context():
         """Return schema of context file."""
         with Paths.context_schema_file().open('r') as f:
@@ -136,22 +130,22 @@ def _validate_package_fields(
 ) -> Tuple[List[PanoField], List[ValidationError]]:
     errors: List[ValidationError] = []
     fields = []
-    field_paths_by_id: Dict[Tuple, List[Path]] = defaultdict(list)
+    field_paths_by_id: Dict[str, List[Path]] = defaultdict(list)
     for field_data, field_path in package.read_fields():
         try:
             _validate_data(field_data, JsonSchemas.field())
             field = PanoField.from_dict(field_data)
             fields.append(field)
-            field_paths_by_id[(field.data_source, field.slug)].append(field_path)
+            field_paths_by_id[field.slug].append(field_path)
         except InvalidYamlFile as e:
             errors.append(e)
         except JsonSchemaValidationError as e:
             errors.append(JsonSchemaError(path=field_path, error=e))
 
     # check for duplicate field slugs
-    for (dataset_slug, field_slug), paths in field_paths_by_id.items():
+    for field_slug, paths in field_paths_by_id.items():
         if len(paths) > 1:
-            errors.append(DuplicateFieldSlugError(field_slug=field_slug, dataset_slug=dataset_slug, paths=paths))
+            errors.append(DuplicateFieldSlugError(field_slug=field_slug, paths=paths))
 
     return fields, errors
 
@@ -163,7 +157,7 @@ def validate_missing_files(
     fields_slugs_from_fields = {f.slug for f in fields}
     # take one model for every field
     data_reference_by_field_slugs = {
-        field_name: (model.data_source, f.data_reference, field_name in model.identifiers)
+        field_name: (f.data_reference, field_name in model.identifiers)
         for model in models
         for f in model.fields
         for field_name in f.field_map
@@ -175,9 +169,8 @@ def validate_missing_files(
         MissingFieldFileError(
             field_slug=slug,
             dataset_slug=package_name,
-            data_source=data_reference_by_field_slugs[slug][0],
-            data_reference=data_reference_by_field_slugs[slug][1],
-            identifier=data_reference_by_field_slugs[slug][2],
+            data_reference=data_reference_by_field_slugs[slug][0],
+            identifier=data_reference_by_field_slugs[slug][1],
         )
         for slug in field_slugs_with_no_files
     ]

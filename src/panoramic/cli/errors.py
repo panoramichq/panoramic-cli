@@ -205,15 +205,14 @@ class DuplicateModelNameError(ValidationError):
 class DuplicateFieldSlugError(ValidationError):
     """Two local models use the same model name."""
 
-    def __init__(self, *, field_slug: str, dataset_slug: Optional[str], paths: List[Path]) -> None:
+    def __init__(self, *, field_slug: str, paths: List[Path]) -> None:
         try:
             paths = [path.relative_to(Path.cwd()) for path in paths]
         except ValueError:
             pass  # Use relative path when possible
 
         path_lines = ''.join(f'\n  in {path}' for path in paths)
-        dataset_message = f'under dataset {dataset_slug} ' if dataset_slug else ''
-        super().__init__(f'Multiple field files {dataset_message}use slug {field_slug}{path_lines}')
+        super().__init__(f'Multiple field files use slug {field_slug}{path_lines}')
 
     def __eq__(self, o: object) -> bool:
         if not isinstance(o, DuplicateFieldSlugError):
@@ -315,7 +314,6 @@ class OrphanFieldFileError(ValidationError):
 class MissingFieldFileError(ValidationError):
     field_slug: str
     dataset_slug: str
-    data_source: str
     data_reference: str
     identifier: bool
 
@@ -324,13 +322,11 @@ class MissingFieldFileError(ValidationError):
         *,
         field_slug: str,
         dataset_slug: str,
-        data_source: str,
         data_reference: str,
         identifier: bool,
     ) -> None:
         self.field_slug = field_slug
         self.dataset_slug = dataset_slug
-        self.data_source = data_source
         self.data_reference = data_reference
         self.identifier = identifier
         super().__init__(f'Missing field file for slug {field_slug} under dataset {dataset_slug}')
@@ -372,22 +368,15 @@ def handle_interrupt(f: Callable):
 class ConnectionNotFound(CliBaseException):
     """Connection not found in config."""
 
-    def __init__(self, connection_name: str):
-        super().__init__(f'Connection with name "{connection_name}" was not found.')
+    def __init__(self):
+        super().__init__('Connection was set up. Run: pano connection setup -h')
 
 
 class ConnectionUrlNotAvailableFound(CliBaseException):
     """Connection not found in config."""
 
     def __init__(self):
-        super().__init__('Connection has no url stored. Please call: pano connection update <connection> --url <url>')
-
-
-class ConnectionAlreadyExistsException(CliBaseException):
-    """Connection with given name already exists."""
-
-    def __init__(self, name: str):
-        super().__init__(f'Connection with name "{name}" already exists.')
+        super().__init__('Connection has no url stored. Please call: pano connection update --url <url>')
 
 
 class ConnectionCreateException(CliBaseException):
@@ -407,8 +396,8 @@ class ConnectionUpdateException(CliBaseException):
 class ConnectionFormatException(CliBaseException):
     """Failed to update connection due to error."""
 
-    def __init__(self, connection_name: str, credential_error: str):
-        super().__init__(f'Invalid credentials format for connection {connection_name} FAIL: {credential_error}')
+    def __init__(self, credential_error: str):
+        super().__init__(f'Invalid credentials format FAIL: {credential_error}')
 
 
 class TransformCompileException(CliBaseException):
@@ -423,9 +412,9 @@ class TransformExecutionFailed(Exception):
 
     compiled_sql: str
 
-    def __init__(self, transform_name: str, connection_name: str, compiled_sql: str):
+    def __init__(self, transform_name: str, compiled_sql: str):
         self.compiled_sql = compiled_sql
-        super().__init__(f'Error executing transform {transform_name} on {connection_name}')
+        super().__init__(f'Error executing transform {transform_name}')
 
 
 class ExecuteInvalidArgumentsException(CliBaseException):

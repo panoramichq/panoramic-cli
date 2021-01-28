@@ -1,5 +1,5 @@
 # Panoramic CLI
-This tool uses declarative database model descriptions and transformation declarations to create and deploy database views. Currently supported data warehouses are Snowflake and Google Big Query.
+This tool uses a declarative database model descriptions and transformation declarations to create and deploy database views. Currently supported data warehouses are Snowflake and Google Big Query.
 
 # Project structure
 The model descriptions and transformations are stored as YAML files in the following structure:
@@ -24,7 +24,7 @@ pano.yaml file must be at the root of the project and must contain:
 api_version: v1
 ```
 
-Datasets represent logically related data models. Dataset and model have are semantic descriptions of database schemas and tables. Fields are description of columns in tables. Fields may simply point to existing columns, or they may contain calculations, using TEL functions, or by combining of other fields.
+Datasets represent logically related data models. Dataset and model have semantic descriptions of database schemas and tables. Fields are description of columns in tables. Fields may simply point to existing columns, or they may contain calculations, using TEL functions, or by combining of other fields.
 
 Fields on the project level contain global fields, shared by all models.
 
@@ -32,7 +32,7 @@ NOTE: Schemas for all descriptor files can be found under src/panoramic/schemas 
 
 <a name="dataset.yaml"></a>
 ## dataset.yaml
-Dataset descriptor contains a slug (identifier) and a display name (this is just a human readable name).
+Dataset descriptor contains a slug (identifier) and a display name (this is just a human-readable name).
 
 ```yaml
 api_version: v1
@@ -45,7 +45,6 @@ There may be multiple model files in the same directory as dataset.yaml. They mu
 
 ```yaml
 api_version: v1
-data_source: database.public.table
 fields:
 - data_reference: '"KEY"'
   field_map:
@@ -59,7 +58,7 @@ joins: []
 model_name: database.public.table
 ```
 
-The `data_source` refers to the FQN of the table/view. `data_reference` is the model TEL expression, typically a name of a column. `field_map` refers to one or more taxons.
+`data_reference` is the model TEL expression, typically a name of a column. `field_map` refers to one or more taxons.
 
 ### Joins definitions
 Joins are an array of join definitions. Join definition has following properties:
@@ -69,7 +68,7 @@ Joins are an array of join definitions. Join definition has following properties
 - `fields`: array of fields (field slugs) to use in the join
 
 ## Field YAML file
-First terminology. Field and taxon are the refer to the same thing, just historically fields were called taxons.
+First terminology. Field and taxon refer to the same thing, just historically fields were called taxons.
 Raw taxons are those which are directly pointing to an existing database column. Computed taxons contain use some computations performed outside of the existing columns.
 Field slugs for fields defined under a dataset must be namespaced, by using this syntax: `model_slug|field_slug`. The pipe operator denotes a namespace.
 Global fields must not have any namespace and must live under the `project root/fields` directory.
@@ -96,7 +95,7 @@ slug: person_key
 - `aggregation` a specification of the aggregation type, see section below
 - `data_type` must be a valid data type, see table below
 - `api_version` must be set to `v1`
-- `display_name` is just a human readable name
+- `display_name` is just a human-readable name
 - `field_type` is either `metric` or `dimension`
 - `slug` is the ID of the field
 - `group` is a logical group of the field, but there is no further functionality related to it. It may have any value at the moment
@@ -119,7 +118,7 @@ Supported data types are from the list below. They translate roughly to equivale
 #### Aggregation
 An aggregation definition has two properties:
 - `type`: either of `sum`, `min`, `max`, `avg`, `count_all`, `count_distinct`, `group_by`, `first_by`, `last_by`
-- `params`: dependening on a type, it contains:
+- `params`: depending on a type, it contains:
     - `fields` for `count_distinct`, containing field slugs
     - `sort_dimensions` for `first_by` and `last_by`, as an array of object with following properties:
         - `taxon`: field slug
@@ -160,20 +159,21 @@ pano connection -h
 Creating a Snowflake connection:
 
 ```sh
-pano connection create --type snowflake conn_name --url 'snowflake://<user_login_name>:<password>@<account_name>/<database_name>/<schema_name>?warehouse=<warehouse_name>&role=<role_name>'
+pano connection setup --type snowflake --url 'snowflake://<user_login_name>:<password>@<account_name>/<database_name>/<schema_name>?warehouse=<warehouse_name>&role=<role_name>'
 
 ```
 
 ## BigQuery example
-Creating a BigQuery conneciton:
+Creating a BigQuery connection:
 
 ```sh
-pano connection create --type bigquery conn_name --url 'bigquery://'
+pano connection setup --type bigquery --url 'bigquery://'
 ```
 
 Before running this, make sure, the environment variable `GOOGLE_APPLICATION_CREDENTIALS` is pointing to the file with Google [credentials](https://cloud.google.com/docs/authentication/production).
 
 NOTE: It is also possible to create a "dummy" connection, by not specifying the `--url`, but instead by providing a `--dialect <snowflake | bigquery>` option.
+
 
 # Metadata scanning
 

@@ -162,7 +162,7 @@ def test_api_model_to_internal(api_model):
     husky_model = FdqModelMapper.to_internal(api_model, _VIRTUAL_DATA_SOURCE, 'company_id')
     assert husky_model.to_primitive() == {
         'data_sources': [_VIRTUAL_DATA_SOURCE],
-        'fully_qualified_name_parts': api_model.data_source.split('.'),
+        'fully_qualified_name_parts': [_VIRTUAL_DATA_SOURCE, api_model.model_name],
         'model_type': 'metric',
         'attributes': {
             attr.taxon: attr.to_primitive()
@@ -185,7 +185,6 @@ def test_api_model_to_internal(api_model):
         HuskyModel(
             {
                 'data_sources': [_VIRTUAL_DATA_SOURCE],
-                'fully_qualified_name_parts': ['physical', 'db', 'schema', 'table'],
                 'model_type': 'metric',
                 'attributes': {},
                 'company_id': _COMPANY_ID,
@@ -198,7 +197,6 @@ def test_api_model_to_internal(api_model):
             {
                 'name': prefix_with_virtual_data_source(_VIRTUAL_DATA_SOURCE, 'api-model-slug-2'),
                 'data_sources': [_VIRTUAL_DATA_SOURCE],
-                'fully_qualified_name_parts': ['physical', 'db', 'table2'],
                 'company_id': _COMPANY_ID,
                 'attributes': {
                     prefix_with_virtual_data_source(_VIRTUAL_DATA_SOURCE, 'taxon_slug'): {
@@ -229,7 +227,6 @@ def test_api_model_to_internal(api_model):
 def test_api_model_from_internal(husky_model):
     api_model = FdqModelMapper.from_internal(husky_model)
     assert api_model.dict(by_alias=True) == {
-        'data_source': '.'.join(husky_model.fully_qualified_name_parts),
         'fields': [
             FdqModelAttributeMapper.from_internal(attr.tel_transformation, [attr], _VIRTUAL_DATA_SOURCE).dict()
             for attr in husky_model.attributes.values()
