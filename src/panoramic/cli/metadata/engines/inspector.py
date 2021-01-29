@@ -28,6 +28,9 @@ class InspectorScanner(WithConnection):
     def scan(self, *, force_reset: bool = False):
         connection = self._get_connection()
 
+        if force_reset:
+            self.reset()
+
         engine = Connection.get_connection_engine(connection)
         inspector = Inspector.from_engine(engine)
         # list all available tables
