@@ -130,13 +130,33 @@ Transformation files use the model definitions to build views that can be deploy
 pano transform create
 ```
 
-This command will prompt the connection to use, and the target (the resulting view FQN). Then one must edit this transform file, stored under transformations subfolder, and add fields to include in this view. After that, transformations may be deployed by executing:
+This command will prompt the target (the resulting view FQN). Then one must edit this transform file, stored under transformations subfolder, and add fields to include in this view. After that, transformations may be deployed by executing:
 
 ```sh
 pano transform exec
 ```
 
 Optionally, one might pass `--compile` argument to the `transform exec` command to only get the resulting SQL views created (they will be storred in transformations/.compiled/ folder.)
+
+### Taxonless querying
+
+You do not need to create a computed taxon, if you need to use calculations. Instead of taxon slug, you may prefix your calculation with:
+
+- `=m:` to indicate that following expression is metric (example - `:m=(facebook_ads|spend / facebook_ads|impressions) * 10`)
+- `=d:` to indicate that following expression is dimension (example - `:d=concat(facebook_ads|account_id, facebook_ads|campaign_name)`)
+
+Example of transformation YAML file with taxonless querying:
+
+```yaml
+api_version: v1
+fields:
+- facebook_ads|campaign_name
+- facebook_ads|spend
+- =d:concat(facebook_ads|campaign_name, facebook_ads|account_name)
+name: my_transform
+target: my_transform_view
+
+```
 
 # Calculated fields
 Calculated fields must not have an `aggregation` property and instead they must provide a `calculation` property. Value of this property is the formula in TEL language.

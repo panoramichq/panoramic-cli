@@ -379,7 +379,7 @@ class ConnectionUrlNotAvailableFound(CliBaseException):
     """Connection not found in config."""
 
     def __init__(self):
-        super().__init__('Connection has no url stored. Please call: pano connection update --url <url>')
+        super().__init__('Connection has no url stored. Please call: pano connection setup --url <url>')
 
 
 class ConnectionCreateException(CliBaseException):
