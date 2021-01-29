@@ -35,4 +35,4 @@ class DimensionPhaseBuilder:
         )
 
         query = Select(columns=sort_columns(select_columns)).select_from(select_from_query)
-        return Dataframe(query, df.slug_to_column, df.used_model_names, df.used_physical_data_sources)
+        return Dataframe(query, df.slug_to_column, df.used_model_names)

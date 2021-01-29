@@ -29,7 +29,6 @@ Options:
   -h, --help  Show this message and exit.
 
 Commands:
-  configure         Configure pano CLI options
   detect-joins      Detect joins under a dataset
   field             Commands on local field files.
   init              Initialize metadata repository

@@ -1,9 +1,11 @@
 from collections import defaultdict
-from typing import Dict, Optional, Tuple
+from typing import Dict, Tuple
 
 from sqlalchemy import literal_column, select
 from sqlalchemy.sql import ClauseElement
 
+from panoramic.cli.connection import Connection
+from panoramic.cli.husky.common.enum import EnumHelper
 from panoramic.cli.husky.core.federated.transform.models import TransformRequest
 from panoramic.cli.husky.core.sql_alchemy_util import (
     UNSAFE_IDENTIFIER_CHARS_REGEXP,
@@ -61,15 +63,12 @@ class TransformService:
         return query
 
     @classmethod
-    def compile_transformation_request(
-        cls, req: TransformRequest, company_id: str, physical_data_source: Optional[str]
-    ) -> Tuple[str, HuskyQueryRuntime]:
+    def compile_transformation_request(cls, req: TransformRequest, company_id: str) -> Tuple[str, HuskyQueryRuntime]:
         """
         Compiles Transform request to its SQL representation
 
         :param req: Input request
         :param company_id: Company ID
-        :param physical_data_source: Restrict the model graph traversal only on provided PDS
 
         :return: SQL and type of dialect
         """
@@ -101,11 +100,13 @@ class TransformService:
         # finalize the blending husky request
         husky_request_dict = {'data_subrequests': subrequests, 'taxons': req.requested_fields, 'origin': origin}
 
-        if physical_data_source:
-            husky_request_dict['physical_data_sources'] = [physical_data_source]
-
         husky_request = BlendingDataRequest(husky_request_dict)
-        context = HuskyQueryContext.from_request(husky_request)
+
+        connection = Connection.get()
+
+        query_runtime_name = Connection.get_dialect_name(connection)
+        query_runtime = EnumHelper.from_value_safe(HuskyQueryRuntime, query_runtime_name)
+        context = HuskyQueryContext(query_runtime)
 
         husky_dataframe = QueryBuilder.validate_data_request(context, husky_request)
 

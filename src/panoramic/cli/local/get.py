@@ -16,7 +16,7 @@ def get_transforms() -> List[Tuple[PanoTransform, Path]]:
         for transform_dict, transform_path in global_package.read_transforms()
     ]
 
-    sorted_transforms = sorted(parsed_transforms, key=lambda pair: (pair[0].connection_name, pair[0].name))
+    sorted_transforms = sorted(parsed_transforms, key=lambda pair: pair[0].name)
     return sorted_transforms
 
 

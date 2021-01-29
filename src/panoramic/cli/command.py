@@ -7,8 +7,8 @@ from typing import Dict, Optional
 import click
 from tqdm import tqdm
 
-from panoramic.cli.config.storage import update_config
-from panoramic.cli.connections import Connections
+from panoramic.cli.config.storage import update_context
+from panoramic.cli.connection import Connection
 from panoramic.cli.diff import echo_diff
 from panoramic.cli.errors import JoinException, ValidationError, ValidationErrorSeverity
 from panoramic.cli.husky.common.enum import EnumHelper
@@ -26,7 +26,6 @@ from panoramic.cli.print import echo_error, echo_errors, echo_info, echo_warning
 from panoramic.cli.scan import scan_fields_for_errors
 from panoramic.cli.state import Action, ActionList
 from panoramic.cli.validate import (
-    validate_config,
     validate_context,
     validate_local_state,
     validate_missing_files,
@@ -38,17 +37,12 @@ logger = logging.getLogger(__name__)
 
 def configure():
     """Just create an empty config file"""
-    update_config('auth', {})
+    update_context('auth', {})
 
 
 def validate() -> bool:
     """Check local files against schema."""
     errors = []
-
-    try:
-        validate_config()
-    except ValidationError as e:
-        errors.append(e)
 
     try:
         validate_context()
@@ -73,18 +67,18 @@ def validate() -> bool:
     return True
 
 
-def scan(connection_name: str, filter_reg_ex: Optional[str] = None):
+def scan(filter_reg_ex: Optional[str] = None):
     """Scan all metadata for given source and filter."""
 
-    connection_info = Connections.get_by_name(connection_name, True)
-    connection_engine = Connections.get_connection_engine(connection_info)
+    connection_info = Connection.get()
+    dialect_name = Connection.get_dialect_name(connection_info)
 
-    dialect_name = EnumHelper.from_value_safe(HuskyQueryRuntime, connection_engine.dialect.name)
-    if not dialect_name:
-        raise UnsupportedDialectError(connection_engine.dialect)
+    query_runtime = EnumHelper.from_value_safe(HuskyQueryRuntime, dialect_name)
+    if not query_runtime:
+        raise UnsupportedDialectError(dialect_name)
 
-    scanner_cls = Scanner.get_scanner(dialect_name)
-    scanner = scanner_cls(connection_name)
+    scanner_cls = Scanner.get_scanner(query_runtime)
+    scanner = scanner_cls()
 
     echo_info('Started scanning the data source')
     scanner.scan(force_reset=True)
@@ -251,17 +245,12 @@ def scaffold_missing_fields(target_dataset: Optional[str] = None, yes: bool = Fa
 
     loaded_models: Dict[str, PanoModel] = {}
     if not no_remote:
-        # determine connection name (remove once we have only one connection)
-        all_connections = Connections.load()
-        first_connection_name = list(all_connections.keys())[0]
-        conn_info = Connections.get_by_name(first_connection_name, True)
-        conn_engine = Connections.get_connection_engine(conn_info)
-        dialect_name = EnumHelper.from_value_safe(HuskyQueryRuntime, conn_engine.dialect.name)
-        if not dialect_name:
-            raise UnsupportedDialectError(conn_engine.dialect)
+        connection = Connection.get()
+        dialect_name = Connection.get_dialect_name(connection)
+        query_runtime = EnumHelper.from_value_safe(HuskyQueryRuntime, dialect_name)
 
-        scanner_cls = Scanner.get_scanner(dialect_name)
-        scanner = scanner_cls(first_connection_name)
+        scanner_cls = Scanner.get_scanner(query_runtime)
+        scanner = scanner_cls()
 
         echo_info('Scanning remote storage...')
         scanner.scan()

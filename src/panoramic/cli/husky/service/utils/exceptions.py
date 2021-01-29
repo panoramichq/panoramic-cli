@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Optional
 
 from panoramic.cli.husky.common.exception_enums import (
     ComponentType,
@@ -151,26 +151,4 @@ class UnsupportedSQLOutputException(HuskyException):
             ExceptionErrorCode.FDQ_UNSUPPORTED_DIALECT,
             msg,
             exception_group=ExceptionGroup.FDQ_TRANSFORM,
-        )
-
-
-class TooManyPhysicalDataSourcesException(HuskyException):
-    """
-    Exception thrown when rendering a native query but a physical dialect cannot be deduced, due to having
-    more than one physical data source in the query.
-    """
-
-    def __init__(self, physical_data_sources: List[str]):
-        """
-        Constructor
-
-        :param physical_data_sources: Set of physical data sources used in the query
-        """
-        physical_data_sources_sorted = sorted(physical_data_sources)
-        msg = f'Too many physical data sources: {",".join(physical_data_sources_sorted)}'
-
-        super().__init__(
-            ExceptionErrorCode.TOO_MANY_PHYSICAL_DATA_SOURCES,
-            msg,
-            exception_group=ExceptionGroup.TAXONS,
         )

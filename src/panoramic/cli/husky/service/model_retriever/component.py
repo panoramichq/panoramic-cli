@@ -32,12 +32,6 @@ def does_model_belong_to_scope(model: HuskyModel, scope: Scope) -> bool:
 
 
 class ModelRetriever:
-    @staticmethod
-    def _filter_physical_data_sources(
-        models: List[HuskyModel], allowed_physical_data_sources: Set[str]
-    ) -> List[HuskyModel]:
-        return [model for model in models if model.physical_data_source in allowed_physical_data_sources]
-
     @classmethod
     def _load_all_models(cls) -> List[HuskyModel]:
         """
@@ -70,7 +64,6 @@ class ModelRetriever:
         data_sources: Set[str],
         scope: Scope,
         specific_model_name: Optional[str] = None,
-        allowed_physical_data_sources: Optional[Set[str]] = None,
     ) -> List[HuskyModel]:
         """
         Loads all models that include all data_sources and match the company/project combination from the Scope object.
@@ -80,14 +73,8 @@ class ModelRetriever:
         # get all models
         models = cls._load_augmented_models()
 
-        # filter only models for allowed physical data sources
-        if allowed_physical_data_sources is None:
-            relevant_models = models
-        else:
-            relevant_models = cls._filter_physical_data_sources(models, allowed_physical_data_sources)
-
         # create iterator of models belonging to the scope
-        scoped_model_iterator = (model for model in relevant_models if does_model_belong_to_scope(model, scope))
+        scoped_model_iterator = (model for model in models if does_model_belong_to_scope(model, scope))
 
         if specific_model_name:
             # now, if we want a specific model (by name), try to find it
@@ -103,7 +90,6 @@ class ModelRetriever:
                 {
                     'data_sources': data_sources,
                     'specific_model_name': specific_model_name,
-                    'allowed_physical_data_sources': allowed_physical_data_sources,
                 }
             )
 

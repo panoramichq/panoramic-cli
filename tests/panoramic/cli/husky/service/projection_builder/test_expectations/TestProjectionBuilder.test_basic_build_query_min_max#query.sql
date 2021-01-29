@@ -1,3 +1,3 @@
 SELECT 'data-source' AS __data_source, ad_id AS ad_id, max(simple_max) AS simple_max, min(simple_min) AS simple_min 
-FROM (SELECT schema_metric_table_hourly_4ba9264ca9b14f09.ad_id AS ad_id, schema_metric_table_hourly_4ba9264ca9b14f09.ad_id AS simple_max, schema_metric_table_hourly_4ba9264ca9b14f09.ad_id AS simple_min 
-FROM schema.metric_table_hourly AS schema_metric_table_hourly_4ba9264ca9b14f09 ) GROUP BY __data_source, ad_id
+FROM (SELECT db_schema_metric_table_hourly_0f32eb13951cfe30.ad_id AS ad_id, db_schema_metric_table_hourly_0f32eb13951cfe30.ad_id AS simple_max, db_schema_metric_table_hourly_0f32eb13951cfe30.ad_id AS simple_min 
+FROM db.schema.metric_table_hourly AS db_schema_metric_table_hourly_0f32eb13951cfe30 ) GROUP BY __data_source, ad_id

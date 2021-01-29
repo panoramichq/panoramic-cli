@@ -5,7 +5,6 @@ import click
 from tqdm import tqdm
 
 from panoramic.cli.config.companies import get_company_id
-from panoramic.cli.connections import Connections
 from panoramic.cli.local.get import get_transforms
 from panoramic.cli.local.writer import FileWriter
 from panoramic.cli.paths import FileExtension, Paths
@@ -19,22 +18,7 @@ def create_command():
     echo_info('Scaffolding a new transform...')
     name = click.prompt('name')
 
-    connections = Connections.load()
-    connection_names = connections.keys() if connections else []
-    connection_base_text = 'connection'
-
-    if len(connection_names) == 0:
-        connection_prompt_text = connection_base_text
-    elif len(connection_names) > 3:
-        connection_prompt_text = f'{connection_base_text} (Available - {{{",".join(list(connection_names)[:3])}}},...)'
-    else:
-        connection_prompt_text = f'{connection_base_text} (Available - {{{",".join(connection_names)}}})'
-
-    # Assemble target based on input
-    connection = click.prompt(connection_prompt_text)
-
-    target_view_path = click.prompt(f'target: {connection}.', prompt_suffix="")
-    target = f'{connection}.{target_view_path}'
+    target = click.prompt('target:', prompt_suffix="")
 
     transform = PanoTransform(name=name, fields=[], target=target)
     writer = FileWriter()
@@ -86,13 +70,11 @@ def exec_command(
     with tqdm(compiled_transforms) as exec_bar:
         for (compiled_transform, transform_path) in exec_bar:
             try:
-                exec_bar.write(
-                    f'Executing: {compiled_transform.transform.name} on {compiled_transform.transform.connection_name}'
-                )
+                exec_bar.write(f'Executing: {compiled_transform.transform.name}')
 
                 TransformExecutor.execute(compiled_transform)
-                exec_bar.write(f'\u2713 [{compiled_transform.transform.connection_name}] {transform.name}')
+                exec_bar.write(f'\u2713 {transform.name}')
             except Exception as e:
                 exec_bar.write(
-                    f'\u2717 [{compiled_transform.transform.connection_name}] {transform.name} \nError: Failed to execute transform {transform_path}:\n  {str(e)}'
+                    f'\u2717 {transform.name} \nError: Failed to execute transform {transform_path}:\n  {str(e)}'
                 )

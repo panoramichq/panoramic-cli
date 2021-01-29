@@ -128,7 +128,6 @@ class FdqModelMapper:
 
         inst = FdqModel.construct(
             model_name=remove_virtual_data_source_prefix(virtual_data_source, husky_model.name),
-            data_source='.'.join(husky_model.fully_qualified_name_parts or []),
             attributes=[
                 FdqModelAttributeMapper.from_internal(transformation, attrs, virtual_data_source)
                 for (transformation, attrs) in attrs_by_key.items()
@@ -152,7 +151,7 @@ class FdqModelMapper:
             'name': prefix_with_virtual_data_source(virtual_data_source, model.model_name).lower(),
             'data_sources': [virtual_data_source],
             'model_type': HuskyModelType.METRIC,
-            'fully_qualified_name_parts': model.data_source.split('.'),
+            'fully_qualified_name_parts': model.model_name.split('.'),
             'visibility': model.visibility,
             'company_id': company_id,
             'attributes': {

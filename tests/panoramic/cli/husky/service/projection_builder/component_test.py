@@ -64,7 +64,6 @@ class TestProjectionBuilder(BaseTest):
             order_by,
             1,
             2,
-            {'context'},
         )
 
         self.write_test_expectations('query.sql', compile_query(final_dataframe.query))
@@ -105,7 +104,6 @@ class TestProjectionBuilder(BaseTest):
             None,
             None,
             None,
-            {'context'},
         )
 
         self.write_test_expectations('query.sql', compile_query(final_dataframe.query))
@@ -134,7 +132,6 @@ class TestProjectionBuilder(BaseTest):
             None,
             None,
             None,
-            {'context'},
         )
 
         self.write_test_expectations('query.sql', compile_query(final_dataframe.query))

@@ -152,9 +152,7 @@ class FileWriter:
         with open(path, 'w') as f:
             f.writelines(
                 [
-                    '-- Compiled with parameters:\n'
-                    f'-- \tconnection: {compiled_transform.transform.connection_name}\n',
-                    f'-- \tcompany_id: {compiled_transform.company_id}\n' '\n',
+                    '-- Compiled with parameters:\n' f'-- \tcompany_id: {compiled_transform.company_id}\n' '\n',
                     compiled_transform.compiled_query,
                 ]
             )

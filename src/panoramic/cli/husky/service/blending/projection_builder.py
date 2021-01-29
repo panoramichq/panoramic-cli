@@ -1,4 +1,4 @@
-from typing import Dict, List, Optional, Set, Tuple
+from typing import Dict, List, Optional, Tuple
 
 from sqlalchemy import String, cast, column, nullslast
 from sqlalchemy.sql import Select
@@ -24,7 +24,6 @@ class ProjectionBuilder:
         cls,
         calc_df: Dataframe,
         return_taxons: Dict[TaxonExpressionStr, Taxon],
-        physical_data_sources: Set[str],
         order_by: Optional[List[TaxonDataOrder]] = None,
         limit: Optional[int] = None,
         offset: Optional[int] = None,
@@ -65,7 +64,6 @@ class ProjectionBuilder:
             final_query,
             projected_df_columns,
             calc_df.used_model_names,
-            used_physical_data_sources=physical_data_sources,
         )
 
     @classmethod

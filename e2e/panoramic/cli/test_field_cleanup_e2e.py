@@ -35,8 +35,7 @@ def create_fields(monkeypatch):
     yield
 
 
-@patch('panoramic.cli.validate.validate_config', return_value=None)
-def test_field_cleanup_e2e(_, create_fields):
+def test_field_cleanup_e2e(create_fields):
     runner = CliRunner()
     result = runner.invoke(cli, ['field', 'cleanup', '-y'])
 
@@ -51,8 +50,7 @@ def test_field_cleanup_e2e(_, create_fields):
 
 
 @patch('panoramic.cli.command.delete_orphaned_fields')
-@patch('panoramic.cli.validate.validate_config', return_value=None)
-def test_field_cleanup_error_e2e(_, mock_delete, monkeypatch):
+def test_field_cleanup_error_e2e(mock_delete, monkeypatch):
     monkeypatch.chdir(Path('e2e') / 'scenarios' / 'pano-push-pull')
     mock_delete.side_effect = Exception('Test Exception')
 

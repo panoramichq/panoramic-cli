@@ -41,14 +41,6 @@ class PanoTransform:
 
         return data
 
-    @property
-    def connection_name(self) -> str:
-        return self.target.split('.', 1)[0]
-
-    @property
-    def view_path(self) -> str:
-        return self.target.split('.', 1)[1]
-
 
 class CompiledTransform:
     transform: PanoTransform
@@ -62,4 +54,4 @@ class CompiledTransform:
 
     @property
     def correctness_query(self) -> str:
-        return f'SELECT * from {self.transform.view_path} limit 1'
+        return f'SELECT * from {self.transform.target} limit 1'

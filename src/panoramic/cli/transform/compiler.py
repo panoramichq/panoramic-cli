@@ -15,10 +15,8 @@ class TransformCompiler:
     def compile(self, transform: PanoTransform) -> CompiledTransform:
         try:
             transform_request = TransformRequest(fields=transform.fields, filter=transform.filters)
-            compiled_query, _ = TransformService.compile_transformation_request(
-                transform_request, self.company_id, transform.connection_name
-            )
-            create_view_statement = f"CREATE OR REPLACE VIEW {transform.view_path} AS ({compiled_query})"
+            compiled_query, _ = TransformService.compile_transformation_request(transform_request, self.company_id)
+            create_view_statement = f"CREATE OR REPLACE VIEW {transform.target} AS ({compiled_query})"
 
             return CompiledTransform(
                 transform=transform, company_id=self.company_id, compiled_query=create_view_statement

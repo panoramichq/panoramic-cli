@@ -1,7 +1,6 @@
 
 api_version: v1
 model_name: test_model
-data_source: pano_snowflake_66.snowflake_sample_data.tpch_sf1.nation
 fields:
   - field_map:
       - dataset_test_field

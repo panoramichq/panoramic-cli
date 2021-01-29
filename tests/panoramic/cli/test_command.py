@@ -2,7 +2,7 @@ from unittest.mock import Mock, patch
 
 import pytest
 
-from panoramic.cli.command import delete_orphaned_fields
+from panoramic.cli.command import delete_orphaned_fields, scaffold_missing_fields
 from panoramic.cli.errors import OrphanFieldFileError
 from panoramic.cli.local.executor import LocalExecutor
 
@@ -59,27 +59,27 @@ def test_delete_orphaned_fields(mock_execute, mock_validate, mock_state, capsys)
     )
 
 
-# @patch('panoramic.cli.command.get_local_state')
-# @patch.object(LocalExecutor, '_execute')
-# def test_scaffold_missing_files(mock_execute, mock_state, capsys):
-#     mock_state.return_value.get_objects_by_package.return_value.items.return_value = [
-#         (
-#             'test_dataset',
-#             (
-#                 [],
-#                 [Mock(data_source='db.schema.test_table', identifiers=['id'], fields=[Mock(field_map=['test_slug'])])],
-#             ),
-#         ),
-#     ]
-#
-#     scaffold_missing_fields(yes=True)
-#
-#     assert mock_execute.mock_calls == [call(Action(desired=sentinel.field))]
-#     assert capsys.readouterr().out == (
-#         "Loading local state...\n\n"
-#         "Fields referenced in models without definition in dataset test_dataset:\n"
-#         "  test_slug\n\n"
-#         "Scanning fields...\n"
-#         "Updating local state...\n"
-#         "Updated 1/1 fields\n"
-#     )
+@patch('panoramic.cli.command.get_local_state')
+@patch.object(LocalExecutor, '_execute')
+def test_scaffold_missing_files(mock_execute, mock_state, capsys):
+    mock_state.return_value.get_objects_by_package.return_value.items.return_value = [
+        (
+            'test_dataset',
+            (
+                [],
+                [Mock(identifiers=['id'], fields=[Mock(field_map=['test_slug'])])],
+            ),
+        ),
+    ]
+
+    scaffold_missing_fields(yes=True)
+
+    # assert mock_execute.mock_calls == [call(Action(desired=sentinel.field))]
+    assert capsys.readouterr().out == (
+        "Loading local state...\n\n"
+        "Fields referenced in models without definition in dataset test_dataset:\n"
+        "  test_slug\n\n"
+        "Scanning fields...\n"
+        "Updating local state...\n"
+        "Updated 1/1 fields\n"
+    )

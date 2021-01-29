@@ -1,4 +1,4 @@
-from typing import Dict, List, Optional, Set
+from typing import Dict, List, Optional
 
 import sqlalchemy
 from sqlalchemy import cast, func, union_all
@@ -43,7 +43,6 @@ class MetricPhaseBuilder:
         self,
         ctx: HuskyQueryContext,
         df: Dataframe,
-        physical_data_sources: Set[str],
         grouping_sets: Optional[GroupingSets] = None,
         filter_clause: Optional[FilterClause] = None,
     ) -> Dataframe:
@@ -98,7 +97,7 @@ class MetricPhaseBuilder:
             }
             post_query = FilterBuilder.augment_query(ctx, post_query, taxon_model_info, filter_clause)
 
-        return Dataframe(post_query, slug_to_column, df.used_model_names, physical_data_sources)
+        return Dataframe(post_query, slug_to_column, df.used_model_names)
 
     @classmethod
     def _add_aggregation(

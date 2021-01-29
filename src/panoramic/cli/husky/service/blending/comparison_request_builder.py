@@ -1,4 +1,4 @@
-from typing import Dict, Optional, Set
+from typing import Dict, Optional
 
 from sqlalchemy import column, literal_column, select
 
@@ -90,7 +90,6 @@ class ComparisonRequestBuilder:
         config_arg: BlendingDataRequest,
         taxon_manager: BlendingTaxonManager,
         query_info: BlendingQueryInfo,
-        allowed_physical_data_sources: Optional[Set[str]] = None,
     ) -> Optional[Dataframe]:
         """
         Builds comparison query for each subrequest and then blends them all into one comparison dataframe.
@@ -128,7 +127,6 @@ class ComparisonRequestBuilder:
                     taxon_manager.used_taxons,
                     dimension_templates=taxon_manager.plan.comparison_data_source_formula_templates[data_source],
                     filter_templates=filter_templates,
-                    allowed_physical_data_sources=allowed_physical_data_sources,
                 )
             )
 
@@ -160,9 +158,7 @@ class ComparisonRequestBuilder:
             for pre_formula in pre_formulas:
                 final_columns.append(literal_column(quote_identifier(pre_formula.label, ctx.dialect)))
         renamed_cols_query = select(sort_columns(final_columns)).select_from(dataframe.query)
-        return Dataframe(
-            renamed_cols_query, aliased_taxon_by_slug, dataframe.used_model_names, dataframe.used_physical_data_sources
-        )
+        return Dataframe(renamed_cols_query, aliased_taxon_by_slug, dataframe.used_model_names)
 
     @classmethod
     def build_comparison_query(
@@ -172,11 +168,8 @@ class ComparisonRequestBuilder:
         taxon_manager: BlendingTaxonManager,
         override_mapping_manager: OverrideMappingManager,
         query_info: BlendingQueryInfo,
-        allowed_physical_data_sources: Optional[Set[str]] = None,
     ) -> Optional[Dataframe]:
-        comp_df = cls._build_comparison_blend_query(
-            ctx, config_arg, taxon_manager, query_info, allowed_physical_data_sources=allowed_physical_data_sources
-        )
+        comp_df = cls._build_comparison_blend_query(ctx, config_arg, taxon_manager, query_info)
         if comp_df is None or len(taxon_manager.plan.comparison_dimension_formulas) == 0:
             # There are no comparison dim formulas, means the rows are already grouped correctly
             return comp_df
@@ -213,4 +206,4 @@ class ComparisonRequestBuilder:
         selectors.extend(group_by_cols)
         query = select(sort_columns(selectors)).select_from(comp_df.query).group_by(*group_by_cols)
 
-        return Dataframe(query, comp_df.slug_to_column, comp_df.used_model_names, comp_df.used_physical_data_sources)
+        return Dataframe(query, comp_df.slug_to_column, comp_df.used_model_names)

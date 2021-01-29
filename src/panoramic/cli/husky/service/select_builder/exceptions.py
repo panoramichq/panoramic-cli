@@ -39,18 +39,13 @@ class ImpossibleTaxonCombination(HuskyException):
         self,
         taxon_slugs_expressions: Set[TaxonSlugExpression],
         data_source: Optional[str] = None,
-        allowed_physical_data_sources: Optional[Set[str]] = None,
     ):
         """
         Constructor
 
         :param taxon_slugs_expressions: Set of wanted taxon slugs
         """
-        if allowed_physical_data_sources:
-            msg = (
-                f'Impossible combination of taxons on physical data sources {", ".join(allowed_physical_data_sources)}'
-            )
-        elif data_source:
+        if data_source:
             msg = f'Impossible combination of taxons on data source {data_source}'
         else:
             msg = 'Impossible combination of taxons'

@@ -74,9 +74,6 @@ class QueryBuilder:
                 taxon_manager.used_taxons,
                 dimension_templates,
                 filter_templates=filter_templates,
-                allowed_physical_data_sources=set(request.physical_data_sources)
-                if request.physical_data_sources
-                else None,
             )
             dataframes.append(df)
 
@@ -158,7 +155,6 @@ class QueryBuilder:
                 taxon_manager,
                 override_mapping_manager,
                 query_info,
-                set(request.physical_data_sources) if request.physical_data_sources else None,
             )
             if comparison_df and comparison_df.slug_to_column:
                 blended_df = left_join_dataframes(ctx, data_df, comparison_df, taxon_manager.plan)
@@ -172,7 +168,6 @@ class QueryBuilder:
         calculated_df = MetricPhaseBuilder(taxon_manager).calculate_dataframe(
             ctx,
             blended_df,
-            blended_df.used_physical_data_sources,
             request.grouping_sets,
             filter_clause=request.filters,
         )
@@ -181,7 +176,6 @@ class QueryBuilder:
         projected_df = ProjectionBuilder.project_dataframe(
             calculated_df,
             return_taxons,
-            calculated_df.used_physical_data_sources,
             request.order_by,
             request.limit,
         )

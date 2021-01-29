@@ -10,7 +10,10 @@ from panoramic.cli.husky.core.taxonomy.override_mapping.enums import MappingSour
 from panoramic.cli.husky.core.taxonomy.override_mapping.models import OverrideMapping
 from panoramic.cli.husky.core.tel.sql_formula import SqlFormulaTemplate, SqlTemplate
 from panoramic.cli.husky.service.blending.query_builder import QueryBuilder
-from panoramic.cli.husky.service.context import HuskyQueryContext
+from panoramic.cli.husky.service.context import (
+    SNOWFLAKE_HUSKY_CONTEXT,
+    HuskyQueryContext,
+)
 from panoramic.cli.husky.service.filter_builder.filter_clauses import (
     TaxonValueFilterClause,
 )
@@ -25,17 +28,12 @@ from panoramic.cli.husky.service.types.types import BlendingQueryInfo, Dataframe
 from panoramic.cli.husky.service.utils.exceptions import (
     HuskyInvalidTelException,
     ModelNotFoundException,
-    TooManyPhysicalDataSourcesException,
 )
 from tests.panoramic.cli.husky.test.mocks.core.taxonomy import mock_get_taxons
 from tests.panoramic.cli.husky.test.mocks.husky.mock_single_query import (
     create_single_query_mock,
 )
-from tests.panoramic.cli.husky.test.mocks.husky_model import (
-    MOCK_DATA_SOURCE_NAME,
-    get_mock_metric_model,
-    get_mock_physical_data_sources_model,
-)
+from tests.panoramic.cli.husky.test.mocks.husky_model import get_mock_metric_model
 from tests.panoramic.cli.husky.test.mocks.mock_dataframe import (
     get_mocked_dataframe_columns_map,
 )
@@ -85,8 +83,7 @@ class TestDataframeBlending(BaseTest):
                 "limit": 100,
             }
         )
-        self._husky_context = HuskyQueryContext.from_request(self._blending_request)
-        self._info = BlendingQueryInfo.create(self._blending_request, self._husky_context)
+        self._info = BlendingQueryInfo.create(self._blending_request, SNOWFLAKE_HUSKY_CONTEXT)
 
     @patch.object(Taxonomy, '_get_filtered_taxons', side_effect=mock_get_taxons)
     @patch('panoramic.cli.husky.service.query_builder.QueryBuilder.build_query')
@@ -97,18 +94,16 @@ class TestDataframeBlending(BaseTest):
             create_single_query_mock('adwords'),
             get_mocked_dataframe_columns_map(['spend', 'impressions', 'date']),
             {'adwords_table'},
-            {'context'},
         )
         fb_df = Dataframe(
             create_single_query_mock('facebook'),
             get_mocked_dataframe_columns_map(['spend', 'impressions', 'date']),
             {'fb_table'},
-            {'context'},
         )
 
         mock__husky_build_query.side_effect = [adwords_df, fb_df]
 
-        df = QueryBuilder.build_query(self._husky_context, self._blending_request, self._info)
+        df = QueryBuilder.build_query(SNOWFLAKE_HUSKY_CONTEXT, self._blending_request, self._info)
         self.write_test_expectations('query.sql', compile_query(df.query))
         expected_query = self.read_test_expectations('query.sql')
         self.assertEqual(expected_query, compile_query(df.query))
@@ -127,18 +122,16 @@ class TestDataframeBlending(BaseTest):
             create_single_query_mock('adwords'),
             get_mocked_dataframe_columns_map(['spend', 'impressions', 'date']),
             {'adwords_table'},
-            {'context'},
         )
         fb_df = Dataframe(
             create_single_query_mock('facebook'),
             get_mocked_dataframe_columns_map(['spend', 'impressions', 'date']),
             {'fb_table'},
-            {'context'},
         )
 
         mock__husky_build_query.side_effect = [adwords_df, fb_df]
 
-        df = QueryBuilder.build_query(self._husky_context, self._blending_request, self._info)
+        df = QueryBuilder.build_query(SNOWFLAKE_HUSKY_CONTEXT, self._blending_request, self._info)
         self.write_test_expectations('query.sql', compile_query(df.query))
         expected_query = self.read_test_expectations('query.sql')
         self.assertEqual(expected_query, compile_query(df.query))
@@ -153,32 +146,28 @@ class TestDataframeBlending(BaseTest):
             create_single_query_mock('adwords'),
             get_mocked_dataframe_columns_map(['spend', 'impressions', 'objective', 'date']),
             {'adwords_table'},
-            {'context'},
         )
         fb_df = Dataframe(
             create_single_query_mock('facebook'),
             get_mocked_dataframe_columns_map(['spend', 'impressions', 'objective', 'date']),
             {'fb_table'},
-            {'context'},
         )
 
         adwords_comparison_df = Dataframe(
             create_single_query_mock('adwords_comparison'),
             get_mocked_dataframe_columns_map(['spend', 'impressions', 'objective']),
             {'adwords_comparison_table'},
-            {'context'},
         )
 
         fb_comparison_df = Dataframe(
             create_single_query_mock('facebook_comparison'),
             get_mocked_dataframe_columns_map(['spend', 'impressions', 'objective']),
             {'fb_comparison_table'},
-            {'context'},
         )
 
         mock__husky_build_query.side_effect = [adwords_df, fb_df, adwords_comparison_df, fb_comparison_df]
 
-        df = QueryBuilder.build_query(self._husky_context, self._blending_request, self._info)
+        df = QueryBuilder.build_query(SNOWFLAKE_HUSKY_CONTEXT, self._blending_request, self._info)
         self.write_test_expectations('query.sql', compile_query(df.query))
         expected_query = self.read_test_expectations('query.sql')
         self.assertEqual(expected_query, compile_query(df.query))
@@ -200,32 +189,28 @@ class TestDataframeBlending(BaseTest):
             create_single_query_mock('adwords'),
             get_mocked_dataframe_columns_map(['spend', 'impressions', 'objective', 'date', 'ad_id']),
             {'adwords_table'},
-            {'context'},
         )
         fb_df = Dataframe(
             create_single_query_mock('facebook'),
             get_mocked_dataframe_columns_map(['spend', 'impressions', 'objective', 'date', 'ad_id']),
             {'fb_table'},
-            {'context'},
         )
 
         adwords_comparison_df = Dataframe(
             create_single_query_mock('adwords_comparison'),
             get_mocked_dataframe_columns_map(['spend', 'impressions', 'objective', 'ad_id', 'date']),
             {'adwords_comparison_table'},
-            {'context'},
         )
 
         fb_comparison_df = Dataframe(
             create_single_query_mock('facebook_comparison'),
             get_mocked_dataframe_columns_map(['spend', 'impressions', 'objective', 'ad_id', 'date']),
             {'fb_comparison_table'},
-            {'context'},
         )
 
         mock__husky_build_query.side_effect = [adwords_df, fb_df, adwords_comparison_df, fb_comparison_df]
 
-        df = QueryBuilder.build_query(self._husky_context, self._blending_request, self._info)
+        df = QueryBuilder.build_query(SNOWFLAKE_HUSKY_CONTEXT, self._blending_request, self._info)
         self.write_test_expectations('query.sql', compile_query(df.query))
         expected_query = self.read_test_expectations('query.sql')
         self.assertEqual(expected_query, compile_query(df.query))
@@ -258,7 +243,6 @@ class TestDataframeBlending(BaseTest):
                 ['spend', 'impressions', 'date', 'campaign_id', 'adgroup_id', 'ad_id', 'objective']
             ),
             {'adwords_table'},
-            {'context'},
         )
         fb_df = Dataframe(
             create_single_query_mock('facebook'),
@@ -266,26 +250,23 @@ class TestDataframeBlending(BaseTest):
                 ['spend', 'impressions', 'date', 'campaign_id', 'adgroup_id', 'ad_id', 'objective']
             ),
             {'fb_table'},
-            {'context'},
         )
 
         adwords_comparison_df = Dataframe(
             create_single_query_mock('adwords_comparison'),
             get_mocked_dataframe_columns_map(['spend', 'impressions', 'objective']),
             {'adwords_comparison_table'},
-            {'context'},
         )
 
         fb_comparison_df = Dataframe(
             create_single_query_mock('facebook_comparison'),
             get_mocked_dataframe_columns_map(['spend', 'impressions', 'objective']),
             {'fb_comparison_table'},
-            {'context'},
         )
 
         mock__husky_build_query.side_effect = [adwords_df, fb_df, adwords_comparison_df, fb_comparison_df]
 
-        df = QueryBuilder.build_query(self._husky_context, self._blending_request, self._info)
+        df = QueryBuilder.build_query(SNOWFLAKE_HUSKY_CONTEXT, self._blending_request, self._info)
         self.write_test_expectations('query.sql', compile_query(df.query))
         expected_query = self.read_test_expectations('query.sql')
         self.assertEqual(expected_query, compile_query(df.query))
@@ -335,8 +316,7 @@ class TestDataframeBlendingEnhancedCpm(BaseTest):
                 "limit": 100,
             }
         )
-        self._husky_context = HuskyQueryContext.from_request(self._blending_request)
-        self._info = BlendingQueryInfo.create(self._blending_request, self._husky_context)
+        self._info = BlendingQueryInfo.create(self._blending_request, SNOWFLAKE_HUSKY_CONTEXT)
 
     @patch.object(Taxonomy, '_get_filtered_taxons', side_effect=mock_get_taxons)
     @patch('panoramic.cli.husky.service.query_builder.QueryBuilder.build_query')
@@ -346,31 +326,27 @@ class TestDataframeBlendingEnhancedCpm(BaseTest):
             create_single_query_mock('adwords'),
             get_mocked_dataframe_columns_map(['generic_spend', 'objective', 'generic_impressions']),
             {'adwords_table'},
-            {'context'},
         )
         fb_df = Dataframe(
             create_single_query_mock('facebook'),
             get_mocked_dataframe_columns_map(['generic_spend', 'objective', 'generic_impressions']),
             {'fb_table'},
-            {'context'},
         )
 
         adwords_comparison_df = Dataframe(
             create_single_query_mock('adwords_comparison'),
             get_mocked_dataframe_columns_map(['generic_spend', 'objective', 'generic_impressions']),
             {'adwords_comparison_table'},
-            {'context'},
         )
         fb_comparison_df = Dataframe(
             create_single_query_mock('facebook_comparison'),
             get_mocked_dataframe_columns_map(['generic_spend', 'objective', 'generic_impressions']),
             {'fb_comparison_table'},
-            {'context'},
         )
 
         mock__husky_build_query.side_effect = [adwords_df, fb_df, adwords_comparison_df, fb_comparison_df]
 
-        df = QueryBuilder.build_query(self._husky_context, self._blending_request, self._info)
+        df = QueryBuilder.build_query(SNOWFLAKE_HUSKY_CONTEXT, self._blending_request, self._info)
         self.write_test_expectations('query.sql', compile_query(df.query))
         expected_query = self.read_test_expectations('query.sql')
         self.assertEqual(expected_query, compile_query(df.query))
@@ -410,8 +386,7 @@ class TestDataframeBlendingCumulativeSum(BaseTest):
                 "limit": 100,
             }
         )
-        self._husky_context = HuskyQueryContext.from_request(self._blending_request)
-        self._info = BlendingQueryInfo.create(self._blending_request, self._husky_context)
+        self._info = BlendingQueryInfo.create(self._blending_request, SNOWFLAKE_HUSKY_CONTEXT)
 
     @patch.object(Taxonomy, '_get_filtered_taxons', side_effect=mock_get_taxons)
     @patch('panoramic.cli.husky.service.query_builder.QueryBuilder.build_query')
@@ -420,12 +395,11 @@ class TestDataframeBlendingCumulativeSum(BaseTest):
             create_single_query_mock('adwords'),
             get_mocked_dataframe_columns_map(['generic_spend', 'objective', 'generic_impressions', 'gender']),
             {'adwords_table'},
-            {'context'},
         )
 
         mock__husky_build_query.side_effect = [adwords_df]
 
-        df = QueryBuilder.build_query(self._husky_context, self._blending_request, self._info)
+        df = QueryBuilder.build_query(SNOWFLAKE_HUSKY_CONTEXT, self._blending_request, self._info)
         self.write_test_expectations('query.sql', compile_query(df.query))
         expected_query = self.read_test_expectations('query.sql')
         assert compile_query(df.query) == expected_query
@@ -480,8 +454,7 @@ class TestTaxonlessQuerying(BaseTest):
                 "taxons": ["spend", "=m:generic_spend / generic_impressions"],
             }
         )
-        self._husky_context = HuskyQueryContext.from_request(self._blending_request)
-        self._info = BlendingQueryInfo.create(self._blending_request, self._husky_context)
+        self._info = BlendingQueryInfo.create(self._blending_request, SNOWFLAKE_HUSKY_CONTEXT)
 
     @patch.object(Taxonomy, '_get_filtered_taxons', side_effect=mock_get_taxons)
     @patch('panoramic.cli.husky.service.query_builder.QueryBuilder.build_query')
@@ -490,18 +463,16 @@ class TestTaxonlessQuerying(BaseTest):
             create_single_query_mock('adwords'),
             get_mocked_dataframe_columns_map(['generic_spend', 'generic_impressions']),
             {'adwords_table'},
-            {'context'},
         )
         fb_df = Dataframe(
             create_single_query_mock('facebook'),
             get_mocked_dataframe_columns_map(['generic_spend', 'generic_impressions']),
             {'fb_table'},
-            {'context'},
         )
 
         mock__husky_build_query.side_effect = [adwords_df, fb_df]
 
-        df = QueryBuilder.build_query(self._husky_context, self._blending_request, self._info)
+        df = QueryBuilder.build_query(SNOWFLAKE_HUSKY_CONTEXT, self._blending_request, self._info)
         self.write_test_expectations('query.sql', compile_query(df.query))
         expected_query = self.read_test_expectations('query.sql')
         self.assertEqual(expected_query, compile_query(df.query))
@@ -554,24 +525,21 @@ class TestTelInSubrequestsQuerying(BaseTest):
                 "limit": 100,
             }
         )
-        self._husky_context = HuskyQueryContext.from_request(self._blending_request)
-        self._info = BlendingQueryInfo.create(self._blending_request, self._husky_context)
+        self._info = BlendingQueryInfo.create(self._blending_request, SNOWFLAKE_HUSKY_CONTEXT)
         adwords_df = Dataframe(
             create_single_query_mock('adwords'),
             get_mocked_dataframe_columns_map(['adwords|impressions']),
             {'adwords_table'},
-            {'context'},
         )
         fb_df = Dataframe(
             create_single_query_mock('facebook'),
             get_mocked_dataframe_columns_map(['facebook_ads|spend']),
             {'fb_table'},
-            {'context'},
         )
 
         mock__husky_build_query.side_effect = [adwords_df, fb_df]
 
-        df = QueryBuilder.build_query(self._husky_context, self._blending_request, self._info)
+        df = QueryBuilder.build_query(SNOWFLAKE_HUSKY_CONTEXT, self._blending_request, self._info)
         self.write_test_expectations('query.sql', compile_query(df.query))
         expected_query = self.read_test_expectations('query.sql')
         self.assertEqual(expected_query, compile_query(df.query))
@@ -615,24 +583,21 @@ class TestTelInSubrequestsQuerying(BaseTest):
                 "limit": 100,
             }
         )
-        self._husky_context = HuskyQueryContext.from_request(self._blending_request)
-        self._info = BlendingQueryInfo.create(self._blending_request, self._husky_context)
+        self._info = BlendingQueryInfo.create(self._blending_request, SNOWFLAKE_HUSKY_CONTEXT)
         adwords_df = Dataframe(
             create_single_query_mock('adwords'),
             get_mocked_dataframe_columns_map(['adwords|impressions']),
             {'adwords_table'},
-            {'context'},
         )
         fb_df = Dataframe(
             create_single_query_mock('facebook'),
             get_mocked_dataframe_columns_map(['facebook_ads|spend']),
             {'fb_table'},
-            {'context'},
         )
 
         mock__husky_build_query.side_effect = [adwords_df, fb_df]
 
-        df = QueryBuilder.build_query(self._husky_context, self._blending_request, self._info)
+        df = QueryBuilder.build_query(SNOWFLAKE_HUSKY_CONTEXT, self._blending_request, self._info)
         self.write_test_expectations('query.sql', compile_query(df.query))
         expected_query = self.read_test_expectations('query.sql')
         self.assertEqual(expected_query, compile_query(df.query))
@@ -682,24 +647,21 @@ class TestTelInSubrequestsQuerying(BaseTest):
                 "limit": 100,
             }
         )
-        self._husky_context = HuskyQueryContext.from_request(self._blending_request)
-        self._info = BlendingQueryInfo.create(self._blending_request, self._husky_context)
+        self._info = BlendingQueryInfo.create(self._blending_request, SNOWFLAKE_HUSKY_CONTEXT)
         adwords_df = Dataframe(
             create_single_query_mock('adwords'),
             get_mocked_dataframe_columns_map(['adwords|spend']),
             {'adwords_table'},
-            {'context'},
         )
         fb_df = Dataframe(
             create_single_query_mock('facebook'),
             get_mocked_dataframe_columns_map(['facebook_ads|spend']),
             {'fb_table'},
-            {'context'},
         )
 
         mock__husky_build_query.side_effect = [adwords_df, fb_df]
 
-        df = QueryBuilder.build_query(self._husky_context, self._blending_request, self._info)
+        df = QueryBuilder.build_query(SNOWFLAKE_HUSKY_CONTEXT, self._blending_request, self._info)
         self.write_test_expectations('query.sql', compile_query(df.query))
         expected_query = self.read_test_expectations('query.sql')
         self.assertEqual(expected_query, compile_query(df.query))
@@ -726,18 +688,16 @@ class TestTelInSubrequestsQuerying(BaseTest):
                 "limit": 100,
             }
         )
-        self._husky_context = HuskyQueryContext.from_request(self._blending_request)
-        self._info = BlendingQueryInfo.create(self._blending_request, self._husky_context)
+        self._info = BlendingQueryInfo.create(self._blending_request, SNOWFLAKE_HUSKY_CONTEXT)
         adwords_df = Dataframe(
             create_single_query_mock('adwords'),
             get_mocked_dataframe_columns_map(['adwords|spend']),
             {'adwords_table'},
-            {'context'},
         )
 
         mock__husky_build_query.side_effect = [adwords_df]
         with pytest.raises(HuskyInvalidTelException):
-            QueryBuilder.build_query(self._husky_context, self._blending_request, self._info)
+            QueryBuilder.build_query(SNOWFLAKE_HUSKY_CONTEXT, self._blending_request, self._info)
 
     @patch.object(Taxonomy, '_get_filtered_taxons', side_effect=mock_get_taxons)
     @patch('panoramic.cli.husky.service.query_builder.QueryBuilder.build_query')
@@ -775,24 +735,21 @@ class TestTelInSubrequestsQuerying(BaseTest):
                 "limit": 100,
             }
         )
-        self._husky_context = HuskyQueryContext.from_request(self._blending_request)
-        self._info = BlendingQueryInfo.create(self._blending_request, self._husky_context)
+        self._info = BlendingQueryInfo.create(self._blending_request, SNOWFLAKE_HUSKY_CONTEXT)
         adwords_df = Dataframe(
             create_single_query_mock('adwords'),
             get_mocked_dataframe_columns_map(['adwords|spend']),
             {'adwords_table'},
-            {'context'},
         )
         fb_df = Dataframe(
             create_single_query_mock('facebook'),
             get_mocked_dataframe_columns_map(['facebook_ads|spend']),
             {'fb_table'},
-            {'context'},
         )
 
         mock__husky_build_query.side_effect = [adwords_df, fb_df]
         with pytest.raises(HuskyInvalidTelException):
-            QueryBuilder.build_query(self._husky_context, self._blending_request, self._info)
+            QueryBuilder.build_query(SNOWFLAKE_HUSKY_CONTEXT, self._blending_request, self._info)
 
     @patch.object(Taxonomy, '_get_filtered_taxons', side_effect=mock_get_taxons)
     @patch('panoramic.cli.husky.service.query_builder.QueryBuilder.build_query')
@@ -834,23 +791,20 @@ class TestTelInSubrequestsQuerying(BaseTest):
                 "limit": 100,
             }
         )
-        self._husky_context = HuskyQueryContext.from_request(self._blending_request)
-        self._info = BlendingQueryInfo.create(self._blending_request, self._husky_context)
+        self._info = BlendingQueryInfo.create(self._blending_request, SNOWFLAKE_HUSKY_CONTEXT)
         twitter_df = Dataframe(
             create_single_query_mock('twitter'),
             get_mocked_dataframe_columns_map(['spend', 'twitter|spend', "twitter|impressions"]),
             {'twitter_table'},
-            {'context'},
         )
         fb_df = Dataframe(
             create_single_query_mock('facebook'),
             get_mocked_dataframe_columns_map(['spend', 'facebook_ads|spend']),
             {'fb_table'},
-            {'context'},
         )
 
         mock__husky_build_query.side_effect = [twitter_df, fb_df]
-        df = QueryBuilder.build_query(self._husky_context, self._blending_request, self._info)
+        df = QueryBuilder.build_query(SNOWFLAKE_HUSKY_CONTEXT, self._blending_request, self._info)
         self.write_test_expectations('query.sql', compile_query(df.query))
         expected_query = self.read_test_expectations('query.sql')
         self.assertEqual(expected_query, compile_query(df.query))
@@ -925,23 +879,20 @@ class TestTelInSubrequestsQuerying(BaseTest):
                 "limit": 100,
             }
         )
-        self._husky_context = HuskyQueryContext.from_request(self._blending_request)
-        self._info = BlendingQueryInfo.create(self._blending_request, self._husky_context)
+        self._info = BlendingQueryInfo.create(self._blending_request, SNOWFLAKE_HUSKY_CONTEXT)
         twitter_df = Dataframe(
             create_single_query_mock('twitter'),
             get_mocked_dataframe_columns_map(['twitter|objective', 'spend', 'twitter|spend', "twitter|impressions"]),
             {'twitter_table'},
-            {'context'},
         )
         fb_df = Dataframe(
             create_single_query_mock('facebook'),
             get_mocked_dataframe_columns_map(['facebook_ads|objective', 'spend', 'facebook_ads|spend']),
             {'fb_table'},
-            {'context'},
         )
 
         mock__husky_build_query.side_effect = [twitter_df, fb_df]
-        df = QueryBuilder.build_query(self._husky_context, self._blending_request, self._info)
+        df = QueryBuilder.build_query(SNOWFLAKE_HUSKY_CONTEXT, self._blending_request, self._info)
         self.write_test_expectations('query.sql', compile_query(df.query))
         expected_query = self.read_test_expectations('query.sql')
         self.assertEqual(expected_query, compile_query(df.query))
@@ -987,23 +938,20 @@ class TestTelInSubrequestsQuerying(BaseTest):
                 "limit": 100,
             }
         )
-        self._husky_context = HuskyQueryContext.from_request(self._blending_request)
-        self._info = BlendingQueryInfo.create(self._blending_request, self._husky_context)
+        self._info = BlendingQueryInfo.create(self._blending_request, SNOWFLAKE_HUSKY_CONTEXT)
         adwords_df = Dataframe(
             create_single_query_mock('twitter'),
             get_mocked_dataframe_columns_map(['spend']),
             {'twitter_table'},
-            {'context'},
         )
         fb_df = Dataframe(
             create_single_query_mock('facebook'),
             get_mocked_dataframe_columns_map(['spend']),
             {'fb_table'},
-            {'context'},
         )
 
         mock__husky_build_query.side_effect = [adwords_df, fb_df]
-        df = QueryBuilder.build_query(self._husky_context, self._blending_request, self._info)
+        df = QueryBuilder.build_query(SNOWFLAKE_HUSKY_CONTEXT, self._blending_request, self._info)
         self.write_test_expectations('query.sql', compile_query(df.query))
         expected_query = self.read_test_expectations('query.sql')
         self.assertEqual(expected_query, compile_query(df.query))
@@ -1082,25 +1030,22 @@ class TestTelOverride(BaseTest):
             }
         )
 
-        husky_context = HuskyQueryContext.from_request(blending_request)
-        query_info = BlendingQueryInfo.create(blending_request, husky_context)
+        query_info = BlendingQueryInfo.create(blending_request, SNOWFLAKE_HUSKY_CONTEXT)
         twitter_df = Dataframe(
             create_single_query_mock('twitter'),
             get_mocked_dataframe_columns_map(
                 ['twitter|objective', 'objective', 'spend', 'twitter|spend', "twitter|impressions"]
             ),
             {'twitter_table'},
-            {'context'},
         )
         fb_df = Dataframe(
             create_single_query_mock('facebook'),
             get_mocked_dataframe_columns_map(['facebook_ads|objective', 'objective', 'spend', 'facebook_ads|spend']),
             {'fb_table'},
-            {'context'},
         )
 
         mock__husky_build_query.side_effect = [twitter_df, fb_df]
-        df = QueryBuilder.build_query(husky_context, blending_request, query_info)
+        df = QueryBuilder.build_query(SNOWFLAKE_HUSKY_CONTEXT, blending_request, query_info)
         self.write_test_expectations('query.sql', compile_query(df.query))
         expected_query = self.read_test_expectations('query.sql')
         self.assertEqual(expected_query, compile_query(df.query))
@@ -1181,38 +1126,33 @@ class TestTelOverride(BaseTest):
             }
         )
 
-        husky_context = HuskyQueryContext.from_request(blending_request)
-        query_info = BlendingQueryInfo.create(blending_request, husky_context)
+        query_info = BlendingQueryInfo.create(blending_request, SNOWFLAKE_HUSKY_CONTEXT)
         twitter_df = Dataframe(
             create_single_query_mock('twitter'),
             get_mocked_dataframe_columns_map(
                 ['twitter|objective', 'objective', 'spend', 'twitter|spend', "twitter|impressions"]
             ),
             {'twitter_table'},
-            {'context'},
         )
         fb_df = Dataframe(
             create_single_query_mock('facebook'),
             get_mocked_dataframe_columns_map(['facebook_ads|objective', 'objective', 'spend', 'facebook_ads|spend']),
             {'fb_table'},
-            {'context'},
         )
         twitter_comparison_df = Dataframe(
             create_single_query_mock('twitter_comparison'),
             get_mocked_dataframe_columns_map(['twitter|objective', 'objective', 'spend', 'twitter|spend']),
             {'adwords_comparison_table'},
-            {'context'},
         )
 
         fb_comparison_df = Dataframe(
             create_single_query_mock('facebook_comparison'),
             get_mocked_dataframe_columns_map(['facebook_ads|objective', 'objective', 'spend', 'facebook_ads|spend']),
             {'fb_comparison_table'},
-            {'context'},
         )
 
         mock__husky_build_query.side_effect = [twitter_df, fb_df, twitter_comparison_df, fb_comparison_df]
-        df = QueryBuilder.build_query(husky_context, blending_request, query_info)
+        df = QueryBuilder.build_query(SNOWFLAKE_HUSKY_CONTEXT, blending_request, query_info)
         self.write_test_expectations('query.sql', compile_query(df.query))
         expected_query = self.read_test_expectations('query.sql')
         self.assertEqual(expected_query, compile_query(df.query))
@@ -1240,12 +1180,11 @@ class TestAggregationDefinitions(BaseTest):
                 "limit": 100,
             }
         )
-        self._husky_context = HuskyQueryContext.from_request(self._blending_request)
-        self._info = BlendingQueryInfo.create(self._blending_request, self._husky_context)
+        self._info = BlendingQueryInfo.create(self._blending_request, SNOWFLAKE_HUSKY_CONTEXT)
 
     def _run_test_case(self, taxons, expected_taxons):
         self._blending_request.taxons = taxons
-        df = QueryBuilder.build_query(self._husky_context, self._blending_request, self._info)
+        df = QueryBuilder.build_query(SNOWFLAKE_HUSKY_CONTEXT, self._blending_request, self._info)
         self.write_test_expectations('query.sql', compile_query(df.query))
         expected_query = self.read_test_expectations('query.sql')
         assert compile_query(df.query) == expected_query
@@ -1331,34 +1270,9 @@ class TestPhysicalDataSource(BaseTest):
         )
 
     @patch.object(Taxonomy, '_get_filtered_taxons', side_effect=mock_get_taxons)
-    @patch('panoramic.cli.husky.service.query_builder.QueryBuilder.build_query')
-    def test_too_many_physical_data_sources(self, mock__husky_build_query, mock__get_taxons):
-        self._blending_request.physical_data_sources = ['some_postgres_kycpj', 'SF']
-
-        with pytest.raises(TooManyPhysicalDataSourcesException):
-            QueryBuilder.validate_data_request(
-                HuskyQueryContext.from_request(self._blending_request), self._blending_request
-            )
-
-    @patch.object(Taxonomy, '_get_filtered_taxons', side_effect=mock_get_taxons)
-    @patch(
-        'panoramic.cli.husky.service.context.HuskyQueryContext.from_request',
-        return_value=HuskyQueryContext(HuskyQueryRuntime.bigquery),
-    )
-    def test_bigquery_output(self, mock__get_taxons, mock__get_source_dialect_by_name):
-        self._blending_request.physical_data_sources = ['husky_integration_test_big_query_husky_test_lcurpjg_9']
-
+    def test_bigquery_output(self, mock__get_taxons):
         with pytest.raises(ModelNotFoundException):
             QueryBuilder.validate_data_request(
-                HuskyQueryContext.from_request(self._blending_request), self._blending_request
+                HuskyQueryContext(HuskyQueryRuntime.bigquery),
+                self._blending_request,
             )
-
-    @patch.object(Taxonomy, '_get_filtered_taxons', side_effect=mock_get_taxons)
-    @patch('panoramic.cli.husky.service.model_retriever.component.ModelRetriever.load_models')
-    def test_used_physical_data_sources(self, mock__load_models, mock__get_taxons):
-        mock__load_models.return_value = [get_mock_physical_data_sources_model()]
-
-        df = QueryBuilder.validate_data_request(
-            HuskyQueryContext.from_request(self._blending_request), self._blending_request
-        )
-        assert df.used_physical_data_sources == {MOCK_DATA_SOURCE_NAME}

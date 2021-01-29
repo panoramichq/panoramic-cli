@@ -52,7 +52,6 @@ class ExceptionErrorCode(Enum):
     CYCLIC_REFERENCE_MODEL_ATTR_TEL = 'cyclic-reference-model-attr-tel'
     FDQ_FLAG_REQUIRED = 'fdq-flag-required'
     INVALID_REQUEST_PAYLOAD = 'invalid-request-payload'
-    TOO_MANY_PHYSICAL_DATA_SOURCES = 'too-many-physical-data-sources'
     UNEXPECTED_TAXONS = 'unexpected-taxons'
     INACCESSIBLE_TAXON = 'inaccessible-taxon'
     OVERRIDE_NOT_FOUND = 'override-mapping-not-found'

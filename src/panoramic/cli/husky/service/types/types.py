@@ -235,22 +235,15 @@ class Dataframe:
     All the model names this dataframe is using.
     """
 
-    used_physical_data_sources: Set[str]
-    """
-    Physical data sources used in this dataframe
-    """
-
     def __init__(
         self,
         query: Selectable,
         slug_to_column: Dict[TaxonExpressionStr, DataframeColumn],
         used_model_names: Set[str],
-        used_physical_data_sources: Set[str],
     ):
         self.query = query
         self.slug_to_column = slug_to_column
         self.used_model_names = used_model_names
-        self.used_physical_data_sources = used_physical_data_sources
 
     @staticmethod
     def dataframe_columns_to_map(df_columns: List[DataframeColumn]) -> Dict[TaxonExpressionStr, DataframeColumn]:
@@ -261,8 +254,7 @@ class Dataframe:
             "DataFrame("
             "query={repr(compile_query(self.query))}, "
             "slug_to_column={repr(self.slug_to_column)}, "
-            "used_model_names={repr(self.used_model_names)}, "
-            "used_physical_data_sources={repr(self.used_physical_data_sources)})"
+            "used_model_names={repr(self.used_model_names)})"
         )
 
 

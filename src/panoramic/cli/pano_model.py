@@ -280,7 +280,6 @@ class PanoModel(Actionable):
     API_VERSION = 'v1'
 
     model_name: str
-    data_source: str
     fields: List[PanoModelField]
     joins: List[PanoModelJoin]
     identifiers: List[str]
@@ -290,7 +289,6 @@ class PanoModel(Actionable):
         self,
         *,
         model_name: str,
-        data_source: str,
         fields: List[PanoModelField],
         joins: List[PanoModelJoin],
         identifiers: List[str],
@@ -299,7 +297,6 @@ class PanoModel(Actionable):
         file_name: Optional[str] = None,
     ):
         self.model_name = model_name
-        self.data_source = data_source
         self.fields = fields
         self.joins = joins
         self.identifiers = identifiers
@@ -315,7 +312,6 @@ class PanoModel(Actionable):
         return {
             'api_version': self.API_VERSION,
             'model_name': self.model_name,
-            'data_source': self.data_source,
             'fields': [x.to_dict() for x in sorted(self.fields, key=lambda field: field.identifier())],
             'joins': [x.to_dict() for x in sorted(self.joins, key=lambda join: join.identifier())],
             'identifiers': sorted(self.identifiers),
@@ -326,7 +322,6 @@ class PanoModel(Actionable):
     def from_dict(cls, inputs: Dict[str, Any]) -> 'PanoModel':
         return cls(
             model_name=inputs['model_name'],
-            data_source=inputs['data_source'],
             fields=[PanoModelField.from_dict(x) for x in inputs.get('fields', [])],
             joins=[PanoModelJoin.from_dict(x) for x in inputs.get('joins', [])],
             identifiers=inputs.get('identifiers', []),
@@ -339,7 +334,6 @@ class PanoModel(Actionable):
         return hash(
             (
                 self.model_name,
-                self.data_source,
                 tuple(self.fields),
                 tuple(self.joins),
                 tuple(self.identifiers),

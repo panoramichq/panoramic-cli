@@ -9,7 +9,7 @@ from panoramic.cli.husky.service.context import SNOWFLAKE_HUSKY_CONTEXT
 _TMP_MODEL = HuskyModel(
     {
         'name': 'test_model',
-        'fully_qualified_name_parts': ['pds', 'database_a', 'company_a', 'table_a'],
+        'fully_qualified_name_parts': ['database_a', 'company_a', 'table_a'],
         'attributes': {
             'ds_1|ad_id': {'tel_transformation': '"col_ad_id"', 'taxon': 'ds_1|ad_id', 'identifier': True},
             'ds_1|gender': {'tel_transformation': '"col_gender"', 'taxon': 'ds_1|gender', 'identifier': False},

@@ -68,13 +68,6 @@ class FdqModel(PydanticModel):
     Name of the model. API will add pano_ds| prefix.
     """
 
-    data_source: str = Field(..., min_length=1)
-    """
-    Full table name in form of
-    [physical_data_source].[db].[schema].table (db and schema is optional, depending on federated db type)
-    Backend must verify, that company has access to physical_data_source.
-    """
-
     attributes: List[FdqModelAttribute] = Field(..., alias='fields')
     """
     List of attributes. Note that this is an array, not a dict anymore.
@@ -93,10 +86,6 @@ class FdqModel(PydanticModel):
     """
     List of taxons that are identifiers of the model
     """
-
-    @property
-    def physical_data_source(self) -> str:
-        return self.data_source.split('.')[0]
 
     @classmethod
     def _get_available_attrs_taxon_slugs(cls, attributes: List[FdqModelAttribute]) -> List[str]:

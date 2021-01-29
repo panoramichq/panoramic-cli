@@ -3,10 +3,12 @@ from typing import Any, Dict
 from panoramic.cli.file_utils import read_yaml, write_yaml
 from panoramic.cli.paths import Paths
 
+# project config file manipulation utils
 
-def update_config(section: str, data: Dict[str, Any]) -> None:
+
+def update_context(section: str, data: Dict[str, Any]) -> None:
     data = {section: data}
-    config_file = Paths.config_file()
+    config_file = Paths.context_file()
     if config_file.is_file():
         config_yaml = read_yaml(config_file)
         config_yaml.update(data)
@@ -15,8 +17,8 @@ def update_config(section: str, data: Dict[str, Any]) -> None:
         write_yaml(config_file, data)
 
 
-def read_config(section: str = '') -> Dict[str, Any]:
-    config_file = Paths.config_file()
+def read_context(section: str = '') -> Dict[str, Any]:
+    config_file = Paths.context_file()
     if not config_file.is_file():
         return {}
 

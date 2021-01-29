@@ -1,3 +1,3 @@
 SELECT 'data-source' AS __data_source, account_id AS account_id, ad_id AS ad_id, count(simple_count_all) AS simple_count_all, count(DISTINCT simple_count_distinct) AS simple_count_distinct 
-FROM (SELECT schema_metric_table_hourly_4ba9264ca9b14f09.account_id AS account_id, schema_metric_table_hourly_4ba9264ca9b14f09.ad_id AS ad_id, schema_metric_table_hourly_4ba9264ca9b14f09.ad_id AS simple_count_all, schema_metric_table_hourly_4ba9264ca9b14f09.ad_id AS simple_count_distinct 
-FROM schema.metric_table_hourly AS schema_metric_table_hourly_4ba9264ca9b14f09 ) GROUP BY __data_source, account_id, ad_id
+FROM (SELECT db_schema_metric_table_hourly_0f32eb13951cfe30.account_id AS account_id, db_schema_metric_table_hourly_0f32eb13951cfe30.ad_id AS ad_id, db_schema_metric_table_hourly_0f32eb13951cfe30.ad_id AS simple_count_all, db_schema_metric_table_hourly_0f32eb13951cfe30.ad_id AS simple_count_distinct 
+FROM db.schema.metric_table_hourly AS db_schema_metric_table_hourly_0f32eb13951cfe30 ) GROUP BY __data_source, account_id, ad_id

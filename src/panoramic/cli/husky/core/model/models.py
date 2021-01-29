@@ -169,10 +169,9 @@ class HuskyModel(SchematicsModel):
 
     fully_qualified_name_parts: Optional[List[str]] = ListType(NonEmptyStringType(required=True))
     """
-    All parts of the fully qualified name. Can contain 2..N values, depending on the actual federated database.
+    All parts of the fully qualified name. Can contain 2..N values, depending on the actual database.
 
     Example:
-    - physical data source (always first)
     - database name
     - schema name
     - table name
@@ -192,16 +191,6 @@ class HuskyModel(SchematicsModel):
     @property
     def identifier_taxon_slugs(self) -> Set[str]:
         return {attr.taxon for attr in self.identifier_attributes}
-
-    @property
-    def physical_data_source(self) -> str:
-        """
-        Gets name of physical data source.
-        """
-        if self.fully_qualified_name_parts is None:
-            raise ValueError('Missing physical data source')
-        else:
-            return self.fully_qualified_name_parts[0]
 
     @memoized_property
     def time_granularity(self) -> Optional[TimeGranularity]:
@@ -224,9 +213,7 @@ class HuskyModel(SchematicsModel):
         """
         assert self.fully_qualified_name_parts
 
-        full_object_name = '.'.join(
-            [quote_identifier(part, ctx.dialect) for part in self.fully_qualified_name_parts[1:]]
-        )
+        full_object_name = '.'.join([quote_identifier(part, ctx.dialect) for part in self.fully_qualified_name_parts])
 
         # sanity check that we have ANY name
         if not full_object_name:

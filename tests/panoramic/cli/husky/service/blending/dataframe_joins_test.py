@@ -17,12 +17,12 @@ class TestDataframeBlending(BaseTest):
             columns=[column('objective'), column('impressions'), column(HUSKY_QUERY_DATA_SOURCE_COLUMN_NAME)],
             from_obj=table('table1'),
         )
-        df1 = Dataframe(q1, get_mocked_dataframe_columns_map(['objective', 'impressions']), set(), {'SF'})
+        df1 = Dataframe(q1, get_mocked_dataframe_columns_map(['objective', 'impressions']), set())
         q2 = Select(
             columns=[column('age'), column('impressions'), column(HUSKY_QUERY_DATA_SOURCE_COLUMN_NAME)],
             from_obj=table('table2'),
         )
-        df2 = Dataframe(q2, get_mocked_dataframe_columns_map(['age_bucket', 'impressions']), set(), {'SF'})
+        df2 = Dataframe(q2, get_mocked_dataframe_columns_map(['age_bucket', 'impressions']), set())
         blended_df = blend_dataframes(SNOWFLAKE_HUSKY_CONTEXT, [df1, df2])
         self.write_test_expectations('query.sql', compile_query(blended_df.query))
         expected_query = self.read_test_expectations('query.sql')
@@ -34,12 +34,12 @@ class TestDataframeBlending(BaseTest):
             columns=[column('ad_id'), column('impressions'), column(HUSKY_QUERY_DATA_SOURCE_COLUMN_NAME)],
             from_obj=table('table1'),
         )
-        df1 = Dataframe(q1, get_mocked_dataframe_columns_map(['ad_id', 'impressions']), {'model_name_a'}, {'SF'})
+        df1 = Dataframe(q1, get_mocked_dataframe_columns_map(['ad_id', 'impressions']), {'model_name_a'})
         q2 = Select(
             columns=[column('ad_id'), column('impressions'), column(HUSKY_QUERY_DATA_SOURCE_COLUMN_NAME)],
             from_obj=table('table2'),
         )
-        df2 = Dataframe(q2, get_mocked_dataframe_columns_map(['ad_id', 'impressions']), {'model_name_b'}, {'SF'})
+        df2 = Dataframe(q2, get_mocked_dataframe_columns_map(['ad_id', 'impressions']), {'model_name_b'})
         blended_df = blend_dataframes(SNOWFLAKE_HUSKY_CONTEXT, [df1, df2])
         self.write_test_expectations('query.sql', compile_query(blended_df.query))
         expected_query = self.read_test_expectations('query.sql')
@@ -52,7 +52,7 @@ class TestDataframeBlending(BaseTest):
             columns=[column('ad_id'), column('impressions'), column(HUSKY_QUERY_DATA_SOURCE_COLUMN_NAME)],
             from_obj=table('table1'),
         )
-        df1 = Dataframe(q1, get_mocked_dataframe_columns_map(['ad_id', 'impressions']), set(), {'SF'})
+        df1 = Dataframe(q1, get_mocked_dataframe_columns_map(['ad_id', 'impressions']), set())
         q2 = Select(
             columns=[
                 column('ad_id'),
@@ -62,7 +62,7 @@ class TestDataframeBlending(BaseTest):
             ],
             from_obj=table('table2'),
         )
-        df2 = Dataframe(q2, get_mocked_dataframe_columns_map(['ad_id', 'impressions', 'campaign_id']), set(), {'SF'})
+        df2 = Dataframe(q2, get_mocked_dataframe_columns_map(['ad_id', 'impressions', 'campaign_id']), set())
         blended_df = blend_dataframes(SNOWFLAKE_HUSKY_CONTEXT, [df1, df2])
         self.write_test_expectations('query.sql', compile_query(blended_df.query))
         expected_query = self.read_test_expectations('query.sql')
@@ -74,7 +74,7 @@ class TestDataframeBlending(BaseTest):
             columns=[column('ad_id'), column('impressions'), column(HUSKY_QUERY_DATA_SOURCE_COLUMN_NAME)],
             from_obj=table('table1'),
         )
-        df1 = Dataframe(q1, get_mocked_dataframe_columns_map(['ad_id', 'impressions']), set(), {'SF'})
+        df1 = Dataframe(q1, get_mocked_dataframe_columns_map(['ad_id', 'impressions']), set())
         q2 = Select(
             columns=[
                 column('ad_id'),
@@ -84,7 +84,7 @@ class TestDataframeBlending(BaseTest):
             ],
             from_obj=table('table2'),
         )
-        df2 = Dataframe(q2, get_mocked_dataframe_columns_map(['ad_id', 'impressions', 'campaign_id']), set(), {'SF'})
+        df2 = Dataframe(q2, get_mocked_dataframe_columns_map(['ad_id', 'impressions', 'campaign_id']), set())
         q3 = Select(
             columns=[
                 column('ad_id'),
@@ -94,7 +94,7 @@ class TestDataframeBlending(BaseTest):
             ],
             from_obj=table('table3'),
         )
-        df3 = Dataframe(q3, get_mocked_dataframe_columns_map(['ad_id', 'impressions', 'campaign_id']), set(), {'SF'})
+        df3 = Dataframe(q3, get_mocked_dataframe_columns_map(['ad_id', 'impressions', 'campaign_id']), set())
         blended_df = blend_dataframes(SNOWFLAKE_HUSKY_CONTEXT, [df1, df2, df3])
         self.write_test_expectations('query.sql', compile_query(blended_df.query))
         expected_query = self.read_test_expectations('query.sql')

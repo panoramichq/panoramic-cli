@@ -41,12 +41,10 @@ def blend_dataframes(
     slug_to_dataframes: Dict[TaxonExpressionStr, List[Dataframe]] = _prepare_slug_to_dataframes(dataframes)
     dataframe_to_query: Dict[Dataframe, Selectable] = dict()
     used_model_names: Set[str] = set()
-    used_physical_sources: Set[str] = set()
     for idx, df in enumerate(dataframes):
         # Create query for each dataframe, that has alias as 'q<number>'
         dataframe_to_query[df] = df.query.alias(f'q{idx}')
         used_model_names.update(df.used_model_names)
-        used_physical_sources.update(df.used_physical_data_sources)
 
     selectors: List[TextClause] = []
     dimension_columns: List[ColumnClause] = []
@@ -98,7 +96,6 @@ def blend_dataframes(
         #  Iterate dataframes, and do full outer join on FALSE, effectively meaning UNION-ALL without the need to
         # align all columns
         dataframe_to_join = dataframes[i]
-        used_physical_sources.update(dataframe_to_join.used_physical_data_sources)
 
         final_slug_to_taxon = {**final_slug_to_taxon, **dataframe_to_join.slug_to_column}
         join_from = join_query
@@ -120,7 +117,7 @@ def blend_dataframes(
     final_columns.extend(column(id_) for id_ in safe_identifiers_iterable(final_slug_to_taxon.keys()))
     query = select(sort_columns(final_columns)).select_from(aggregate_join_query)
 
-    return Dataframe(query, final_slug_to_taxon, used_model_names, used_physical_sources)
+    return Dataframe(query, final_slug_to_taxon, used_model_names)
 
 
 def left_join_dataframes(
@@ -186,5 +183,4 @@ def left_join_dataframes(
         q,
         columns_by_slug,
         data_dataframe.used_model_names | comparison_dataframe.used_model_names,
-        data_dataframe.used_physical_data_sources | comparison_dataframe.used_physical_data_sources,
     )
