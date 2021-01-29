@@ -1,3 +1,3 @@
-SELECT schema_metric_table_hourly_4ba9264ca9b14f09.ad_id AS ad_id 
-FROM schema.metric_table_hourly AS schema_metric_table_hourly_4ba9264ca9b14f09  
-WHERE schema_metric_table_hourly_4ba9264ca9b14f09.spend = schema_metric_table_hourly_4ba9264ca9b14f09.impressions
+SELECT db_schema_metric_table_hourly_0f32eb13951cfe30.ad_id AS ad_id 
+FROM db.schema.metric_table_hourly AS db_schema_metric_table_hourly_0f32eb13951cfe30  
+WHERE db_schema_metric_table_hourly_0f32eb13951cfe30.spend = db_schema_metric_table_hourly_0f32eb13951cfe30.impressions

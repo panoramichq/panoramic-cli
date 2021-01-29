@@ -1,5 +1,7 @@
 from typing import Dict
 
+from tqdm import tqdm
+
 from panoramic.cli.connection import Connection
 from panoramic.cli.husky.core.taxonomy.enums import ValidationType
 from panoramic.cli.metadata.engines.with_connection import WithConnection
@@ -52,7 +54,7 @@ class SnowflakeScanner(WithConnection):
         # list all available databases
         dbs = Connection.execute('SHOW DATABASES', connection)
 
-        for db_row in dbs:
+        for db_row in tqdm(dbs):
             db_name = db_row['name']
 
             # prepare the query to fetch metadata about all tables
@@ -67,7 +69,7 @@ class SnowflakeScanner(WithConnection):
 
             rows = Connection.execute(query, connection)
 
-            for col_row in rows:
+            for col_row in tqdm(rows):
                 # generate correct model name
                 model_name = '.'.join([db_name, col_row['table_schema'], col_row['table_name']])
                 column_name = col_row['column_name']

@@ -213,9 +213,7 @@ class HuskyModel(SchematicsModel):
         """
         assert self.fully_qualified_name_parts
 
-        full_object_name = '.'.join(
-            [quote_identifier(part, ctx.dialect) for part in self.fully_qualified_name_parts[1:]]
-        )
+        full_object_name = '.'.join([quote_identifier(part, ctx.dialect) for part in self.fully_qualified_name_parts])
 
         # sanity check that we have ANY name
         if not full_object_name:
