@@ -99,14 +99,13 @@ def cli(debug):
 
 
 @cli.command(help='Scan models from source', cls=ContextAwareCommand)
-@click.argument('connection_name', type=str, required=True)
 @click.option('--filter', '-f', type=str, help='Filter down what models to scan using regular expression')
 @handle_exception
 @handle_interrupt
-def scan(connection_name: str, filter: Optional[str]):
+def scan(filter: Optional[str]):
     from panoramic.cli.command import scan as scan_command
 
-    scan_command(connection_name, filter)
+    scan_command(filter)
 
 
 @cli.command(help='Validate local files', cls=Command)

@@ -67,7 +67,7 @@ def validate() -> bool:
     return True
 
 
-def scan(connection_name: str, filter_reg_ex: Optional[str] = None):
+def scan(filter_reg_ex: Optional[str] = None):
     """Scan all metadata for given source and filter."""
 
     connection_info = Connection.get()
