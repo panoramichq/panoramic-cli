@@ -9,12 +9,8 @@ from panoramic.cli.husky.service.blending.blending_taxon_manager import (
     BlendingTaxonManager,
 )
 from panoramic.cli.husky.service.blending.preprocessing import preprocess_request
-from panoramic.cli.husky.service.context import (
-    SNOWFLAKE_HUSKY_CONTEXT,
-    HuskyQueryContext,
-)
+from panoramic.cli.husky.service.context import SNOWFLAKE_HUSKY_CONTEXT
 from panoramic.cli.husky.service.types.api_data_request_types import BlendingDataRequest
-from panoramic.cli.husky.service.types.enums import HuskyQueryRuntime
 from panoramic.cli.husky.service.types.types import BlendingQueryInfo
 from tests.panoramic.cli.husky.test.mocks.core.taxonomy import (
     get_mocked_taxons_by_slug,
@@ -58,10 +54,7 @@ class TestTelPlanner(BaseTest):
                 "limit": 100,
             }
         )
-        self._husky_context = HuskyQueryContext.from_request(
-            self._blending_request, force_runtime=HuskyQueryRuntime.snowflake
-        )
-        self._info = BlendingQueryInfo.create(self._blending_request, self._husky_context)
+        self._info = BlendingQueryInfo.create(self._blending_request, SNOWFLAKE_HUSKY_CONTEXT)
 
     @patch.object(Taxonomy, '_get_filtered_taxons', side_effect=mock_get_taxons)
     def test_fb_tw_merged_objective_and_generic_cpm(self, mock__get_taxons):

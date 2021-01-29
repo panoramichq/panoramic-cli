@@ -245,7 +245,6 @@ def scaffold_missing_fields(target_dataset: Optional[str] = None, yes: bool = Fa
 
     loaded_models: Dict[str, PanoModel] = {}
     if not no_remote:
-        # determine connection name (remove once we have only one connection)
         connection = Connection.get()
         dialect_name = Connection.get_dialect_name(connection)
         query_runtime = EnumHelper.from_value_safe(HuskyQueryRuntime, dialect_name)

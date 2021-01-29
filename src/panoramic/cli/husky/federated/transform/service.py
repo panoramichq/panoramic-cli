@@ -4,6 +4,8 @@ from typing import Dict, Tuple
 from sqlalchemy import literal_column, select
 from sqlalchemy.sql import ClauseElement
 
+from panoramic.cli.connection import Connection
+from panoramic.cli.husky.common.enum import EnumHelper
 from panoramic.cli.husky.core.federated.transform.models import TransformRequest
 from panoramic.cli.husky.core.sql_alchemy_util import (
     UNSAFE_IDENTIFIER_CHARS_REGEXP,
@@ -99,7 +101,12 @@ class TransformService:
         husky_request_dict = {'data_subrequests': subrequests, 'taxons': req.requested_fields, 'origin': origin}
 
         husky_request = BlendingDataRequest(husky_request_dict)
-        context = HuskyQueryContext.from_request(husky_request)
+
+        connection = Connection.get()
+
+        query_runtime_name = Connection.get_dialect_name(connection)
+        query_runtime = EnumHelper.from_value_safe(HuskyQueryRuntime, query_runtime_name)
+        context = HuskyQueryContext(query_runtime)
 
         husky_dataframe = QueryBuilder.validate_data_request(context, husky_request)
 
