@@ -1,5 +1,16 @@
 # Changelog
 
+## Version 2.1.0 Release
+
+- Support for metadata scan
+- Removed `data_source` property from model files
+- Connection is now project specific and there may not be multiple connections in one project
+
+## Version 2.0.0 Release
+
+- Removed dependency on Panoramic API, fully standalone version
+- Without support for metadata scan
+
 ## Version 1.7.1 Release
 
 - Bugfix for badly generated transform queries
