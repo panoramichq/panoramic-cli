@@ -26,13 +26,11 @@ class InspectorScanner(WithConnection):
     }
 
     def scan(self, *, force_reset: bool = False):
-        """Scan Snowflake storage"""
         connection = self._get_connection()
 
         engine = Connection.get_connection_engine(connection)
         inspector = Inspector.from_engine(engine)
         # list all available tables
-        # print(inspector.sorted_tables)
         for schema_name in tqdm(inspector.get_schema_names()):
             for table_name in tqdm(inspector.get_table_names(schema=schema_name)):
                 model_name = table_name
