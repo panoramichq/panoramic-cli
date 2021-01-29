@@ -63,6 +63,7 @@ def map_error_to_field(error: MissingFieldFileError, loaded_models: Dict[str, Pa
         slug=error.field_slug,
         field_type=field_type.value,
         display_name=error.field_slug,
+        data_source=error.dataset_slug,
         group='CLI',
         data_type=data_type.value,
         aggregation=aggregation,
