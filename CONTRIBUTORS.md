@@ -15,5 +15,6 @@ Pano contributors (sorted alphabetically)
 * **[Roman Roštár](https://github.com/raethlo)**
 * **[Vojta Udrzal](https://github.com/froxCZ)**
 * **[Mato Vetrak](https://github.com/vetyy)**
+* **[Jakub Mahnert](https://github.com/kubamahnert)**
 
 **[Full contributors list](https://github.com/panoramichq/panoramic-cli/contributors).**
